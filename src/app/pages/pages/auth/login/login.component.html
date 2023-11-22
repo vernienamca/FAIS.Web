@@ -1,0 +1,73 @@
+<!-- <div @stagger>
+  <div class="my-12 container flex flex-col sm:flex-row items-stretch sm:items-start gap-6">
+    <div @fadeInUp class="card p-6 flex-1 flex flex-col items-center">
+      <div class="inline-block p-6 rounded-full text-primary mx-auto flex items-center justify-center bg-primary/10">
+        <mat-icon class="icon-5xl" svgIcon="mat:beenhere"></mat-icon>
+      </div>
+  
+      <h2 class="headline my-6">Basic Plan</h2>
+  
+      <div class="body-1"><span class="body-2">2</span> Users</div>
+      <div class="body-1"><span class="body-2">10</span> Projects</div>
+      <div class="body-1"><span class="body-2">10GB</span> Storage</div>
+      <div class="body-1"><span class="body-2">Basic</span> Support</div>
+  
+      <h3 class="display-2 font-bold my-6">19<span class="text-secondary headline align-top">$</span></h3>
+  
+      <button class="rounded-full max-w-full w-200" color="primary" mat-raised-button type="button">Purchase</button>
+    </div>
+  
+  </div>
+  
+</div> -->
+
+<div class="login-container w-full h-full flex flex-col justify-center">
+  <div class="flex flex-row">
+    <div @fadeInUp class="card form overflow-hidden w-full max-w-md">
+      <div class="p-6 pb-0 flex flex-col items-center justify-center">
+        <div class="fill-current text-center">
+          <img src="assets/img/demo/logo.svg">
+        </div>
+      </div>
+      <div class="text-center mt-4">
+        <h2 class="title m-0">LOGIN</h2>
+        <p>Please enter your details below to log in.</p>
+      </div>
+      <div [formGroup]="form" class="p-8 flex flex-col gap-4">
+        <div class="flex flex-col">
+          <mat-form-field class="flex-1">
+            <mat-label>Username</mat-label>
+            <input formControlName="email" matInput required>
+            <mat-error *ngIf="form.get('email').hasError('required')">
+              Username is required
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field class="flex-1">
+            <mat-label>Password</mat-label>
+            <input [type]="inputType" formControlName="password" matInput required>
+            <button (click)="toggleVisibility()" mat-icon-button matSuffix matTooltip="Toggle Visibility" type="button">
+              <mat-icon *ngIf="visible" svgIcon="mat:visibility"></mat-icon>
+              <mat-icon *ngIf="!visible" svgIcon="mat:visibility_off"></mat-icon>
+            </button>
+            <mat-hint>Click the eye to toggle visibility</mat-hint>
+            <mat-error *ngIf="form.get('password').hasError('required')">
+              Password is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="flex items-center justify-between">
+          <a [routerLink]="['/forgot-password']" class="caption">Forgot Password?</a>
+        </div>
+        <button (click)="send()" color="primary" mat-raised-button type="button">
+          Login
+        </button>
+      </div>
+    </div>
+    <div @fadeInUp class="card slogan overflow-hidden w-full flex items-center">
+      <div class="title text-center">
+        <h2>Fixed Asset Information System</h2>
+        <p>"OWNER OF THE COUNTRY'S TRANSMISSION ASSETS"</p>
+      </div>
+    </div>
+  </div>
+</div>
