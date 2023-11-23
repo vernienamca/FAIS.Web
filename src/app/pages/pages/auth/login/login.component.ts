@@ -4,6 +4,11 @@ import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { fadeInUp400ms } from '../../../../../@vex/animations/fade-in-up.animation';
 
+//font awesome icons for login
+import { faLock } from '@fortawesome/free-solid-svg-icons';
+import { faUser } from '@fortawesome/free-solid-svg-icons';
+
+
 @Component({
   selector: 'vex-login',
   templateUrl: './login.component.html',
@@ -13,8 +18,14 @@ import { fadeInUp400ms } from '../../../../../@vex/animations/fade-in-up.animati
     fadeInUp400ms
   ]
 })
+
 export class LoginComponent implements OnInit {
 
+//font awesome icons for logins
+ icon = faLock;
+ icon2 = faUser;
+
+ 
   form: UntypedFormGroup;
 
   inputType = 'password';
@@ -51,4 +62,9 @@ export class LoginComponent implements OnInit {
       this.cd.markForCheck();
     }
   }
+
+  // // Use a getter for faUser
+  // get faUser() {
+  //   return faUser;  
+  // }
 }
