@@ -37,7 +37,9 @@
             ],
             "styles": [
               "src/styles.scss",
-              "src/@vex/styles/tailwind.scss"
+              "src/@vex/styles/tailwind.scss",
+              "/node_modules/font-awesome/css/font-awesome.css"
+             
             ],
             "scripts": [],
             "allowedCommonJsDependencies": [
@@ -127,5 +129,8 @@
         }
       }
     }
+  },
+  "cli": {
+    "analytics": "717df78e-3bde-4109-b241-881584b1c8ba"
   }
 }
