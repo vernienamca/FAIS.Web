@@ -11,6 +11,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 
 @NgModule({
@@ -26,7 +27,9 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     MatTooltipModule,
     MatButtonModule,
     MatCheckboxModule,
-    FlexLayoutModule
+    FlexLayoutModule,
+    FontAwesomeModule
+    
   ]
 })
 export class LoginModule {
