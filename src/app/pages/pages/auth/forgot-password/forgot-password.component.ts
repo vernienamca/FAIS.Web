@@ -47,6 +47,7 @@ this.aFormGroup = this.formBuilder.group({
 })
 
   }
+  
 //captcha site key make sure to change this according to your domain (I used Localhost login on transco gmail)
 
   siteKey:string ="6Lfm5R4pAAAAAH8_jyMZ7AVsigdgQWzHiow3Q7a5";
@@ -57,7 +58,7 @@ this.aFormGroup = this.formBuilder.group({
 
 
     // this.router.navigate(['/']);
-    this.imageUrl = 'assets/img/icons/forgot-password-icons/reset-password-sent.png';
+    this.imageUrl = 'assets/img/icons/forgot-password-icons/reset-password-sent.svg';
 
 
     this.passwordSent = true;

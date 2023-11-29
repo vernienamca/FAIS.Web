@@ -12,11 +12,14 @@ import { faCheck } from '@fortawesome/free-solid-svg-icons';
 })
 export class ResetPasswordComponent implements OnInit {
 
-
+  //icon on the textbox showing
   icon = faCheck;
+  // icon for the lists of green check validation
+  greencheck = faCheck;
   
   imageUrl = 'assets/img/icons/forgot-password-icons/password.png';
   form: FormGroup; 
+  
 
   inputType = 'password';
   visible = false;
@@ -29,25 +32,67 @@ export class ResetPasswordComponent implements OnInit {
     private snackbar: MatSnackBar
   ) {}
 
+
+
   send() {
-
-    this.success = true;
-      // Show a snackbar / tooltip when the reset password is successful 
-      this.snackbar.open('Password reset successful!', 'Close', {
-        duration: 3000,
+    if (this.passwordRequirements && this.passwordsMatch()) {
+      this.success = true;
+    } else {
+      // Show an error message to the user
+      this.snackbar.open('Password requirements are not satisfied. Please check and try again.', 'Close', {
+        duration: 5000,
       });
-    // this.router.navigate(['/']);
-    // this.snackbar.open('Lucky you! Looks like you didn\'t need a password or email address! For a real application we provide validators to prevent this. ;)', 'LOL THANKS', {
-    //   duration: 10000
-    // });
+    }
   }
+  
+  
 
-  ngOnInit() {
-    this.form = this.fb.group({
-      email: ['', Validators.required],
-      password: ['', Validators.required]
-    });
-  }
+ ngOnInit() {
+  this.form = this.fb.group({
+    email: ['', Validators.required],
+    password: [
+      '',
+      [Validators.required, Validators.minLength(8)],
+    ],
+    confirmPassword: [
+      '',
+      [Validators.required, Validators.minLength(8)],
+    ]
+
+  });
+
+  // Listen for changes in the password field
+  this.form.get('password').valueChanges.subscribe(() => {
+    this.cd.markForCheck(); // Trigger change detection
+  });
+}
+  
+
+passwordsMatch(): boolean {
+  const password = this.form.get('password').value;
+  const confirmPassword = this.form.get('confirmPassword').value;
+
+  return password === confirmPassword;
+}
+
+
+// password requirements logic call the returned values on the html
+passwordRequirements(): { minLength: boolean, hasNumber: boolean, hasLowercase: boolean, hasSpecialCharacter: boolean } {
+  const password = this.form.get('password').value;
+
+  // Count the number of special characters in the password
+  const specialCharacterCount = (password.match(/[!@#$%^&*(),.?":{}|<>]/g) || []).length;
+
+  return {
+    minLength: password.length >= 8,
+    hasNumber: /\d/.test(password),
+    hasLowercase: /[a-z]/.test(password),
+    hasSpecialCharacter: specialCharacterCount >= 2
+  };
+}
+
+
+
 
   toggleVisibility() {
     if (this.visible) {
