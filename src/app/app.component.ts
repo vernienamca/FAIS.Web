@@ -162,7 +162,7 @@ export class AppComponent {
           {
             type: 'link',
             label: 'System Settings',
-            route: '/apps/mail',
+            route: '/apps/system-settings',
             icon: 'mat:mail',
           },
           {
