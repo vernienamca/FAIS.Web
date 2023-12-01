@@ -30,9 +30,6 @@ export class LoginComponent implements OnInit {
 
  
 
-//font awesome icons for logins
- icon = faLock;
- icon2 = faUser;
 
  
   form: UntypedFormGroup;
