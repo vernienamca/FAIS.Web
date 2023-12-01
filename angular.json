@@ -37,7 +37,9 @@
             ],
             "styles": [
               "src/styles.scss",
-              "src/@vex/styles/tailwind.scss"
+              "src/@vex/styles/tailwind.scss",
+              "/node_modules/font-awesome/css/font-awesome.css"
+             
             ],
             "scripts": [],
             "allowedCommonJsDependencies": [

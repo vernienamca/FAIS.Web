@@ -13,6 +13,9 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+
+
 
 @NgModule({
   declarations: [LoginComponent],
@@ -23,6 +26,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     MatInputModule,
     MatIconModule,
     MatSnackBarModule,
+    FontAwesomeModule, 
 
     MatTooltipModule,
     MatButtonModule,
@@ -33,4 +37,5 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
   ]
 })
 export class LoginModule {
+
 }

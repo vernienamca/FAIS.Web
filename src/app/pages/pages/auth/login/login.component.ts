@@ -21,7 +21,14 @@ import { faUser } from '@fortawesome/free-solid-svg-icons';
   ]
 })
 
+
 export class LoginComponent implements OnInit {
+
+//font awesome icons for logins
+ icon = faLock;
+ icon2 = faUser;
+
+ 
 
 //font awesome icons for logins
  icon = faLock;

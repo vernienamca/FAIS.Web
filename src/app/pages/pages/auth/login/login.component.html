@@ -26,6 +26,10 @@
   
 
     <!-- login  -->
+  <div class="ml-12 mr-12  flex flex-row">
+  
+
+    <!-- login  -->
     <div @fadeInUp class="card form overflow-hidden w-full max-w-md">
 
  
@@ -35,18 +39,28 @@
         </div>
 
         
+
+        
       </div>
      
 
       <div class="text-center mt-4">
         <h2 class="title m-0">LOGIN</h2>
         
+        
       </div>
+      <div [formGroup]="form" class="p-8 flex flex-col gap-12">
       <div [formGroup]="form" class="p-8 flex flex-col gap-12">
         <div class="flex flex-col">
       
 
+      
+
           <mat-form-field class="flex-1">
+            <mat-label> <fa-icon [icon]="icon2" style="color: #043C79; padding: 10px;"></fa-icon>Username</mat-label>
+
+
+           
             <mat-label> <fa-icon [icon]="icon2" style="color: #043C79; padding: 10px;"></fa-icon>Username</mat-label>
 
 
@@ -55,6 +69,7 @@
             <mat-error *ngIf="form.get('email').hasError('required')">
               Username is required
             </mat-error>
+
 
           </mat-form-field>
           <mat-form-field class="flex-1">
@@ -76,11 +91,19 @@
           <a [routerLink]="['/forgot-password']" class="caption">Forgot Password?</a>
         </div>
         <button (click)="send()" mat-raised-button type="button" color="primary" style="background-color: #043C79;">
+        <button (click)="send()" mat-raised-button type="button" color="primary" style="background-color: #043C79;">
           Login
         </button>
         
+        
       </div>
     </div>
+<!-- 
+        slogan  -->
+        
+        <div @fadeInUp class="mt-12 card slogan overflow-hidden w-full flex items-center justify-center h-4/6 hide-on-small-screens">
+
+
 <!-- 
         slogan  -->
         
