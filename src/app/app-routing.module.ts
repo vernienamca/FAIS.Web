@@ -45,11 +45,12 @@ const routes: VexRoutes = [
             }
           },
           {
-            path: 'mail',
-            loadChildren: () => import('./pages/apps/mail/mail.module').then(m => m.MailModule),
+            path: 'system-settings',
+            // loadChildren: () => import('./pages/apps/mail/mail.module').then(m => m.MailModule),
+            loadChildren: () => import('./pages/apps/system-settings/system-settings.module').then(m =>m.SystemSettingsModule),
             data: {
               toolbarShadowEnabled: true,
-              scrollDisabled: true
+              scrollDisabled: false
             }
           },
           {
