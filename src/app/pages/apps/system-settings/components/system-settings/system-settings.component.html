@@ -1,0 +1,119 @@
+<div class="breadcrumb d-flex">
+    <div class="row">
+        <div class="col">
+            <span>System Management ></span>
+            <span>System Settings ></span>
+            <span>Edit System Settings</span>
+        </div>
+    </div>
+
+    <div class="options">
+        <div class="btn-opt m-5">
+            <button class="save" (click)="save()"><fa-icon [icon]="folderSave" style="color: #fff;"></fa-icon>Save</button>
+            <button class="close"><fa-icon [icon]="close" style="color: #fff;"></fa-icon>Close</button>
+        </div>
+    </div>
+</div>
+
+<div class="settings" [formGroup]="settingsForm">
+    <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start" dynamicHeight class="tabs">
+        <mat-tab label="General">
+            <div class="gen-set">
+               <div class="gen-set-items">
+                <div class="row">
+                    <div class="form-input">
+                          <label for="comp-input">Company Name</label>
+                          <input type="text" id="comp-input" placeholder="Company Name" formControlName="company">
+                    </div>
+                    <div class="form-input">
+                      <label style="margin: 5px;" for="pn-input">Phone Number</label>
+                      <input type="text" id="pn-input" placeholder="Phone Number" formControlName="phone">
+                    </div>
+                  </div>
+                  <div class="row">
+                      <div class="form-input">
+                              <label for="em-input">Email Address</label>
+                              <input type="text" id="em-input" placeholder="Email Address" formControlName="email">
+                      </div>
+                      <div class="form-input">
+                              <label for="web-input">Website</label>
+                              <input type="text" id="web-input" placeholder="Website" formControlName="web">      
+                      </div>
+                  </div>
+                  <div class="form-input">
+                          <label for="addr-input">Address</label>
+                          <input type="text" id="addr-input" placeholder="Address" formControlName="address">    
+                  </div>
+                    <hr>
+               </div>
+            </div>
+            <vex-app-version></vex-app-version>
+        </mat-tab>
+        <mat-tab label="Configuration Settings">
+            <div class="conf-set">
+                <div class="gen-set-items">
+                 <div class="row">
+                     <div class="form-input">
+                           <label for="min-pass">Minimum Password Length</label>
+                           <select name="min-pass" id="min-pass" formControlName="minPass">
+                            <option *ngFor="let minPass of minPassOpt" [ngValue]="minPass">
+                                {{minPass.value}}
+                            </option>
+                          </select>
+                     </div>
+                     <div class="form-input">
+                       <label for="min-schar">Minimum Special Characters</label>
+                       <select name="min-schar" id="min-schar" formControlName="minSpChar">
+                        <option *ngFor="let minSpChar of minSpCharOpt" [ngValue]="minSpChar">
+                                {{minSpChar.value}}
+                            </option>
+                      </select>
+                     </div>
+                   </div>
+                   <div class="row">
+                       <div class="form-input">
+                               <label for="pass-exp">Password Expiry (days)</label>
+                               <select name="pass-exp" id="pass-exp" formControlName="passExp">
+                                    <option *ngFor="let passExp of passExpOpt" [ngValue]="passExp">
+                                {{passExp.value}}
+                            </option>
+                                </select>
+                       </div>
+                       <div class="form-input">
+                               <label for="idle">Idle Time (in minutes)</label>
+                               <select name="idle" id="idle" formControlName="idle">
+                                <option *ngFor="let idle of idleOpt" [ngValue]="idle">
+                                {{idle.value}}
+                            </option>
+                            </select>   
+                       </div>
+                   </div>
+                   <div class="row">
+                    <div class="form-input">
+                            <label for="sign-atmp">Maximum signing on attempts</label>
+                            <select name="sign-atmp" id="sign-atmp" formControlName="signAtmp">
+                            <option *ngFor="let signAtmp of signAtmpOpt" [ngValue]="signAtmp">
+                                {{signAtmp.value}}
+                            </option>
+                          </select>
+                          <div class="note">
+                            <span>The number of consecutive sign-on or password verification attempts that are not correct by users.</span>
+                          </div>
+                    </div>
+                    <div class="form-input">
+                            <label for="enf-pass">Enforce Password history <span class="req">*</span></label>
+                            <select name="enf-pass" id="enf-pass" formControlName="enfPass">
+                                <option *ngFor="let enfPass of enfPassOpt" [ngValue]="enfPass">
+                                    {{enfPass.value}}
+                                </option>
+                              </select>
+                            <div class="note">
+                                <span>The policy setting determines the number of unique new passwords that must be associated with a user account before an old password can be reused.</span>
+                            </div>
+                    </div>
+                </div>
+                </div>
+             </div>
+        </mat-tab>
+    </mat-tab-group>
+</div>
