@@ -1,3 +1,4 @@
+
 <!-- <div @stagger>
   <div class="my-12 container flex flex-col sm:flex-row items-stretch sm:items-start gap-6">
     <div @fadeInUp class="card p-6 flex-1 flex flex-col items-center">
@@ -22,94 +23,51 @@
 </div> -->
 
 <div class="login-container w-full h-full flex flex-col justify-center">
-  <div class="ml-12 mr-12  flex flex-row">
-  
-
-    <!-- login  -->
-  <div class="ml-12 mr-12  flex flex-row">
-  
-
-    <!-- login  -->
+  <div class="ml-12 mr-12 flex flex-row">
+    <!-- login -->
     <div @fadeInUp class="card form overflow-hidden w-full max-w-md">
-
- 
       <div class="p-12 pb-12 flex flex-col items-center justify-center">
         <div class="fill-current text-center">
           <img src="assets/img/demo/logo.svg">
         </div>
-
-        
-
-        
       </div>
-     
 
       <div class="text-center mt-4">
         <h2 class="title m-0">LOGIN</h2>
-        
-        
       </div>
-      <div [formGroup]="form" class="p-8 flex flex-col gap-12">
+
       <div [formGroup]="form" class="p-8 flex flex-col gap-12">
         <div class="flex flex-col">
-      
-
-      
-
           <mat-form-field class="flex-1">
-            <mat-label> <fa-icon [icon]="icon2" style="color: #043C79; padding: 10px;"></fa-icon>Username</mat-label>
-
-
-           
-            <mat-label> <fa-icon [icon]="icon2" style="color: #043C79; padding: 10px;"></fa-icon>Username</mat-label>
-
-
-           
+            <mat-label><fa-icon [icon]="icon2" style="color: #043C79; padding: 10px;"></fa-icon>Username</mat-label>
             <input formControlName="email" matInput required>
-            <mat-error *ngIf="form.get('email').hasError('required')">
-              Username is required
-            </mat-error>
-
-
+            <mat-error *ngIf="form.get('email').hasError('required')">Username is required</mat-error>
           </mat-form-field>
+
           <mat-form-field class="flex-1">
-
             <mat-label><fa-icon [icon]="icon" style="color: #043C79; padding:10px;"></fa-icon>Password</mat-label>
-
             <input [type]="inputType" formControlName="password" matInput required>
             <button (click)="toggleVisibility()" mat-icon-button matSuffix matTooltip="Toggle Visibility" type="button">
               <mat-icon *ngIf="visible" svgIcon="mat:visibility"></mat-icon>
               <mat-icon *ngIf="!visible" svgIcon="mat:visibility_off"></mat-icon>
             </button>
             <mat-hint>Click the eye to toggle visibility</mat-hint>
-            <mat-error *ngIf="form.get('password').hasError('required')">
-              Password is required
-            </mat-error>
+            <mat-error *ngIf="form.get('password').hasError('required')">Password is required</mat-error>
           </mat-form-field>
         </div>
+
         <div class="flex items-center justify-between">
           <a [routerLink]="['/forgot-password']" class="caption">Forgot Password?</a>
         </div>
-        <button (click)="send()" mat-raised-button type="button" color="primary" style="background-color: #043C79;">
+
         <button (click)="send()" mat-raised-button type="button" color="primary" style="background-color: #043C79;">
           Login
         </button>
-        
-        
       </div>
     </div>
-<!-- 
-        slogan  -->
-        
-        <div @fadeInUp class="mt-12 card slogan overflow-hidden w-full flex items-center justify-center h-4/6 hide-on-small-screens">
 
-
-<!-- 
-        slogan  -->
-        
-        <div @fadeInUp class="mt-12 card slogan overflow-hidden w-full flex items-center justify-center h-4/6 hide-on-small-screens">
-
-
+    <!-- slogan -->
+    <div @fadeInUp class="mt-12 card slogan overflow-hidden w-full flex items-center justify-center h-4/6 hide-on-small-screens">
       <div class="title text-center">
         <h2>Fixed Asset Information System</h2>
         <p>"OWNER OF THE COUNTRY'S TRANSMISSION ASSETS"</p>
