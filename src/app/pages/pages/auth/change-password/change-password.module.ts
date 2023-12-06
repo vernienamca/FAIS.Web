@@ -5,6 +5,7 @@ import { ChangePasswordComponent } from './change-password.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { MatInputModule } from '@angular/material/input';
 import { FlexModule } from '@angular/flex-layout';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -15,7 +16,8 @@ import { FlexModule } from '@angular/flex-layout';
     ChangePasswordRoutingModule,
     FontAwesomeModule,
     MatInputModule,
-    FlexModule
+    FlexModule,
+    ReactiveFormsModule
   ]
 })
 export class ChangePasswordModule { }

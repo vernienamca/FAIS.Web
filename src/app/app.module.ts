@@ -8,6 +8,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { CustomLayoutModule } from './custom-layout/custom-layout.module';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ForgotPasswordComponent } from './app/pages/auth/forgot-password/forgot-password.component';
+import {MatIconModule} from '@angular/material/icon';
+
 
 @NgModule({
   declarations: [AppComponent, ForgotPasswordComponent],
@@ -19,7 +21,8 @@ import { ForgotPasswordComponent } from './app/pages/auth/forgot-password/forgot
     // Vex
     VexModule,
     CustomLayoutModule,
-    FontAwesomeModule
+    FontAwesomeModule,
+    MatIconModule
   ],
   providers: [],
   bootstrap: [AppComponent]
