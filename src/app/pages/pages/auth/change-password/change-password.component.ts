@@ -1,8 +1,4 @@
 import { Component } from '@angular/core';
-import { faFolder } from '@fortawesome/free-solid-svg-icons';
-import { faClose } from '@fortawesome/free-solid-svg-icons';
-import { faEye } from '@fortawesome/free-solid-svg-icons';
-import { faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Validators } from '@angular/forms';
 
@@ -14,14 +10,12 @@ import { Validators } from '@angular/forms';
 })
 
 export class ChangePasswordComponent {
-  folderSave = faFolder;
-  close = faClose;
-  eyeOpen = faEye;
-  eyeClose = faEyeSlash;
+  eyeOpen = "visibility";
+  eyeClose = "visibility_off";
 
-  hideOldPass = false;
-  hideNewPass = false;
-  hideConfPass = false;
+  hideOldPass = true;
+  hideNewPass = true;
+  hideConfPass = true;
 
   changePasswordForm: FormGroup;
 
