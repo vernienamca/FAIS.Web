@@ -4,10 +4,15 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { VexModule } from '../@vex/vex.module';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { CustomLayoutModule } from './custom-layout/custom-layout.module';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ForgotPasswordComponent } from './app/pages/auth/forgot-password/forgot-password.component';
+import { AuthService } from './core/services/auth.service';
+import { AuthApi } from './core/api/auth-api.service';
+import { PortalApi } from './core/api/portal-api.service';
+import { PortalService } from './core/services/portal.service';
+import { TokenInterceptorService } from './core/interceptors/token-interceptor.service';
+import { DatePipe } from '@angular/common';
 
 @NgModule({
   declarations: [AppComponent, ForgotPasswordComponent],
@@ -18,10 +23,20 @@ import { ForgotPasswordComponent } from './app/pages/auth/forgot-password/forgot
     HttpClientModule,
     // Vex
     VexModule,
-    CustomLayoutModule,
-    FontAwesomeModule
+    CustomLayoutModule
   ],
-  providers: [],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: TokenInterceptorService,
+      multi: true,
+    },
+    DatePipe,
+    AuthApi, 
+    PortalApi, 
+    AuthService, 
+    PortalService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

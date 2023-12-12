@@ -1,7 +1,5 @@
 import { Component } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
-import { faFolder } from '@fortawesome/free-solid-svg-icons';
-import { faClose } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'vex-system-settings',
@@ -9,9 +7,6 @@ import { faClose } from '@fortawesome/free-solid-svg-icons';
   styleUrls: ['./system-settings.component.scss']
 })
 export class SystemSettingsComponent {
-
-  folderSave = faFolder;
-  close = faClose;
   inpMinVal: any;
   inpMaxVal: any;
   inpNumVal;
