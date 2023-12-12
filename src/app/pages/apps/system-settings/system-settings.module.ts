@@ -6,10 +6,8 @@ import { SystemSettingsComponent } from './components/system-settings/system-set
 import { MatTabsModule } from '@angular/material/tabs';
 import {MatGridListModule} from '@angular/material/grid-list';
 import { AppVersionComponent } from './components/app-version/app-version.component';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import {MatTableModule} from '@angular/material/table';
+import { MatTableModule } from '@angular/material/table';
 import { ReactiveFormsModule } from '@angular/forms';
-
 
 @NgModule({
   declarations: [
@@ -21,7 +19,6 @@ import { ReactiveFormsModule } from '@angular/forms';
     SystemSettingsRoutingModule,
     MatTabsModule,
     MatGridListModule,
-    FontAwesomeModule,
     MatTableModule,
     ReactiveFormsModule
   ]

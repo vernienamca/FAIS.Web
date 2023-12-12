@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
-import { AioTableComponent } from './aio-table.component';
+import { RoleListComponent } from './role-list.component';
 
 describe('AioTableComponent', () => {
-  let component: AioTableComponent;
-  let fixture: ComponentFixture<AioTableComponent>;
+  let component: RoleListComponent;
+  let fixture: ComponentFixture<RoleListComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [AioTableComponent]
+      declarations: [RoleListComponent]
     })
       .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(AioTableComponent);
+    fixture = TestBed.createComponent(RoleListComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

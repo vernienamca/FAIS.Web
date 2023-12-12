@@ -144,38 +144,38 @@ export class AppComponent {
           {
             type: 'link',
             label: 'Modules',
-            route: '/apps/aio-table',
+            route: '/apps/module-list',
             icon: 'mat:assignment'
           },
           {
             type: 'link',
             label: 'Roles',
-            route: '/apps/calendar',
-            icon: 'mat:date_range'
+            route: '/apps/role-list',
+            icon: 'mat:bubble_chart'
           },
           {
             type: 'link',
             label: 'Users',
-            route: '/apps/users',
-            icon: 'mat:chat'
+            route: '/apps/user-list',
+            icon: 'mat:group'
           },
           {
             type: 'link',
             label: 'System Settings',
             route: '/apps/system-settings',
-            icon: 'mat:mail',
+            icon: 'mat:settings'
           },
           {
             type: 'link',
             label: 'Notification Templates',
             route: '/apps/editor',
-            icon: 'mat:assessment'
+            icon: 'mat:notification_add'
           },
           {
             type: 'link',
             label: 'Audit Logs',
-            route: '/apps/chat',
-            icon: 'mat:chrome_reader_mode'
+            route: '/coming-soon',
+            icon: 'mat:history'
           }
         ]
       },
@@ -205,13 +205,13 @@ export class AppComponent {
             type: 'link',
             label: 'Pro-forma Entries',
             icon: 'mat:attach_money',
-            route: '/pages/pricing'
+            route: '/coming-soon'
           },
           {
             type: 'link',
             label: 'Cost Centers',
             icon: 'mat:receipt',
-            route: '/pages/invoice'
+            route: '/coming-soon'
           }
         ]
       },

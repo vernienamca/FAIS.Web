@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { PopoverService } from '../../../components/popover/popover.service';
 import { ToolbarUserDropdownComponent } from './toolbar-user-dropdown/toolbar-user-dropdown.component';
 
@@ -8,7 +8,6 @@ import { ToolbarUserDropdownComponent } from './toolbar-user-dropdown/toolbar-us
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ToolbarUserComponent implements OnInit {
-
   dropdownOpen: boolean;
 
   constructor(private popover: PopoverService,

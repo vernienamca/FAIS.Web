@@ -1,76 +1,81 @@
-import { Component, ElementRef, HostBinding, Input } from '@angular/core';
+import { Component, HostBinding, Input, OnDestroy, OnInit } from '@angular/core';
 import { LayoutService } from '../../services/layout.service';
 import { ConfigService } from '../../config/config.service';
-import { map, startWith, switchMap } from 'rxjs/operators';
+import { map, takeUntil } from 'rxjs/operators';
 import { NavigationService } from '../../services/navigation.service';
 import { PopoverService } from '../../components/popover/popover.service';
-import { MegaMenuComponent } from '../../components/mega-menu/mega-menu.component';
-import { Observable, of } from 'rxjs';
+import { Observable, Subject, of } from 'rxjs';
+import { AuthService } from 'src/app/core/services/auth.service';
+import { DatePipe } from '@angular/common';
+import { PortalService } from 'src/app/core/services/portal.service';
 
 @Component({
   selector: 'vex-toolbar',
   templateUrl: './toolbar.component.html',
   styleUrls: ['./toolbar.component.scss']
 })
-export class ToolbarComponent {
-
+export class ToolbarComponent implements OnInit, OnDestroy  {
   @Input() mobileQuery: boolean;
-
-  @Input()
-  @HostBinding('class.shadow-b')
+  @Input() @HostBinding('class.shadow-b')
   hasShadow: boolean;
-
-  navigationItems = this.navigationService.items;
-
-  isHorizontalLayout$: Observable<boolean> = this.configService.config$.pipe(map(config => config.layout === 'horizontal'));
-  isVerticalLayout$: Observable<boolean> = this.configService.config$.pipe(map(config => config.layout === 'vertical'));
-  isNavbarInToolbar$: Observable<boolean> = this.configService.config$.pipe(map(config => config.navbar.position === 'in-toolbar'));
-  isNavbarBelowToolbar$: Observable<boolean> = this.configService.config$.pipe(map(config => config.navbar.position === 'below-toolbar'));
-  userVisible$: Observable<boolean> = this.configService.config$.pipe(map(config => config.toolbar.user.visible));
-
+  navigationItems = this._navigationService.items;
+  isHorizontalLayout$: Observable<boolean> = this._configService.config$.pipe(map(config => config.layout === 'horizontal'));
+  isVerticalLayout$: Observable<boolean> = this._configService.config$.pipe(map(config => config.layout === 'vertical'));
+  isNavbarInToolbar$: Observable<boolean> = this._configService.config$.pipe(map(config => config.navbar.position === 'in-toolbar'));
+  isNavbarBelowToolbar$: Observable<boolean> = this._configService.config$.pipe(map(config => config.navbar.position === 'below-toolbar'));
+  userVisible$: Observable<boolean> = this._configService.config$.pipe(map(config => config.toolbar.user.visible));
   megaMenuOpen$: Observable<boolean> = of(false);
+  user: any;
+  currentDate: string;
 
-  constructor(private layoutService: LayoutService,
-              private configService: ConfigService,
-              private navigationService: NavigationService,
-              private popoverService: PopoverService) { }
+  private _onDestroy$ = new Subject<void>();
+
+  constructor(
+    private _layoutService: LayoutService,
+    private _configService: ConfigService,
+    private _navigationService: NavigationService,
+    private _authService: AuthService,
+    private _portalService: PortalService,
+    private _datePipe: DatePipe
+  ) { 
+    const userId = parseFloat(localStorage.getItem('user_id'));
+    this._portalService.getUser(userId)
+      .pipe(takeUntil(this._onDestroy$))
+      .subscribe(data => {
+        if (!data) {
+          return;
+        }
+        this.user = data;
+      });
+      
+    this.currentDate = `${this._datePipe.transform(new Date(), 'fullDate')} ${this._datePipe.transform(new Date(), 'shortTime')}`;
+  }
+
+  ngOnInit(): void {
+  }
+
+  ngOnDestroy(): void {
+    this._onDestroy$.next();
+    this._onDestroy$.complete();
+  }
 
   openQuickpanel(): void {
-    this.layoutService.openQuickpanel();
+    this._layoutService.openQuickpanel();
   }
 
   openSidenav(): void {
-    this.layoutService.openSidenav();
-  }
-
-  openMegaMenu(origin: ElementRef | HTMLElement): void {
-    this.megaMenuOpen$ = of(
-      this.popoverService.open({
-        content: MegaMenuComponent,
-        origin,
-        offsetY: 12,
-        position: [
-          {
-            originX: 'start',
-            originY: 'bottom',
-            overlayX: 'start',
-            overlayY: 'top'
-          },
-          {
-            originX: 'end',
-            originY: 'bottom',
-            overlayX: 'end',
-            overlayY: 'top',
-          },
-        ]
-      })
-    ).pipe(
-      switchMap(popoverRef => popoverRef.afterClosed$.pipe(map(() => false))),
-      startWith(true),
-    );
+    this._layoutService.openSidenav();
   }
 
   openSearch(): void {
-    this.layoutService.openSearch();
+    this._layoutService.openSearch();
+  }
+
+  showProfile(): void {
+    
+  }
+
+  logout(): void {
+    this._authService.logout();
   }
 }

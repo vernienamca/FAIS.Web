@@ -2,13 +2,12 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { QuicklinkModule } from 'ngx-quicklink';
 import { VexRoutes } from '../../../../@vex/interfaces/vex-route.interface';
-import { AioTableComponent } from './aio-table.component';
-
+import { RoleListComponent } from './role-list/role-list.component';
 
 const routes: VexRoutes = [
   {
     path: '',
-    component: AioTableComponent,
+    component: RoleListComponent,
     data: {
       toolbarShadowEnabled: false
     }
@@ -19,5 +18,5 @@ const routes: VexRoutes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule, QuicklinkModule]
 })
-export class AioTableRoutingModule {
+export class RoleRoutingModule {
 }
