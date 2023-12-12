@@ -1,11 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-import { AioTableRoutingModule } from './aio-table-routing.module';
-import { AioTableComponent } from './aio-table.component';
 import { PageLayoutModule } from '../../../../@vex/components/page-layout/page-layout.module';
 import { BreadcrumbsModule } from '../../../../@vex/components/breadcrumbs/breadcrumbs.module';
-import { CustomerCreateUpdateModule } from './customer-create-update/customer-create-update.module';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
@@ -17,16 +13,16 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
-
+import { UserListComponent } from './user-list/user-list.component';
+import { UserRoutingModule } from './user-routing.module';
 
 @NgModule({
-  declarations: [AioTableComponent],
+  declarations: [UserListComponent],
   imports: [
     CommonModule,
-    AioTableRoutingModule,
+    UserRoutingModule,
     PageLayoutModule,
     BreadcrumbsModule,
-    CustomerCreateUpdateModule,
     MatPaginatorModule,
     MatTableModule,
     MatSortModule,
@@ -34,7 +30,6 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
     MatIconModule,
     MatButtonModule,
     MatMenuModule,
-
     FormsModule,
     MatTooltipModule,
     ReactiveFormsModule,
@@ -42,5 +37,5 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
     MatButtonToggleModule
   ]
 })
-export class AioTableModule {
+export class UserModule {
 }

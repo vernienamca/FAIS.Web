@@ -69,8 +69,16 @@ const routes: VexRoutes = [
             }
           },
           {
-            path: 'aio-table',
-            loadChildren: () => import('./pages/apps/aio-table/aio-table.module').then(m => m.AioTableModule),
+            path: 'module-list',
+            loadChildren: () => import('./pages/apps/module/module.module').then(m => m.ModuleModule),
+          },
+          {
+            path: 'role-list',
+            loadChildren: () => import('./pages/apps/role/role.module').then(m => m.RoleModule),
+          },
+          {
+            path: 'user-list',
+            loadChildren: () => import('./pages/apps/user/user.module').then(m => m.UserModule),
           },
           {
             path: 'help-center',

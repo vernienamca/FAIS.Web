@@ -9,7 +9,6 @@ import { TableColumn } from '../../../../@vex/interfaces/table-column.interface'
   styleUrls: ['./dashboard-analytics.component.scss']
 })
 export class DashboardAnalyticsComponent {
-
   tableColumns: TableColumn<Order>[] = [
     {
       label: '',
@@ -69,4 +68,6 @@ export class DashboardAnalyticsComponent {
     colors: ['#ff9800']
   });
 
+  ngOnInit(): void {
+  }
 }

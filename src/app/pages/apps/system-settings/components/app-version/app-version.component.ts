@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
 export interface PeriodicElement {
   versionNo: number;
@@ -18,9 +17,6 @@ const ELEMENT_DATA: PeriodicElement[] = [
   styleUrls: ['./app-version.component.scss']
 })
 export class AppVersionComponent {
-
-  plusIcon = faPlus;
-
   displayedColumns: string[] = ['version', 'date', 'amendment'];
   dataSource = ELEMENT_DATA;
 
