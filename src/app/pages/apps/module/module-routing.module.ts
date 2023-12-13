@@ -3,11 +3,19 @@ import { RouterModule } from '@angular/router';
 import { QuicklinkModule } from 'ngx-quicklink';
 import { VexRoutes } from '../../../../@vex/interfaces/vex-route.interface';
 import { ModuleListComponent } from './module-list/module-list.component';
+import { ModuleComponent } from './module.component';
 
 const routes: VexRoutes = [
   {
     path: '',
     component: ModuleListComponent,
+    data: {
+      toolbarShadowEnabled: false
+    }
+  },
+  {
+    path: ':edit-module',
+    component: ModuleComponent,
     data: {
       toolbarShadowEnabled: false
     }

@@ -15,9 +15,14 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { ModuleListComponent } from './module-list/module-list.component';
 import { ModuleRoutingModule } from './module-routing.module';
+import { ModuleComponent } from './module.component';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 @NgModule({
-  declarations: [ModuleListComponent],
+  declarations: [ModuleListComponent, ModuleComponent],
   imports: [
     CommonModule,
     ModuleRoutingModule,
@@ -34,7 +39,11 @@ import { ModuleRoutingModule } from './module-routing.module';
     MatTooltipModule,
     ReactiveFormsModule,
     MatSelectModule,
-    MatButtonToggleModule
+    MatButtonToggleModule,
+    MatFormFieldModule,
+    MatSlideToggleModule,
+    MatInputModule,
+    FlexLayoutModule
   ]
 })
 export class ModuleModule {
