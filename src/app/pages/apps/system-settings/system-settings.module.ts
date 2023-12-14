@@ -8,6 +8,8 @@ import {MatGridListModule} from '@angular/material/grid-list';
 import { AppVersionComponent } from './components/app-version/app-version.component';
 import { MatTableModule } from '@angular/material/table';
 import { ReactiveFormsModule } from '@angular/forms';
+import { MatIconModule } from '@angular/material/icon';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 @NgModule({
   declarations: [
@@ -20,7 +22,9 @@ import { ReactiveFormsModule } from '@angular/forms';
     MatTabsModule,
     MatGridListModule,
     MatTableModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatIconModule,
+    FlexLayoutModule
   ]
 })
 export class SystemSettingsModule { }

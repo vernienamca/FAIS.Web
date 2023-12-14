@@ -66,7 +66,7 @@ export class SystemSettingsComponent {
     enfPass: this.enfPassOpt
   });
 
-  save(){
+  onSubmit() : void{
     console.log('form value',this.settingsForm.value);
     
   }
