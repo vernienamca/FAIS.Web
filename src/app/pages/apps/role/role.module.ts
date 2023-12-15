@@ -15,9 +15,16 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { RoleListComponent } from './role-list/role-list.component';
 import { RoleRoutingModule } from './role-routing.module';
+import { RoleComponent } from './role.component';
+import { ComponentsAutocompleteRoutingModule } from '../../ui/components/components-autocomplete/components-autocomplete-routing.module';
+import { ComponentsOverviewAutocompleteModule } from '../../ui/components/components-overview/components/components-overview-autocomplete/components-overview-autocomplete.module';
+import { SecondaryToolbarModule } from 'src/@vex/components/secondary-toolbar/secondary-toolbar.module';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatInputModule } from '@angular/material/input';
 
 @NgModule({
-  declarations: [RoleListComponent],
+  declarations: [RoleListComponent, RoleComponent],
   imports: [
     CommonModule,
     RoleRoutingModule,
@@ -34,7 +41,13 @@ import { RoleRoutingModule } from './role-routing.module';
     MatTooltipModule,
     ReactiveFormsModule,
     MatSelectModule,
-    MatButtonToggleModule
+    MatButtonToggleModule,
+    ComponentsAutocompleteRoutingModule,
+    ComponentsOverviewAutocompleteModule,
+    SecondaryToolbarModule,
+    MatTabsModule,
+    MatAutocompleteModule,
+    MatInputModule
   ]
 })
 export class RoleModule {

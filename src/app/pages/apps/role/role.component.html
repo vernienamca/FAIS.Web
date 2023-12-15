@@ -1,0 +1,32 @@
+<vex-page-layout @stagger>
+  <vex-secondary-toolbar>
+    <vex-breadcrumbs [crumbs]="['System Management', 'Roles', 'Edit Role']"></vex-breadcrumbs>
+  </vex-secondary-toolbar>
+  
+  <vex-page-layout-content class="container">
+    <div class="card flex flex-col sm:flex-row">
+      <div class="border-l flex-auto">
+        <div class="bg-base border-l-3 p-4 mt-3 flex flex-col sm:flex-row gap-3 items-center">
+          <button class="rounded-full" class="!bg-green !text-white" mat-raised-button type="button">
+            <mat-icon class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" svgIcon="mat:save_as"></mat-icon>
+            <span>Save</span>
+          </button>
+          <button class="rounded-full" color="primary" mat-raised-button type="button">
+            <mat-icon class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" svgIcon="mat:close"></mat-icon>
+            <span>Close</span>
+          </button>
+        </div>
+        <div class="px-6 py-4 flex flex-col">
+          <mat-form-field appearance="fill" class="max-w-[60%]">
+            <mat-label>Role Name</mat-label>
+            <input matInput required>
+          </mat-form-field>
+          <mat-form-field appearance="fill" class="max-w-[60%]">
+            <mat-label>Description</mat-label>
+            <textarea matInput required></textarea>
+          </mat-form-field>
+        </div>
+      </div>
+    </div> 
+  </vex-page-layout-content>
+</vex-page-layout>

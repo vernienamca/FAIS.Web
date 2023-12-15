@@ -34,28 +34,19 @@
       </div>
 
       <table @stagger [dataSource]="dataSource" class="w-full" mat-table matSort>
-        <!--- Note that these columns can be defined in any order.
-              The actual rendered columns are set as a property on the row definition" -->
-
-        <!-- Checkbox Column -->
         <ng-container matColumnDef="checkbox">
           <th *matHeaderCellDef mat-header-cell>
-            <mat-checkbox (change)="$event ? masterToggle() : null"
-                          [checked]="selection.hasValue() && isAllSelected()"
-                          [indeterminate]="selection.hasValue() && !isAllSelected()"
-                          color="primary">
+            <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()" 
+              [indeterminate]="selection.hasValue() && !isAllSelected()" color="primary">
             </mat-checkbox>
           </th>
           <td *matCellDef="let row" class="w-4" mat-cell>
-            <mat-checkbox (change)="$event ? selection.toggle(row) : null"
-                          (click)="$event.stopPropagation()"
-                          [checked]="selection.isSelected(row)"
-                          color="primary">
+            <mat-checkbox (change)="$event ? selection.toggle(row) : null" (click)="$event.stopPropagation()" 
+              [checked]="selection.isSelected(row)" color="primary">
             </mat-checkbox>
           </td>
         </ng-container>
 
-        <!-- Image Column -->
         <ng-container matColumnDef="image">
           <th *matHeaderCellDef mat-header-cell></th>
           <td *matCellDef="let row" class="w-8 min-w-8 pr-0" mat-cell>
@@ -63,7 +54,6 @@
           </td>
         </ng-container>
 
-        <!-- Text Columns -->
         <ng-container *ngFor="let column of columns; trackBy: trackByProperty">
           <ng-container *ngIf="column.type === 'text'" [matColumnDef]="column.property">
             <th *matHeaderCellDef class="uppercase" mat-header-cell mat-sort-header> {{ column.label }}</th>
@@ -71,23 +61,19 @@
           </ng-container>
         </ng-container>
 
-        <!-- Contact Column -->
         <ng-container matColumnDef="contact">
           <th *matHeaderCellDef mat-header-cell mat-sort-header></th>
           <td *matCellDef="let row" mat-cell>
             <div class="flex">
               <a (click)="$event.stopPropagation()"
-                 class="w-8 h-8 p-0 leading-none flex items-center justify-center hover:bg-hover text-primary bg-primary/10"
-                 mat-icon-button>
+                class="w-8 h-8 p-0 leading-none flex items-center justify-center hover:bg-hover text-primary bg-primary/10" mat-icon-button>
                 <mat-icon class="icon-sm" svgIcon="mat:phone"></mat-icon>
               </a>
-
               <a (click)="$event.stopPropagation()"
                  class="w-8 h-8 p-0 leading-none flex items-center justify-center ml-1 hover:bg-hover text-teal bg-teal/10"
                  mat-icon-button>
                 <mat-icon class="icon-sm" svgIcon="mat:mail"></mat-icon>
               </a>
-
               <a (click)="$event.stopPropagation()"
                  class="w-8 h-8 p-0 leading-none flex items-center justify-center ml-1 hover:bg-hover text-green bg-green/10"
                  mat-icon-button>
@@ -118,47 +104,35 @@
         <ng-container matColumnDef="actions">
           <th *matHeaderCellDef mat-header-cell mat-sort-header>ACTIONS</th>
           <td *matCellDef="let row" class="w-10 text-secondary" mat-cell>
-            <button (click)="$event.stopPropagation()"
-                    [matMenuTriggerData]="{ customer: row }"
-                    [matMenuTriggerFor]="actionsMenu"
-                    mat-icon-button
-                    type="button">
+            <button (click)="$event.stopPropagation()" [matMenuTriggerData]="{ data: row }" [matMenuTriggerFor]="actionsMenu" 
+              mat-icon-button type="button">
               <mat-icon svgIcon="mat:more_horiz"></mat-icon>
             </button>
           </td>
         </ng-container>
-
         <tr *matHeaderRowDef="visibleColumns" mat-header-row></tr>
-        <tr (click)="updateCustomer(row)"
-            *matRowDef="let row; columns: visibleColumns;"
-            @fadeInUp
-            class="hover:bg-hover trans-ease-out cursor-pointer"
-            mat-row></tr>
+        <tr (click)="view(roles)" *matRowDef="let row; columns: visibleColumns;" @fadeInUp 
+          class="hover:bg-hover trans-ease-out cursor-pointer" mat-row></tr>
       </table>
-
       <mat-paginator [pageSizeOptions]="pageSizeOptions" [pageSize]="pageSize" class="sticky left-0"></mat-paginator>
     </div>
-
   </vex-page-layout-content>
-
 </vex-page-layout>
 
 <mat-menu #columnFilterMenu="matMenu" xPosition="before" yPosition="below">
-  <button (click)="toggleColumnVisibility(column, $event)" *ngFor="let column of columns"
-          class="mat-menu-item block">
+  <button (click)="toggleColumnVisibility(column, $event)" *ngFor="let column of columns" class="mat-menu-item block">
     <mat-checkbox (click)="$event.stopPropagation()" [(ngModel)]="column.visible" color="primary">
       {{ column.label }}
     </mat-checkbox>
   </button>
 </mat-menu>
-
 <mat-menu #actionsMenu="matMenu" xPosition="before" yPosition="below">
-  <ng-template let-customer="customer" matMenuContent>
-    <button (click)="updateCustomer(customer)" mat-menu-item>
+  <ng-template let-data="data" matMenuContent>
+    <button (click)="view(data)" mat-menu-item>
       <mat-icon svgIcon="mat:edit"></mat-icon>
       <span>Edit</span>
     </button>
-    <button (click)="deleteCustomer(customer)" mat-menu-item>
+    <button (click)="deleteCustomer(data)" mat-menu-item>
       <mat-icon svgIcon="mat:delete"></mat-icon>
       <span>Delete</span>
     </button>
