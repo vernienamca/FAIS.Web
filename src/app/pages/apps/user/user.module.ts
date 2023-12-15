@@ -15,9 +15,9 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { UserListComponent } from './user-list/user-list.component';
 import { UserRoutingModule } from './user-routing.module';
-
+import { ProfileComponent } from './profile/profile.component';
 @NgModule({
-  declarations: [UserListComponent],
+  declarations: [UserListComponent,ProfileComponent],
   imports: [
     CommonModule,
     UserRoutingModule,
