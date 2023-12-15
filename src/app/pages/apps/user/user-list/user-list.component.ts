@@ -18,6 +18,9 @@ import { PortalService } from 'src/app/core/services/portal.service';
 import { IUser } from 'src/app/core/models/user';
 import { UserStatusEnum } from 'src/app/core/enums/user-status.enum';
 
+
+import { Router } from '@angular/router';
+
 @UntilDestroy()
 @Component({
   selector: 'app-user-list',
@@ -68,6 +71,7 @@ export class UserListComponent implements OnInit, OnDestroy, AfterViewInit {
   constructor(
     private _dialog: MatDialog,
     private _portalService: PortalService,
+    private router: Router
   ) {
   }
 
@@ -110,6 +114,7 @@ export class UserListComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   createCustomer() {
+    this.router.navigate(['apps/user-edit']);
   }
 
   updateCustomer(customer: any) {
