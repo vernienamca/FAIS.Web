@@ -92,6 +92,16 @@ const routes: VexRoutes = [
             path: 'editor',
             loadChildren: () => import('./pages/apps/editor/editor.module').then(m => m.EditorModule),
           },
+          {
+            path: 'profile',
+            // loadChildren: () => import('').then(m => m.),
+            children: [
+              {
+                path: 'change-password',
+                loadChildren: () => import('./pages/pages/auth/change-password/change-password.module').then(m => m.ChangePasswordModule),
+              }
+            ]
+          },
         ]
       },
       {
