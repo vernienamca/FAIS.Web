@@ -19,7 +19,10 @@
     <input type="text" id="amend" placeholder="Amendment">    
   </div>
   <div class="add-version">
-    <button class="add-version-btn">Add Version</button>
+    <button class="add-version-btn">
+      <mat-icon svgIcon="mat:add"></mat-icon>
+      <span>Add Version</span>
+    </button>
   </div>
   <div class="v-table">
     <table mat-table [dataSource]="dataSource" class="mat-elevation-z0">

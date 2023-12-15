@@ -46,10 +46,12 @@
 }
 
 .add-version-btn{
-  padding: 8px;
-  background: green;
+  padding: 3px 15px;
+  background: #009246;
   color: #fff;
   border-radius: 5px;
+  display: flex;
+  align-items: center;
 }
 
 .v-table{
@@ -61,7 +63,7 @@
 }
 
 table tr:nth-child(even) {
-  background: #F1F1F1;
+  background: #F5F4F4;
 }
 
 tr td{

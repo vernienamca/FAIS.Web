@@ -1,16 +1,22 @@
-<div class="breadcrumb d-flex">
+<div class="breadcrumb">
     <div class="row">
         <div class="col">
-            <span>System Management ></span>
-            <span>System Settings ></span>
+            <span>System Management > </span>
+            <span>System Settings > </span>
             <span>Edit System Settings</span>
         </div>
     </div>
 
     <div class="options">
-        <div class="btn-opt m-5">
-            <button class="save" (click)="save()">Save</button>
-            <button class="close">Close</button>
+        <div class="btn-opt m-5" fxLayout="row">
+            <button class="save" form="settingsForm">
+              <mat-icon svgIcon="mat:folder"></mat-icon>
+              <span>Save</span>
+            </button>
+            <button class="close">
+              <mat-icon svgIcon="mat:close"></mat-icon>
+              <span>Close</span>
+            </button>
         </div>
     </div>
 </div>
