@@ -17,6 +17,12 @@ const routes: VexRoutes = [
     path: 'forgot-password',
     loadChildren: () => import('./pages/pages/auth/forgot-password/forgot-password.module').then(m => m.ForgotPasswordModule),
   },
+
+  {
+    path: 'reset-password',
+    loadChildren: () => import('./pages/pages/auth/reset-password/reset-password.module').then(m => m.ResetPasswordModule),
+  },
+
   {
     path: 'coming-soon',
     loadChildren: () => import('./pages/pages/coming-soon/coming-soon.module').then(m => m.ComingSoonModule),
