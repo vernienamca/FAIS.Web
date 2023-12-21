@@ -4,6 +4,7 @@ import { Observable } from "rxjs";
 import { IModule } from "../models/module";
 import { IRole } from "../models/role";
 import { IUser } from "../models/user";
+import { IAuditLogs } from "../models/audit-logs";
 
 export class PortalApi extends BaseApi {
     private _apiUrl = `${environment.apiGatewayBaseUrl}/api`;
@@ -22,5 +23,9 @@ export class PortalApi extends BaseApi {
 
     getUser(id: number) {
         return this.get<any>(`${this._apiUrl}/user/getbyid?id=${id}`, {});
+    }
+
+    getAuditLogs(): Observable<IAuditLogs[]> {
+        return this.get<IAuditLogs>(`${this._apiUrl}/auditlog/get`);
     }
 }

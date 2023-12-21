@@ -174,7 +174,7 @@ export class AppComponent {
           {
             type: 'link',
             label: 'Audit Logs',
-            route: '/coming-soon',
+            route: '/apps/audit-logs-list',
             icon: 'mat:history'
           }
         ]

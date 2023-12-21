@@ -82,16 +82,14 @@ const routes: VexRoutes = [
             path: 'role-list',
             loadChildren: () => import('./pages/apps/role/role.module').then(m => m.RoleModule),
           },
-
-
-
+           {
+            path: 'audit-logs-list',
+            loadChildren: () => import('./pages/apps/audit-logs/audit-logs.module').then(m => m.AuditLogsModule),
+          },
           {
             path: 'user-edit',
             loadChildren: () => import('./pages/apps/User-Edit/User-Edit.module').then(m => m.UserEditModule),
           },
-
-
-
           {
             path: 'user-list',
             loadChildren: () => import('./pages/apps/user/user.module').then(m => m.UserModule),
