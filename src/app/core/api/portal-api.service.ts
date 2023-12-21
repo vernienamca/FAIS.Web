@@ -6,7 +6,7 @@ import { IRole } from "../models/role";
 import { IUser } from "../models/user";
 
 export class PortalApi extends BaseApi {
-    private _apiUrl = `${environment.apiGatewayBaseUrl}/api`;
+    private _apiUrl = `${environment.apiGatewayBaseUrl}`;
 
     getModules(): Observable<IModule[]> {
         return this.get<IModule>(`${this._apiUrl}/module/get`);
