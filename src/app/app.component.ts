@@ -150,7 +150,7 @@ export class AppComponent {
           {
             type: 'link',
             label: 'Roles',
-            route: '/apps/role-list',
+            route: '/apps/roles',
             icon: 'mat:bubble_chart'
           },
           {

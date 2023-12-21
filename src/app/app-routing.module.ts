@@ -79,7 +79,7 @@ const routes: VexRoutes = [
             loadChildren: () => import('./pages/apps/module/module.module').then(m => m.ModuleModule),
           },
           {
-            path: 'role-list',
+            path: 'roles',
             loadChildren: () => import('./pages/apps/role/role.module').then(m => m.RoleModule),
           },
 
