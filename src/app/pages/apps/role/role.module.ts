@@ -22,9 +22,12 @@ import { SecondaryToolbarModule } from 'src/@vex/components/secondary-toolbar/se
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatInputModule } from '@angular/material/input';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { AddModuleComponent } from './add-module/add-module.component';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
-  declarations: [RoleListComponent, RoleComponent],
+  declarations: [RoleListComponent, RoleComponent, AddModuleComponent],
   imports: [
     CommonModule,
     RoleRoutingModule,
@@ -47,7 +50,9 @@ import { MatInputModule } from '@angular/material/input';
     SecondaryToolbarModule,
     MatTabsModule,
     MatAutocompleteModule,
-    MatInputModule
+    MatInputModule,
+    MatSlideToggleModule,
+    MatDialogModule
   ]
 })
 export class RoleModule {
