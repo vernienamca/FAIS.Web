@@ -19,9 +19,11 @@ const routes: VexRoutes = [
   },
 
   {
-    path: 'reset-password',
+    path: 'reset-password/:tempKey',
     loadChildren: () => import('./pages/pages/auth/reset-password/reset-password.module').then(m => m.ResetPasswordModule),
   },
+
+  
 
   {
     path: 'coming-soon',

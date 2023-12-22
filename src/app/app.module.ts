@@ -13,6 +13,8 @@ import { PortalApi } from './core/api/portal-api.service';
 import { PortalService } from './core/services/portal.service';
 import { TokenInterceptorService } from './core/interceptors/token-interceptor.service';
 import { DatePipe } from '@angular/common';
+import { SecurityService } from './core/services/security.service';
+import { securityApi } from './core/api/security-api.service';
 
 @NgModule({
   declarations: [AppComponent, ForgotPasswordComponent],
@@ -35,7 +37,9 @@ import { DatePipe } from '@angular/common';
     AuthApi, 
     PortalApi, 
     AuthService, 
-    PortalService
+    PortalService,
+    SecurityService,
+    securityApi
   ],
   bootstrap: [AppComponent]
 })

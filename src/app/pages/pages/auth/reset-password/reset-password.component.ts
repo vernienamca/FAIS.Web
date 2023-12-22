@@ -4,11 +4,11 @@ import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
-import { HttpClient } from '@angular/common/http';
+
 
 
 import { ActivatedRoute } from '@angular/router';
-import { catchError } from 'rxjs';
+import { SecurityService } from 'src/app/core/services/security.service';
 
 @Component({
   selector: 'vex-reset-password',
@@ -28,100 +28,82 @@ export class ResetPasswordComponent implements OnInit {
   visible = false;
   success = false; 
   resetEmail: string | null = null; 
+  tempKey: string;
 
   constructor(
     private router: Router,
     private fb: FormBuilder,
     private cd: ChangeDetectorRef,
     private snackbar: MatSnackBar,
-    //injections for temp db
-    // private tempDbService: TempDbService,
+  
     private route: ActivatedRoute,
-    // private http: HttpClient
+    private _securityService: SecurityService
+    
   ) {}
 
 
 
-  send() {
 
-    // const resetEmail = this.resetEmail;
+  ngOnInit(): void {
+    this.tempKey = this.route.snapshot.params['tempKey'];
+    console.log('tempKey:', this.tempKey);
 
-    // const email = this.form.get('email').value;
-    // const newPassword = this.form.get('password').value;
-
-    // // Fetch the user based on reset email
-    // const user = this.tempDbService.getUserByEmail(resetEmail);
-    // const apiUrl = 'https://localhost:7194/api/Email/update-user';
-  const resetEmail = this.resetEmail;
-  const newPassword = this.form.get('password').value;
-
-  console.log(resetEmail)
-
-
-  const requestBody = {
-    newEmail: resetEmail,
-    newPassword: newPassword
-  };
-  
-  console.log('Data to send:', requestBody);
-
-  // this.http.post(apiUrl, requestBody)
-  // .pipe(
-  //   catchError(error => {
-  //     console.error('Error updating password', error);
-
-  //     // Check if the error has a response with details
-  //     if (error.error && error.error.errors) {
-  //       console.error('Validation errors:', error.error.errors);
-  //     }
-
-  //     return [];
-  //   })
-  // )
-  // .subscribe(() => {
-    if (this.passwordRequirements() && this.passwordsMatch()) {
-      this.success = true;
-    } else {
-      // Show an error message to the user
-      this.snackbar.open('Password requirements are not satisfied. Please check and try again.', 'Close', {
-        duration: 5000,
-      });
+    if (!this.tempKey) {
+        console.error('tempKey is undefined or null. Handle this case appropriately.');
+   
     }
-  // });
+
+    this.form = this.fb.group({
+        password: [
+            '',
+            [Validators.required, Validators.minLength(8)],
+        ],
+        confirmPassword: [
+            '',
+            [Validators.required, Validators.minLength(8)],
+        ]
+    });
+
+    // Listen for changes in the password field
+    this.form.get('password').valueChanges.subscribe(() => {
+        this.cd.markForCheck(); // Trigger change detection
+    });
 }
+
   
+  
+send() {
+ 
+  if (this.form.get('password').valid && this.form.get('confirmPassword').valid && this.passwordsMatch()) {
+    const newPassword = this.form.get('password').value;
 
- ngOnInit() {
+    // Call the ResetPassword method from SecurityService
+    this._securityService.ResetPassword(newPassword, this.tempKey).subscribe({
+      next: data => {
 
-
-  this.resetEmail = this.route.snapshot.queryParamMap.get('email'); 
-
-console.log('resetEmail:',this.resetEmail)
-
-  this.form = this.fb.group({
-    email: ['', Validators.required],
-    password: [
-      '',
-      [Validators.required, Validators.minLength(8)],
-    ],
-    confirmPassword: [
-      '',
-      [Validators.required, Validators.minLength(8)],
-    ]
-
-  });
-
-  // Listen for changes in the password field
-  this.form.get('password').valueChanges.subscribe(() => {
-    this.cd.markForCheck(); // Trigger change detection
-  });
+    
+        console.log('Password reset successful:', data);
+       
+      
+      },
+    });
+  } else {
+    this.snackbar.open('Password requirements are not satisfied. Please check and try again.', 'Close', {
+      duration: 5000,
+    });
+  }
 }
-  
+
+    
+
 
 passwordsMatch(): boolean {
   const password = this.form.get('password').value;
   const confirmPassword = this.form.get('confirmPassword').value;
-
+  this.success = true;
+  setTimeout(() => {
+    this.router.navigate(['/login']);
+  }, 5000);
   return password === confirmPassword;
 }
 
