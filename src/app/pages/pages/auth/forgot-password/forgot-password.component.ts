@@ -1,17 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,OnDestroy } from '@angular/core';
 import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { fadeInUp400ms } from '../../../../../@vex/animations/fade-in-up.animation';
 import {FormGroup,FormBuilder} from '@angular/forms';
 //left arrow 
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
-import { HttpClient } from '@angular/common/http';
+import { SecurityService } from 'src/app/core/services/security.service';
 
-
-import { catchError } from 'rxjs/operators';
-
-// //temp db service
-// import { TempDbService } from 'src/services/temp-db.service'; // Import your TempDbService
+import {  Subject,takeUntil } from 'rxjs';
 
 @Component({
   selector: 'vex-forgot-password',
@@ -21,7 +17,7 @@ import { catchError } from 'rxjs/operators';
 })
 export class ForgotPasswordComponent implements OnInit {
 
-
+  private _onDestroy$ = new Subject<void>();
 
 //captcha form group
 protected aFormGroup: FormGroup;
@@ -47,19 +43,30 @@ public postJsonValue: any;
     private router: Router,
     private fb: UntypedFormBuilder,
     private formBuilder: FormBuilder,
-    // private http: HttpClient,
-//temp db injection
-    // private tempDbService: TempDbService 
+    private _securityService: SecurityService,
+  
+
   ) { }
 
-  ngOnInit() {
+  ngOnInit():void {
 
     //captcha
 this.aFormGroup = this.formBuilder.group({
   recaptcha:['', Validators.required]
+
 })
 
+
+
   } 
+
+  ngOnDestroy(): void {
+    this._onDestroy$.next();
+    this._onDestroy$.complete();
+  }
+
+  
+
   
 //captcha site key make sure to change this according to your domain (I used Localhost login on transco gmail)
 
@@ -73,39 +80,31 @@ this.aFormGroup = this.formBuilder.group({
     if (this.form.invalid) {
       return;
     }
-  
-  
-    const email = this.form.get('email').value;
+    this.imageUrl = 'assets/img/icons/forgot-password-icons/reset-password-sent.svg';
+    this.passwordSent = true;
+    this.sendEmail();
+ 
+}
 
- // Check if the email exists in the JSON data
-//  const user = this.tempDbService.getUserByEmail(email);
-//  if (!user) {
-//   console.error('Email not found in the database');
-//   return;
-//  }
+sendEmail() {
+  this._securityService.sendEmail(this.form.value.email)
+    .pipe(takeUntil(this._onDestroy$))
+    .subscribe({
+      next: (data) => {
+        if (!data) {
+          return;
+        }
+        // Check additional conditions based on the response, if needed
 
+        // Handle success, e.g., update UI, show a success message, etc.
+     
 
-
-  //  // API ENDPOINT
-  //  const apiUrl = 'https://localhost:7194/api/Email/send-email';
-  //   const emailData = { to: email };
-  
-  //   console.log('Email to send:', emailData);
-  
-  //   // http request
-  //   this.http
-  //     .post(apiUrl, emailData)
-  //     .pipe(
-  //       catchError((error) => {
-  //         console.error('Error sending email:', error);
-        
-  //         return [];
-  //       })
-  //     )
-  //     .subscribe(() => {
-        
-        this.imageUrl = 'assets/img/icons/forgot-password-icons/reset-password-sent.svg';
-        this.passwordSent = true;
-      // });
-  }
+    
+      },
+      error: (error) => {
+        // Handle error, e.g., show an error message, log the error, etc.
+        console.error('Error sending email:', error);
+      }
+    });
+}
 }
