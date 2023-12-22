@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 
 @Injectable()
 export class AuthApi extends BaseApi {
-  private _apiUrl = `${environment.apiGatewayBaseUrl}/api`;
+  private _apiUrl = `${environment.apiGatewayBaseUrl}`;
 
   authenticate(username: string, password: string): Observable<any> {
     return this.get<any>(`${this._apiUrl}/auth/authenticate?username=${username}&password=${password}`);

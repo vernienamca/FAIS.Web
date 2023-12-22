@@ -21,7 +21,6 @@ import { DatePipe } from '@angular/common';
     AppRoutingModule,
     BrowserAnimationsModule,
     HttpClientModule,
-    // Vex
     VexModule,
     CustomLayoutModule
   ],
