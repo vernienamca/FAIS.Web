@@ -16,21 +16,13 @@ import {  Subject,takeUntil } from 'rxjs';
   animations: [fadeInUp400ms]
 })
 export class ForgotPasswordComponent implements OnInit {
-
+  icon = faArrowLeft;
+  passwordSent = false;
+  buttonText = 'SEND RECOVERY LINK';
+  imageUrl = 'assets/img/icons/forgot-password-icons/Vector.png';
+  
   private _onDestroy$ = new Subject<void>();
-
-//captcha form group
-protected aFormGroup: FormGroup;
-
-
-//left arrow 
-icon = faArrowLeft;
-passwordSent = false;
-buttonText = 'SEND RECOVERY LINK';
-
-//Image URLS 
-imageUrl = 'assets/img/icons/forgot-password-icons/Vector.png';
-
+  protected aFormGroup: FormGroup;
 
   form = this.fb.group({
     email: [null, Validators.required]
@@ -44,8 +36,7 @@ public postJsonValue: any;
     private fb: UntypedFormBuilder,
     private formBuilder: FormBuilder,
     private _securityService: SecurityService,
-  
-
+    private _router: Router
   ) { }
 
   ngOnInit():void {
@@ -86,7 +77,7 @@ this.aFormGroup = this.formBuilder.group({
  
 }
 
-sendEmail() {
+sendEmail(): void {
   this._securityService.sendEmail(this.form.value.email)
     .pipe(takeUntil(this._onDestroy$))
     .subscribe({
@@ -106,5 +97,9 @@ sendEmail() {
         console.error('Error sending email:', error);
       }
     });
-}
+  }
+
+  redirectToLogin(): void {
+    this._router.navigate(['login']);
+  }
 }
