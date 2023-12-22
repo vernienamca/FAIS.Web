@@ -17,6 +17,7 @@ import { MatSelectChange } from '@angular/material/select';
 import { PortalService } from 'src/app/core/services/portal.service';
 import { IModule } from 'src/app/core/models/module';
 import { IRole } from 'src/app/core/models/role';
+import { Router } from '@angular/router';
 
 @UntilDestroy()
 @Component({
@@ -42,7 +43,7 @@ export class RoleListComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input()
   columns: TableColumn<IRole>[] = [
     { label: 'Role Name', property: 'name', type: 'text', visible: true, cssClasses: ['font-medium'] },
-    { label: 'Description', property: 'description', type: 'text', visible: true, cssClasses: ['font-medium'] },
+    { label: 'Description', property: 'description', type: 'text', visible: true },
     { label: 'Modified By', property: 'updatedBy', type: 'text', visible: true },
     { label: 'Date Modified', property: 'updatedAt', type: 'text', visible: true },
     { label: 'Actions', property: 'actions', type: 'button', visible: true }
@@ -51,7 +52,7 @@ export class RoleListComponent implements OnInit, OnDestroy, AfterViewInit {
   layoutCtrl = new UntypedFormControl('boxed');
   subject$: ReplaySubject<IRole[]> = new ReplaySubject<IRole[]>(1);
   data$: Observable<IRole[]> = this.subject$.asObservable();
-  customers: IRole[];
+  roles: IRole[];
   totalCount: number = 0;
   pageSize = 10;
   pageSizeOptions: number[] = [5, 10, 20, 50];
@@ -65,6 +66,7 @@ export class RoleListComponent implements OnInit, OnDestroy, AfterViewInit {
   constructor(
     private _dialog: MatDialog,
     private _portalService: PortalService,
+    private _router: Router,
   ) {
   }
 
@@ -87,7 +89,7 @@ export class RoleListComponent implements OnInit, OnDestroy, AfterViewInit {
       .pipe(filter<IRole[]>(Boolean))
       .subscribe(customers => {
         this.totalCount = customers.length;
-        this.customers = customers;
+        this.roles = customers;
         this.dataSource.data = customers;
       });
 
@@ -122,23 +124,8 @@ export class RoleListComponent implements OnInit, OnDestroy, AfterViewInit {
     // });
   }
 
-  updateCustomer(customer: any) {
-    // this._dialog.open(CustomerCreateUpdateComponent, {
-    //   data: customer
-    // }).afterClosed().subscribe(updatedCustomer => {
-    //   /**
-    //    * Customer is the updated customer (if the user pressed Save - otherwise it's null)
-    //    */
-    //   if (updatedCustomer) {
-    //     /**
-    //      * Here we are updating our local array.
-    //      * You would probably make an HTTP request here.
-    //      */
-    //     const index = this.customers.findIndex((existingCustomer) => existingCustomer.id === updatedCustomer.id);
-    //     this.customers[index] = new Customer(updatedCustomer);
-    //     this.subject$.next(this.customers);
-    //   }
-    // });
+  view(data: any) {
+    this._router.navigate([`apps/roles/${data.id}`]);
   }
 
   deleteCustomer(customer: any) {
@@ -193,8 +180,8 @@ export class RoleListComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   onLabelChange(change: MatSelectChange, row: IModule) {
-    const index = this.customers.findIndex(c => c === row);
+    const index = this.roles.findIndex(c => c === row);
     //this.customers[index].labels = change.value;
-    this.subject$.next(this.customers);
+    this.subject$.next(this.roles);
   }
 }

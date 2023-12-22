@@ -23,7 +23,6 @@ import { securityApi } from './core/api/security-api.service';
     AppRoutingModule,
     BrowserAnimationsModule,
     HttpClientModule,
-    // Vex
     VexModule,
     CustomLayoutModule
   ],
