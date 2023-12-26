@@ -1,5 +1,5 @@
 export const environment = {
   production: false,
-  apiGatewayBaseUrl: 'https://access-dev.theretailscore.com',
+  apiGatewayBaseUrl: 'http://localhost:8081',
   clientSecretKey: '7D0uTJWdm3+jDfgjbGcC4w=='
 };
