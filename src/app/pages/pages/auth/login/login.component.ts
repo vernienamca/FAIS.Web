@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -58,7 +58,7 @@ export class LoginComponent implements OnInit {
         }
         localStorage.setItem('user_id', data.userId);
         localStorage.setItem('access_token', data.accessToken);
-        this.router.navigate(['/']);
+        this.router.navigate(['/apps/help-center/getting-started']);
       });
   }
 

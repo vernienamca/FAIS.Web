@@ -2,13 +2,14 @@ import { Component, Input, OnInit } from '@angular/core';
 import { NavigationService } from '../../services/navigation.service';
 import { LayoutService } from '../../services/layout.service';
 import { ConfigService } from '../../config/config.service';
-import { map, startWith, switchMap } from 'rxjs/operators';
-import { NavigationLink } from '../../interfaces/navigation-item.interface';
+import { map, startWith, switchMap, takeUntil } from 'rxjs/operators';
+import { NavigationItem, NavigationLink } from '../../interfaces/navigation-item.interface';
 import { PopoverService } from '../../components/popover/popover.service';
-import { Observable, of } from 'rxjs';
+import { Observable, Subject, of } from 'rxjs';
 import { UserMenuComponent } from '../../components/user-menu/user-menu.component';
 import { MatDialog } from '@angular/material/dialog';
 import { SearchModalComponent } from '../../components/search-modal/search-modal.component';
+import { SecurityService } from 'src/app/core/services/security.service';
 
 @Component({
   selector: 'vex-sidenav',
@@ -16,26 +17,36 @@ import { SearchModalComponent } from '../../components/search-modal/search-modal
   styleUrls: ['./sidenav.component.scss']
 })
 export class SidenavComponent implements OnInit {
-
   @Input() collapsed: boolean;
+
   collapsedOpen$ = this.layoutService.sidenavCollapsedOpen$;
   title$ = this.configService.config$.pipe(map(config => config.sidenav.title));
   imageUrl$ = this.configService.config$.pipe(map(config => config.sidenav.imageUrl));
   showCollapsePin$ = this.configService.config$.pipe(map(config => config.sidenav.showCollapsePin));
   userVisible$ = this.configService.config$.pipe(map(config => config.sidenav.user.visible));
   searchVisible$ = this.configService.config$.pipe(map(config => config.sidenav.search.visible));
-
   userMenuOpen$: Observable<boolean> = of(false);
-
   items = this.navigationService.items;
 
-  constructor(private navigationService: NavigationService,
-              private layoutService: LayoutService,
-              private configService: ConfigService,
-              private readonly popoverService: PopoverService,
-              private readonly dialog: MatDialog) { }
+  private _onDestroy$ = new Subject<void>();
+
+  constructor(
+    private navigationService: NavigationService,
+    private layoutService: LayoutService,
+    private configService: ConfigService,
+    private readonly popoverService: PopoverService,
+    private _securityService: SecurityService,
+    private readonly dialog: MatDialog
+  ) { }
 
   ngOnInit() {
+    const userId = parseFloat(localStorage.getItem('user_id'));
+    this.getNavigationItems(userId);
+  }
+
+  ngOnDestroy() {
+    this._onDestroy$.next();
+    this._onDestroy$.complete();
   }
 
   collapseOpenSidenav() {
@@ -82,5 +93,41 @@ export class SidenavComponent implements OnInit {
       width: '100%',
       maxWidth: '600px'
     });
+  }
+
+  getNavigationItems(userId: number) {
+    this._securityService.getPermissions(userId)
+      .pipe(takeUntil(this._onDestroy$))
+      .subscribe(data => {
+        if (!data) {
+          return;
+        }
+        let groupNames: string[] = [];
+        let childrens: NavigationLink[] = [];
+        data.forEach(item => {
+          if (!groupNames.includes(item.groupName)) {
+            groupNames.push(item.groupName);
+          }
+          const children: NavigationLink = {
+            type: 'link',
+            label: item.moduleName,
+            route: item.url,
+            icon: `mat:${item.icon}`,
+            groupName: item.groupName
+          };
+          childrens.push(children);
+        });
+
+        let navigationItems: NavigationItem[] = [];
+        groupNames.forEach(groupName => {
+          const item: NavigationItem = {
+            type: 'subheading',
+            label: groupName,
+            children: Array.from(childrens.filter(t => t.groupName == groupName))
+          };
+          navigationItems.push(item);
+        });
+        this.items = navigationItems;
+      });
   }
 }

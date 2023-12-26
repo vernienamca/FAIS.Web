@@ -21,6 +21,6 @@ export class PortalApi extends BaseApi {
     }
 
     getUser(id: number) {
-        return this.get<any>(`${this._apiUrl}/user/getbyid?id=${id}`, {});
+        return this.get<any>(`${this._apiUrl}/user/${id}`, {});
     }
 }

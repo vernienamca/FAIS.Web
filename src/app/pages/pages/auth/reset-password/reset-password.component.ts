@@ -78,7 +78,7 @@ send() {
     const newPassword = this.form.get('password').value;
 
     // Call the ResetPassword method from SecurityService
-    this._securityService.ResetPassword(newPassword, this.tempKey).subscribe({
+    this._securityService.resetPassword(newPassword, this.tempKey).subscribe({
       next: data => {
 
     
