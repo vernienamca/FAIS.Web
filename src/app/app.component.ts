@@ -1,4 +1,4 @@
-import { Component, Inject, LOCALE_ID, Renderer2 } from '@angular/core';
+import { AfterViewInit, Component, Inject, LOCALE_ID, OnDestroy, OnInit, Renderer2 } from '@angular/core';
 import { ConfigService } from '../@vex/config/config.service';
 import { Settings } from 'luxon';
 import { DOCUMENT } from '@angular/common';
@@ -13,6 +13,9 @@ import { ColorSchemeName } from '../@vex/config/colorSchemeName';
 import { MatIconRegistry, SafeResourceUrlWithIconOptions } from '@angular/material/icon';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ColorVariable, colorVariables } from '../@vex/components/config-panel/color-variables';
+import { BehaviorSubject, Subject, concatMap, startWith, takeUntil } from 'rxjs';
+import { SecurityService } from './core/services/security.service';
+import { NavigationItem, NavigationLink } from 'src/@vex/interfaces/navigation-item.interface';
 
 @Component({
   selector: 'vex-root',
@@ -20,17 +23,20 @@ import { ColorVariable, colorVariables } from '../@vex/components/config-panel/c
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  constructor(private configService: ConfigService,
-              private renderer: Renderer2,
-              private platform: Platform,
-              @Inject(DOCUMENT) private document: Document,
-              @Inject(LOCALE_ID) private localeId: string,
-              private layoutService: LayoutService,
-              private route: ActivatedRoute,
-              private navigationService: NavigationService,
-              private splashScreenService: SplashScreenService,
-              private readonly matIconRegistry: MatIconRegistry,
-              private readonly domSanitizer: DomSanitizer) {
+  constructor(
+    private configService: ConfigService,
+    private renderer: Renderer2,
+    private platform: Platform,
+    @Inject(DOCUMENT) private document: Document,
+    @Inject(LOCALE_ID) private localeId: string,
+    private layoutService: LayoutService,
+    private route: ActivatedRoute,
+    private navigationService: NavigationService,
+    private splashScreenService: SplashScreenService,
+    private readonly matIconRegistry: MatIconRegistry,
+    private readonly domSanitizer: DomSanitizer,
+    private _securityService: SecurityService
+  ) {
     Settings.defaultLocale = this.localeId;
 
     if (this.platform.BLINK) {
@@ -49,6 +55,7 @@ export class AppComponent {
             );
 
           case 'logo':
+           
             return this.domSanitizer.bypassSecurityTrustResourceUrl(
               `assets/img/icons/logos/${name}.svg`
             );
@@ -96,7 +103,6 @@ export class AppComponent {
 
       if (queryParamMap.has('primaryColor')) {
         const color: ColorVariable = colorVariables[queryParamMap.get('primaryColor')];
-
         if (color) {
           this.configService.updateConfig({
             style: {
@@ -114,137 +120,5 @@ export class AppComponent {
         });
       }
     });
-
-    /**
-     * Add your own routes here
-     */
-    this.navigationService.items = [
-      {
-        type: 'subheading',
-        label: 'Dashboards',
-        children: [
-          {
-            type: 'link',
-            label: 'Analytics',
-            route: '/',
-            icon: 'mat:insights',
-            badge: {
-              value: '16',
-              bgClass: 'bg-cyan',
-              textClass: 'text-cyan-contrast',
-            },
-            routerLinkActiveOptions: { exact: true }
-          }
-        ]
-      },
-      {
-        type: 'subheading',
-        label: 'System Management',
-        children: [
-          {
-            type: 'link',
-            label: 'Modules',
-            route: '/apps/module-list',
-            icon: 'mat:assignment'
-          },
-          {
-            type: 'link',
-            label: 'Roles',
-            route: '/apps/roles',
-            icon: 'mat:bubble_chart'
-          },
-          {
-            type: 'link',
-            label: 'Users',
-            route: '/apps/user-list',
-            icon: 'mat:group'
-          },
-          {
-            type: 'link',
-            label: 'System Settings',
-            route: '/apps/system-settings',
-            icon: 'mat:settings'
-          },
-          {
-            type: 'link',
-            label: 'Notification Templates',
-            route: '/apps/editor',
-            icon: 'mat:notification_add'
-          },
-          {
-            type: 'link',
-            label: 'Audit Logs',
-            route: '/coming-soon',
-            icon: 'mat:history'
-          }
-        ]
-      },
-      {
-        type: 'subheading',
-        label: 'System Libraries',
-        children: [
-          {
-            type: 'link',
-            label: 'Library Types',
-            icon: 'mat:lock',
-            route: '/coming-soon'
-          },
-          {
-            type: 'link',
-            label: 'Library Type Options',
-            icon: 'mat:watch_later',
-            route: '/coming-soon'
-          },
-          {
-            type: 'link',
-            label: 'Chart of Accounts',
-            icon: 'mat:watch_later',
-            route: '/coming-soon'
-          },
-          {
-            type: 'link',
-            label: 'Pro-forma Entries',
-            icon: 'mat:attach_money',
-            route: '/coming-soon'
-          },
-          {
-            type: 'link',
-            label: 'Cost Centers',
-            icon: 'mat:receipt',
-            route: '/coming-soon'
-          }
-        ]
-      },
-      {
-        type: 'subheading',
-        label: 'Profile Management',
-        children: [
-          {
-            type: 'link',
-            label: 'Asset Profile',
-            icon: 'mat:watch_later',
-            route: '/coming-soon'
-          },
-          {
-            type: 'link',
-            label: 'Metering Profile',
-            icon: 'mat:attach_money',
-            route: '/pages/pricing'
-          },
-          {
-            type: 'link',
-            label: 'Transmission Line Profile',
-            icon: 'mat:watch_later',
-            route: '/pages/pricing'
-          },
-          {
-            type: 'link',
-            label: 'Plant Information',
-            icon: 'mat:attach_money',
-            route: '/pages/pricing'
-          }
-        ]
-      }
-    ];
   }
 }

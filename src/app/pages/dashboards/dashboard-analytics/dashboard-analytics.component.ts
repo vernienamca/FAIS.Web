@@ -67,7 +67,4 @@ export class DashboardAnalyticsComponent {
     },
     colors: ['#ff9800']
   });
-
-  ngOnInit(): void {
-  }
 }
