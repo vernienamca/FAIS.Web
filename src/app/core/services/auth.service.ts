@@ -29,4 +29,8 @@ export class AuthService {
     this.isLogoutTriggered = false;
     return this._authApi.authenticate(username, password);
   }
+
+  changePassword() {
+    this._router.navigateByUrl('apps/profile/change-password');
+  }
 }

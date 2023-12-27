@@ -12,7 +12,7 @@
             <mat-icon class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" svgIcon="mat:save_as"></mat-icon>
             <span>Save</span>
           </button>
-          <button class="rounded-full" color="primary" mat-raised-button type="button">
+          <button class="rounded-full" (click)="close()" color="primary" mat-raised-button type="button">
             <mat-icon class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" svgIcon="mat:close"></mat-icon>
             <span>Close</span>
           </button>
@@ -20,11 +20,11 @@
         <div class="px-6 py-4 flex flex-col">
           <mat-form-field appearance="fill" class="max-w-[60%]">
             <mat-label>Role Name</mat-label>
-            <input matInput formControlName="roleName" required>
+            <input matInput formControlName="roleName" [(ngModel)]="roleName" required >
           </mat-form-field>
           <mat-form-field appearance="fill" class="max-w-[60%]">
             <mat-label>Description</mat-label>
-            <textarea matInput formControlName="roleDesc" required></textarea>
+            <textarea matInput formControlName="roleDesc" [(ngModel)]="roleDescription" required></textarea>
           </mat-form-field>
           <div class="is-active flex gap-3">
             <span>Active</span><mat-slide-toggle color="accent" formControlName="isActive" matInput></mat-slide-toggle>
@@ -34,7 +34,7 @@
           <div class="px-6 py-4 flex flex-col">
             <div class="flex flex-col">
               <div class="flex flex-row justify-between">
-                <h1 class="text-lg">Manage Permissions (3)</h1>
+                <h1 class="text-lg">Manage Permissions ({{roleField.get('permissions')['controls'].length}})</h1>
                 <button class="add-version-btn flex items-center !bg-green !text-white rounded-full" (click)="addModuleBtn()" mat-raised-button type="button">
                   <mat-icon svgIcon="mat:add"></mat-icon>
                   <span>Add Module</span>
@@ -45,62 +45,52 @@
               </div>
             </div>
             <div class="module-table py-8">
-              
-              <table mat-table [dataSource]="dataSource" class="mat-elevation-z0">
-
-              <!-- <div formArrayName="permisssions">
-                <div formGroupName="0"> -->
-                  <ng-container matColumnDef="module-name">
-                    <th mat-header-cell *matHeaderCellDef>Module Name</th>
-                    <td mat-cell *matCellDef="let element">{{element.get('name').value}}</td>
-                    </ng-container>
-      
-                    <ng-container matColumnDef="create">
-                    <th mat-header-cell *matHeaderCellDef>Create</th>
-                    <td mat-cell *matCellDef="let element"><mat-checkbox color="accent" [formControl]="element.get('create')"></mat-checkbox> </td>
-                    </ng-container>
-      
-                    <ng-container matColumnDef="read">
-                    <th mat-header-cell *matHeaderCellDef>Read</th>
-                    <td mat-cell *matCellDef="let element"> <mat-checkbox color="accent" [formControl]="element.get('read')"></mat-checkbox> </td>
-                    </ng-container>
-      
-                    <ng-container matColumnDef="update">
-                    <th mat-header-cell *matHeaderCellDef>Update</th>
-                    <td mat-cell *matCellDef="let element"><mat-checkbox color="accent" [formControl]="element.get('update')"></mat-checkbox> </td>
-                    </ng-container>
-                <!-- </div>
-              </div> -->
-
-              <ng-container matColumnDef="action">
-                <th mat-header-cell *matHeaderCellDef> Action </th>
-                <td mat-cell *matCellDef="let element">
-                  <button type="button" (click)="removeModule(element.get('moduleId'))">
-                    <mat-icon svgIcon="mat:delete"></mat-icon>
-                  </button>
-                </td>
-              </ng-container>
-
-              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-              </table>
+              <table class="w-full text-sm text-left rtl:text-right">
+                <thead class="text-gray-700 font-medium">
+                    <tr>
+                        <th class="px-6 py-3">Module Name</th>
+                        <th class="px-6 py-3">Create</th>
+                        <th class="px-6 py-3">Read</th>
+                        <th class="px-6 py-3">Update</th>
+                        <th class="px-6 py-3">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                  <ng-template ngFor let-module let-i="index" [ngForOf]="roleField.get('permissions')['controls']">
+                    <tr>
+                      <th class="px-6 py-3 font-medium"><input type="text" class="bg-transparent" onfocus="this.blur()" readonly="readonly" [formControl]="module.get('name')"></th>
+                      <td class="px-6 py-3"><mat-checkbox color="accent" [formControl]="module.get('create')"></mat-checkbox></td>
+                      <td class="px-6 py-3"><mat-checkbox color="accent" [formControl]="module.get('read')"></mat-checkbox></td>
+                      <td class="px-6 py-3"><mat-checkbox color="accent" [formControl]="module.get('update')"></mat-checkbox></td>
+                      <td class="px-6 py-3">
+                          <button type="button" class="ml-2" (click)="removeModule(i)">
+                            <mat-icon svgIcon="mat:delete"></mat-icon>
+                          </button>
+                      </td>
+                    </tr>
+                  </ng-template>
+                </tbody>
+            </table>
+            <div *ngIf="roleField.get('permissions')['controls'].length===0">
+              <span class="flex justify-center my-4">No data available in table</span>
+            </div>
             </div>
             <div class="module-footer my-8 flex flex-row justify-around items-center">
               <div class="created-by-cont">
                 <span class="created-by font-bold mr-2">Created By:</span>
-                <span>Super Admin</span>
+                <span>{{createdBy}}</span>
               </div>
               <div class="date-created-cont">
                 <span class="date-created font-bold mr-2">Date Created:</span>
-                <span>07/19/2023 10:15 AM</span>
+                <span>{{createdAt | date:'MM/dd/yyyy h:mm a'}}</span>
               </div>
               <div class="modified-by-cont">
                 <span class="modified-by font-bold mr-2">Modified By:</span>
-                <span>Elizabeth M. Terrell</span>
+                <span>{{modifiedBy}}</span>
               </div>
               <div class="date-modified-cont">
                 <span class="date-modified font-bold mr-2">Date Modified:</span>
-                <span>07/19/2023 10:15 AM</span>
+                <span>{{dateModified | date:'MM/dd/yyyy h:mm a'}}</span>
               </div>
             </div>
           </div>

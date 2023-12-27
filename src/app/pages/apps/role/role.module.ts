@@ -42,7 +42,7 @@ import { MatDialogModule } from '@angular/material/dialog';
     MatMenuModule,
     FormsModule,
     MatTooltipModule,
-    ReactiveFormsModule,
+    ReactiveFormsModule.withConfig({warnOnNgModelWithFormControl: 'never'}),
     MatSelectModule,
     MatButtonToggleModule,
     ComponentsAutocompleteRoutingModule,

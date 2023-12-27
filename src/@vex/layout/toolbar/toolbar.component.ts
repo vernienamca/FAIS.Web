@@ -78,4 +78,8 @@ export class ToolbarComponent implements OnInit, OnDestroy  {
   logout(): void {
     this._authService.logout();
   }
+
+  changePassword(): void{
+    this._authService.changePassword();
+  }
 }
