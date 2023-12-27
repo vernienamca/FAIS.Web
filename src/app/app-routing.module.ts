@@ -59,6 +59,10 @@ const routes: VexRoutes = [
             loadChildren: () => import('./pages/apps/user/user.module').then(m => m.UserModule),
           },
           {
+            path: 'audit-logs',
+            loadChildren: () => import('./pages/apps/audit-logs/audit-logs.module').then(m => m.AuditLogsModule),
+          },
+          {
             path: 'settings',
             loadChildren: () => import('./pages/apps/system-settings/system-settings.module').then(m =>m.SystemSettingsModule),
             data: {
