@@ -49,7 +49,7 @@ export class RoleListComponent implements OnInit, OnDestroy, AfterViewInit {
     { label: 'Actions', property: 'actions', type: 'button', visible: true }
   ];
 
-  layoutCtrl = new UntypedFormControl('boxed');
+  layoutCtrl = new UntypedFormControl('fullwidth');
   subject$: ReplaySubject<IRole[]> = new ReplaySubject<IRole[]>(1);
   data$: Observable<IRole[]> = this.subject$.asObservable();
   roles: IRole[];

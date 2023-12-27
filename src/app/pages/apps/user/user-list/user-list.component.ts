@@ -53,7 +53,7 @@ export class UserListComponent implements OnInit, OnDestroy, AfterViewInit {
     { label: 'Actions', property: 'actions', type: 'button', visible: true }
   ];
 
-  layoutCtrl = new UntypedFormControl('boxed');
+  layoutCtrl = new UntypedFormControl('fullwidth');
   subject$: ReplaySubject<IUser[]> = new ReplaySubject<IUser[]>(1);
   data$: Observable<IUser[]> = this.subject$.asObservable();
   customers: IUser[];
