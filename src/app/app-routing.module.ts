@@ -22,7 +22,6 @@ const routes: VexRoutes = [
     path: 'reset-password/:tempKey',
     loadChildren: () => import('./pages/pages/auth/reset-password/reset-password.module').then(m => m.ResetPasswordModule),
   },
-  
   {
     path: 'coming-soon',
     loadChildren: () => import('./pages/pages/coming-soon/coming-soon.module').then(m => m.ComingSoonModule),
@@ -44,38 +43,11 @@ const routes: VexRoutes = [
         path: 'apps',
         children: [
           {
-            path: 'chat',
-            loadChildren: () => import('./pages/apps/chat/chat.module').then(m => m.ChatModule),
-            data: {
-              toolbarShadowEnabled: true
-            }
+            path: 'help-center',
+            loadChildren: () => import('./pages/apps/help-center/help-center.module').then(m => m.HelpCenterModule),
           },
           {
-            path: 'system-settings',
-            // loadChildren: () => import('./pages/apps/mail/mail.module').then(m => m.MailModule),
-            loadChildren: () => import('./pages/apps/system-settings/system-settings.module').then(m =>m.SystemSettingsModule),
-            data: {
-              toolbarShadowEnabled: true,
-              scrollDisabled: false
-            }
-          },
-          {
-            path: 'social',
-            loadChildren: () => import('./pages/apps/social/social.module').then(m => m.SocialModule)
-          },
-          {
-            path: 'contacts',
-            loadChildren: () => import('./pages/apps/contacts/contacts.module').then(m => m.ContactsModule)
-          },
-          {
-            path: 'calendar',
-            loadChildren: () => import('./pages/apps/calendar/calendar.module').then(m => m.CalendarModule),
-            data: {
-              toolbarShadowEnabled: true
-            }
-          },
-          {
-            path: 'module-list',
+            path: 'modules',
             loadChildren: () => import('./pages/apps/module/module.module').then(m => m.ModuleModule),
           },
           {
@@ -100,16 +72,24 @@ const routes: VexRoutes = [
 
 
           {
-            path: 'user-list',
+            path: 'users',
             loadChildren: () => import('./pages/apps/user/user.module').then(m => m.UserModule),
           },
           {
-            path: 'help-center',
-            loadChildren: () => import('./pages/apps/help-center/help-center.module').then(m => m.HelpCenterModule),
+            path: 'audit-logs',
+            loadChildren: () => import('./pages/apps/audit-logs/audit-logs.module').then(m => m.AuditLogsModule),
           },
           {
-            path: 'scrumboard',
-            loadChildren: () => import('./pages/apps/scrumboard/scrumboard.module').then(m => m.ScrumboardModule),
+            path: 'settings',
+            loadChildren: () => import('./pages/apps/system-settings/system-settings.module').then(m =>m.SystemSettingsModule),
+            data: {
+              toolbarShadowEnabled: true,
+              scrollDisabled: false
+            }
+          },
+          {
+            path: 'user-edit',
+            loadChildren: () => import('./pages/apps/User-Edit/User-Edit.module').then(m => m.UserEditModule),
           },
           {
             path: 'editor',
@@ -117,7 +97,6 @@ const routes: VexRoutes = [
           },
           {
             path: 'profile',
-            // loadChildren: () => import('').then(m => m.),
             children: [
               {
                 path: 'change-password',
@@ -130,22 +109,6 @@ const routes: VexRoutes = [
       {
         path: 'pages',
         children: [
-          {
-            path: 'pricing',
-            loadChildren: () => import('./pages/pages/pricing/pricing.module').then(m => m.PricingModule)
-          },
-          {
-            path: 'faq',
-            loadChildren: () => import('./pages/pages/faq/faq.module').then(m => m.FaqModule)
-          },
-          {
-            path: 'guides',
-            loadChildren: () => import('./pages/pages/guides/guides.module').then(m => m.GuidesModule)
-          },
-          {
-            path: 'invoice',
-            loadChildren: () => import('./pages/pages/invoice/invoice.module').then(m => m.InvoiceModule)
-          },
           {
             path: 'error-404',
             loadChildren: () => import('./pages/pages/errors/error-404/error-404.module').then(m => m.Error404Module)
@@ -186,10 +149,6 @@ const routes: VexRoutes = [
             loadChildren: () => import('./pages/ui/page-layouts/page-layouts.module').then(m => m.PageLayoutsModule),
           },
         ]
-      },
-      {
-        path: 'documentation',
-        loadChildren: () => import('./pages/documentation/documentation.module').then(m => m.DocumentationModule),
       },
       {
         path: '**',

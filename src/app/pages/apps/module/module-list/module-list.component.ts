@@ -46,7 +46,7 @@ export class ModuleListComponent implements OnInit, OnDestroy, AfterViewInit {
     { label: 'Actions', property: 'actions', type: 'button', visible: true }
   ];
 
-  layoutCtrl = new UntypedFormControl('boxed');
+  layoutCtrl = new UntypedFormControl('fullwidth');
   subject$: ReplaySubject<IModule[]> = new ReplaySubject<IModule[]>(1);
   data$: Observable<IModule[]> = this.subject$.asObservable();
   customers: IModule[];

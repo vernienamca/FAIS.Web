@@ -12,6 +12,7 @@ export interface NavigationLink {
     bgClass: string;
     textClass: string;
   };
+  groupName?: string;
 }
 
 export interface NavigationDropdown {

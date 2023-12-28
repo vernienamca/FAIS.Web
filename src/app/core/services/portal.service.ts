@@ -4,6 +4,7 @@ import { PortalApi } from '../api/portal-api.service';
 import { IModule } from '../models/module';
 import { IRole } from '../models/role';
 import { IUser } from '../models/user';
+import { IAuditLogs } from '../models/audit-logs';
 
 @Injectable({
   providedIn: 'root'
@@ -25,5 +26,9 @@ export class PortalService {
   
   getUser(id: number): Observable<any> {
     return this._portalApi.getUser(id);
+  }
+
+  getAuditLogs(): Observable<IAuditLogs[]> {
+    return this._portalApi.getAuditLogs();
   }
 }

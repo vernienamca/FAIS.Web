@@ -8,5 +8,9 @@ export interface IModule {
   createdBy: string,
   createdAt: Date,
   updatedBy?: string;
-  updatedAt?: Date
+  updatedAt?: Date;
+  create: boolean;
+  read: boolean;
+  update: boolean;
+  isAdded: boolean;
 }

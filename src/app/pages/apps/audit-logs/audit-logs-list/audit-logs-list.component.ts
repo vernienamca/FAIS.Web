@@ -1,12 +1,12 @@
 import { AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { Observable, ReplaySubject, Subject } from 'rxjs';
+import { Observable, of, ReplaySubject, Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatDialog } from '@angular/material/dialog';
 import { TableColumn } from '../../../../../@vex/interfaces/table-column.interface';
-import { aioTableLabels } from '../../../../../static-data/aio-table-data';
+import { aioTableData, aioTableLabels } from '../../../../../static-data/aio-table-data';
 import { SelectionModel } from '@angular/cdk/collections';
 import { fadeInUp400ms } from '../../../../../@vex/animations/fade-in-up.animation';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS, MatFormFieldDefaultOptions } from '@angular/material/form-field';
@@ -15,17 +15,13 @@ import { UntypedFormControl } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { MatSelectChange } from '@angular/material/select';
 import { PortalService } from 'src/app/core/services/portal.service';
-import { IUser } from 'src/app/core/models/user';
-import { UserStatusEnum } from 'src/app/core/enums/user-status.enum';
-
-
-import { Router } from '@angular/router';
+import { IAuditLogs } from 'src/app/core/models/audit-logs';
 
 @UntilDestroy()
 @Component({
-  selector: 'app-user-list',
-  templateUrl: './user-list.component.html',
-  styleUrls: ['./user-list.component.scss'],
+  selector: 'vex-aio-table',
+  templateUrl: './audit-logs-list.component.html',
+  styleUrls: ['./audit-logs-list.component.scss'],
   animations: [
     fadeInUp400ms,
     stagger40ms
@@ -39,39 +35,35 @@ import { Router } from '@angular/router';
     }
   ]
 })
-export class UserListComponent implements OnInit, OnDestroy, AfterViewInit {
+export class AuditLogsListComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @Input()
-  columns: TableColumn<IUser>[] = [
-    { label: 'Username', property: 'userName', type: 'text', visible: true, cssClasses: ['font-medium'] },
-    { label: 'First Name', property: 'firstName', type: 'text', visible: true, cssClasses: ['font-medium'] },
-    { label: 'Last Name', property: 'lastName', type: 'text', visible: true },
-    { label: 'Position', property: 'position', type: 'text', visible: true },
-    { label: 'Division', property: 'division', type: 'text', visible: true },
-    { label: 'Status', property: 'statusCode', type: 'text', visible: true },
+  columns: TableColumn<IAuditLogs>[] = [
+    { label: 'Activity', property: 'activity', type: 'text', visible: true, cssClasses: ['font-medium'] },
+    { label: 'Old Values', property: 'oldValues', type: 'text', visible: true },
+    { label: 'New Values', property: 'newValues', type: 'text', visible: true },
+    { label: 'IP Address', property: 'ipAddress', type: 'text', visible: true },
     { label: 'Actions', property: 'actions', type: 'button', visible: true }
   ];
 
-  layoutCtrl = new UntypedFormControl('fullwidth');
-  subject$: ReplaySubject<IUser[]> = new ReplaySubject<IUser[]>(1);
-  data$: Observable<IUser[]> = this.subject$.asObservable();
-  customers: IUser[];
+  layoutCtrl = new UntypedFormControl('fullWidth');
+  subject$: ReplaySubject<IAuditLogs[]> = new ReplaySubject<IAuditLogs[]>(1);
+  data$: Observable<IAuditLogs[]> = this.subject$.asObservable();
+  logs: IAuditLogs[];
   totalCount: number = 0;
   pageSize = 10;
   pageSizeOptions: number[] = [5, 10, 20, 50];
-  dataSource: MatTableDataSource<IUser> | null;
-  selection = new SelectionModel<IUser>(true, []);
+  dataSource: MatTableDataSource<IAuditLogs> | null;
+  selection = new SelectionModel<IAuditLogs>(true, []);
   searchCtrl = new UntypedFormControl();
   labels = aioTableLabels;
-  userStatusEnum = UserStatusEnum;
 
   private _onDestroy$ = new Subject<void>();
 
   constructor(
     private _dialog: MatDialog,
     private _portalService: PortalService,
-    private router: Router
   ) {
   }
 
@@ -80,7 +72,7 @@ export class UserListComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnInit() {
-    this._portalService.getUsers()
+    this._portalService.getAuditLogs()
       .pipe(takeUntil(this._onDestroy$))
       .subscribe(data => {
         if (!data) {
@@ -91,11 +83,11 @@ export class UserListComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.dataSource = new MatTableDataSource();
     this.data$
-      .pipe(filter<IUser[]>(Boolean))
-      .subscribe(customers => {
-        this.totalCount = customers.length;
-        this.customers = customers;
-        this.dataSource.data = customers;
+      .pipe(filter<IAuditLogs[]>(Boolean))
+      .subscribe(logs => {
+        this.totalCount = logs.length;
+        this.logs = logs;
+        this.dataSource.data = logs;
       });
 
     this.searchCtrl.valueChanges.pipe(
@@ -111,18 +103,6 @@ export class UserListComponent implements OnInit, OnDestroy, AfterViewInit {
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
-  }
-  createCustomer() {
-    this.router.navigate(['apps/user-add']);
-  }
-  
-  updateCustomer(customer: any) {
-  }
-
-  deleteCustomer(customer: any) {
-  }
-
-  deleteCustomers(customers: any[]) {
   }
 
   onFilterChange(value: string) {
@@ -158,9 +138,9 @@ export class UserListComponent implements OnInit, OnDestroy, AfterViewInit {
     return column.property;
   }
 
-  onLabelChange(change: MatSelectChange, row: IUser) {
-    const index = this.customers.findIndex(c => c === row);
+  onLabelChange(change: MatSelectChange, row: IAuditLogs) {
+    const index = this.logs.findIndex(c => c === row);
     //this.customers[index].labels = change.value;
-    this.subject$.next(this.customers);
+    this.subject$.next(this.logs);
   }
 }

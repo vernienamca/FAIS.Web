@@ -1,7 +1,10 @@
-import { Component, Inject, OnInit, Optional } from '@angular/core';
-import { FormArray, FormGroup } from '@angular/forms';
+import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { Modules } from '../role.component';
+import { PortalService } from 'src/app/core/services/portal.service';
+import { filter, takeUntil } from 'rxjs/operators';
+import { Subject, ReplaySubject, Observable } from 'rxjs';
+import { IModule } from 'src/app/core/models/module';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'vex-add-module',
@@ -10,36 +13,42 @@ import { Modules } from '../role.component';
 })
 export class AddModuleComponent implements OnInit{
 
-  public ELEMENT_DATA: Modules[] = [
-    {moduleId: 1, name: 'AMR Retirement/Transfer', create: true, read: true,  update: true, isAdded: false},
-    {moduleId: 2, name: 'Asset Registers', create: true, read: true, update: false, isAdded: false},
-    {moduleId: 3, name: 'Land Transactions', create: false, read: true, update: true, isAdded: false},
-    {moduleId: 4, name: 'Asset Movement Report', create: true, read: true, update: false, isAdded: false},
-    {moduleId: 5, name: 'Land', create: true, read: true, update: false, isAdded: false},
-    {moduleId: 6, name: 'Coding Details', create: true, read: true, update: false, isAdded: false}
-  ];
-
   displayedColumns: string[] = ['module-name', 'action'];
-  arrayOfGroup:FormGroup[]=[];
-  roleField: FormGroup;
-  dataSource = this.ELEMENT_DATA;
+  dataSource: MatTableDataSource<IModule> | null;
   inputData: any;
-  moduleDataRow: Modules[]=[];
-  local_data:any;
+  moduleDataRow: IModule[]=[];
   isAdded: any;
-  checkModule: any;
+  checkModule: IModule[]=[];
+  subject$: ReplaySubject<IModule[]> = new ReplaySubject<IModule[]>(1);
+  data$: Observable<IModule[]> = this.subject$.asObservable();
 
-  constructor(@Optional() @Inject(MAT_DIALOG_DATA) public data: Modules,
+  private _onDestroy$ = new Subject<void>();
+
+  constructor(@Inject(MAT_DIALOG_DATA) public data: IModule,
   private ref: MatDialogRef<AddModuleComponent>,
-  ) {
-    this.local_data = {...data};
-  }
+  private _portalService: PortalService,
+  ) {}
 
   ngOnInit(): void {
+    this._portalService.getModules()
+    .pipe(takeUntil(this._onDestroy$))
+    .subscribe(data => {
+      if (!data) {
+        return;
+      }
+      this.subject$.next(data);
+    });
+
+    this.dataSource = new MatTableDataSource();
+    this.data$
+      .pipe(filter<IModule[]>(Boolean))
+      .subscribe(modules => {        
+        this.dataSource.data = modules;
+      });
+
     this.inputData = this.data;
     this.inputData.modules.forEach((module)=>{
-      this.checkModule =  module;
-
+      this.checkModule = [...this.checkModule, module];
     });
   }
 
@@ -57,7 +66,13 @@ export class AddModuleComponent implements OnInit{
     }
   }
 
-  onSubmit():void{
-
+  moduleExist(module):boolean{
+    let moduleIsAdded = false
+    this.checkModule.forEach((data)=>{
+      if (data.id == module) {
+        moduleIsAdded = true;
+      }
+    });
+    return moduleIsAdded;
   }
 }
