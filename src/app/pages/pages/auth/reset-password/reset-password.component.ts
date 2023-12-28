@@ -18,9 +18,7 @@ import { SecurityService } from 'src/app/core/services/security.service';
 })
 export class ResetPasswordComponent implements OnInit {
 
-  //icon on the textbox showing
   icon = faCheck;
-  // icon for the lists of green check validation
   greencheck = faCheck;
   imageUrl = 'assets/img/icons/forgot-password-icons/password.png';
   form: FormGroup; 
@@ -31,21 +29,19 @@ export class ResetPasswordComponent implements OnInit {
   tempKey: string;
 
   constructor(
-    private router: Router,
-    private fb: FormBuilder,
-    private cd: ChangeDetectorRef,
-    private snackbar: MatSnackBar,
+    private _router: Router,
+    private _fb: FormBuilder,
+    private _cd: ChangeDetectorRef,
+    private _snackbar: MatSnackBar,
   
-    private route: ActivatedRoute,
+    private _route: ActivatedRoute,
     private _securityService: SecurityService
     
   ) {}
 
 
-
-
   ngOnInit(): void {
-    this.tempKey = this.route.snapshot.params['tempKey'];
+    this.tempKey = this._route.snapshot.params['tempKey'];
     console.log('tempKey:', this.tempKey);
 
     if (!this.tempKey) {
@@ -53,7 +49,7 @@ export class ResetPasswordComponent implements OnInit {
    
     }
 
-    this.form = this.fb.group({
+    this.form = this._fb.group({
         password: [
             '',
             [Validators.required, Validators.minLength(8)],
@@ -63,10 +59,8 @@ export class ResetPasswordComponent implements OnInit {
             [Validators.required, Validators.minLength(8)],
         ]
     });
-
-    // Listen for changes in the password field
     this.form.get('password').valueChanges.subscribe(() => {
-        this.cd.markForCheck(); // Trigger change detection
+        this._cd.markForCheck();
     });
 }
 
@@ -76,9 +70,7 @@ send() {
  
   if (this.form.get('password').valid && this.form.get('confirmPassword').valid && this.passwordsMatch()) {
     const newPassword = this.form.get('password').value;
-
-    // Call the ResetPassword method from SecurityService
-    this._securityService.resetPassword(newPassword, this.tempKey).subscribe({
+    this._securityService.ResetPassword(newPassword, this.tempKey).subscribe({
       next: data => {
 
     
@@ -88,13 +80,11 @@ send() {
       },
     });
   } else {
-    this.snackbar.open('Password requirements are not satisfied. Please check and try again.', 'Close', {
+    this._snackbar.open('Password requirements are not satisfied. Please check and try again.', 'Close', {
       duration: 5000,
     });
   }
 }
-
-    
 
 
 passwordsMatch(): boolean {
@@ -102,16 +92,13 @@ passwordsMatch(): boolean {
   const confirmPassword = this.form.get('confirmPassword').value;
   this.success = true;
   setTimeout(() => {
-    this.router.navigate(['/login']);
+    this._router.navigate(['/login']);
   }, 5000);
   return password === confirmPassword;
 }
 
-
-// password requirements logic call the returned values on the html
 passwordRequirements(): { minLength: boolean, hasNumber: boolean, hasLowercase: boolean, hasSpecialCharacter: boolean } {
   const password = this.form.get('password').value;
-  // Count the number of special characters in the password
   const specialCharacterCount = (password.match(/[!@#$%^&*(),.?":{}|<>]/g) || []).length;
 
   return {
@@ -122,18 +109,15 @@ passwordRequirements(): { minLength: boolean, hasNumber: boolean, hasLowercase: 
   };
 }
 
-
-
-
   toggleVisibility() {
     if (this.visible) {
       this.inputType = 'password';
       this.visible = false;
-      this.cd.markForCheck();
+      this._cd.markForCheck();
     } else {
       this.inputType = 'text';
       this.visible = true;
-      this.cd.markForCheck();
+      this._cd.markForCheck();
     }
   }
 }

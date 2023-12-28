@@ -2,17 +2,18 @@ import { Component } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { FormControl } from '@angular/forms';
 
-import { MatTableDataSource } from '@angular/material/table';
 import {ThemePalette} from '@angular/material/core';
 
-export interface PeriodicElement {
+
+
+export interface RolesElement {
   description: string;
   position: string;
   date: Date;
   isToggled: boolean,
 }
 
-const ELEMENT_DATA: PeriodicElement[] = [
+const ELEMENT_DATA: RolesElement[] = [
   { position: 'Admin', description: 'Description Accountant...', date: new Date('2023-07-18T14:00:00'), isToggled: false },
 
   {position: 'PAD Analyst', description: 'Description Librarian...',  date: new Date('2023-07-18T14:00:00'), isToggled: false },
@@ -28,88 +29,68 @@ const ELEMENT_DATA: PeriodicElement[] = [
 ];
 
 @Component({
-  selector: 'vex-User-Add',
-  templateUrl: './User-Edit.component.html',
-  styleUrls: ['./User-Edit.component.scss'],
+  selector: 'vex-user-add',
+  templateUrl: './user-add.component.html',
+  styleUrls: ['./user-add.component.scss'],
 
   
 })
-export class UserEditComponent {
+
+export class UserAddComponent {
 
   color: ThemePalette = 'accent';
-  
   isToggled: boolean = false;
-
+  selectedPhoto: string | null = null;
+  positions: string[] = ['Supervisor', 'Manager', 'Employee', 'Other'];
+  division: string[] = ['PAD', 'ARMD',];
+  status: string[] = ['Active', 'Inactive',];
   displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
   dataSource = ELEMENT_DATA;
   searchCtrl: FormControl = new FormControl();
   
-  handleToggle(element: PeriodicElement) {
+
+  handleToggle(element: RolesElement) {
     element.isToggled = !element.isToggled;
   }
   
   
   onFileSelected(event: any) {
     const file = event.target.files[0];
-    // Handle the selected file, you can upload it to a server, display a preview, etc.
-    console.log('Selected file:', file);
+    if (file) {
+      this.getBase64(file).then((dataUrl: string) => {
+        this.selectedPhoto = dataUrl;
+      });
+    }
   }
 
-  constructor(private fb: FormBuilder) {}
+  getBase64(file: File): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = error => reject(error);
+    });
+  }
+  constructor(private _fb: FormBuilder) {}
 
 
-  
-  // minPassOpt = [
-  //   {id: 1, value: 8},
-  //   {id: 2, value: 10}
-  // ];
 
-  // minSpCharOpt = [
-  //   {id: 1, value: 1},
-  //   {id: 2, value: 2}
-  // ];
-
-  // passExpOpt = [
-  //   {id: 1, value: 160},
-  //   {id: 2, value: 180}
-  // ];
-
-  // idleOpt = [
-  //   {id: 1, value: 15},
-  //   {id: 2, value: 20}
-  // ];
-
-  // signAtmpOpt = [
-  //   {id: 1, value: 3},
-  //   {id: 2, value: 5}
-  // ];
-
-  // enfPassOpt = [
-  //   {id: 1, value: 3},
-  //   {id: 2, value: 5}
-  // ];
-
-  // inpOpts = [
-  //   this.minPassOpt,
-  //   this.minSpCharOpt,
-  //   this.passExpOpt,
-  //   this.idleOpt,
-  //   this.signAtmpOpt,
-  //   this.enfPassOpt
-  // ];
-
-  settingsForm = this.fb.group({
+  settingsForm = this._fb.group({
+    ExampleData: '', 
+    accountstatus:'',
+    statusdate:'',
+    accexpiration:'',
+    emailaddress:'',
+    username: '', 
+    position:'',
+    TAFG:'',
+    division:'',
+    last:'',
     company: '',
-    phone: '',
-    email: '',
+    mobilenumber: '',
     web: '',
     address: '',
-    // minPass: this.minPassOpt,
-    // minSpChar: this.minSpCharOpt,
-    // passExp: this.passExpOpt,
-    // idle: this.idleOpt,
-    // signAtmp: this.signAtmpOpt,
-    // enfPass: this.enfPassOpt
+   
   });
 
   save(){

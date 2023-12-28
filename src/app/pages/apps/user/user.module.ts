@@ -16,6 +16,13 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { UserListComponent } from './user-list/user-list.component';
 import { UserRoutingModule } from './user-routing.module';
 import { ProfileComponent } from './profile/profile.component';
+
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatTabsModule } from '@angular/material/tabs';
+
+
+
+
 @NgModule({
   declarations: [UserListComponent,ProfileComponent],
   imports: [
@@ -34,7 +41,11 @@ import { ProfileComponent } from './profile/profile.component';
     MatTooltipModule,
     ReactiveFormsModule,
     MatSelectModule,
-    MatButtonToggleModule
+    MatButtonToggleModule,
+    MatSlideToggleModule,
+    MatTabsModule
+
+   
   ]
 })
 export class UserModule {
