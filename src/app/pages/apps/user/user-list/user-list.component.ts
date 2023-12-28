@@ -112,11 +112,10 @@ export class UserListComponent implements OnInit, OnDestroy, AfterViewInit {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }
-
   createCustomer() {
-    this.router.navigate(['apps/user-edit']);
+    this.router.navigate(['apps/user-add']);
   }
-
+  
   updateCustomer(customer: any) {
   }
 

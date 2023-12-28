@@ -1,7 +1,6 @@
 
 import { securityApi } from '../api/security-api.service';
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
 
 @Injectable({
@@ -12,7 +11,7 @@ export class SecurityService {
   
   constructor(
     private _securityApi: securityApi,
-    private _router: Router
+
   ) { }
 
   sendEmail(to: string): Observable<any> {
