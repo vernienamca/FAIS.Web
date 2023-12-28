@@ -5,6 +5,7 @@ import {FormGroup,FormBuilder} from '@angular/forms';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { SecurityService } from 'src/app/core/services/security.service';
 import {  Subject,takeUntil } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'vex-forgot-password',
@@ -59,8 +60,6 @@ this.aFormGroup = this.formBuilder.group({
     this.sendEmail();
  
 }
-
-sendEmail(): void {
 sendEmail(): void {
   this._securityService.sendEmail(this.form.value.email)
     .pipe(takeUntil(this._onDestroy$))
