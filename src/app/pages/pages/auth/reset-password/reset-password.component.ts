@@ -70,7 +70,7 @@ send() {
  
   if (this.form.get('password').valid && this.form.get('confirmPassword').valid && this.passwordsMatch()) {
     const newPassword = this.form.get('password').value;
-    this._securityService.ResetPassword(newPassword, this.tempKey).subscribe({
+    this._securityService.resetPassword(newPassword, this.tempKey).subscribe({
       next: data => {
 
     
