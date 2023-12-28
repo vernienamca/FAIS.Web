@@ -41,6 +41,9 @@ export class SidenavComponent implements OnInit {
 
   ngOnInit() {
     const userId = parseFloat(localStorage.getItem('user_id'));
+    if (!userId) {
+      return;
+    }
     this.getNavigationItems(userId);
   }
 
