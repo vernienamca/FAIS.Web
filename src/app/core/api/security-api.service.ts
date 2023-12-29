@@ -20,4 +20,8 @@ export class securityApi extends BaseApi {
   resetPassword(newPassword: string, tempKey: string): Observable<any> {
     return this.put<any>(`${this._apiUrl}/Security/reset-password?tempKey=${tempKey}`, { newPassword });
   }
+
+  changePassword(oldPassword: string,newPassword: string): Observable<any> {
+    return this.post<any>(`${this._apiUrl}/Security/change-password`, { oldPassword,newPassword });
+  }
 }

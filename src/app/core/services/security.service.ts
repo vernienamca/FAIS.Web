@@ -24,5 +24,9 @@ export class SecurityService {
   resetPassword(newPassword: string, tempKey: string): Observable<any> {
     return this._securityApi.resetPassword(newPassword,tempKey);
   }
+
+  changePassword(oldPassword: string,newPassword: string): Observable<any> {
+    return this._securityApi.changePassword(oldPassword, newPassword);
+  }
 }
 
