@@ -68,7 +68,7 @@
                         <div class="row">
                             <div class="form-input">
                                 <label for="em-input">First Name</label>
-                                <input type="text" id="user-input" placeholder="Keach" formControlName="username">
+                                <input type="text" id="user-input" placeholder="Keach" formControlName="First">
                             </div>
                             <div class="form-input">
                                 <label for="web-input">Last Name</label>
@@ -107,8 +107,9 @@
                        
                         <div class="form-input">
                             <label for="addr-input">Division</label>
-                            <input type="text" id="div-input" placeholder="Division" formControlName="division">
-                     
+                            <mat-select placeholder="Select Division"formControlName="division"> 
+                            <mat-option *ngFor="let division of division" [value]="division"> {{division}}</mat-option>
+                          </mat-select>
                        </div>
 
                         <div class="row">

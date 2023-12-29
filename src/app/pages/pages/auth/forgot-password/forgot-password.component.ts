@@ -5,7 +5,7 @@ import {FormGroup,FormBuilder} from '@angular/forms';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { SecurityService } from 'src/app/core/services/security.service';
 import {  Subject,takeUntil } from 'rxjs';
-
+import { Router } from '@angular/router';
 @Component({
   selector: 'vex-forgot-password',
   templateUrl: './forgot-password.component.html',
@@ -34,21 +34,17 @@ public postJsonValue: any;
     private _securityService: SecurityService,
     private _router: Router
   ) { }
-
   ngOnInit():void {
 this.aFormGroup = this.formBuilder.group({
   recaptcha:['', Validators.required]
 })
   } 
-
   ngOnDestroy(): void {
     this._onDestroy$.next();
     this._onDestroy$.complete();
   }
-
-
+  // siteKey:string ="6Lfm5R4pAAAAAH8_jyMZ7AVsigdgQWzHiow3Q7a5";
   siteKey:string ="6Lfm5R4pAAAAAH8_jyMZ7AVsigdgQWzHiow3Q7a5";
-
   send(event: Event) {
     event.preventDefault();
     if (this.form.invalid) {
@@ -60,7 +56,6 @@ this.aFormGroup = this.formBuilder.group({
  
 }
 
-sendEmail(): void {
 sendEmail(): void {
   this._securityService.sendEmail(this.form.value.email)
     .pipe(takeUntil(this._onDestroy$))

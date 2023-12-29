@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { FormControl } from '@angular/forms';
-
 import {ThemePalette} from '@angular/material/core';
+import { DateTime } from 'luxon';
+import { UserService } from 'src/app/core/services/user.service';
 
 
 
@@ -15,7 +16,6 @@ export interface RolesElement {
 
 const ELEMENT_DATA: RolesElement[] = [
   { position: 'Admin', description: 'Description Accountant...', date: new Date('2023-07-18T14:00:00'), isToggled: false },
-
   {position: 'PAD Analyst', description: 'Description Librarian...',  date: new Date('2023-07-18T14:00:00'), isToggled: false },
   {position: 'PAD Verifier', description: 'Description Super Admin',  date: new Date('2023-07-18T14:00:00'),  isToggled: false },
   {position: 'PAD Approver', description: 'Description Accountant', date: new Date('2023-07-18T14:00:00'), isToggled: false },
@@ -41,13 +41,18 @@ export class UserAddComponent {
   color: ThemePalette = 'accent';
   isToggled: boolean = false;
   selectedPhoto: string | null = null;
-  positions: string[] = ['Supervisor', 'Manager', 'Employee', 'Other'];
-  division: string[] = ['PAD', 'ARMD',];
+  positions: string[] = [];
+  division: string[] = [];
   status: string[] = ['Active', 'Inactive',];
   displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
   dataSource = ELEMENT_DATA;
   searchCtrl: FormControl = new FormControl();
   
+  constructor(
+    private _fb: FormBuilder,
+    private _userService: UserService, ) {}
+
+
 
   handleToggle(element: RolesElement) {
     element.isToggled = !element.isToggled;
@@ -71,10 +76,29 @@ export class UserAddComponent {
       reader.onerror = error => reject(error);
     });
   }
-  constructor(private _fb: FormBuilder) {}
 
-
-
+  ngOnInit(): void {
+    this._userService.getLibraryNamesByCode('PST').subscribe(
+      (positionData) => {
+        console.log('Position Data:', positionData);
+        if (positionData) {
+          this.positions = positionData; 
+        }
+      }
+    );
+  
+    this._userService.getLibraryNamesByCode('DIV').subscribe(
+      (divisionData) => {
+        console.log('Division Data:', divisionData);
+        if (divisionData) {
+          this.division = divisionData; 
+        }
+      }
+    );
+  }
+ 
+// TODO: CLEAN THIS VARIABLES MAKE IT SIMPLE DECLARE IT ONCE 
+//REMOVE ERROR AND CONSOLE LOGS
   settingsForm = this._fb.group({
     ExampleData: '', 
     accountstatus:'',
@@ -86,16 +110,51 @@ export class UserAddComponent {
     TAFG:'',
     division:'',
     last:'',
-    company: '',
     mobilenumber: '',
-    web: '',
-    address: '',
+    First:'',
    
   });
 
-  save(){
-    console.log('form value',this.settingsForm.value);
+  save() {
+    console.log('form value', this.settingsForm.value);
+  
+    const userDTO = {
+      EmployeeNumber: this.settingsForm.value.ExampleData,
+      accountstatus: '1',
+      statusDate: this.settingsForm.value.statusdate,
+      dateExpired: this.settingsForm.value.accexpiration,
+      emailAddress: this.settingsForm.value.emailaddress,
+      userName: this.settingsForm.value.username,
+      positionName: this.settingsForm.value.position,
+      divisionName: this.settingsForm.value.division,
+      TAFG: this.settingsForm.value.TAFG,
+      firstName: this.settingsForm.value.First,
+      lastName: this.settingsForm.value.last,
+      password: 'test',
+      createdBy: 1, 
+      updatedBy: 1, 
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    };
+  
+    console.log('userDTO:', userDTO);
+  
+    this._userService.addUser(userDTO).subscribe(
+      (addedUser) => {
+        console.log('User added successfully:', addedUser);
+        this.settingsForm.reset();
+      },
+      (error) => {
+        console.error('Error adding user:', error);
     
+        if (error.error) {
+          console.error('Error details:', error.error);
+        } else {
+          console.error('No additional error details.');
+        }
+      }
+    );
+    } 
+  
   }
 
-}
