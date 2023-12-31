@@ -39,6 +39,9 @@ export class ToolbarComponent implements OnInit, OnDestroy  {
     private _datePipe: DatePipe
   ) { 
     const userId = parseFloat(localStorage.getItem('user_id'));
+    if (!userId) {
+      return;
+    }
     this._portalService.getUser(userId)
       .pipe(takeUntil(this._onDestroy$))
       .subscribe(data => {

@@ -5,7 +5,7 @@
   </button>
 </vex-secondary-toolbar>
 
-<div class="container p-gutter grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+<div class="container p-gutter grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4" [class.container]="false" [class.px-gutter]="true">
   <vex-widget-assistant class="sm:col-span-2"></vex-widget-assistant>
   <vex-widget-quick-line-chart icon="mat:pageview" [series]="pageViewsSeries" iconClass="text-primary bg-primary/10"
     label="Cost Centers" value="54"></vex-widget-quick-line-chart>
@@ -13,3 +13,4 @@
     iconClass="text-orange bg-orange/10" label="Asset Profile" value="120"></vex-widget-quick-line-chart>
   <vex-widget-large-goal-chart [series]="salesSeries" class="sm:col-span-full" total="4,374"></vex-widget-large-goal-chart>
 </div>
+
