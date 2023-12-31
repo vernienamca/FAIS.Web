@@ -16,6 +16,8 @@ import { DatePipe } from '@angular/common';
 import { SecurityService } from './core/services/security.service';
 import { securityApi } from './core/api/security-api.service';
 import { UserApi } from './core/api/user-api.service';
+import { RoleApi } from './core/api/role-api.service';
+import { RoleService } from './core/services/role.service';
 
 @NgModule({
   declarations: [AppComponent, ForgotPasswordComponent],
@@ -40,7 +42,9 @@ import { UserApi } from './core/api/user-api.service';
     PortalService,
     SecurityService,
     securityApi,
-    UserApi
+    UserApi,
+    RoleApi,
+    RoleService
   ],
   bootstrap: [AppComponent]
 })

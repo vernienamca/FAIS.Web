@@ -1,16 +1,231 @@
 <div class="breadcrumb d-flex">
-  <div class="row">
-      <div class="col">
-          <span>System Management ></span>
-          <span>System Settings ></span>
-          <span>Edit System Settings</span>
-      </div>
-  </div>
+    <div class="row">
+        <div class="col">
+            <span>My Profile</span>
+ 
+        </div>
+    </div>
 
-  <div class="options">
-      <div class="btn-opt m-5">
-          <button class="save" (click)="save()">Save</button>
-          <button class="close">Close</button>
+    <div class="options">
+        <div class="btn-opt" style="display: flex;">
+          <button class="save" (click)="save()" style="display: flex; align-items: center;">
+            <mat-icon svgIcon="mat:folder"></mat-icon> Save
+          </button>
+          <button class="close" style="display: flex; align-items: center;">
+            <mat-icon svgIcon="mat:close"></mat-icon> Close
+          </button>
+        </div>
       </div>
-  </div>
+      
+
+</div>
+<div class="settings" [formGroup]="settingsForm">
+    <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="center" dynamicHeight class="tabs">
+        <mat-tab label="General">
+            <div class="profile" style="padding-left: 50px; display: flex; align-items: flex-start;">
+
+                <div class="box-placeholder">
+                    <img *ngIf="selectedPhoto" [src]="selectedPhoto" alt="Selected Photo" class="center-image" width="48" height="48">
+                    <div *ngIf="!selectedPhoto">
+                      <mat-icon color="primary" svgIcon="mat:account_circle" class="center-icon" size="48"></mat-icon>
+                    </div>
+                    <div>
+                      <input type="file" (change)="onFileSelected($event)" accept="image/*" style="display: none" #fileInput />
+                      <button mat-button (click)="fileInput.click()">Attach Photo</button>
+                    </div>
+                  </div>
+                  
+
+
+               <div class="gen-set" style="display: flex; justify-content: center; align-items: center; width: 80%; height: 100%;">
+
+                    <div class="gen-set-items">
+                        <div class="row">
+                            <div class="form-input">
+                                <label for="comp-input">Empno</label>
+                                <input type="text" id="comp-input" placeholder="Example Data" formControlName="ExampleData">
+                            </div>
+
+                        
+                        </div>
+                        <div class="row">
+                            <div class="form-input">
+                                <label for="em-input">Username</label>
+                                <input type="text" id="user-input" placeholder="Keach 101" formControlName="username">
+                            </div>
+
+                            <div class="form-input">
+                                <label for="comp-input">Position</label>
+                                <mat-select placeholder="Select Position" formControlName="position">
+                                  <mat-option *ngFor="let position of positions" [value]="position">{{ position }}</mat-option>
+                                </mat-select>
+                              </div>
+
+                           
+                        </div>
+
+                        <div class="row">
+                            <div class="form-input">
+                                <label for="em-input">First Name</label>
+                                <input type="text" id="user-input" placeholder="Keach" formControlName="First">
+                            </div>
+                            <div class="form-input">
+                                <label for="web-input">Last Name</label>
+                                <input type="text" id="web-input" placeholder="Dela Cruz" formControlName="last">
+                            </div>
+
+                            
+                        </div>
+
+                        
+                        <div class="row">
+                            <div class="form-input">
+                                <label for="addr-input">Email Address</label>
+                                <input type="text" id="addr-input" placeholder="Keah@email.com" formControlName="emailaddress">
+                            </div>
+                            <div class="form-input">
+                                <label for="web-input">Mobile Number</label>
+                                <input type="number" id="mobile-input" placeholder="09171233456" formControlName="mobilenumber">
+                            </div>
+
+                            
+                        </div>
+
+                        <div class="row">
+                            <div class="form-input">
+                                <label for="em-input">TA-FG</label>
+                                <input type="text" id="tafg-input" placeholder="TAFG" formControlName="TAFG">
+                            </div>
+                            <div class="form-input">
+                                <label for="web-input">OUP-FG</label>
+                                <input type="number" id="OUP-FGinput" placeholder="HO" formControlName="OUPFG">
+                            </div>
+
+                            
+                        </div>
+                       
+                        <div class="form-input">
+                            <label for="addr-input">Division</label>
+                            <mat-select placeholder="Select Division"formControlName="division"> 
+                            <mat-option *ngFor="let division of division" [value]="division"> {{division}}</mat-option>
+                          </mat-select>
+                       </div>
+
+                        <div class="row">
+                            <div class="form-input">
+                                <label for="acc-input"> Account Status</label>
+                                <mat-select placeholder="Select Status" formControlName="accountstatus"> 
+                                <mat-option *ngFor="let status of status" [value]="status">{{ status }}</mat-option>
+                                </mat-select>
+           
+                            </div>
+                            <div class="form-input">
+                                <label for="web-input">Status Date</label>
+                                <input type="datetime" id="date-input" placeholder="status date " formControlName="statusdate">
+                            </div>
+
+
+                            
+                            
+                        </div>
+
+                        <div class="row">
+                            <div class="form-input">
+                              <label for="acc-input">Account Expiration Date</label>
+                              <mat-form-field appearance="fill">
+                                <input matInput [matDatepicker]="expirationPicker" placeholder="Select Date" formControlName="accexpiration" style="border-bottom: none;">
+                                <mat-datepicker-toggle matSuffix [for]="expirationPicker"></mat-datepicker-toggle>
+                                <mat-datepicker #expirationPicker></mat-datepicker>
+                              </mat-form-field>
+                            </div>
+                          </div>
+                          
+                          
+
+                    </div>
+          
+            <!-- USER ROLE NAVIGATION EDIT -->
+     
+            <mat-tab label="User Role">
+                <div class="conf-set">
+                    <div class="Userprofile" style="padding-left: 50px; display: flex; align-items: flex-start;">
+            
+                      <div class="box-placeholder2">
+                        <mat-icon color="primary" svgIcon="mat:account_circle" class="center-icon" size="48"></mat-icon>
+                        <div style="display: flex; flex-direction: column; align-items: center;">
+                          <input type="file" (change)="onFileSelected($event)" accept="image/*" style="display: none" #fileInput />
+                          <button mat-button (click)="fileInput.click()" style="margin-top: 10px;">Attach Photo</button>
+                          <img *ngIf="settingsForm.value.selectedPhoto" [src]="settingsForm.value.selectedPhoto" alt="User Photo" style="width: 100px; height: 100px; border-radius: 50%; margin-top: 10px;" />
+                          <p style="font-size: 20px; font-family: 'Poppins'; margin-top: 10px;">{{ settingsForm.get('First').value }} {{ settingsForm.get('last').value }}</p>
+
+                        </div>
+                     
+                      
+
+                   
+            
+                            <div class="StaticInfo" style="display: flex; flex-direction: column; align-items: left; margin-top: 40px;">
+                                <div class="row no-margin">
+                                 
+                                    <p>Position:</p>
+                                    <p>{{ settingsForm.get('position').value }}</p>
+                                </div>
+                                <hr>
+                                <div class="row no-margin">
+                                 
+                                    <p style="margin-right: 30px;">Last Login date:</p>
+                                    <p>July 24, 2023 3:00 PM</p>
+                                </div>
+                                <hr>
+                                <div class="row no-margin">
+                              
+                                    <p>Region:</p>
+                                    <p>T1, T2</p>
+                                </div>
+                            </div>
+                            <hr>
+                        </div>
+
+                        <div class="gen-set" style="display: flex; justify-content: center; align-items: center; width: 80%; height: 100%;"> 
+                            <div class="gen-set-items">
+                                  <table mat-table [dataSource]="USER_ROLE" class="mat-elevation-z8" style="background-color: transparent;">
+                                    <ng-container matColumnDef="position">
+                                      <th mat-header-cell *matHeaderCellDef>Role</th>
+                                      <td mat-cell *matCellDef="let element">{{element.position}}</td>
+                                    </ng-container>
+                                  
+                                    <ng-container matColumnDef="description">
+                                      <th mat-header-cell *matHeaderCellDef>Description</th>
+                                      <td mat-cell *matCellDef="let element">{{element.description}}</td>
+                                    </ng-container>
+                                  
+                                    <ng-container matColumnDef="date">
+                                      <th mat-header-cell *matHeaderCellDef>Date Added</th>
+                                      <td mat-cell *matCellDef="let element">{{element.date}}</td>
+                                    </ng-container>
+                                  
+                                    <ng-container matColumnDef="action">
+                                      <th mat-header-cell *matHeaderCellDef>Action</th>
+                                      <td mat-cell *matCellDef="let element">
+                                        <mat-slide-toggle [checked]="true" (change)="handleToggle(element)" [disabled]="true"></mat-slide-toggle>
+                                      </td>
+                                    </ng-container>
+                                  
+                                    <tr mat-header-row *matHeaderRowDef="['position', 'description', 'date', 'action']"></tr>
+                                    <tr mat-row *matRowDef="let row; columns: ['position', 'description', 'date', 'action']" [ngClass]="{'toggled-row': row.isToggled}"></tr>
+                                    </table>
+                                    
+                                  
+                                  
+                                </div>
+                           
+        
+                            </div>
+                  
+               
+                      
+                      
+                </div>
+
+
 </div>

@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { FormControl } from '@angular/forms';
 import {ThemePalette} from '@angular/material/core';
-import { DateTime } from 'luxon';
 import { UserService } from 'src/app/core/services/user.service';
 
 
@@ -47,7 +46,7 @@ export class UserAddComponent {
   displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
   dataSource = ELEMENT_DATA;
   searchCtrl: FormControl = new FormControl();
-  
+
   constructor(
     private _fb: FormBuilder,
     private _userService: UserService, ) {}
@@ -98,7 +97,7 @@ export class UserAddComponent {
   }
  
 // TODO: CLEAN THIS VARIABLES MAKE IT SIMPLE DECLARE IT ONCE 
-//REMOVE ERROR AND CONSOLE LOGS
+//REMOVE ERROR AND
   settingsForm = this._fb.group({
     ExampleData: '', 
     accountstatus:'',
@@ -112,29 +111,37 @@ export class UserAddComponent {
     last:'',
     mobilenumber: '',
     First:'',
+    OUPFG: '',
    
   });
 
   save() {
     console.log('form value', this.settingsForm.value);
-  
+    const defaultPassword = 'changeme';
+    console.log('TAFG value:', this.settingsForm.value.TAFG);
+    console.log('TAFG value:', this.settingsForm.value.OUPFG);
+
     const userDTO = {
       EmployeeNumber: this.settingsForm.value.ExampleData,
-      accountstatus: '1',
+      statusCode: '1',
       statusDate: this.settingsForm.value.statusdate,
       dateExpired: this.settingsForm.value.accexpiration,
       emailAddress: this.settingsForm.value.emailaddress,
       userName: this.settingsForm.value.username,
       positionName: this.settingsForm.value.position,
       divisionName: this.settingsForm.value.division,
+      mobileNumber: this.settingsForm.value.mobilenumber,
       TAFG: this.settingsForm.value.TAFG,
       firstName: this.settingsForm.value.First,
       lastName: this.settingsForm.value.last,
-      password: 'test',
+      password: defaultPassword,
       createdBy: 1, 
       updatedBy: 1, 
       createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
+      updatedAt: new Date().toISOString(),
+      photo: this.selectedPhoto,
+      OupFgId: this.settingsForm.value.OUPFG,
+      sessionId: null
     };
   
     console.log('userDTO:', userDTO);

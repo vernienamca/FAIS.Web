@@ -43,7 +43,7 @@ this.aFormGroup = this.formBuilder.group({
     this._onDestroy$.next();
     this._onDestroy$.complete();
   }
-  // siteKey:string ="6Lfm5R4pAAAAAH8_jyMZ7AVsigdgQWzHiow3Q7a5";
+
   siteKey:string ="6Lfm5R4pAAAAAH8_jyMZ7AVsigdgQWzHiow3Q7a5";
   send(event: Event) {
     event.preventDefault();
@@ -52,6 +52,7 @@ this.aFormGroup = this.formBuilder.group({
     }
     this.imageUrl = 'assets/img/icons/forgot-password-icons/reset-password-sent.svg';
     this.passwordSent = true;
+    console.log('ngx-recaptcha2 SiteKey:', this.siteKey);
     this.sendEmail();
  
 }

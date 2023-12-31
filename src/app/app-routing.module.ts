@@ -67,10 +67,8 @@ const routes: VexRoutes = [
             loadChildren: () => import('./pages/apps/user/user-add/User-add.module').then(m => m.UserAddModule),
           },
 
-      
 
-
-
+          
           {
             path: 'users',
             loadChildren: () => import('./pages/apps/user/user.module').then(m => m.UserModule),
@@ -87,10 +85,7 @@ const routes: VexRoutes = [
               scrollDisabled: false
             }
           },
-          {
-            path: 'user-edit',
-            loadChildren: () => import('./pages/apps/User-Edit/User-Edit.module').then(m => m.UserEditModule),
-          },
+       
           {
             path: 'editor',
             loadChildren: () => import('./pages/apps/editor/editor.module').then(m => m.EditorModule),
@@ -101,7 +96,12 @@ const routes: VexRoutes = [
               {
                 path: 'change-password',
                 loadChildren: () => import('./pages/pages/auth/change-password/change-password.module').then(m => m.ChangePasswordModule),
-              }
+              },
+              {
+                path: 'user-profile',
+                loadChildren: () => import('./pages/apps/user/profile/profile.module.').then(m => m.ProfileModule),
+              },
+           
             ]
           },
         ]

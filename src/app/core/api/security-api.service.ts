@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { BaseApi } from './base-api.service';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { IPermission } from '../models/permission';
-import { NavigationItem } from 'src/@vex/interfaces/navigation-item.interface';
+
 
 @Injectable()
 export class securityApi extends BaseApi {  
