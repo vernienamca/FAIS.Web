@@ -44,7 +44,6 @@ export class AuditLogsListComponent implements OnInit, OnDestroy, AfterViewInit 
     { label: 'Old Values', property: 'oldValues', type: 'text', visible: true },
     { label: 'New Values', property: 'newValues', type: 'text', visible: true },
     { label: 'IP Address', property: 'ipAddress', type: 'text', visible: true },
-    { label: 'Actions', property: 'actions', type: 'button', visible: true }
   ];
 
   layoutCtrl = new UntypedFormControl('fullWidth');
@@ -140,7 +139,10 @@ export class AuditLogsListComponent implements OnInit, OnDestroy, AfterViewInit 
 
   onLabelChange(change: MatSelectChange, row: IAuditLogs) {
     const index = this.logs.findIndex(c => c === row);
-    //this.customers[index].labels = change.value;
     this.subject$.next(this.logs);
+  }
+
+  exportLogs(){
+    // this._portalService.exportAuditLogs()
   }
 }

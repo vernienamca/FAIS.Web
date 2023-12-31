@@ -28,4 +28,8 @@ export class PortalApi extends BaseApi {
     getAuditLogs(): Observable<IAuditLogs[]> {
         return this.get<IAuditLogs>(`${this._apiUrl}/auditLog/get`);
     }
+
+    // exportAuditLogs(): {
+    //     return this.get<any>(`${this._apiUrl}/auditLog/export`);
+    // }
 }
