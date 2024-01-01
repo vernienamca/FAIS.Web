@@ -18,5 +18,8 @@ export class UserService {
   addUser(userDTO: any): Observable<any> {
     return this._userApi.addUser(userDTO);
   }
-
+  
+  updateUser(id: number, userDTO: any): Observable<any> {
+    return this._userApi.updateUser(id, userDTO);
+  }
 }

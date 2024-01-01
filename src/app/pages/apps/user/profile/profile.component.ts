@@ -31,7 +31,6 @@ export class ProfileComponent{
   positions: string[] = [];
   division: string[] = [];
   status: string[] = ['Active', 'Inactive',];
-  displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
   searchCtrl: FormControl = new FormControl();
   userId: string | null;
   userInfo: any;
@@ -52,7 +51,6 @@ export class ProfileComponent{
     First:'',
     selectedPhoto:'',
     OUPFG: ''
-   
   });
 
   constructor(
@@ -143,9 +141,22 @@ export class ProfileComponent{
       }
     );
   }
- 
-  save () {  
-  }
+
+save() {
+  const userIdNumber = +this.userId;
+  const updatedUserData = {
+    lastName: this.settingsForm.get('last')?.value,
+    mobilenumber: this.settingsForm.get('mobilenumber')?.value,
+    updatedBY: userIdNumber
+  };
+
+  this._userService.updateUser(userIdNumber, updatedUserData).subscribe(
+    (result) => {
+      console.log('User updated successfully:', result);
+    },
+    (error) => {
+      console.error('Error updating user:', error);
+    }
+  );
 }
-
-
+}
