@@ -31,4 +31,8 @@ export class PortalService {
   getAuditLogs(): Observable<IAuditLogs[]> {
     return this._portalApi.getAuditLogs();
   }
+
+  exportAuditLogs(): Observable<Blob> {
+    return this._portalApi.exportAuditLogs();
+  }
 }

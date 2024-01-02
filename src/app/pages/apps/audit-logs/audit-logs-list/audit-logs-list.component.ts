@@ -46,7 +46,7 @@ export class AuditLogsListComponent implements OnInit, OnDestroy, AfterViewInit 
     { label: 'IP Address', property: 'ipAddress', type: 'text', visible: true },
   ];
 
-  layoutCtrl = new UntypedFormControl('fullWidth');
+  layoutCtrl = new UntypedFormControl('fullwidth');
   subject$: ReplaySubject<IAuditLogs[]> = new ReplaySubject<IAuditLogs[]>(1);
   data$: Observable<IAuditLogs[]> = this.subject$.asObservable();
   logs: IAuditLogs[];
@@ -142,7 +142,7 @@ export class AuditLogsListComponent implements OnInit, OnDestroy, AfterViewInit 
     this.subject$.next(this.logs);
   }
 
-  exportLogs(){
-    // this._portalService.exportAuditLogs()
+  exportAuditLogs(){
+    this._portalService.exportAuditLogs();
   }
 }
