@@ -16,8 +16,14 @@
  
 }
 
-.box-placeholder2 {
+.btn-opt{
+    background-color: #E9ECEF;
+    margin: 15px 50px;
+    padding: 10px;
+    color: #ffffff;
+}
 
+.box-placeholder2 {
     display: flex;
     justify-content: center;
     flex-direction: column;
@@ -26,9 +32,7 @@
     height: 450px; 
     background-color:transparent; 
     border: 1px solid #ccc; 
-
 }
-
 
 .center-icon {
     font-size: 50px;
@@ -37,19 +41,19 @@
   }
 
 
+
 .save{
-    background-color: green;
-    padding: 7px 15px;
+    background-color: #009246;
+    padding: 3px 15px;
     border-radius: 5px;
     margin-right: 8px;
     display: flex;
     align-items: center;
 }
 
-
 .close{
-    background-color: blue;
-    padding: 7px 15px;
+    background-color: #043C79;
+    padding: 3px 15px;
     border-radius: 5px;
     margin-left: 8px;
     display: flex;

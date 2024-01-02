@@ -19,4 +19,8 @@ export class UserApi extends BaseApi {
   updateUser(id: number, userDTO: any): Observable<any> {
     return this.put<any>(`${this._apiUrl}/User/UpdateUser/${id}`, userDTO);
   }
+  
+  getLastUserId(): Observable<any> {
+    return this.get<any>(`${this._apiUrl}/User/GetLastUserId`);
+  }
 }

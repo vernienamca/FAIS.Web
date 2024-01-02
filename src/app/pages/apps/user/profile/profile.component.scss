@@ -9,11 +9,11 @@
     justify-content: center;
     flex-direction: column;
     align-items: center;
-    width: 329px; 
-    height: 260px; 
+    width: auto; 
+    height: auto; 
     background-color:transparent; 
     border: 1px solid #ccc; 
- 
+    padding: 20px;
 }
 
 
@@ -23,26 +23,25 @@
     padding: 10px;
     color: #ffffff;
 }
+
 .box-placeholder2 {
 
     display: flex;
     justify-content: center;
     flex-direction: column;
     align-items: center;
-    width: 350px; 
-    height: 450px; 
+    width: auto; 
+    height: auto; 
+    padding: 20px;
     background-color:transparent; 
     border: 1px solid #ccc; 
-
 }
-
 
 .center-icon {
     font-size: 50px;
     height: 100px ;
     width: 100px;
   }
-
 
   .save{
     background-color: #009246;
@@ -143,18 +142,3 @@ hr{
 .toggled-row {
     background-color: #d3cccc;
   }
-
-.mat-mdc-slide-toggle.mat-accent {
-
-    --mdc-switch-selected-hover-handle-color: #06b900a1;
-
-    --mdc-switch-selected-hover-track-color: #06b900a1;
-
-    --mdc-switch-selected-pressed-track-color: #06b900a1;
-
-    --mdc-switch-selected-focus-track-color:  #06b900a1;
-
-    --mdc-switch-selected-focus-handle-color: #06b900a1;
-
-
-}

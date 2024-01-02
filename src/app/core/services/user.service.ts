@@ -22,4 +22,7 @@ export class UserService {
   updateUser(id: number, userDTO: any): Observable<any> {
     return this._userApi.updateUser(id, userDTO);
   }
+  getLastUserId(): Observable<any> {
+    return this._userApi.getLastUserId();
+  }
 }

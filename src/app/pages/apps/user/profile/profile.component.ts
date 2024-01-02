@@ -6,7 +6,7 @@ import { UserService } from 'src/app/core/services/user.service';
 import { PortalService } from 'src/app/core/services/portal.service';
 import { RoleService } from 'src/app/core/services/role.service';
 import { DatePipe } from '@angular/common';
-
+import { Router } from '@angular/router';
 
 export interface RolesElement {
   description: string;
@@ -19,8 +19,6 @@ export interface RolesElement {
   selector: 'app-profile',
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss'],
-
-  
 })
 
 export class ProfileComponent{
@@ -58,7 +56,8 @@ export class ProfileComponent{
     private _userService: UserService, 
     private _portalService: PortalService,
     private _roleService: RoleService,
-    private _datePipe: DatePipe, ) {}
+    private _datePipe: DatePipe,
+    private _router: Router ) {}
 
   handleToggle(element: RolesElement) {
     element.isToggled = !element.isToggled;
@@ -67,20 +66,19 @@ export class ProfileComponent{
   onFileSelected(event: any) {
     const file = event.target.files[0];
     if (file) {
-      this.getBase64(file).then((dataUrl: string) => {
-        this.selectedPhoto = dataUrl;
-      });
+      if (this.isBase64(this.userInfo.photo)) {
+        this.selectedPhoto = this.userInfo.photo;
+      } else {
+        this.selectedPhoto = `assets/img/avatars/${this.userInfo.photo}`;
+      }
+
     }
   }
-
-  getBase64(file: File): Promise<string> {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result as string);
-      reader.onerror = error => reject(error);
-    });
+  
+  isBase64(str: string): boolean {
+    return /^data:image\/[a-z]+;base64,/.test(str);
   }
+
 
   ngOnInit(): void {
     this.userId = localStorage.getItem('user_id');
@@ -88,8 +86,7 @@ export class ProfileComponent{
       this._portalService.getUser(+this.userId)
         .subscribe(
           (user: any) => {
-            this.userInfo = user;
-            console.log('User information:', this.userInfo);    
+            this.userInfo = user; 
             this.settingsForm.setValue({
               ExampleData: this.userInfo.employeeNumber,
               accountstatus:this.userInfo.statusCode === 1 ? 'Active' : 'Inactive',
@@ -112,8 +109,6 @@ export class ProfileComponent{
 
             this._roleService.getById(+this.userId).subscribe(
               (roleInfo: any) => {
-                console.log('Role information:', roleInfo);
-            
                 this.USER_ROLE = [{
                   position: roleInfo.name,
                   description: roleInfo.description,
@@ -124,7 +119,7 @@ export class ProfileComponent{
             );
           })
     }
-
+    
     this._userService.getLibraryNamesByCode('PST').subscribe(
       (positionData) => {
         if (positionData) {
@@ -141,6 +136,11 @@ export class ProfileComponent{
       }
     );
   }
+
+  closeProfile() {
+    this._router.navigate(['/']); 
+  }
+  
 
 save() {
   const userIdNumber = +this.userId;
