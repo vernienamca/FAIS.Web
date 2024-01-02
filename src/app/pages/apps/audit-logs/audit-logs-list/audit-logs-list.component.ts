@@ -40,9 +40,12 @@ export class AuditLogsListComponent implements OnInit, OnDestroy, AfterViewInit 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @Input()
   columns: TableColumn<IAuditLogs>[] = [
+    { label: 'Date & Time', property: 'dateCreated', type: 'text', visible: true },
+    { label: 'User', property: 'createdBy', type: 'text', visible: true },
     { label: 'Activity', property: 'activity', type: 'text', visible: true, cssClasses: ['font-medium'] },
-    { label: 'Old Values', property: 'oldValues', type: 'text', visible: true },
-    { label: 'New Values', property: 'newValues', type: 'text', visible: true },
+    { label: 'Module Name', property: 'moduleName', type: 'text', visible: true },
+    { label: 'Old Value', property: 'oldValues', type: 'text', visible: true },
+    { label: 'New Value', property: 'newValues', type: 'text', visible: true },
     { label: 'IP Address', property: 'ipAddress', type: 'text', visible: true },
   ];
 
