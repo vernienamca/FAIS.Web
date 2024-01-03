@@ -4,7 +4,7 @@
   <div class="search-area flex justify-end items-center content-center">
     <h3 class="mr-4 text-neutral-900">Search</h3>
     <mat-form-field appearance="outline" class="mt-5 flex justify-center">
-      <input matInput type="text" placeholder="Search module here">
+      <input matInput type="text" placeholder="Search module here" (keyup)="applyFilter($event)">
       <button type="button" matSuffix class="search-btn !text-black p-3">
         <mat-icon svgIcon="mat:search"></mat-icon>
       </button>

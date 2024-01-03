@@ -42,6 +42,7 @@ export class RoleComponent implements OnInit {
   createdAt:Date;
   modifiedBy:string;
   dateModified:Date;
+  isActive:boolean;
 
   private _roleId = '';
   private _onDestroy$ = new Subject<void>();
@@ -51,7 +52,16 @@ export class RoleComponent implements OnInit {
     private _router: Router,
     private _route: ActivatedRoute,
     private _portalService: PortalService,
-  ) {}
+  ) {
+    this.roleField = this._fb.group({
+      roleName: ['', Validators.required],
+      roleDesc: ['', Validators.required],
+      isActive:  [Boolean],
+      permissions: this._fb.array([
+        this.moduleGroup
+      ])
+  });
+  }
 
   ngOnInit(): void {
     this._roleId = this._route.snapshot.paramMap.get('id');
@@ -71,19 +81,12 @@ export class RoleComponent implements OnInit {
           this.createdAt = role.createdAt;
           this.modifiedBy = role.updatedBy;
           this.dateModified = role.updatedAt;
+          this.isActive = role.isActive;
         }
       });
       this.subject$.next(data);
     });
     
-    this.roleField = this._fb.group({
-      roleName: ['', Validators.required],
-      roleDesc: ['', Validators.required],
-      isActive:  [true],
-      permissions: this._fb.array([
-        this.moduleGroup
-      ])
-  });
   this.removeNullOnLoad();
 
   }
@@ -109,9 +112,9 @@ export class RoleComponent implements OnInit {
     this.moduleGroup = this._fb.group({
       id: [list.id], 
       name: [list.name],
-      create: [list?.create == false],
-      read: [list?.read == false],
-      update: [list?.update == false],
+      create: [true],
+      read: [true],
+      update: [false],
       isAdded: [list?.isAdded]
     })
 
