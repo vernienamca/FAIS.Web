@@ -75,4 +75,9 @@ export class AddModuleComponent implements OnInit{
     });
     return moduleIsAdded;
   }
+
+  applyFilter(event: Event) {
+    const filterModule = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterModule.trim().toLowerCase();
+  }
 }
