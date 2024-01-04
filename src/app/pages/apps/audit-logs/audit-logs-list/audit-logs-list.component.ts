@@ -59,7 +59,8 @@ export class AuditLogsListComponent implements OnInit, OnDestroy, AfterViewInit 
   dataSource: MatTableDataSource<IAuditLogs> | null;
   selection = new SelectionModel<IAuditLogs>(true, []);
   searchCtrl = new UntypedFormControl();
-  labels = aioTableLabels;
+  labels = aioTableLabels;                                                    
+  users = [];
 
   private _onDestroy$ = new Subject<void>();
 
@@ -90,6 +91,7 @@ export class AuditLogsListComponent implements OnInit, OnDestroy, AfterViewInit 
         this.totalCount = logs.length;
         this.logs = logs;
         this.dataSource.data = logs;
+        this.users = logs.map(function(a) {return a.createdBy;}).filter((value, index, self) => self.indexOf(value) === index);
       });
 
     this.searchCtrl.valueChanges.pipe(

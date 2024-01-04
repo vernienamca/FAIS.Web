@@ -18,9 +18,15 @@
     <vex-page-layout-content [class.container]="layoutCtrl.value === 'boxed'" [class.px-gutter]="layoutCtrl.value === 'fullwidth'" class="-mt-6">
       <div class="card overflow-auto -mt-16">
         <div class="bg-app-bar px-6 h-16 border-b sticky left-0 flex items-center">
-          <div class="bg-foreground rounded-full border px-4 max-w-[300px] flex-auto flex items-center border border-gray-300">
+          <div class="bg-foreground rounded border px-2 max-w-[250px] flex-auto flex items-center border border-gray-300">
+            <mat-select placeholder="User" class="py-2 border-0 outline-none w-full bg-transparent">
+              <mat-option *ngFor="let user of users" [value]="user">{{user}}</mat-option>
+            </mat-select>
+          </div>
+          
+          <div style="margin-left: 15px;" class="bg-foreground rounded border px-4 max-w-[300px] flex-auto flex items-center border border-gray-300">
             <mat-icon class="icon-sm text-secondary" svgIcon="mat:search"></mat-icon>
-            <input [formControl]="searchCtrl" class="px-4 py-2 border-0 outline-none w-full bg-transparent" 
+            <input [formControl]="searchCtrl" class="py-2 border-0 outline-none w-full bg-transparent" 
               placeholder="Search audit logs here..." type="search">
           </div>
           <span class="flex-1"></span>
@@ -133,6 +139,7 @@
               *matRowDef="let row; columns: visibleColumns;"
               @fadeInUp
               class="hover:bg-hover trans-ease-out cursor-pointer"
+              [ngClass]="{ 'alternate-row': row.id % 2 === 0 }"
               mat-row></tr>
         </table>
   
