@@ -5,6 +5,7 @@ import { IModule } from "../models/module";
 import { IRole } from "../models/role";
 import { IUser } from "../models/user";
 import { IAuditLogs } from "../models/audit-logs";
+import { HttpResponse } from '@angular/common/http';
 
 export class PortalApi extends BaseApi {
     private _apiUrl = `${environment.apiGatewayBaseUrl}`;
@@ -29,7 +30,11 @@ export class PortalApi extends BaseApi {
         return this.get<IAuditLogs>(`${this._apiUrl}/auditLog/get`);
     }
 
-    exportAuditLogs(): Observable<any>  {
-        return this.post<any>(`${this._apiUrl}/auditLog/export`, null);
+    exportAuditLogs(): Observable<HttpResponse<Blob>>  {
+        return this.get(`${this._apiUrl}/auditLog/export`, 
+        {
+            observe: 'response',
+            responseType: 'blob' as 'json'
+        });
     }
 }
