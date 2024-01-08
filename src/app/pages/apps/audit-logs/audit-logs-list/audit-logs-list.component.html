@@ -23,19 +23,18 @@
               <mat-option *ngFor="let user of users" [value]="user">{{user}}</mat-option>
             </mat-select>
           </div>
-          
           <div style="margin-left: 15px;" class="bg-foreground rounded border px-4 max-w-[300px] flex-auto flex items-center border border-gray-300">
             <mat-icon class="icon-sm text-secondary" svgIcon="mat:search"></mat-icon>
             <input [formControl]="searchCtrl" class="py-2 border-0 outline-none w-full bg-transparent" 
               placeholder="Search audit logs here..." type="search">
           </div>
-          <span class="flex-1"></span>
-          <button [matMenuTriggerFor]="columnFilterMenu" class="ml-4 flex-none" mat-icon-button matTooltip="Filter Columns" type="button">
-            <mat-icon svgIcon="mat:filter_list"></mat-icon>
+          <button mat-button style="margin-left: 15px;background-color:#043B7b;color:#ffff">
+            <mat-icon svgIcon="mat:Shared"></mat-icon>
+            <span>Open Shared Folder</span>
           </button>
-          <button (click)="exportAuditLogs()" class="ml-4 flex-none" color="primary"
-            mat-mini-fab matTooltip="Export Logs" type="button">
+          <button (click)="exportAuditLogs()" mat-button style="margin-left: 15px;background-color:#043B7b;color:#ffff">
             <mat-icon svgIcon="mat:download"></mat-icon>
+            <span>Export Audit Logs</span>
           </button>
         </div>
   
@@ -133,7 +132,7 @@
               </button>
             </td>
           </ng-container>
-  
+
           <tr *matHeaderRowDef="visibleColumns" mat-header-row></tr>
           <tr
               *matRowDef="let row; columns: visibleColumns;"

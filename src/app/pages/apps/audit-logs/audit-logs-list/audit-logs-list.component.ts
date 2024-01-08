@@ -16,6 +16,8 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { MatSelectChange } from '@angular/material/select';
 import { PortalService } from 'src/app/core/services/portal.service';
 import { IAuditLogs } from 'src/app/core/models/audit-logs';
+import { Pipe, PipeTransform } from '@angular/core';
+import { FormControl } from '@angular/forms';
 
 @UntilDestroy()
 @Component({
@@ -149,5 +151,13 @@ export class AuditLogsListComponent implements OnInit, OnDestroy, AfterViewInit 
 
   exportAuditLogs(){
     this._portalService.exportAuditLogs();
+  }
+
+  transform(items: any[], filter:string) : any{
+    if(!items || !filter){
+      return items;
+    }
+
+    return items.filter(item => item.includes(filter));
   }
 }
