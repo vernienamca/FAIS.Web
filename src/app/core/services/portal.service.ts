@@ -50,4 +50,11 @@ export class PortalService {
       link.click();
     });
   }
+
+  openFolder() : void {
+    this._portalApi.openFolder().subscribe(
+      (response) => {
+      },
+    )
+  }
 }

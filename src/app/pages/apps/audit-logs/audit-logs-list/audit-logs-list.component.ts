@@ -17,7 +17,6 @@ import { MatSelectChange } from '@angular/material/select';
 import { PortalService } from 'src/app/core/services/portal.service';
 import { IAuditLogs } from 'src/app/core/models/audit-logs';
 import { Pipe, PipeTransform } from '@angular/core';
-import { FormControl } from '@angular/forms';
 
 @UntilDestroy()
 @Component({
@@ -61,8 +60,12 @@ export class AuditLogsListComponent implements OnInit, OnDestroy, AfterViewInit 
   dataSource: MatTableDataSource<IAuditLogs> | null;
   selection = new SelectionModel<IAuditLogs>(true, []);
   searchCtrl = new UntypedFormControl();
+  userCtrl = new UntypedFormControl();
+  userFilterCtrl = new UntypedFormControl();
   labels = aioTableLabels;                                                    
   users = [];
+
+  public filteredUsers: ReplaySubject<string[]> = new ReplaySubject<string[]>(1);
 
   private _onDestroy$ = new Subject<void>();
 
@@ -99,6 +102,31 @@ export class AuditLogsListComponent implements OnInit, OnDestroy, AfterViewInit 
     this.searchCtrl.valueChanges.pipe(
       untilDestroyed(this)
     ).subscribe(value => this.onFilterChange(value));
+
+    // listen for search field value changes
+    this.userFilterCtrl.valueChanges
+      .pipe(untilDestroyed(this))
+      .subscribe(() => {
+        this.filterUsers();
+      });
+  }
+
+   protected filterUsers() {
+    if (!this.users) {
+      return;
+    }
+
+    let search = this.userFilterCtrl.value;
+    if (!search) {
+      this.filteredUsers.next(this.users.slice());
+      return;
+    } else {
+      search = search.toLowerCase();
+    }
+
+    this.filteredUsers.next(
+      this.users.filter(user => user.name.toLowerCase().indexOf(search) > -1)
+    );
   }
 
   ngOnDestroy(): void {
@@ -151,6 +179,10 @@ export class AuditLogsListComponent implements OnInit, OnDestroy, AfterViewInit 
 
   exportAuditLogs(){
     this._portalService.exportAuditLogs();
+  }
+
+  openFolder(){
+    this._portalService.openFolder();
   }
 
   openFileExplorer(){

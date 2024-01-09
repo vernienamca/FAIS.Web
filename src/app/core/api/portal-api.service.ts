@@ -37,4 +37,8 @@ export class PortalApi extends BaseApi {
             responseType: 'blob' as 'json'
         });
     }
+
+    openFolder(): Observable<any> {
+        return this.get<any>(`${this._apiUrl}/auditLog/openFolder`);
+    }
 }
