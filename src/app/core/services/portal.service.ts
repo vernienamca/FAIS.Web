@@ -5,6 +5,7 @@ import { IModule } from '../models/module';
 import { IRole } from '../models/role';
 import { IUser } from '../models/user';
 import { IAuditLogs } from '../models/audit-logs';
+import { IStringInterpolation } from '../models/string-interpolation';
 
 @Injectable({
   providedIn: 'root'
@@ -30,5 +31,9 @@ export class PortalService {
 
   getAuditLogs(): Observable<IAuditLogs[]> {
     return this._portalApi.getAuditLogs();
+  }
+
+  getStringInterpolation(): Observable<IStringInterpolation[]> {
+    return this._portalApi.getStringInterpolation();
   }
 }
