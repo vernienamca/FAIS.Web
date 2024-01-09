@@ -28,7 +28,7 @@
             <input [formControl]="searchCtrl" class="py-2 border-0 outline-none w-full bg-transparent" 
               placeholder="Search audit logs here..." type="search">
           </div>
-          <button mat-button style="margin-left: 15px;background-color:#043B7b;color:#ffff">
+          <button (click)="openFileExplorer()" mat-button style="margin-left: 15px;background-color:#043B7b;color:#ffff">
             <mat-icon svgIcon="mat:Shared"></mat-icon>
             <span>Open Shared Folder</span>
           </button>
@@ -37,7 +37,7 @@
             <span>Export Audit Logs</span>
           </button>
         </div>
-  
+        <input type="file" id="fileInput" style="display: none;">
         <table @stagger [dataSource]="dataSource" class="w-full" mat-table matSort>
           <!--- Note that these columns can be defined in any order.
                 The actual rendered columns are set as a property on the row definition" -->

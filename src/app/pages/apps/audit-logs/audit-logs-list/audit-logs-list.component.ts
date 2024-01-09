@@ -153,6 +153,11 @@ export class AuditLogsListComponent implements OnInit, OnDestroy, AfterViewInit 
     this._portalService.exportAuditLogs();
   }
 
+  openFileExplorer(){
+    const fileInput = document.getElementById('fileInput') as HTMLInputElement;
+    fileInput.click();
+  }
+
   transform(items: any[], filter:string) : any{
     if(!items || !filter){
       return items;
