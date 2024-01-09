@@ -16,6 +16,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { MatSelectChange } from '@angular/material/select';
 import { PortalService } from 'src/app/core/services/portal.service';
 import { IAuditLogs } from 'src/app/core/models/audit-logs';
+import { Pipe, PipeTransform } from '@angular/core';
 
 @UntilDestroy()
 @Component({
@@ -40,13 +41,16 @@ export class AuditLogsListComponent implements OnInit, OnDestroy, AfterViewInit 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @Input()
   columns: TableColumn<IAuditLogs>[] = [
+    { label: 'Date & Time', property: 'dateCreated', type: 'text', visible: true },
+    { label: 'User', property: 'createdBy', type: 'text', visible: true },
     { label: 'Activity', property: 'activity', type: 'text', visible: true, cssClasses: ['font-medium'] },
-    { label: 'Old Values', property: 'oldValues', type: 'text', visible: true },
-    { label: 'New Values', property: 'newValues', type: 'text', visible: true },
+    { label: 'Module Name', property: 'moduleName', type: 'text', visible: true },
+    { label: 'Old Value', property: 'oldValues', type: 'text', visible: true },
+    { label: 'New Value', property: 'newValues', type: 'text', visible: true },
     { label: 'IP Address', property: 'ipAddress', type: 'text', visible: true },
   ];
 
-  layoutCtrl = new UntypedFormControl('fullWidth');
+  layoutCtrl = new UntypedFormControl('fullwidth');
   subject$: ReplaySubject<IAuditLogs[]> = new ReplaySubject<IAuditLogs[]>(1);
   data$: Observable<IAuditLogs[]> = this.subject$.asObservable();
   logs: IAuditLogs[];
@@ -56,7 +60,12 @@ export class AuditLogsListComponent implements OnInit, OnDestroy, AfterViewInit 
   dataSource: MatTableDataSource<IAuditLogs> | null;
   selection = new SelectionModel<IAuditLogs>(true, []);
   searchCtrl = new UntypedFormControl();
-  labels = aioTableLabels;
+  userCtrl = new UntypedFormControl();
+  userFilterCtrl = new UntypedFormControl();
+  labels = aioTableLabels;                                                    
+  users = [];
+
+  public filteredUsers: ReplaySubject<string[]> = new ReplaySubject<string[]>(1);
 
   private _onDestroy$ = new Subject<void>();
 
@@ -87,11 +96,37 @@ export class AuditLogsListComponent implements OnInit, OnDestroy, AfterViewInit 
         this.totalCount = logs.length;
         this.logs = logs;
         this.dataSource.data = logs;
+        this.users = logs.map(function(a) {return a.createdBy;}).filter((value, index, self) => self.indexOf(value) === index);
       });
 
     this.searchCtrl.valueChanges.pipe(
       untilDestroyed(this)
     ).subscribe(value => this.onFilterChange(value));
+
+    // listen for search field value changes
+    this.userFilterCtrl.valueChanges
+      .pipe(untilDestroyed(this))
+      .subscribe(() => {
+        this.filterUsers();
+      });
+  }
+
+   protected filterUsers() {
+    if (!this.users) {
+      return;
+    }
+
+    let search = this.userFilterCtrl.value;
+    if (!search) {
+      this.filteredUsers.next(this.users.slice());
+      return;
+    } else {
+      search = search.toLowerCase();
+    }
+
+    this.filteredUsers.next(
+      this.users.filter(user => user.name.toLowerCase().indexOf(search) > -1)
+    );
   }
 
   ngOnDestroy(): void {
@@ -142,7 +177,24 @@ export class AuditLogsListComponent implements OnInit, OnDestroy, AfterViewInit 
     this.subject$.next(this.logs);
   }
 
-  exportLogs(){
-    // this._portalService.exportAuditLogs()
+  exportAuditLogs(){
+    this._portalService.exportAuditLogs();
+  }
+
+  openFolder(){
+    this._portalService.openFolder();
+  }
+
+  openFileExplorer(){
+    const fileInput = document.getElementById('fileInput') as HTMLInputElement;
+    fileInput.click();
+  }
+
+  transform(items: any[], filter:string) : any{
+    if(!items || !filter){
+      return items;
+    }
+
+    return items.filter(item => item.includes(filter));
   }
 }

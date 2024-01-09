@@ -6,6 +6,7 @@ import { IRole } from "../models/role";
 import { IUser } from "../models/user";
 import { IAuditLogs } from "../models/audit-logs";
 import { IStringInterpolation } from "../models/string-interpolation";
+import { HttpResponse } from '@angular/common/http';
 
 export class PortalApi extends BaseApi {
     private _apiUrl = `${environment.apiGatewayBaseUrl}`;
@@ -34,7 +35,15 @@ export class PortalApi extends BaseApi {
         return this.get<IStringInterpolation>(`${this._apiUrl}/notification/get`);
     }
 
-    // exportAuditLogs(): {
-    //     return this.get<any>(`${this._apiUrl}/auditLog/export`);
-    // }
+    exportAuditLogs(): Observable<HttpResponse<Blob>>  {
+        return this.get(`${this._apiUrl}/auditLog/export`, 
+        {
+            observe: 'response',
+            responseType: 'blob' as 'json'
+        });
+    }
+
+    openFolder(): Observable<any> {
+        return this.get<any>(`${this._apiUrl}/auditLog/openFolder`);
+    }
 }

@@ -6,5 +6,6 @@ export interface IAuditLogs {
     ipAddress: string,
     userCreated: string,
     dateCreated: Date,
+    createdBy: string
   }
   

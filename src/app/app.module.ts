@@ -15,6 +15,7 @@ import { TokenInterceptorService } from './core/interceptors/token-interceptor.s
 import { DatePipe } from '@angular/common';
 import { SecurityService } from './core/services/security.service';
 import { securityApi } from './core/api/security-api.service';
+import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 
 @NgModule({
   declarations: [AppComponent, ForgotPasswordComponent],
@@ -24,7 +25,8 @@ import { securityApi } from './core/api/security-api.service';
     BrowserAnimationsModule,
     HttpClientModule,
     VexModule,
-    CustomLayoutModule
+    CustomLayoutModule,
+    NgxMatSelectSearchModule
   ],
   providers: [
     {

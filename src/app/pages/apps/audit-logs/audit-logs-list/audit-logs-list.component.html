@@ -18,21 +18,30 @@
     <vex-page-layout-content [class.container]="layoutCtrl.value === 'boxed'" [class.px-gutter]="layoutCtrl.value === 'fullwidth'" class="-mt-6">
       <div class="card overflow-auto -mt-16">
         <div class="bg-app-bar px-6 h-16 border-b sticky left-0 flex items-center">
-          <div class="bg-foreground rounded-full border px-4 max-w-[300px] flex-auto flex items-center border border-gray-300">
+          <div class="bg-foreground rounded border px-2 max-w-[250px] flex-auto flex items-center border border-gray-300">
+            <mat-select [formControl]="userCtrl" placeholder="User" class="py-2 border-0 outline-none w-full bg-transparent">
+              <mat-option>
+                <ngx-mat-select-search [formControl]="userFilterCtrl"></ngx-mat-select-search>
+              </mat-option>
+
+              <mat-option *ngFor="let user of users" [value]="user">{{user}}</mat-option>
+            </mat-select>
+          </div>
+          <div style="margin-left: 15px;" class="bg-foreground rounded border px-4 max-w-[300px] flex-auto flex items-center border border-gray-300">
             <mat-icon class="icon-sm text-secondary" svgIcon="mat:search"></mat-icon>
-            <input [formControl]="searchCtrl" class="px-4 py-2 border-0 outline-none w-full bg-transparent" 
+            <input [formControl]="searchCtrl" class="py-2 border-0 outline-none w-full bg-transparent" 
               placeholder="Search audit logs here..." type="search">
           </div>
-          <span class="flex-1"></span>
-          <button [matMenuTriggerFor]="columnFilterMenu" class="ml-4 flex-none" mat-icon-button matTooltip="Filter Columns" type="button">
-            <mat-icon svgIcon="mat:filter_list"></mat-icon>
+          <button (click)="openFolder()" mat-button class="button">
+            <mat-icon svgIcon="mat:folder_shared"></mat-icon>
+            <span>Open Shared Folder</span>
           </button>
-          <button (click)="exportLogs()" class="ml-4 flex-none" color="primary"
-            mat-mini-fab matTooltip="Export Logs" type="button">
+          <button (click)="exportAuditLogs()" mat-button class="button">
             <mat-icon svgIcon="mat:download"></mat-icon>
+            <span>Export Audit Logs</span>
           </button>
         </div>
-  
+        <input type="file" id="fileInput" style="display: none;">
         <table @stagger [dataSource]="dataSource" class="w-full" mat-table matSort>
           <!--- Note that these columns can be defined in any order.
                 The actual rendered columns are set as a property on the row definition" -->
@@ -127,12 +136,13 @@
               </button>
             </td>
           </ng-container>
-  
+
           <tr *matHeaderRowDef="visibleColumns" mat-header-row></tr>
           <tr
               *matRowDef="let row; columns: visibleColumns;"
               @fadeInUp
               class="hover:bg-hover trans-ease-out cursor-pointer"
+              [ngClass]="{ 'alternate-row': row.id % 2 === 0 }"
               mat-row></tr>
         </table>
   
