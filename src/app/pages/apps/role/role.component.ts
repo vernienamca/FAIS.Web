@@ -82,6 +82,7 @@ export class RoleComponent implements OnInit {
           this.modifiedBy = role.updatedBy;
           this.dateModified = role.updatedAt;
           this.isActive = role.isActive;
+          this.addModuleFromArray(role.rolePermissionModels, true)
         }
       });
       this.subject$.next(data);
@@ -107,15 +108,15 @@ export class RoleComponent implements OnInit {
     
   }
 
-  addNewModule(list) : FormGroup
-  {
+  addNewModule(list, isAdded?:boolean) : FormGroup
+  {    
     this.moduleGroup = this._fb.group({
       id: [list.id], 
-      name: [list.name],
-      create: [true],
-      read: [true],
-      update: [false],
-      isAdded: [list?.isAdded]
+      name: [list?.moduleName || list?.name],
+      create: [list?.isCreate || true],
+      read: [list?.isRead || true],
+      update: [list?.isUpdate || false],
+      isAdded: [isAdded]
     })
 
     return this.moduleGroup;
@@ -147,9 +148,10 @@ export class RoleComponent implements OnInit {
     control.removeAt(i);
   }
 
-  addModuleFromArray(data) {
+  addModuleFromArray(data,isAdded?:boolean) {
     data.forEach((list)=>{
-      (<FormArray>this.roleField.get('permissions')).push(this.addNewModule(list));
+      
+      (<FormArray>this.roleField.get('permissions')).push(this.addNewModule(list, isAdded));
     });
   }
 
