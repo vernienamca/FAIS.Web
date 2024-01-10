@@ -19,7 +19,8 @@
       <div class="card overflow-auto -mt-16">
         <div class="bg-app-bar px-6 h-16 border-b sticky left-0 flex items-center">
           <div class="bg-foreground rounded border px-2 max-w-[250px] flex-auto flex items-center border border-gray-300">
-            <mat-select [formControl]="userCtrl" placeholder="User" class="py-2 border-0 outline-none w-full bg-transparent">
+            <mat-select [formControl]="userCtrl" placeholder="Select a user" (selectionChange)="onFilterUser($event)"
+              class="py-2 border-0 outline-none w-full bg-transparent">
               <mat-option>
                 <ngx-mat-select-search [formControl]="userFilterCtrl"></ngx-mat-select-search>
               </mat-option>
@@ -32,11 +33,11 @@
             <input [formControl]="searchCtrl" class="py-2 border-0 outline-none w-full bg-transparent" 
               placeholder="Search audit logs here..." type="search">
           </div>
-          <button (click)="openFolder()" mat-button class="button">
+          <button (click)="openFolder()" mat-raised-button type="button">
             <mat-icon svgIcon="mat:folder_shared"></mat-icon>
             <span>Open Shared Folder</span>
           </button>
-          <button (click)="exportAuditLogs()" mat-button class="button">
+          <button (click)="exportAuditLogs()" mat-raised-button type="button">
             <mat-icon svgIcon="mat:download"></mat-icon>
             <span>Export Audit Logs</span>
           </button>

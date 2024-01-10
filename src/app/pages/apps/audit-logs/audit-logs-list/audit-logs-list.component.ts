@@ -177,24 +177,19 @@ export class AuditLogsListComponent implements OnInit, OnDestroy, AfterViewInit 
     this.subject$.next(this.logs);
   }
 
-  exportAuditLogs(){
+  exportAuditLogs(): void {
     this._portalService.exportAuditLogs();
   }
 
-  openFolder(){
+  openFolder(): void {
     this._portalService.openFolder();
   }
 
-  openFileExplorer(){
-    const fileInput = document.getElementById('fileInput') as HTMLInputElement;
-    fileInput.click();
-  }
-
-  transform(items: any[], filter:string) : any{
-    if(!items || !filter){
-      return items;
+  onFilterUser(event: any): void {
+    if (!event.value) {
+      this.dataSource.data = this.logs;
+      return;
     }
-
-    return items.filter(item => item.includes(filter));
+    this.dataSource.data = this.logs.filter(t => t.createdBy === event.value);
   }
 }
