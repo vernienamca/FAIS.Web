@@ -25,6 +25,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { AddModuleComponent } from './add-module/add-module.component';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [RoleListComponent, RoleComponent, AddModuleComponent],
@@ -52,7 +53,8 @@ import { MatDialogModule } from '@angular/material/dialog';
     MatAutocompleteModule,
     MatInputModule,
     MatSlideToggleModule,
-    MatDialogModule
+    MatDialogModule,
+    MatSnackBarModule
   ]
 })
 export class RoleModule {

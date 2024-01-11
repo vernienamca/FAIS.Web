@@ -20,11 +20,11 @@
         <div class="px-6 py-4 flex flex-col">
           <mat-form-field appearance="fill" class="max-w-[60%]">
             <mat-label>Role Name</mat-label>
-            <input matInput formControlName="roleName" [(ngModel)]="roleName" required >
+            <input matInput formControlName="name" [(ngModel)]="roleName" required >
           </mat-form-field>
           <mat-form-field appearance="fill" class="max-w-[60%]">
             <mat-label>Description</mat-label>
-            <textarea matInput formControlName="roleDesc" [(ngModel)]="roleDescription" required></textarea>
+            <textarea matInput formControlName="description" [(ngModel)]="roleDescription" required></textarea>
           </mat-form-field>
           <div class="is-active flex gap-3">
             <span>Active</span><mat-slide-toggle color="accent" formControlName="isActive" [(ngModel)]="isActive" matInput></mat-slide-toggle>
@@ -34,7 +34,7 @@
           <div class="px-6 py-4 flex flex-col">
             <div class="flex flex-col">
               <div class="flex flex-row justify-between">
-                <h1 class="text-lg">Manage Permissions ({{roleField.get('permissions')['controls'].length}})</h1>
+                <h1 class="text-lg">Manage Permissions ({{roleField.get('rolePermissionModels')['controls'].length}})</h1>
                 <button class="add-version-btn flex items-center !bg-green !text-white rounded-full" (click)="addModuleBtn()" mat-raised-button type="button">
                   <mat-icon svgIcon="mat:add"></mat-icon>
                   <span>Add Module</span>
@@ -45,7 +45,7 @@
               </div>
             </div>
             <div class="module-table py-4">
-              <table *ngIf="roleField.get('permissions')['controls'].length>0" class="w-full text-sm text-left rtl:text-right">
+              <table *ngIf="roleField.get('rolePermissionModels')['controls'].length>0" class="w-full text-sm text-left rtl:text-right">
                 <thead class="text-gray-700 font-medium">
                     <tr>
                         <th class="px-6 py-3">Module Name</th>
@@ -56,12 +56,12 @@
                     </tr>
                 </thead>
                 <tbody>
-                  <ng-template ngFor let-module let-i="index" [ngForOf]="roleField.get('permissions')['controls']">
+                  <ng-template ngFor let-module let-i="index" [ngForOf]="roleField.get('rolePermissionModels')['controls']">
                     <tr>
                       <th class="px-6 py-3 font-medium"><input type="text" class="bg-transparent" onfocus="this.blur()" readonly="readonly" [formControl]="module.get('name')"></th>
-                      <td class="px-6 py-3"><mat-checkbox color="accent" [formControl]="module.get('create')"></mat-checkbox></td>
-                      <td class="px-6 py-3"><mat-checkbox color="accent" [formControl]="module.get('read')"></mat-checkbox></td>
-                      <td class="px-6 py-3"><mat-checkbox color="accent" [formControl]="module.get('update')"></mat-checkbox></td>
+                      <td class="px-6 py-3"><mat-checkbox color="accent" [formControl]="module.get('isCreate')"></mat-checkbox></td>
+                      <td class="px-6 py-3"><mat-checkbox color="accent" [formControl]="module.get('isRead')"></mat-checkbox></td>
+                      <td class="px-6 py-3"><mat-checkbox color="accent" [formControl]="module.get('isUpdate')"></mat-checkbox></td>
                       <td class="px-6 py-3">
                           <button type="button" class="ml-2" (click)="removeModule(i)">
                             <mat-icon svgIcon="mat:delete"></mat-icon>
@@ -71,7 +71,7 @@
                   </ng-template>
                 </tbody>
             </table>
-            <div *ngIf="roleField.get('permissions')['controls'].length===0">
+            <div *ngIf="roleField.get('rolePermissionModels')['controls'].length===0">
               <span class="flex justify-center my-4">No data available in table</span>
             </div>
             </div>

@@ -14,6 +14,7 @@ import { IRole } from 'src/app/core/models/role';
 import { PortalService } from 'src/app/core/services/portal.service';
 import { takeUntil } from 'rxjs/operators';
 import { Observable, ReplaySubject, Subject } from 'rxjs';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 
 
@@ -43,8 +44,9 @@ export class RoleComponent implements OnInit {
   modifiedBy:string;
   dateModified:Date;
   isActive:boolean;
+  permissionList: any[];
 
-  private _roleId = '';
+  private _roleId = this._route.snapshot.paramMap.get('id');
   private _onDestroy$ = new Subject<void>();
 
   constructor(private _fb: FormBuilder,
@@ -52,39 +54,45 @@ export class RoleComponent implements OnInit {
     private _router: Router,
     private _route: ActivatedRoute,
     private _portalService: PortalService,
+    private _snackbar: MatSnackBar,
   ) {
     this.roleField = this._fb.group({
-      roleName: ['', Validators.required],
-      roleDesc: ['', Validators.required],
+      id: Number(this._roleId),
+      name: ['', Validators.required],
+      description: ['', Validators.required],
       isActive:  [Boolean],
-      permissions: this._fb.array([
+      rolePermissionModels: this._fb.array([
         this.moduleGroup
       ])
   });
   }
 
   ngOnInit(): void {
-    this._roleId = this._route.snapshot.paramMap.get('id');
     
-    this._portalService.getRoles()
+    this._portalService.getRoleId(Number(this._roleId))
     .pipe(takeUntil(this._onDestroy$))
-    .subscribe(data => {
+    .subscribe((data: any) => {    
       if (!data) {
         return;
       }
       
-      data.forEach(role =>{
-        if (role.id === Number(this._roleId)) {          
-          this.roleName = role.name;
-          this.roleDescription = role.description;
-          this.createdBy = role.createdBy;
-          this.createdAt = role.createdAt;
-          this.modifiedBy = role.updatedBy;
-          this.dateModified = role.updatedAt;
-          this.isActive = role.isActive;
-          this.addModuleFromArray(role.rolePermissionModels, true)
+      if (!data.rolePermissionModels) {
+        return;
+      }
+
+      for (let key in data) {
+        if (data.hasOwnProperty(key)) {
+          this.roleName = data.name;
+          this.roleDescription = data.description;
+          this.createdBy = data.createdBy;
+          this.createdAt = data.createdAt;
+          this.modifiedBy = data.updatedBy;
+          this.dateModified = data.updatedAt;
+          this.isActive = data.isActive;
+          this.permissionList = data?.rolePermissionModels
         }
-      });
+      }
+      this.addModuleFromArray(this.permissionList);
       this.subject$.next(data);
     });
     
@@ -94,8 +102,8 @@ export class RoleComponent implements OnInit {
 
 
   removeNullOnLoad():void{
-    const permissionsControls = this.roleField.get('permissions')['controls'];
-    const permissions = this.roleField.get('permissions');
+    const permissionsControls = this.roleField.get('rolePermissionModels')['controls'];
+    const permissions = this.roleField.get('rolePermissionModels');
     
     permissions.value.forEach(e => {
       if (e === null) {
@@ -108,23 +116,37 @@ export class RoleComponent implements OnInit {
     
   }
 
-  addNewModule(list, isAdded?:boolean) : FormGroup
+  addNewModule(list) : FormGroup
   {    
     this.moduleGroup = this._fb.group({
-      id: [list.id], 
+      roleId: [list.id], 
+      moduleId: [list.moduleId],
       name: [list?.moduleName || list?.name],
-      create: [list?.isCreate || true],
-      read: [list?.isRead || true],
-      update: [list?.isUpdate || false],
-      isAdded: [isAdded]
+      isCreate: [list?.isCreate || true],
+      isRead: [list?.isRead || true],
+      isUpdate: [list?.isUpdate || false],
+      isAdded: [true]
     })
 
     return this.moduleGroup;
   }
 
   onSubmit(): void{
-    console.log(this.roleField.value);
-    
+    this._portalService.updaterolepermission(this.roleField.value).subscribe({
+      next: (data) => {
+        console.log('Role updated successfully:', data);
+        this._snackbar.open('Role updated successfully.', 'Close', {
+          duration: 5000,
+        });
+      },
+      error: (error) => {
+        console.error('Error updating role:', error);
+        this._snackbar.open('Error updating role.', 'Close', {
+          duration: 5000,
+        });
+      }
+      }
+    );
 
   }
   
@@ -134,7 +156,7 @@ export class RoleComponent implements OnInit {
       width: '702px',
       data:{
         title: 'Add Module',
-        modules: <FormArray>this.roleField.controls['permissions'].value
+        modules: <FormArray>this.roleField.controls['rolePermissionModels'].value
       },
       disableClose: true
     });
@@ -144,14 +166,16 @@ export class RoleComponent implements OnInit {
   }
 
   removeModule(i: number):void{
-    const control = <FormArray>this.roleField.controls['permissions'];
+    const control = <FormArray>this.roleField.controls['rolePermissionModels'];
     control.removeAt(i);
   }
 
-  addModuleFromArray(data,isAdded?:boolean) {
-    data.forEach((list)=>{
-      
-      (<FormArray>this.roleField.get('permissions')).push(this.addNewModule(list, isAdded));
+  addModuleFromArray(data): void {
+    if (!data) { 
+      return; 
+    }
+    data.map(item => {
+      (<FormArray>this.roleField.get('rolePermissionModels')).push(this.addNewModule(item));
     });
   }
 
