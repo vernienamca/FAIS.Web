@@ -16,6 +16,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { MatSelectChange } from '@angular/material/select';
 import { PortalService } from 'src/app/core/services/portal.service';
 import { IModule } from 'src/app/core/models/module';
+import { Router } from '@angular/router';
 
 @UntilDestroy()
 @Component({
@@ -63,6 +64,7 @@ export class ModuleListComponent implements OnInit, OnDestroy, AfterViewInit {
   constructor(
     private _dialog: MatDialog,
     private _portalService: PortalService,
+    private _router: Router
   ) {
   }
 
@@ -155,6 +157,10 @@ export class ModuleListComponent implements OnInit, OnDestroy, AfterViewInit {
      * You would probably make an HTTP request here.
      */
     customers.forEach(c => this.deleteCustomer(c));
+  }
+
+  view(data: any) {
+    this._router.navigate([`apps/modules/${data.id}`]);
   }
 
   onFilterChange(value: string) {

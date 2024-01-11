@@ -15,8 +15,6 @@ import { PortalService } from 'src/app/core/services/portal.service';
 import { takeUntil } from 'rxjs/operators';
 import { Observable, ReplaySubject, Subject } from 'rxjs';
 
-
-
 @Component({
   selector: 'vex-role',
   templateUrl: './role.component.html',

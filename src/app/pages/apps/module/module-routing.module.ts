@@ -4,6 +4,7 @@ import { QuicklinkModule } from 'ngx-quicklink';
 import { VexRoutes } from '../../../../@vex/interfaces/vex-route.interface';
 import { ModuleListComponent } from './module-list/module-list.component';
 import { ModuleComponent } from './module.component';
+import { PageMode } from 'src/app/core/enums/page-mode.enum';
 
 const routes: VexRoutes = [
   {
@@ -14,9 +15,10 @@ const routes: VexRoutes = [
     }
   },
   {
-    path: ':edit-module',
+    path: ':id',
     component: ModuleComponent,
     data: {
+      pageMode: PageMode.Edit,
       toolbarShadowEnabled: false
     }
   }

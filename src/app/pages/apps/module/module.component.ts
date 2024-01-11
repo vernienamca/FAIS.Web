@@ -9,6 +9,13 @@ import { FormGroup, Validators, FormBuilder  } from '@angular/forms';
 export class ModuleComponent {
 
   editModuleForm: FormGroup;
+  moduleName:string;
+  moduleDescription:string;
+  isActive:boolean;
+  createdBy:string;
+  createdAt:Date;
+  modifiedBy:string;
+  dateModified:Date;
  
   constructor(private fb: FormBuilder) {}
 
@@ -18,6 +25,7 @@ export class ModuleComponent {
       description: '',
       url: '',
       isActive: true,
+     
     });
   }
 
