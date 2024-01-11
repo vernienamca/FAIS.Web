@@ -89,7 +89,6 @@ export class RoleComponent implements OnInit {
 
   }
 
-
   removeNullOnLoad():void{
     const permissionsControls = this.roleField.get('permissions')['controls'];
     const permissions = this.roleField.get('permissions');
@@ -101,8 +100,6 @@ export class RoleComponent implements OnInit {
         }
       }
     });
-
-    
   }
 
   addNewModule(list) : FormGroup
@@ -121,10 +118,7 @@ export class RoleComponent implements OnInit {
 
   onSubmit(): void{
     console.log(this.roleField.value);
-    
-
   }
-  
 
   addModuleBtn() : void{
     let dlg = this._dialog.open(AddModuleComponent, {
