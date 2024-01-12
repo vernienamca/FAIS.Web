@@ -19,11 +19,11 @@ export class PortalApi extends BaseApi {
     }
 
     getRoleId(id: number): Observable<IRole[]> {
-        return this.get<IRole>(`${this._apiUrl}/role/getrolepermissionbyid?id=${id}`);
+        return this.get<IRole>(`${this._apiUrl}/role/role-permission/${id}`);
     }
 
     updaterolepermission(data:any): Observable<any> {
-        return this.put<any>(`${this._apiUrl}/role/updaterolepermission`, data);
+        return this.put<any>(`${this._apiUrl}/role/update-role`, data);
     }
 
     getUsers(): Observable<IUser[]> {
