@@ -19,6 +19,14 @@ export class PortalApi extends BaseApi {
         return this.get<IRole>(`${this._apiUrl}/role/get`);
     }
 
+    getRoleId(id: number): Observable<IRole[]> {
+        return this.get<IRole>(`${this._apiUrl}/role/role-permission/${id}`);
+    }
+
+    updaterolepermission(data:any): Observable<any> {
+        return this.put<any>(`${this._apiUrl}/role/update-role`, data);
+    }
+
     getUsers(): Observable<IUser[]> {
         return this.get<IUser>(`${this._apiUrl}/user/get`);
     }
@@ -44,6 +52,6 @@ export class PortalApi extends BaseApi {
     }
 
     openFolder(): Observable<any> {
-        return this.get<any>(`${this._apiUrl}/auditLog/openFolder`);
+        return this.get<any>(`${this._apiUrl}/auditLog/folder`);
     }
 }

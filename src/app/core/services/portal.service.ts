@@ -24,6 +24,14 @@ export class PortalService {
     return this._portalApi.getRoles();
   }
 
+  getRoleId(id: number): Observable<IRole[]> {
+    return this._portalApi.getRoleId(id);
+  }
+
+  updaterolepermission(data: any): Observable<IRole[]> {
+    return this._portalApi.updaterolepermission(data);
+  }
+
   getUsers(): Observable<IUser[]> {
     return this._portalApi.getUsers();
   }

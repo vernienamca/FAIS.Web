@@ -2,16 +2,19 @@
     background-color: #f2f2f2;
   }
 
-  .button {
-    margin-left: 15px;
+  .mat-mdc-button {
+    border-radius: 2px;
     background-color:#043B7b;
+    margin-left: 15px;
   }
 
-  .button span{
+  .mat-mdc-button span {
     color:#ffff;
   }
 
-  .button mat-icon {
+  .mat-mdc-button mat-icon {
     color:#ffff;
   }
 
+
+  
