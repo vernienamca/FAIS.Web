@@ -13,6 +13,8 @@ import { NotificationRoutingModule } from '../../notification-routing.module';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+
 @NgModule({
   declarations: [
     StringInterpolationAddComponent 
@@ -31,7 +33,8 @@ import { MatNativeDateModule } from '@angular/material/core';
     MatSlideToggleModule,
     NotificationRoutingModule,
     MatDatepickerModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    MatSnackBarModule
  
   ]
 })
