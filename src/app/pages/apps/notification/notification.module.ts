@@ -14,6 +14,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { StringInterpolationListComponent } from './string-interpolation/string-interpolation-list/string-interpolation-list.component';
+import { TemplateListComponent } from './templates/template-list/template-list.component'
 import { NotificationRoutingModule } from './notification-routing.module';
 
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
@@ -21,7 +22,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 
 
 @NgModule({
-  declarations: [StringInterpolationListComponent],
+  declarations: [StringInterpolationListComponent, TemplateListComponent],
   imports: [
     CommonModule,
     NotificationRoutingModule,

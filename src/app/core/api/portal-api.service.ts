@@ -6,6 +6,7 @@ import { IRole } from "../models/role";
 import { IUser } from "../models/user";
 import { IAuditLogs } from "../models/audit-logs";
 import { IStringInterpolation } from "../models/string-interpolation";
+import { IAlerts } from "../models/alerts";
 import { HttpResponse } from '@angular/common/http';
 
 export class PortalApi extends BaseApi {
@@ -40,7 +41,11 @@ export class PortalApi extends BaseApi {
     }
 
     getStringInterpolation(): Observable<IStringInterpolation[]> {
-        return this.get<IStringInterpolation>(`${this._apiUrl}/notification/get`);
+        return this.get<IStringInterpolation>(`${this._apiUrl}/notification/interpolations`);
+    }
+
+    getAlerts(): Observable<IAlerts[]> {
+        return this.get<IAlerts>(`${this._apiUrl}/notification/templates`);
     }
 
     exportAuditLogs(): Observable<HttpResponse<Blob>>  {

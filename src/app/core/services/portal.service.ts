@@ -6,6 +6,7 @@ import { IRole } from '../models/role';
 import { IUser } from '../models/user';
 import { IAuditLogs } from '../models/audit-logs';
 import { IStringInterpolation } from '../models/string-interpolation';
+import { IAlerts } from '../models/alerts';
 import { DatePipe } from '@angular/common';
 
 @Injectable({
@@ -46,6 +47,10 @@ export class PortalService {
 
   getStringInterpolation(): Observable<IStringInterpolation[]> {
     return this._portalApi.getStringInterpolation();
+  }
+
+  getAlerts(): Observable<IAlerts[]> {
+    return this._portalApi.getAlerts();
   }
   
   exportAuditLogs(): void {
