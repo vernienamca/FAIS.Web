@@ -19,6 +19,17 @@ export class PortalService {
     return this._portalApi.getModules();
   }
 
+  updateModule(data: any): void {
+    this._portalApi.updateModule(data).subscribe(
+      response => {
+        console.log('update successfull', response);
+      },
+      error => {
+        console.error('Error updating modules', error);
+      }
+    );
+  }
+
   getRoles(): Observable<IRole[]> {
     return this._portalApi.getRoles();
   }

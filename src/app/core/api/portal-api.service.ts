@@ -14,6 +14,11 @@ export class PortalApi extends BaseApi {
         return this.get<IModule>(`${this._apiUrl}/module/get`);
     }
 
+    updateModule(data: any): Observable<any> {
+        console.log("test");
+        return this.put<any>(`${this._apiUrl}/module/updateModule`, data);
+    }
+
     getRoles(): Observable<IRole[]> {
         return this.get<IRole>(`${this._apiUrl}/role/get`);
     }

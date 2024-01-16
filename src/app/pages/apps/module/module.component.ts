@@ -49,7 +49,6 @@ export class ModuleComponent {
     this.moduleField = this._fb.group({
       moduleName: ['', Validators.required],
       moduleDesc: ['', Validators.required],
-      url: [''],
       isActive:  [Boolean]
   });
   }
@@ -82,6 +81,7 @@ export class ModuleComponent {
 
   onSubmit() : void{
     console.log(this.moduleField.value);
+    this._portalService.updateModule(this.moduleField.value);
   }
 
   close(): void{
