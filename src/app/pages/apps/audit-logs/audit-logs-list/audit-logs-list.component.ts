@@ -6,7 +6,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatDialog } from '@angular/material/dialog';
 import { TableColumn } from '../../../../../@vex/interfaces/table-column.interface';
-import { aioTableData, aioTableLabels } from '../../../../../static-data/aio-table-data';
+import { aioTableLabels } from '../../../../../static-data/aio-table-data';
 import { SelectionModel } from '@angular/cdk/collections';
 import { fadeInUp400ms } from '../../../../../@vex/animations/fade-in-up.animation';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS, MatFormFieldDefaultOptions } from '@angular/material/form-field';
@@ -40,7 +40,7 @@ export class AuditLogsListComponent implements OnInit, OnDestroy, AfterViewInit 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @Input()
   columns: TableColumn<IAuditLogs>[] = [
-    { label: 'Date & Time', property: 'dateCreated', type: 'text', visible: true },
+    { label: 'Date & Time', property: 'createdAt', type: 'text', visible: true },
     { label: 'User', property: 'createdBy', type: 'text', visible: true },
     { label: 'Activity', property: 'activity', type: 'text', visible: true, cssClasses: ['font-medium'] },
     { label: 'Module Name', property: 'moduleName', type: 'text', visible: true },
@@ -68,7 +68,7 @@ export class AuditLogsListComponent implements OnInit, OnDestroy, AfterViewInit 
 
   constructor(
     private _dialog: MatDialog,
-    private _portalService: PortalService,
+    private _portalService: PortalService
   ) {
   }
 
@@ -83,6 +83,7 @@ export class AuditLogsListComponent implements OnInit, OnDestroy, AfterViewInit 
         if (!data) {
           return;
         }
+        console.log(data);
         this.subject$.next(data);
       });
 
@@ -126,14 +127,12 @@ export class AuditLogsListComponent implements OnInit, OnDestroy, AfterViewInit 
     column.visible = !column.visible;
   }
 
-  /** Whether the number of selected elements matches the total number of rows. */
   isAllSelected() {
     const numSelected = this.selection.selected.length;
     const numRows = this.dataSource.data.length;
     return numSelected === numRows;
   }
 
-  /** Selects all rows if they are not all selected; otherwise clear selection. */
   masterToggle() {
     this.isAllSelected() ?
       this.selection.clear() :

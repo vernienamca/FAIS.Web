@@ -11,7 +11,6 @@ const routes: VexRoutes = [
   }
 ];
 
-
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule, QuicklinkModule]

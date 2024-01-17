@@ -6,6 +6,7 @@ import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { SecurityService } from 'src/app/core/services/security.service';
 import {  Subject,takeUntil } from 'rxjs';
 import { Router } from '@angular/router';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'vex-forgot-password',
@@ -13,33 +14,38 @@ import { Router } from '@angular/router';
   styleUrls: ['./forgot-password.component.scss'],
   animations: [fadeInUp400ms]
 })
-export class ForgotPasswordComponent implements OnInit {
+export class ForgotPasswordComponent implements OnInit, OnDestroy {
+  form: FormGroup;
+  siteKey: string;
+
+  get formControls() {
+    return {
+      email: this.form.get('email'),
+      recaptcha: this.form.get('recaptcha')
+    };
+  }
+
   icon = faArrowLeft;
   passwordSent = false;
   buttonText = 'SEND RECOVERY LINK';
   imageUrl = 'assets/img/icons/forgot-password-icons/Vector.png';
   
   private _onDestroy$ = new Subject<void>();
-  protected aFormGroup: FormGroup;
-
-  form = this.fb.group({
-    email: [null, Validators.required]
-  });
-
-public getJsonValue: any;
-public postJsonValue: any;
 
   constructor(
-    private fb: UntypedFormBuilder,
-    private formBuilder: FormBuilder,
+    fb: FormBuilder,
     private _securityService: SecurityService,
     private _router: Router
-  ) { }
+  ) { 
+    this.form = fb.group({
+      email: ['', [Validators.required, Validators.email,
+        Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')]],
+      recaptcha: ['', Validators.required]
+    });
+    this.siteKey = environment.reCaptcha.siteKey;
+  }
 
   ngOnInit():void {
-this.aFormGroup = this.formBuilder.group({
-  recaptcha:['', Validators.required]
-})
   } 
 
   ngOnDestroy(): void {
@@ -47,33 +53,41 @@ this.aFormGroup = this.formBuilder.group({
     this._onDestroy$.complete();
   }
 
-
-  siteKey:string ="6Lfm5R4pAAAAAH8_jyMZ7AVsigdgQWzHiow3Q7a5";
-
-  send(event: Event) {
-    event.preventDefault();
-    if (this.form.invalid) {
-      return;
-    }
-    this.imageUrl = 'assets/img/icons/forgot-password-icons/reset-password-sent.svg';
-    this.passwordSent = true;
-    this.sendEmail();
- 
-}
-sendEmail(): void {
-  this._securityService.sendEmail(this.form.value.email)
-    .pipe(takeUntil(this._onDestroy$))
-    .subscribe({
-      next: (data) => {
+  submit(): void {
+    this._securityService.forgotPassword(this.formControls.email.value)
+      .pipe(takeUntil(this._onDestroy$))
+      .subscribe(data => {
         if (!data) {
           return;
-        }    
-      },
-      error: (error) => {
-        console.error('Error sending email:', error);
-      }
-    });
+        }
+        console.log(data);
+      });
   }
+
+  // send(event: Event) {
+  //   event.preventDefault();
+  //   if (this.form.invalid) {
+  //     return;
+  //   }
+  //   this.imageUrl = 'assets/img/icons/forgot-password-icons/reset-password-sent.svg';
+  //   this.passwordSent = true;
+  //   this.sendEmail();
+  // }
+
+  // sendEmail(): void {
+  //   this._securityService.sendEmail(this.form.value.email)
+  //     .pipe(takeUntil(this._onDestroy$))
+  //     .subscribe({
+  //       next: (data) => {
+  //         if (!data) {
+  //           return;
+  //         }    
+  //       },
+  //       error: (error) => {
+  //         console.error('Error sending email:', error);
+  //       }
+  //     });
+  //   }
 
   redirectToLogin(): void {
     this._router.navigate(['login']);
