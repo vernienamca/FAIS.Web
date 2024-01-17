@@ -10,17 +10,16 @@ const routes: VexRoutes = [
     loadChildren: () => import('./pages/pages/auth/login/login.module').then(m => m.LoginModule),
   },
   {
-    path: 'register',
-    loadChildren: () => import('./pages/pages/auth/register/register.module').then(m => m.RegisterModule),
-  },
-  {
     path: 'forgot-password',
     loadChildren: () => import('./pages/pages/auth/forgot-password/forgot-password.module').then(m => m.ForgotPasswordModule),
   },
-
   {
     path: 'reset-password/:tempKey',
     loadChildren: () => import('./pages/pages/auth/reset-password/reset-password.module').then(m => m.ResetPasswordModule),
+  },
+  {
+    path: 'register',
+    loadChildren: () => import('./pages/pages/auth/register/register.module').then(m => m.RegisterModule),
   },
   {
     path: 'coming-soon',
@@ -54,23 +53,14 @@ const routes: VexRoutes = [
             path: 'roles',
             loadChildren: () => import('./pages/apps/role/role.module').then(m => m.RoleModule),
           },
-
-
-
           {
             path: 'user-edit',
             loadChildren: () => import('./pages/apps/User-Edit/User-Edit.module').then(m => m.UserEditModule),
           },
-
           {
             path: 'user-add',
             loadChildren: () => import('./pages/apps/user/user-add/User-add.module').then(m => m.UserAddModule),
           },
-
-      
-
-
-
           {
             path: 'users',
             loadChildren: () => import('./pages/apps/user/user.module').then(m => m.UserModule),

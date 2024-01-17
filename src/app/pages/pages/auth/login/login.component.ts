@@ -43,7 +43,7 @@ export class LoginComponent implements OnInit {
     this._onDestroy$.complete();
   }
 
-  login() {
+  login(): void {
     this._authService.authenticate(this.form.value.username, this.form.value.password)
       .pipe(takeUntil(this._onDestroy$))
       .subscribe(data => {
@@ -62,7 +62,7 @@ export class LoginComponent implements OnInit {
       });
   }
 
-  toggleVisibility() {
+  toggleVisibility(): void {
     if (this.visible) {
       this.inputType = 'password';
       this.visible = false;

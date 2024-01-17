@@ -49,7 +49,8 @@ export class UserListComponent implements OnInit, OnDestroy, AfterViewInit {
     { label: 'Last Name', property: 'lastName', type: 'text', visible: true },
     { label: 'Position', property: 'position', type: 'text', visible: true },
     { label: 'Division', property: 'division', type: 'text', visible: true },
-    { label: 'Status', property: 'statusCode', type: 'text', visible: true },
+    { label: 'TA-FG', property: 'tafGs', type: 'text', visible: true },
+    { label: 'Status', property: 'status', type: 'text', visible: true },
     { label: 'Actions', property: 'actions', type: 'button', visible: true }
   ];
 
@@ -86,6 +87,7 @@ export class UserListComponent implements OnInit, OnDestroy, AfterViewInit {
         if (!data) {
           return;
         }
+        console.log(data);
         this.subject$.next(data);
       });
 

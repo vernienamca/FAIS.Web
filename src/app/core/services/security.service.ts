@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { IPermission } from '../models/permission';
 import { NavigationItem } from 'src/@vex/interfaces/navigation-item.interface';
+import { IUser } from '../models/user';
 
 @Injectable({
   providedIn: 'root'
@@ -17,8 +18,8 @@ export class SecurityService {
     return this._securityApi.getPermissions(userId);
   }
 
-  sendEmail(to: string): Observable<any> {
-    return this._securityApi.sendEmail(to);
+  forgotPassword(emailAddress: string): Observable<any> {
+    return this._securityApi.forgotPassword(emailAddress);
   }
 
   resetPassword(newPassword: string, tempKey: string): Observable<any> {
