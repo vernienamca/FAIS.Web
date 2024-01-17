@@ -1,4 +1,4 @@
-export interface IAlerts {
+export interface ITemplates {
     id: number,
     subject: string,
     content: string,

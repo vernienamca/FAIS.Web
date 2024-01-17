@@ -15,7 +15,7 @@ import { UntypedFormControl } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { MatSelectChange } from '@angular/material/select';
 import { PortalService } from 'src/app/core/services/portal.service';
-import { IAlerts } from 'src/app/core/models/alerts';
+import { ITemplates } from 'src/app/core/models/templates';
 import { Router } from '@angular/router';
 
 @UntilDestroy()
@@ -40,7 +40,7 @@ export class TemplateListComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @Input()
-  columns: TableColumn<IAlerts>[] = [
+  columns: TableColumn<ITemplates>[] = [
     { label: 'Subject', property: 'subject', type: 'text', visible: true, cssClasses: ['font-medium'] },
     { label: 'Content', property: 'content', type: 'text', visible: true },
     { label: 'Receiver', property: 'receiver', type: 'text', visible: true },
@@ -52,14 +52,14 @@ export class TemplateListComponent implements OnInit, OnDestroy, AfterViewInit {
   ];
 
   layoutCtrl = new UntypedFormControl('fullWidth');
-  subject$: ReplaySubject<IAlerts[]> = new ReplaySubject<IAlerts[]>(1);
-  data$: Observable<IAlerts[]> = this.subject$.asObservable();
-  logs: IAlerts[];
+  subject$: ReplaySubject<ITemplates[]> = new ReplaySubject<ITemplates[]>(1);
+  data$: Observable<ITemplates[]> = this.subject$.asObservable();
+  logs: ITemplates[];
   totalCount: number = 0;
   pageSize = 10;
   pageSizeOptions: number[] = [5, 10, 20, 50];
-  dataSource: MatTableDataSource<IAlerts> | null;
-  selection = new SelectionModel<IAlerts>(true, []);
+  dataSource: MatTableDataSource<ITemplates> | null;
+  selection = new SelectionModel<ITemplates>(true, []);
   searchCtrl = new UntypedFormControl();
   labels = aioTableLabels;
 
@@ -88,7 +88,7 @@ export class TemplateListComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.dataSource = new MatTableDataSource();
     this.data$
-      .pipe(filter<IAlerts[]>(Boolean))
+      .pipe(filter<ITemplates[]>(Boolean))
       .subscribe(logs => {
         this.totalCount = logs.length;
         this.logs = logs;
@@ -143,7 +143,7 @@ export class TemplateListComponent implements OnInit, OnDestroy, AfterViewInit {
     return column.property;
   }
 
-  onLabelChange(change: MatSelectChange, row: IAlerts) {
+  onLabelChange(change: MatSelectChange, row: ITemplates) {
     const index = this.logs.findIndex(c => c === row);
     this.subject$.next(this.logs);
   }
