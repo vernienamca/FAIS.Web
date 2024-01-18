@@ -8,6 +8,7 @@ import { Observable, Subject, of } from 'rxjs';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { DatePipe } from '@angular/common';
 import { PortalService } from 'src/app/core/services/portal.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'vex-toolbar',
@@ -36,7 +37,8 @@ export class ToolbarComponent implements OnInit, OnDestroy  {
     private _navigationService: NavigationService,
     private _authService: AuthService,
     private _portalService: PortalService,
-    private _datePipe: DatePipe
+    private _datePipe: DatePipe,
+    private _router: Router
   ) { 
     const userId = parseFloat(localStorage.getItem('user_id'));
     if (!userId) {
@@ -75,9 +77,8 @@ export class ToolbarComponent implements OnInit, OnDestroy  {
   }
 
   showProfile(): void {
-    
+    this._router.navigate(['apps/profile/user-profile']);
   }
-
   logout(): void {
     this._authService.logout();
   }

@@ -15,8 +15,6 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { UserListComponent } from './user-list/user-list.component';
 import { UserRoutingModule } from './user-routing.module';
-import { ProfileComponent } from './profile/profile.component';
-
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatTabsModule } from '@angular/material/tabs';
 
@@ -24,7 +22,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 
 
 @NgModule({
-  declarations: [UserListComponent,ProfileComponent],
+  declarations: [UserListComponent],
   imports: [
     CommonModule,
     UserRoutingModule,

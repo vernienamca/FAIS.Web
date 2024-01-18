@@ -16,6 +16,10 @@ import { DatePipe } from '@angular/common';
 import { SecurityService } from './core/services/security.service';
 import { securityApi } from './core/api/security-api.service';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
+import { RoleService } from './core/services/role.service';
+import { RoleApi } from './core/api/role-api.service';
+import { UserApi } from './core/api/user-api.service';
+
 
 @NgModule({
   declarations: [AppComponent, ForgotPasswordComponent],
@@ -40,7 +44,11 @@ import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
     AuthService, 
     PortalService,
     SecurityService,
-    securityApi
+    securityApi,
+    RoleService,
+    UserApi,
+    RoleApi,
+
   ],
   bootstrap: [AppComponent]
 })
