@@ -61,7 +61,6 @@ export class TemplateListComponent implements OnInit, OnDestroy, AfterViewInit {
   dataSource: MatTableDataSource<ITemplates> | null;
   selection = new SelectionModel<ITemplates>(true, []);
   searchCtrl = new UntypedFormControl();
-  labels = aioTableLabels;
 
   private _onDestroy$ = new Subject<void>();
 

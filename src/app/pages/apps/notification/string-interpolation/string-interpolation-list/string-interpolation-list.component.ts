@@ -49,7 +49,7 @@ export class StringInterpolationListComponent implements OnInit, OnDestroy, Afte
   layoutCtrl = new UntypedFormControl('fullWidth');
   subject$: ReplaySubject<IStringInterpolation[]> = new ReplaySubject<IStringInterpolation[]>(1);
   data$: Observable<IStringInterpolation[]> = this.subject$.asObservable();
-  logs: IStringInterpolation[];
+  interpolations: IStringInterpolation[];
   totalCount: number = 0;
   pageSize = 10;
   pageSizeOptions: number[] = [5, 10, 20, 50];
@@ -84,10 +84,11 @@ export class StringInterpolationListComponent implements OnInit, OnDestroy, Afte
     this.dataSource = new MatTableDataSource();
     this.data$
       .pipe(filter<IStringInterpolation[]>(Boolean))
-      .subscribe(logs => {
-        this.totalCount = logs.length;
-        this.logs = logs;
-        this.dataSource.data = logs;
+      .subscribe(interpolations => {
+        console.log(interpolations);
+        this.totalCount = interpolations.length;
+        this.interpolations = interpolations;
+        this.dataSource.data = interpolations;
       });
 
     this.searchCtrl.valueChanges.pipe(
@@ -139,8 +140,8 @@ export class StringInterpolationListComponent implements OnInit, OnDestroy, Afte
   }
 
   onLabelChange(change: MatSelectChange, row: IStringInterpolation) {
-    const index = this.logs.findIndex(c => c === row);
-    this.subject$.next(this.logs);
+    const index = this.interpolations.findIndex(c => c === row);
+    this.subject$.next(this.interpolations);
   }
 
   createStringInterpolation() {
