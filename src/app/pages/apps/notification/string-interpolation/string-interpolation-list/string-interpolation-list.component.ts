@@ -1,53 +1,74 @@
-import { AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { Observable, of, ReplaySubject, Subject } from 'rxjs';
-import { filter, takeUntil } from 'rxjs/operators';
-import { MatTableDataSource } from '@angular/material/table';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
-import { MatDialog } from '@angular/material/dialog';
-import { TableColumn } from '../../../../../../@vex/interfaces/table-column.interface';
-import { aioTableData, aioTableLabels } from '../../../../../../static-data/aio-table-data';
-import { SelectionModel } from '@angular/cdk/collections';
-import { fadeInUp400ms } from '../../../../../../@vex/animations/fade-in-up.animation';
-import { MAT_FORM_FIELD_DEFAULT_OPTIONS, MatFormFieldDefaultOptions } from '@angular/material/form-field';
-import { stagger40ms } from '../../../../../../@vex/animations/stagger.animation';
-import { UntypedFormControl } from '@angular/forms';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { MatSelectChange } from '@angular/material/select';
-import { PortalService } from 'src/app/core/services/portal.service';
-import { IStringInterpolation } from 'src/app/core/models/string-interpolation';
-import { Router } from '@angular/router';
+import {
+  AfterViewInit,
+  Component,
+  Input,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from "@angular/core";
+import { Observable, of, ReplaySubject, Subject } from "rxjs";
+import { filter, takeUntil } from "rxjs/operators";
+import { MatTableDataSource } from "@angular/material/table";
+import { MatPaginator } from "@angular/material/paginator";
+import { MatSort } from "@angular/material/sort";
+import { MatDialog } from "@angular/material/dialog";
+import { TableColumn } from "../../../../../../@vex/interfaces/table-column.interface";
+import { SelectionModel } from "@angular/cdk/collections";
+import { fadeInUp400ms } from "../../../../../../@vex/animations/fade-in-up.animation";
+import {
+  MAT_FORM_FIELD_DEFAULT_OPTIONS,
+  MatFormFieldDefaultOptions,
+} from "@angular/material/form-field";
+import { stagger40ms } from "../../../../../../@vex/animations/stagger.animation";
+import { UntypedFormControl } from "@angular/forms";
+import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
+import { MatSelectChange } from "@angular/material/select";
+import { PortalService } from "src/app/core/services/portal.service";
+import { IStringInterpolation } from "src/app/core/models/string-interpolation";
+import { Router } from "@angular/router";
 
 @UntilDestroy()
 @Component({
-  selector: 'vex-aio-table',
-  templateUrl: './string-interpolation-list.component.html',
-  styleUrls: ['./string-interpolation-list.component.scss'],
-  animations: [
-    fadeInUp400ms,
-    stagger40ms
-  ],
+  selector: "vex-aio-table",
+  templateUrl: "./string-interpolation-list.component.html",
+  styleUrls: ["./string-interpolation-list.component.scss"],
+  animations: [fadeInUp400ms, stagger40ms],
   providers: [
     {
       provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
       useValue: {
-        appearance: 'fill'
-      } as MatFormFieldDefaultOptions
-    }
-  ]
+        appearance: "fill",
+      } as MatFormFieldDefaultOptions,
+    },
+  ],
 })
-export class StringInterpolationListComponent implements OnInit, OnDestroy, AfterViewInit {
+export class StringInterpolationListComponent
+  implements OnInit, OnDestroy, AfterViewInit
+{
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @Input()
   columns: TableColumn<IStringInterpolation>[] = [
-    { label: 'Code', property: 'transactionCode', type: 'text', visible: true, cssClasses: ['font-medium'] },
-    { label: 'Description', property: 'transactionDescription', type: 'text', visible: true },
-    { label: 'Actions', property: 'actions', type: 'button', visible: true }
+    {
+      label: "Code",
+      property: "transactionCode",
+      type: "text",
+      visible: true,
+      cssClasses: ["font-medium"],
+    },
+    {
+      label: "Description",
+      property: "description",
+      type: "text",
+      visible: true,
+    },
+    { label: "Actions", property: "actions", type: "button", visible: true },
   ];
 
-  layoutCtrl = new UntypedFormControl('fullWidth');
-  subject$: ReplaySubject<IStringInterpolation[]> = new ReplaySubject<IStringInterpolation[]>(1);
+  layoutCtrl = new UntypedFormControl("fullWidth");
+  subject$: ReplaySubject<IStringInterpolation[]> = new ReplaySubject<
+    IStringInterpolation[]
+  >(1);
   data$: Observable<IStringInterpolation[]> = this.subject$.asObservable();
   interpolations: IStringInterpolation[];
   totalCount: number = 0;
@@ -56,7 +77,6 @@ export class StringInterpolationListComponent implements OnInit, OnDestroy, Afte
   dataSource: MatTableDataSource<IStringInterpolation> | null;
   selection = new SelectionModel<IStringInterpolation>(true, []);
   searchCtrl = new UntypedFormControl();
-  labels = aioTableLabels;
 
   private _onDestroy$ = new Subject<void>();
 
@@ -64,17 +84,19 @@ export class StringInterpolationListComponent implements OnInit, OnDestroy, Afte
     private _dialog: MatDialog,
     private _portalService: PortalService,
     private _router: Router
-  ) {
-  }
+  ) {}
 
   get visibleColumns() {
-    return this.columns.filter(column => column.visible).map(column => column.property);
+    return this.columns
+      .filter((column) => column.visible)
+      .map((column) => column.property);
   }
 
   ngOnInit() {
-    this._portalService.getStringInterpolation()
+    this._portalService
+      .getStringInterpolation()
       .pipe(takeUntil(this._onDestroy$))
-      .subscribe(data => {
+      .subscribe((data) => {
         if (!data) {
           return;
         }
@@ -84,16 +106,16 @@ export class StringInterpolationListComponent implements OnInit, OnDestroy, Afte
     this.dataSource = new MatTableDataSource();
     this.data$
       .pipe(filter<IStringInterpolation[]>(Boolean))
-      .subscribe(interpolations => {
+      .subscribe((interpolations) => {
         console.log(interpolations);
         this.totalCount = interpolations.length;
         this.interpolations = interpolations;
         this.dataSource.data = interpolations;
       });
 
-    this.searchCtrl.valueChanges.pipe(
-      untilDestroyed(this)
-    ).subscribe(value => this.onFilterChange(value));
+    this.searchCtrl.valueChanges
+      .pipe(untilDestroyed(this))
+      .subscribe((value) => this.onFilterChange(value));
   }
 
   ngOnDestroy(): void {
@@ -130,9 +152,9 @@ export class StringInterpolationListComponent implements OnInit, OnDestroy, Afte
 
   /** Selects all rows if they are not all selected; otherwise clear selection. */
   masterToggle() {
-    this.isAllSelected() ?
-      this.selection.clear() :
-      this.dataSource.data.forEach(row => this.selection.select(row));
+    this.isAllSelected()
+      ? this.selection.clear()
+      : this.dataSource.data.forEach((row) => this.selection.select(row));
   }
 
   trackByProperty<T>(index: number, column: TableColumn<T>) {
@@ -140,11 +162,11 @@ export class StringInterpolationListComponent implements OnInit, OnDestroy, Afte
   }
 
   onLabelChange(change: MatSelectChange, row: IStringInterpolation) {
-    const index = this.interpolations.findIndex(c => c === row);
+    const index = this.interpolations.findIndex((c) => c === row);
     this.subject$.next(this.interpolations);
   }
 
   createStringInterpolation() {
-    this._router.navigate(['apps/string-interpolation-add']);
+    this._router.navigate(["apps/string-interpolation-add"]);
   }
 }
