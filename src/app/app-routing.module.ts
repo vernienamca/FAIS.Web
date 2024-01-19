@@ -82,10 +82,6 @@ const routes: VexRoutes = [
             loadChildren: () => import('./pages/apps/notification/notification.module').then(m =>m.NotificationModule),
           },
           {
-            path: 'string-interpolation-add',
-            loadChildren: () => import('./pages/apps/notification/string-interpolation/string-interpolation-add/string-interpolation-add.module').then(m => m.StringInterpolationAddModule),
-          },
-          {
             path: 'notification-template',
             loadChildren: () => import('./pages/apps/notification/notification.module').then(m =>m.NotificationModule),
           },

@@ -3,7 +3,6 @@ import { RouterModule } from '@angular/router';
 import { QuicklinkModule } from 'ngx-quicklink';
 import { VexRoutes } from '../../../../@vex/interfaces/vex-route.interface';
 import { StringInterpolationListComponent } from './string-interpolation/string-interpolation-list/string-interpolation-list.component';
-import { StringInterpolationAddComponent } from './string-interpolation/string-interpolation-add/string-interpolation-add.component'
 
 import { TemplateListComponent } from './templates/template-list/template-list.component'
 
@@ -15,10 +14,6 @@ const routes: VexRoutes = [
     data: {
       toolbarShadowEnabled: false
     }
-  },
-  {
-    path: 'apps/string-interpolation-add',
-    component: StringInterpolationAddComponent
   },
   {
     path: 'templates',

@@ -66,15 +66,23 @@
         <ng-container *ngFor="let column of columns; trackBy: trackByProperty">
           <ng-container *ngIf="column.type === 'text'" [matColumnDef]="column.property">
             <th *matHeaderCellDef class="uppercase" mat-header-cell mat-sort-header> {{ column.label }}</th>
-            <ng-container *ngIf="column.property !== 'isActive'; else isActive">
+
+            <ng-container *ngIf="column.property === 'createdAt'; else text">
+
               <td *matCellDef="let row" [ngClass]="column.cssClasses" mat-cell>
-                {{ row[column.property] }}
-                <div *ngIf="row[column.property] == 'Y'" class="bg-green text-green-contrast label flex-none">Active
-                </div>
-                <div *ngIf="row[column.property] == 'N'" class="bg-amber text-amber-contrast label flex-none">Inactive
-                </div>
+                {{ row[column.property] | date: 'MM/dd/yyyy hh:mm a' }}
               </td>
+
             </ng-container>
+            <ng-template #text>
+              <ng-container *ngIf="column.property !== 'isActive'; else isActive">
+                <td *matCellDef="let row" mat-cell>
+                  {{ row[column.property] }}
+                </td>
+              </ng-container>
+            </ng-template>
+
+
             <ng-template #isActive>
               <td *matCellDef="let row" mat-cell>
                 <div *ngIf="column.property == 'isActive'">
@@ -164,11 +172,6 @@
     </mat-checkbox>
   </button>
 </mat-menu>
-<!--   
-  <mat-menu #actionsMenu="matMenu" xPosition="before" yPosition="below">
-    <ng-template let-customer="customer" matMenuContent>
-    </ng-template>
-  </mat-menu> -->
 <mat-menu #actionsMenu="matMenu" xPosition="before" yPosition="below">
   <ng-template let-customer="customer" matMenuContent>
     <!-- <button (click)="updateCustomer(customer)" mat-menu-item> -->

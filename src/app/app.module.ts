@@ -16,8 +16,6 @@ import { DatePipe } from '@angular/common';
 import { SecurityService } from './core/services/security.service';
 import { securityApi } from './core/api/security-api.service';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
-import { NotificationApi } from './core/api/notification-api.service';
-import { NotificationService } from './core/services/notification.service';
 
 @NgModule({
   declarations: [AppComponent, ForgotPasswordComponent],
@@ -42,9 +40,7 @@ import { NotificationService } from './core/services/notification.service';
     AuthService, 
     PortalService,
     SecurityService,
-    securityApi,
-    NotificationApi,
-    NotificationService
+    securityApi
   ],
   bootstrap: [AppComponent]
 })
