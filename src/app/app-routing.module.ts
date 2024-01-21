@@ -79,11 +79,11 @@ const routes: VexRoutes = [
           },
           {
             path: 'interpolations',
-            loadChildren: () => import('./pages/apps/notification/notification.module').then(m =>m.NotificationModule),
+            loadChildren: () => import('./pages/apps/notification/notification.module').then(m =>m.NotificationModule)
           },
           {
             path: 'notification-template',
-            loadChildren: () => import('./pages/apps/notification/notification.module').then(m =>m.NotificationModule),
+            loadChildren: () => import('./pages/apps/notification/notification.module').then(m =>m.NotificationModule)
           },
           {
             path: 'user-edit',

@@ -99,8 +99,7 @@ export class TemplateListComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnInit() {
-    this._portalService
-      .getAlerts()
+    this._portalService.getAlerts()
       .pipe(takeUntil(this._onDestroy$))
       .subscribe((data) => {
         if (!data) {
@@ -120,17 +119,14 @@ export class TemplateListComponent implements OnInit, OnDestroy, AfterViewInit {
       .pipe(untilDestroyed(this))
       .subscribe((value) => this.onFilterChange(value));
   }
-
   ngOnDestroy(): void {
     this._onDestroy$.next();
     this._onDestroy$.complete();
   }
-
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }
-
   onFilterChange(value: string) {
     if (!this.dataSource) {
       return;
@@ -139,36 +135,28 @@ export class TemplateListComponent implements OnInit, OnDestroy, AfterViewInit {
     value = value.toLowerCase();
     this.dataSource.filter = value;
   }
-
   toggleColumnVisibility(column, event) {
     event.stopPropagation();
     event.stopImmediatePropagation();
     column.visible = !column.visible;
   }
-
-  /** Whether the number of selected elements matches the total number of rows. */
   isAllSelected() {
     const numSelected = this.selection.selected.length;
     const numRows = this.dataSource.data.length;
     return numSelected === numRows;
   }
-
-  /** Selects all rows if they are not all selected; otherwise clear selection. */
   masterToggle() {
     this.isAllSelected()
       ? this.selection.clear()
       : this.dataSource.data.forEach((row) => this.selection.select(row));
   }
-
   trackByProperty<T>(index: number, column: TableColumn<T>) {
     return column.property;
   }
-
   onLabelChange(change: MatSelectChange, row: ITemplates) {
     const index = this.templates.findIndex((c) => c === row);
     this.subject$.next(this.templates);
   }
-
   createTemplate() {
     this._router.navigate(["apps/template-add"]);
   }

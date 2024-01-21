@@ -91,10 +91,8 @@ export class StringInterpolationListComponent
       .filter((column) => column.visible)
       .map((column) => column.property);
   }
-
   ngOnInit() {
-    this._portalService
-      .getStringInterpolation()
+    this._portalService.getStringInterpolation()
       .pipe(takeUntil(this._onDestroy$))
       .subscribe((data) => {
         if (!data) {
@@ -117,18 +115,15 @@ export class StringInterpolationListComponent
       .pipe(untilDestroyed(this))
       .subscribe((value) => this.onFilterChange(value));
   }
-
   ngOnDestroy(): void {
     this._onDestroy$.next();
     this._onDestroy$.complete();
   }
-
-  ngAfterViewInit() {
+  ngAfterViewInit() : void {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }
-
-  onFilterChange(value: string) {
+  onFilterChange(value: string) : void{
     if (!this.dataSource) {
       return;
     }
@@ -136,37 +131,29 @@ export class StringInterpolationListComponent
     value = value.toLowerCase();
     this.dataSource.filter = value;
   }
-
-  toggleColumnVisibility(column, event) {
+  toggleColumnVisibility(column, event): void {
     event.stopPropagation();
     event.stopImmediatePropagation();
     column.visible = !column.visible;
   }
-
-  /** Whether the number of selected elements matches the total number of rows. */
-  isAllSelected() {
+  isAllSelected() : boolean {
     const numSelected = this.selection.selected.length;
     const numRows = this.dataSource.data.length;
     return numSelected === numRows;
   }
-
-  /** Selects all rows if they are not all selected; otherwise clear selection. */
-  masterToggle() {
+  masterToggle() : void {
     this.isAllSelected()
       ? this.selection.clear()
       : this.dataSource.data.forEach((row) => this.selection.select(row));
   }
-
-  trackByProperty<T>(index: number, column: TableColumn<T>) {
+  trackByProperty<T>(index: number, column: TableColumn<T>) : string {
     return column.property;
   }
-
-  onLabelChange(change: MatSelectChange, row: IStringInterpolation) {
+  onLabelChange(change: MatSelectChange, row: IStringInterpolation) : void{
     const index = this.interpolations.findIndex((c) => c === row);
     this.subject$.next(this.interpolations);
   }
-
-  createStringInterpolation() {
+  createStringInterpolation() : void{
     this._router.navigate(["apps/string-interpolation-add"]);
   }
 }

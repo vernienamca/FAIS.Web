@@ -21,8 +21,7 @@ const routes: VexRoutes = [
     data: {
       toolbarShadowEnabled: false
     }
-  },
-
+  }
 ];
 
 @NgModule({
