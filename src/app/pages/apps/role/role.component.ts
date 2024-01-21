@@ -119,8 +119,7 @@ export class RoleComponent implements OnInit {
   addNewModule(list) : FormGroup
   {    
     this.moduleGroup = this._fb.group({
-      roleId: [list.id], 
-      moduleId: [list.moduleId],
+      moduleId: [list.moduleId ?? list.id],
       name: [list?.moduleName || list?.name],
       isCreate: [list?.isCreate || true],
       isRead: [list?.isRead || true],
