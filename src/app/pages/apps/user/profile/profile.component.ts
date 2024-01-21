@@ -135,7 +135,6 @@ this.myInputField.nativeElement.focus();
         });
     }
   
-  
     this._userService.getLastLoginDate(+this.userId)
     .pipe(takeUntil(this._onDestroy$))
     .subscribe(data => {
@@ -156,15 +155,15 @@ this.myInputField.nativeElement.focus();
     this._router.navigate(['/']);
   }
 
-  save() {
+  save(): void {
     const userIdNumber = +this.userId;
-    const updatedUserData = {
+    const data = {
       lastName: this.settingsForm.get('last')?.value,
       mobilenumber: this.settingsForm.get('mobilenumber')?.value,
       updatedBY: userIdNumber
     };
 
-    this._userService.updateUser(userIdNumber, updatedUserData)
+    this._userService.updateUser(userIdNumber,data)
     .pipe(takeUntil(this._onDestroy$))
     .subscribe(data => {
       if (!data) {

@@ -31,7 +31,6 @@ import { MatNativeDateModule } from '@angular/material/core';
     UserRoutingModule,
     MatDatepickerModule,
     MatNativeDateModule
- 
   ]
 })
 export class UserAddModule { }
