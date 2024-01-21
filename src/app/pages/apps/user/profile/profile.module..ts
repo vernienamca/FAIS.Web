@@ -16,6 +16,7 @@ import { BreadcrumbsModule } from '../../../../../@vex/components/breadcrumbs/br
 import { PageLayoutModule } from  '../../../../../@vex/components/page-layout/page-layout.module'
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 @NgModule({
   declarations: [
     ProfileComponent
@@ -36,8 +37,8 @@ import { MatIconModule } from '@angular/material/icon';
     MatChipsModule,
     BreadcrumbsModule,
     PageLayoutModule,
-    MatFormFieldModule
-   
+    MatFormFieldModule,
+    MatSnackBarModule
   ]
 })
 export class ProfileModule { }

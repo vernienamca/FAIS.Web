@@ -13,7 +13,6 @@ export class RoleApi extends BaseApi {
   }
   
   getUserRoles(userId: number): Observable<string[]> {
-    return this.get<string[]>(`${this._apiUrl}/Role/GetUserRoles`, { params: { userId: userId.toString() } });
+    return this.get<string[]>(`${this._apiUrl}/Role/user-roles/${userId}`);
   }
-
 }

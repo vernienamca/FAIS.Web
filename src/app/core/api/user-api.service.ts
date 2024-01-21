@@ -8,17 +8,10 @@ export class UserApi extends BaseApi {
   private _apiUrl = `${environment.apiGatewayBaseUrl}`;
 
   getLastLoginDate(userId: number): Observable<any> {
-    return this.get<any>(`${this._apiUrl}/User/GetLastLoginDate?userId=${userId}`);
+    return this.get<any>(`${this._apiUrl}/User/user/last-login?userId=${userId}`);
   }
   
   updateUser(id: number, userDTO: any): Observable<any> {
     return this.put<any>(`${this._apiUrl}/User/UpdateUser/${id}`, userDTO);
-  }
-  
-  uploadFile(directory: string, file: File): Observable<any> {
-    const formData: FormData = new FormData();
-    formData.append('file', file);
-
-    return this.post<any>(`${this._apiUrl}/User/UploadFile?directory=${directory}`, formData);
   }
 }

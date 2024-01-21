@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 import { ENTER, COMMA } from '@angular/cdk/keycodes';
 import { Subject, takeUntil } from 'rxjs';
 import { ViewChild,ElementRef } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 export interface RolesElement {
   description: string;
@@ -68,7 +69,8 @@ export class ProfileComponent {
     private _portalService: PortalService,
     private _roleService: RoleService,
     private _datePipe: DatePipe,
-    private _router: Router
+    private _router: Router,
+    private _snackBar:MatSnackBar,
    ) { }
 
   userRoleCount(): number {
@@ -92,46 +94,55 @@ this.myInputField.nativeElement.focus();
   ngOnInit(): void {
     this.userId = localStorage.getItem('user_id');
     if (this.userId) {
-      this._portalService.getUser(+this.userId).pipe(takeUntil(this._onDestroy$))
-        .subscribe(
-          (user: any) => {
-            this.userInfo = user;
-            this.settingsForm.setValue({
-              ExampleData: this.userInfo.employeeNumber,
-              accountstatus: this.userInfo.status === 1 ? 'Active' : 'Inactive',
-              statusdate: this._datePipe.transform(this.userInfo.statusDate, 'MMMM d, yyyy ' ),
-              accexpiration: this._datePipe.transform(this.userInfo.dateExpired, 'MMMM d, yyyy h:mm a'),
-              emailaddress: this.userInfo.emailAddress,
-              username: this.userInfo.userName,
-              position:  this.userInfo.position,
-              division: this.userInfo.division,
-              TAFG: this.userInfo.tafGs,
-              last: this.userInfo.lastName,
-              mobilenumber: this.userInfo.mobileNumber,
-              First: this.userInfo.firstName,
-              selectedPhoto: this.userInfo.photo,
-              OUPFG: this.userInfo.oufg,
+      this._portalService.getUser(+this.userId)
+        .pipe(takeUntil(this._onDestroy$))
+        .subscribe((user: any) => {
+          if (!user) {
+            return;
+          }
+          this.userInfo = user;
+          this.settingsForm.setValue({
+            ExampleData: this.userInfo.employeeNumber,
+            accountstatus: this.userInfo.status === 1 ? 'Active' : 'Inactive',
+            statusdate: this._datePipe.transform(this.userInfo.statusDate, 'MMMM d, yyyy '),
+            accexpiration: this._datePipe.transform(this.userInfo.dateExpired, 'MMMM d, yyyy h:mm a'),
+            emailaddress: this.userInfo.emailAddress,
+            username: this.userInfo.userName,
+            position: this.userInfo.position,
+            division: this.userInfo.division,
+            TAFG: this.userInfo.tafGs,
+            last: this.userInfo.lastName,
+            mobilenumber: this.userInfo.mobileNumber,
+            First: this.userInfo.firstName,
+            selectedPhoto: this.userInfo.photo,
+            OUPFG: this.userInfo.oufg,
+          });
+  
+          this.settingsForm.disable();
+          this.TAFGControl.setValue(this.userInfo.tafGs || []);
+          this.settingsForm.get('last')?.enable();
+          this.settingsForm.get('mobilenumber')?.enable();
+  
+          this._roleService.getUserRoles(+this.userId)
+            .pipe(takeUntil(this._onDestroy$))
+            .subscribe((roles: any[]) => {
+              this.USER_ROLE = roles.map(role => ({
+                position: role.name,
+                description: role.description,
+                date: this._datePipe.transform(role.createdAt, 'longDate'),
+              }));
             });
-            this.settingsForm.disable();
-            this.TAFGControl.setValue(this.userInfo.tafGs || []);
-            this.settingsForm.get('last')?.enable();
-            this.settingsForm.get('mobilenumber')?.enable();
-
-            this._roleService.getUserRoles(+this.userId).pipe(takeUntil(this._onDestroy$)).subscribe(
-              (roles: any[]) => {
-                this.USER_ROLE = roles.map(role => ({
-                  position: role.name,
-                  description: role.description,
-                  date:this._datePipe.transform(role.createdAt, 'longDate', 'en-PH'),
-                }));
-              },
-            );
-          })
+        });
     }
   
-    this._userService.getLastLoginDate(+this.userId).pipe(takeUntil(this._onDestroy$))
-    .subscribe((lastLoginDate: any) => {
-        this.lastLoginDate = this._datePipe.transform(lastLoginDate, 'MMMM d, yyyy h:mm a', 'en-US');
+  
+    this._userService.getLastLoginDate(+this.userId)
+    .pipe(takeUntil(this._onDestroy$))
+    .subscribe(data => {
+      if (!data) {
+        return;
+      }
+        this.lastLoginDate = this._datePipe.transform(data, 'MMMM d, yyyy h:mm a',);
       }
     );
   }
@@ -153,14 +164,16 @@ this.myInputField.nativeElement.focus();
       updatedBY: userIdNumber
     };
 
-    this._userService.updateUser(userIdNumber, updatedUserData).pipe(takeUntil(this._onDestroy$)).subscribe({
-      next: (result) => {
-        console.log('User updated successfully:', result);
-      },
-      error: (error) => {
-        console.error('Error updating user:', error);
+    this._userService.updateUser(userIdNumber, updatedUserData)
+    .pipe(takeUntil(this._onDestroy$))
+    .subscribe(data => {
+      if (!data) {
+        return;
       }
+      this._snackBar.open('User updated successfully', 'OK', {
+        duration: 3000,
+      });
     });
   }
 }
-    
+  

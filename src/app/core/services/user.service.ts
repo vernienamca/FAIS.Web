@@ -18,8 +18,4 @@ export class UserService {
   getLastLoginDate(userId: number): Observable<any> {
     return this._userApi.getLastLoginDate(userId);
   }
-
-  uploadFile(directory: string, file: File): Observable<any> {  
-    return this._userApi.uploadFile(directory,file);
-  }
 }

@@ -42,8 +42,6 @@ import { MatTabsModule } from '@angular/material/tabs';
     MatButtonToggleModule,
     MatSlideToggleModule,
     MatTabsModule
-
-   
   ]
 })
 export class UserModule {

@@ -47,8 +47,7 @@ import { UserApi } from './core/api/user-api.service';
     securityApi,
     RoleService,
     UserApi,
-    RoleApi,
-
+    RoleApi
   ],
   bootstrap: [AppComponent]
 })
