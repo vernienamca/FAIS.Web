@@ -195,7 +195,7 @@
                                         <div class="flex items-center">
                                             <label for="smtp-password" class="block text-sm font-medium font-bold">SMTP
                                                 Enable SSL</label>
-                                            <mat-checkbox color="accent" formControlName="smtpEnableSSL" [checked]="enableSSL === 'Y'" (change)="onCheckboxChange($event)" [(ngModel)]="enableSSL"></mat-checkbox>
+                                            <mat-checkbox color="accent" formControlName="smtpEnableSSL" (change)="convertBooleanToString(checkSSL, $event.checked ? 'Y':'N')" [(ngModel)]="checkSSL"></mat-checkbox>
                                         </div>
                                         <p class="text-gray-700">The primary reason why SSL is used is to keep sensitive
                                             information sent across the Internet encrypted so that only the intended

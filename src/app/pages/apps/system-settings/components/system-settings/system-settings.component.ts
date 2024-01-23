@@ -10,8 +10,6 @@ import { PortalService } from 'src/app/core/services/portal.service';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { ISettings } from 'src/app/core/models/settings';
-import { MatCheckboxChange } from '@angular/material/checkbox';
-
 @Component({
   selector: 'vex-system-settings',
   templateUrl: './system-settings.component.html',
@@ -42,6 +40,7 @@ export class SystemSettingsComponent implements OnInit, AfterViewInit {
   smtpPort: number;
   smtpFromEmail : string;
   smtpPass: string;
+  checkSSL: boolean;
   enableSSL: string;
 
   @ViewChild(AppVersionComponent) appVersion: AppVersionComponent;
@@ -71,7 +70,7 @@ export class SystemSettingsComponent implements OnInit, AfterViewInit {
       smtpPort: [''],
       smtpFromEmail: [''],
       smtpPassword: [''],
-      smtpEnableSSL: [this.enableSSL],
+      smtpEnableSSL: [''],
     });
   }
   ngAfterViewInit() {
@@ -104,12 +103,15 @@ export class SystemSettingsComponent implements OnInit, AfterViewInit {
       this.smtpFromEmail = this.settings.smtpFromEmail;
       this.smtpPass = this.settings.smtpPassword;
       this.enableSSL = this.settings.smtpEnableSSL;
+      this.checkSSL = this.enableSSL ==='Y';
+      this.convertBooleanToString(this.checkSSL, this.enableSSL);
     });    
   }
 
-  onCheckboxChange(event: MatCheckboxChange) {
-    const newValue = event.checked ? 'Y' : 'N';
-    this.enableSSL = newValue;
+  convertBooleanToString(bool: boolean, newValue:string): void {
+    if (bool === true) {
+      this.settingsForm.get('smtpEnableSSL').patchValue(newValue);
+    }
   }
 
   minPassOpt = [
@@ -152,8 +154,9 @@ export class SystemSettingsComponent implements OnInit, AfterViewInit {
   ];
 
   onSubmit() : void{
-    console.log('form value',this.settingsForm.value);
-    
+    if (this.settingsForm.get('smtpEnableSSL').value === false) {
+      this.settingsForm.get('smtpEnableSSL').patchValue('N')
+    }
     this._portalService.updatesettings(this.settingsForm.value)
     .pipe(takeUntil(this._onDestroy$))
     .subscribe({
