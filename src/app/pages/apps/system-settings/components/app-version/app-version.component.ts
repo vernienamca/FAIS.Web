@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
 
 export interface PeriodicElement {
   versionNo: number;
@@ -19,10 +20,16 @@ const ELEMENT_DATA: PeriodicElement[] = [
 export class AppVersionComponent {
   displayedColumns: string[] = ['version', 'date', 'amendment'];
   dataSource = ELEMENT_DATA;
+  versionForm: FormGroup;
 
-  /**
-   *
-   */
+  constructor(private _fb: FormBuilder) {
+    this.versionForm = this._fb.group({
+      versionNo: '',
+      versionDate: '',
+      amendment: '',
+    });
+  }
+
 
 
 }
