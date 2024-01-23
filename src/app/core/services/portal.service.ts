@@ -8,6 +8,7 @@ import { IAuditLogs } from '../models/audit-logs';
 import { IStringInterpolation } from '../models/string-interpolation';
 import { ITemplates } from '../models/templates';
 import { DatePipe } from '@angular/common';
+import { ISettings } from '../models/settings';
 
 @Injectable({
   providedIn: 'root'
@@ -71,5 +72,13 @@ export class PortalService {
 
   openFolder() : void {
     this._portalApi.openFolder().subscribe();
+  }
+
+  getSettingsId(id: number): Observable<any> {
+    return this._portalApi.getSettingsId(id);
+  }
+
+  updatesettings(data: any): Observable<any> {
+    return this._portalApi.updatesettings(data);
   }
 }
