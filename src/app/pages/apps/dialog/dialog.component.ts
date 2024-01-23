@@ -9,16 +9,12 @@ import { DialogInterface } from 'src/app/core/models/dialog';
 })
 export class DialogComponent {
   constructor(@Inject(MAT_DIALOG_DATA) public data: DialogInterface,
-  // private stateService: StateService,
   private _dialogRef: MatDialogRef<DialogComponent>,
   ) {}
 
-  handleDialogSubmit() {
-    // this.stateService.isAsyncOperationRunning$.next(true);
-    
+  handleDialogSubmit() {    
     setTimeout(() => {
       this.data.callbackMethod();
-      // this.stateService.isAsyncOperationRunning$.next(false);
     }, 500);
     this.closeDialog(this.data);
   }
