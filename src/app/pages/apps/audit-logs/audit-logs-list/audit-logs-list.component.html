@@ -38,10 +38,8 @@
           </button>
         </div>
         <input type="file" id="fileInput" style="display: none;">
+        <mat-progress-bar *ngIf="isListLoading" mode="indeterminate" color="primary"></mat-progress-bar>
         <table @stagger [dataSource]="dataSource" class="w-full" mat-table matSort>
-          <!--- Note that these columns can be defined in any order.
-                The actual rendered columns are set as a property on the row definition" -->
-  
           <!-- Checkbox Column -->
           <ng-container matColumnDef="checkbox">
             <th *matHeaderCellDef mat-header-cell>

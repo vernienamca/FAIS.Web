@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Observable, of, ReplaySubject, Subject } from 'rxjs';
-import { filter, takeUntil } from 'rxjs/operators';
+import { filter, finalize, takeUntil } from 'rxjs/operators';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -59,7 +59,8 @@ export class AuditLogsListComponent implements OnInit, OnDestroy, AfterViewInit 
   dataSource: MatTableDataSource<IAuditLogs> | null;
   selection = new SelectionModel<IAuditLogs>(true, []);
   searchCtrl = new UntypedFormControl();
-  labels = aioTableLabels;                                                    
+  labels = aioTableLabels;      
+  isListLoading = true;                                              
   users = [];
 
   public filteredUsers: ReplaySubject<string[]> = new ReplaySubject<string[]>(1);
@@ -67,7 +68,6 @@ export class AuditLogsListComponent implements OnInit, OnDestroy, AfterViewInit 
   private _onDestroy$ = new Subject<void>();
 
   constructor(
-    private _dialog: MatDialog,
     private _portalService: PortalService
   ) {
   }
@@ -78,12 +78,14 @@ export class AuditLogsListComponent implements OnInit, OnDestroy, AfterViewInit 
 
   ngOnInit() {
     this._portalService.getAuditLogs()
-      .pipe(takeUntil(this._onDestroy$))
+      .pipe(
+        takeUntil(this._onDestroy$),
+        finalize(() => this.isListLoading = false)
+      )
       .subscribe(data => {
         if (!data) {
           return;
         }
-        console.log(data);
         this.subject$.next(data);
       });
 

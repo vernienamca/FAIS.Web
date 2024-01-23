@@ -22,7 +22,8 @@ export class TokenInterceptorService implements HttpInterceptor {
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const token = localStorage.getItem('access_token');
     if (request.url.indexOf(this.baseUrl) > -1) {
-      if (!token && request.url.indexOf('user/forgot-password') === -1) {
+      if (!token && request.url.indexOf('user/forgot-password') === -1 && request.url.indexOf('user/settings') === -1
+        && request.url.indexOf('user/tempkey') === -1 && request.url.indexOf('user/reset-password') === -1) {
         this.router.navigate(['/login']);
       }
     }

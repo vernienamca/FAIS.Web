@@ -18,6 +18,10 @@ const routes: VexRoutes = [
     loadChildren: () => import('./pages/pages/auth/reset-password/reset-password.module').then(m => m.ResetPasswordModule),
   },
   {
+    path: 'invalid-link',
+    loadChildren: () => import('./pages/pages/auth/invalid-key/invalid-link.module').then(m => m.InvalidLinkModule),
+  },
+  {
     path: 'register',
     loadChildren: () => import('./pages/pages/auth/register/register.module').then(m => m.RegisterModule),
   },

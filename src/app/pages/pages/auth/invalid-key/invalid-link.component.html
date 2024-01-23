@@ -1,0 +1,14 @@
+
+<div class="logo-container">
+  <img src="assets/img/demo/logo.svg" alt="Logo">
+</div>
+<div class="rectangle"></div>
+<div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="5px" [style.marginTop.px]="150">
+  <img fxFlex src="assets/img/icons/invalid.png" alt="Invalid Link" class="img-icon">
+  <h2 fxFlex class="header-text">Invalid Link</h2>
+</div>
+<div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="5px" [style.marginTop.px]="10">
+  <p fxFlex>The link you clicked is invalid or has expired.</p>
+  <p fxFlex>Please make sure you're using the link from the most recent email.</p>
+  <button color="primary" mat-raised-button type="button" class="back-homepage" (click)="backToHomePage()">Back to Homepage</button>
+</div>

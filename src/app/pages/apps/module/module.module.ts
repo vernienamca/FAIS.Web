@@ -20,6 +20,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 @NgModule({
   declarations: [ModuleListComponent, ModuleComponent],
@@ -43,7 +44,8 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     MatFormFieldModule,
     MatSlideToggleModule,
     MatInputModule,
-    FlexLayoutModule
+    FlexLayoutModule,
+    MatProgressBarModule
   ]
 })
 export class ModuleModule {

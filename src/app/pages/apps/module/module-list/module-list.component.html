@@ -14,7 +14,6 @@
       </div>
     </div>
   </vex-page-layout-header>
-
   <vex-page-layout-content [class.container]="layoutCtrl.value === 'boxed'" [class.px-gutter]="layoutCtrl.value === 'fullwidth'" class="-mt-6">
     <div class="card overflow-auto -mt-16">
       <div class="bg-app-bar px-6 h-16 border-b sticky left-0 flex items-center">
@@ -32,11 +31,8 @@
           <mat-icon svgIcon="mat:add"></mat-icon>
         </button>
       </div>
-
+      <mat-progress-bar *ngIf="isListLoading" mode="indeterminate" color="primary"></mat-progress-bar>
       <table @stagger [dataSource]="dataSource" class="w-full" mat-table matSort>
-        <!--- Note that these columns can be defined in any order.
-              The actual rendered columns are set as a property on the row definition" -->
-
         <!-- Checkbox Column -->
         <ng-container matColumnDef="checkbox">
           <th *matHeaderCellDef mat-header-cell>

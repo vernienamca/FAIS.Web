@@ -13,6 +13,7 @@ export interface IUser {
   statusCode: string;
   statusDate: Date;
   dateExpired: Date;
+  tempKey: string;
   createdBy: string,
   createdAt: Date,
   updatedBy?: string;

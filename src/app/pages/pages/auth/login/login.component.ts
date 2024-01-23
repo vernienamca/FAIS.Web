@@ -24,9 +24,9 @@ export class LoginComponent implements OnInit {
   private _onDestroy$ = new Subject<void>();
 
   constructor(
-    private router: Router,
     private fb: UntypedFormBuilder,
     private cd: ChangeDetectorRef,
+    private _router: Router,
     private snackbar: MatSnackBar,
     private _authService: AuthService
   ) {}
@@ -58,7 +58,7 @@ export class LoginComponent implements OnInit {
         }
         localStorage.setItem('user_id', data.userId);
         localStorage.setItem('access_token', data.accessToken);
-        this.router.navigate(['/apps/help-center/getting-started']);
+        this._router.navigate(['/apps/help-center/getting-started']);
       });
   }
 

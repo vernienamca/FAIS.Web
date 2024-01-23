@@ -1,12 +1,12 @@
 import { AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Observable, of, ReplaySubject, Subject } from 'rxjs';
-import { filter, takeUntil } from 'rxjs/operators';
+import { filter, finalize, takeUntil } from 'rxjs/operators';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatDialog } from '@angular/material/dialog';
 import { TableColumn } from '../../../../../@vex/interfaces/table-column.interface';
-import { aioTableData, aioTableLabels } from '../../../../../static-data/aio-table-data';
+import { aioTableLabels } from '../../../../../static-data/aio-table-data';
 import { SelectionModel } from '@angular/cdk/collections';
 import { fadeInUp400ms } from '../../../../../@vex/animations/fade-in-up.animation';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS, MatFormFieldDefaultOptions } from '@angular/material/form-field';
@@ -60,13 +60,13 @@ export class RoleListComponent implements OnInit, OnDestroy, AfterViewInit {
   selection = new SelectionModel<IRole>(true, []);
   searchCtrl = new UntypedFormControl();
   labels = aioTableLabels;
+  isListLoading = true;
 
   private _onDestroy$ = new Subject<void>();
 
   constructor(
-    private _dialog: MatDialog,
     private _portalService: PortalService,
-    private _router: Router,
+    private _router: Router
   ) {
   }
 
@@ -76,7 +76,10 @@ export class RoleListComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnInit() {
     this._portalService.getRoles()
-      .pipe(takeUntil(this._onDestroy$))
+      .pipe(
+        takeUntil(this._onDestroy$),
+        finalize(() => this.isListLoading = false)
+      )
       .subscribe(data => {
         if (!data) {
           return;
