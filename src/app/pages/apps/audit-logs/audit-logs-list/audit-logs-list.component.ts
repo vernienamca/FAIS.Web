@@ -64,19 +64,15 @@ export class AuditLogsListComponent implements OnInit, OnDestroy, AfterViewInit 
   users = [];
 
   public filteredUsers: ReplaySubject<string[]> = new ReplaySubject<string[]>(1);
-
   private _onDestroy$ = new Subject<void>();
-
-  constructor(
-    private _portalService: PortalService
-  ) {
-  }
 
   get visibleColumns() {
     return this.columns.filter(column => column.visible).map(column => column.property);
   }
 
-  ngOnInit() {
+  constructor(private _portalService: PortalService) {}
+
+  ngOnInit(): void {
     this._portalService.getAuditLogs()
       .pipe(
         takeUntil(this._onDestroy$),
@@ -109,12 +105,12 @@ export class AuditLogsListComponent implements OnInit, OnDestroy, AfterViewInit 
     this._onDestroy$.complete();
   }
 
-  ngAfterViewInit() {
+  ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }
 
-  onFilterChange(value: string) {
+  onFilterChange(value: string): void {
     if (!this.dataSource) {
       return;
     }
@@ -123,13 +119,13 @@ export class AuditLogsListComponent implements OnInit, OnDestroy, AfterViewInit 
     this.dataSource.filter = value;
   }
 
-  toggleColumnVisibility(column, event) {
+  toggleColumnVisibility(column, event): void {
     event.stopPropagation();
     event.stopImmediatePropagation();
     column.visible = !column.visible;
   }
 
-  isAllSelected() {
+  isAllSelected(): boolean {
     const numSelected = this.selection.selected.length;
     const numRows = this.dataSource.data.length;
     return numSelected === numRows;

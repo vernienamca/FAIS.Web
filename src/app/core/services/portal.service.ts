@@ -70,9 +70,6 @@ export class PortalService {
   }
 
   openFolder() : void {
-    this._portalApi.openFolder().subscribe(
-      (response) => {
-      },
-    )
+    this._portalApi.openFolder().subscribe();
   }
 }

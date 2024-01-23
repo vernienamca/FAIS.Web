@@ -57,6 +57,6 @@ export class PortalApi extends BaseApi {
     }
 
     openFolder(): Observable<any> {
-        return this.get<any>(`${this._apiUrl}/auditLog/folder`);
+        return this.get<any>(`${this._apiUrl}/auditLog/open-folder`);
     }
 }

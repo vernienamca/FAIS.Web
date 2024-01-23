@@ -16,8 +16,6 @@ import { takeUntil } from 'rxjs/operators';
 import { Observable, ReplaySubject, Subject } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
-
-
 @Component({
   selector: 'vex-role',
   templateUrl: './role.component.html',
@@ -68,7 +66,6 @@ export class RoleComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    
     this._portalService.getRoleId(Number(this._roleId))
     .pipe(takeUntil(this._onDestroy$))
     .subscribe((data: any) => {    

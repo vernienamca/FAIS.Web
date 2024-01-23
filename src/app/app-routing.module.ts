@@ -83,11 +83,11 @@ const routes: VexRoutes = [
           },
           {
             path: 'interpolations',
-            loadChildren: () => import('./pages/apps/notification/notification.module').then(m =>m.NotificationModule)
+            loadChildren: () => import('./pages/apps/notification/string-interpolation/string-interpolation-list/string-interpolation.module').then(m =>m.StringInterpolationModule)
           },
           {
             path: 'templates',
-            loadChildren: () => import('./pages/apps/notification/notification.module').then(m =>m.NotificationModule)
+            loadChildren: () => import('./pages/apps/notification/templates/template-list/template.module').then(m =>m.TemplateModule)
           },
           {
             path: 'user-edit',
