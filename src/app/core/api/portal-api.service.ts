@@ -8,6 +8,7 @@ import { IAuditLogs } from "../models/audit-logs";
 import { IStringInterpolation } from "../models/string-interpolation";
 import { ITemplates } from "../models/templates";
 import { HttpResponse } from '@angular/common/http';
+import { ISettings } from "../models/settings";
 
 export class PortalApi extends BaseApi {
     private _apiUrl = `${environment.apiGatewayBaseUrl}`;
@@ -58,5 +59,13 @@ export class PortalApi extends BaseApi {
 
     openFolder(): Observable<any> {
         return this.get<any>(`${this._apiUrl}/auditLog/folder`);
+    }
+
+    getSettingsId(id: number) : Observable<ISettings>{
+        return this.get<ISettings>(`${this._apiUrl}/settings/${id}`);
+    }
+
+    updatesettings(data:any): Observable<any> {
+        return this.put<any>(`${this._apiUrl}/settings`, data);
     }
 }

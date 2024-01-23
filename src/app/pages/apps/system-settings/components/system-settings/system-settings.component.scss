@@ -1,111 +1,17 @@
-.breadcrumb .col{
-    margin: 10px 50px;
-    color: #043B7B;
-    font-size: large;
-}
-
-.btn-opt{
-    background-color: #E9ECEF;
-    margin: 15px 50px;
-    padding: 10px;
-    color: #ffffff;
-}
-
-.btn-opt button > *{
-    margin: auto 5px;
-}
-
-.settings{
-    .mat-tab-label {
-        min-width: 25px !important; // In addition to mat-strech-tabs allowing tabs to fill remaining space in parent container
-        padding: 5px;
-      }
-}
-
-.save{
-    background-color: #009246;
-    padding: 3px 15px;
-    border-radius: 5px;
-    margin-right: 8px;
-    display: flex;
-    align-items: center;
-}
-
-.close{
-    background-color: #043C79;
-    padding: 3px 15px;
-    border-radius: 5px;
-    margin-left: 8px;
-    display: flex;
-    align-items: center;
-}
-
-::ng-deep .mat-mdc-tab .mdc-tab__text-label,
-::ng-deep .mat-mdc-tab-link .mdc-tab__text-label{
-    color: #000 !important;
-    min-width: 300px;
-    display: flex;
-    justify-content: center;
-}
-
-.gen-set, .conf-set{
-    display: flex;
-    justify-content: center;
-    margin-top: 30px;
-}
-
-.gen-set-items{
-    width: 95%;
-}
-
-.form-input input,
-.form-input select{
-    width: 94%;
-    padding: 8px;
-}
-
-.form-input input,
-.form-input select{
-    border: 1px solid #7D7C7C;
-    border-radius: 5px;
-    margin-top: 5px;
-}
-
-.row{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin: 30px 0;
-}
-
-.row .form-input{
-    flex-basis: 48%;
-}
-
-.form-input #addr-input{
-    width: 97%;
-}
-
-.form-input label{
-    line-height: 50%;
-}
-
-.note{
-    margin-top: 10px;
-    color: #828282;
-    
-}
-
 hr{
     border-top: 5px dashed #D8D8D8;
-    margin-top: 50px;
-    width: 98%;
 }
 
-.tabs{
-    margin-left: 20px;
+::ng-deep .mat-mdc-checkbox.mat-accent .mdc-checkbox--selected ~ .mdc-checkbox__ripple{
+    background: #008000!important;
 }
 
-.req{
-    color: #FF0000;
+::ng-deep .mat-mdc-checkbox.mat-accent{
+    --mdc-checkbox-selected-checkmark-color: #008000;
+    --mdc-checkbox-selected-focus-icon-color: #ffffff;
+    --mdc-checkbox-selected-hover-icon-color: #ffffff;
+    --mdc-checkbox-selected-icon-color: #ffffff;
+    --mdc-checkbox-selected-pressed-icon-color: #ffffff;
+    --mdc-checkbox-unselected-focus-icon-color: #008000;
+    --mdc-checkbox-unselected-hover-icon-color: #008000;
 }

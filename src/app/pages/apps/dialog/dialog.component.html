@@ -1,0 +1,16 @@
+<div class="p-4">
+  <h1 class="text-lg" mat-dialog-title>{{ data.dialogHeader }}</h1>
+  <div mat-dialog-content class="py-4">
+    <p>{{ data.dialogContent }}</p>
+  </div>
+  <div mat-dialog-actions class="flex gap-3">
+    <button mat-button (click)="handleDialogSubmit()" mat-raised-button class="rounded-full !bg-green !text-white" >
+      <mat-icon svgIcon="mat:upload"></mat-icon>
+      <span>{{ data.confirmButtonLabel }}</span>
+    </button>
+    <button mat-button cdkFocusInitial (click)="closeDialog()" mat-raised-button color="primary">
+      <mat-icon svgIcon="mat:close"></mat-icon>
+      {{ data.cancelButtonLabel }}
+    </button>
+  </div>
+</div>
