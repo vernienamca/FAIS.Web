@@ -137,9 +137,7 @@ export class StringInterpolationListComponent
     column.visible = !column.visible;
   }
   isAllSelected() : boolean {
-    const numSelected = this.selection.selected.length;
-    const numRows = this.dataSource.data.length;
-    return numSelected === numRows;
+    return this.selection.selected.length === this.dataSource.data.length;
   }
   masterToggle() : void {
     this.isAllSelected()

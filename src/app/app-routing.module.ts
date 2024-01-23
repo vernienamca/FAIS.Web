@@ -82,7 +82,7 @@ const routes: VexRoutes = [
             loadChildren: () => import('./pages/apps/notification/notification.module').then(m =>m.NotificationModule)
           },
           {
-            path: 'notification-template',
+            path: 'templates',
             loadChildren: () => import('./pages/apps/notification/notification.module').then(m =>m.NotificationModule)
           },
           {

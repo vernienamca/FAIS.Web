@@ -119,15 +119,18 @@ export class TemplateListComponent implements OnInit, OnDestroy, AfterViewInit {
       .pipe(untilDestroyed(this))
       .subscribe((value) => this.onFilterChange(value));
   }
+
   ngOnDestroy(): void {
     this._onDestroy$.next();
     this._onDestroy$.complete();
   }
-  ngAfterViewInit() {
+
+  ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }
-  onFilterChange(value: string) {
+
+  onFilterChange(value: string): void {
     if (!this.dataSource) {
       return;
     }
@@ -135,29 +138,33 @@ export class TemplateListComponent implements OnInit, OnDestroy, AfterViewInit {
     value = value.toLowerCase();
     this.dataSource.filter = value;
   }
-  toggleColumnVisibility(column, event) {
+
+  toggleColumnVisibility(column, event): void {
     event.stopPropagation();
     event.stopImmediatePropagation();
     column.visible = !column.visible;
   }
+
   isAllSelected() {
-    const numSelected = this.selection.selected.length;
-    const numRows = this.dataSource.data.length;
-    return numSelected === numRows;
+    return this.selection.selected.length === this.dataSource.data.length;
   }
-  masterToggle() {
+
+  masterToggle(): void {
     this.isAllSelected()
       ? this.selection.clear()
       : this.dataSource.data.forEach((row) => this.selection.select(row));
   }
+
   trackByProperty<T>(index: number, column: TableColumn<T>) {
     return column.property;
   }
-  onLabelChange(change: MatSelectChange, row: ITemplates) {
+
+  onLabelChange(change: MatSelectChange, row: ITemplates): void {
     const index = this.templates.findIndex((c) => c === row);
     this.subject$.next(this.templates);
   }
-  createTemplate() {
+
+  createTemplate(): void {
     this._router.navigate(["apps/template-add"]);
   }
 }
