@@ -5,6 +5,8 @@ import { IModule } from '../models/module';
 import { IRole } from '../models/role';
 import { IUser } from '../models/user';
 import { IAuditLogs } from '../models/audit-logs';
+import { IStringInterpolation } from '../models/string-interpolation';
+import { ITemplates } from '../models/templates';
 import { DatePipe } from '@angular/common';
 
 @Injectable({
@@ -43,6 +45,14 @@ export class PortalService {
     return this._portalApi.getAuditLogs();
   }
 
+  getStringInterpolation(): Observable<IStringInterpolation[]> {
+    return this._portalApi.getStringInterpolation();
+  }
+
+  getAlerts(): Observable<ITemplates[]> {
+    return this._portalApi.getTemplates();
+  }
+  
   exportAuditLogs(): void {
     this._portalApi.exportAuditLogs().subscribe(response => {
       const contentDisposition = response.headers.get('Content-Disposition');

@@ -82,6 +82,14 @@ const routes: VexRoutes = [
             }
           },
           {
+            path: 'interpolations',
+            loadChildren: () => import('./pages/apps/notification/notification.module').then(m =>m.NotificationModule)
+          },
+          {
+            path: 'templates',
+            loadChildren: () => import('./pages/apps/notification/notification.module').then(m =>m.NotificationModule)
+          },
+          {
             path: 'user-edit',
             loadChildren: () => import('./pages/apps/User-Edit/User-Edit.module').then(m => m.UserEditModule),
           },

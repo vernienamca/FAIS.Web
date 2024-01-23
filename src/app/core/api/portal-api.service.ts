@@ -5,6 +5,8 @@ import { IModule } from "../models/module";
 import { IRole } from "../models/role";
 import { IUser } from "../models/user";
 import { IAuditLogs } from "../models/audit-logs";
+import { IStringInterpolation } from "../models/string-interpolation";
+import { ITemplates } from "../models/templates";
 import { HttpResponse } from '@angular/common/http';
 
 export class PortalApi extends BaseApi {
@@ -36,6 +38,14 @@ export class PortalApi extends BaseApi {
 
     getAuditLogs(): Observable<IAuditLogs[]> {
         return this.get<IAuditLogs>(`${this._apiUrl}/auditLog/get`);
+    }
+
+    getStringInterpolation(): Observable<IStringInterpolation[]> {
+        return this.get<IStringInterpolation>(`${this._apiUrl}/notification/interpolations`);
+    }
+
+    getTemplates(): Observable<ITemplates[]> {
+        return this.get<ITemplates>(`${this._apiUrl}/notification/templates`);
     }
 
     exportAuditLogs(): Observable<HttpResponse<Blob>>  {

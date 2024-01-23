@@ -1,0 +1,15 @@
+.label {
+    margin-top: 0.25rem;
+    display: inline-flex;
+    height: 2rem;
+    min-width: 3rem;
+    -webkit-user-select: none;
+    user-select: none;
+    align-items: center;
+    border-radius: 0.5rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    font-size: .75rem;
+    line-height: 3rem;
+    text-align: center !important;
+}
