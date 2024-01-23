@@ -2,21 +2,22 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { QuicklinkModule } from 'ngx-quicklink';
 import { VexRoutes } from '../../../../@vex/interfaces/vex-route.interface';
-import { ModuleListComponent } from './module-list/module-list.component';
-import { ModuleComponent } from './module.component';
-import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { StringInterpolationListComponent } from './string-interpolation/string-interpolation-list/string-interpolation-list.component';
+
+import { TemplateListComponent } from './templates/template-list/template-list.component'
+
 
 const routes: VexRoutes = [
   {
     path: '',
-    component: ModuleListComponent,
+    component: StringInterpolationListComponent,
     data: {
       toolbarShadowEnabled: false
     }
   },
   {
-    path: ':edit-module',
-    component: ModuleComponent,
+    path: 'templates',
+    component: TemplateListComponent,
     data: {
       toolbarShadowEnabled: false
     }
@@ -27,5 +28,5 @@ const routes: VexRoutes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule, QuicklinkModule]
 })
-export class ModuleRoutingModule {
+export class NotificationRoutingModule {
 }

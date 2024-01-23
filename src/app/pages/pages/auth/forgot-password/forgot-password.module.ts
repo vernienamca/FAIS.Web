@@ -9,6 +9,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgxCaptchaModule } from 'ngx-captcha';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [ForgotPasswordComponent],
@@ -20,7 +22,9 @@ import { NgxCaptchaModule } from 'ngx-captcha';
     MatButtonModule,
     MatIconModule,
     FontAwesomeModule,
-    NgxCaptchaModule
+    NgxCaptchaModule,
+    FlexLayoutModule,
+    MatSnackBarModule
   ]
 })
 export class ForgotPasswordModule {

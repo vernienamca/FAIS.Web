@@ -1,53 +1,47 @@
 .login-container {
-    position: relative;
-  }
+  position: relative;
+}
 
-  .login-container::before {
-    content: "";
-    background-image: url("./../../../../../assets/img/background/login-bg.jpg");
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-    filter: blur(0.5px); 
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    z-index: -1;
-    height: 100%;
-  }
+.login-container::before {
+  content: "";
+  background-image: url("./../../../../../assets/img/background/login-bg.jpg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  filter: blur(0.5px); 
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: -1;
+  height: 100%;
+}
   
-  .title {
-    font-family: 'Poppins', sans-serif; 
-    text-align: center;
-    font-weight: 1000;
-    
-    color: #043C79;
-    
-  }
+.title {
+  font-family: 'Poppins', sans-serif; 
+  text-align: center;
+  font-weight: 1000;
+  color: #043C79;
   
-  .title h2 {
-    font-size: 40px; 
-    margin-bottom: 10px; 
-
-  }
+}
   
-  .title p {
-    font-size: 16px; 
-    margin-top: 50px;
-    color: #043C79;
-  }
+.title h2 {
+  font-size: 40px; 
+  margin-bottom: 10px; 
+
+}
   
-
+.title p {
+  font-size: 16px; 
+  margin-top: 50px;
+  color: #043C79;
+}
   
-  .slogan {
-    backdrop-filter: blur(10px); 
-    background-color: rgba(255, 255, 255, 0.8); 
-  }
-
-
-
+.slogan {
+  backdrop-filter: blur(10px); 
+  background-color: rgba(255, 255, 255, 0.8); 
+}
   
 @media (max-width: 767px) {
     .hide-on-small-screens {
@@ -70,7 +64,7 @@
 }
 
 .mat-mdc-raised-button {
-    border-radius: 2px;
+  border-radius: 2px;
 }
 
 .login-container .slogan {

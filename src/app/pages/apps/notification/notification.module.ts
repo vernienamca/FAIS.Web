@@ -13,20 +13,17 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
-import { ModuleListComponent } from './module-list/module-list.component';
-import { ModuleRoutingModule } from './module-routing.module';
-import { ModuleComponent } from './module.component';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
+import { StringInterpolationListComponent } from './string-interpolation/string-interpolation-list/string-interpolation-list.component';
+import { TemplateListComponent } from './templates/template-list/template-list.component'
+import { NotificationRoutingModule } from './notification-routing.module';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { FlexLayoutModule } from '@angular/flex-layout';
-import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatTabsModule } from '@angular/material/tabs';
 
 @NgModule({
-  declarations: [ModuleListComponent, ModuleComponent],
+  declarations: [StringInterpolationListComponent, TemplateListComponent],
   imports: [
     CommonModule,
-    ModuleRoutingModule,
+    NotificationRoutingModule,
     PageLayoutModule,
     BreadcrumbsModule,
     MatPaginatorModule,
@@ -41,12 +38,9 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
     ReactiveFormsModule,
     MatSelectModule,
     MatButtonToggleModule,
-    MatFormFieldModule,
     MatSlideToggleModule,
-    MatInputModule,
-    FlexLayoutModule,
-    MatProgressBarModule
+    MatTabsModule,
   ]
 })
-export class ModuleModule {
+export class NotificationModule {
 }

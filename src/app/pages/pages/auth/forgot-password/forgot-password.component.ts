@@ -1,12 +1,13 @@
 import { Component, OnInit,OnDestroy } from '@angular/core';
-import { UntypedFormBuilder, Validators } from '@angular/forms';
+import { Validators } from '@angular/forms';
 import { fadeInUp400ms } from '../../../../../@vex/animations/fade-in-up.animation';
-import {FormGroup,FormBuilder} from '@angular/forms';
+import { FormGroup,FormBuilder } from '@angular/forms';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { SecurityService } from 'src/app/core/services/security.service';
 import {  Subject,takeUntil } from 'rxjs';
 import { Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'vex-forgot-password',
@@ -16,7 +17,9 @@ import { environment } from 'src/environments/environment';
 })
 export class ForgotPasswordComponent implements OnInit, OnDestroy {
   form: FormGroup;
+  isPasswordSent = false;
   siteKey: string;
+  arrowIcon = faArrowLeft;
 
   get formControls() {
     return {
@@ -25,19 +28,15 @@ export class ForgotPasswordComponent implements OnInit, OnDestroy {
     };
   }
 
-  icon = faArrowLeft;
-  passwordSent = false;
-  buttonText = 'SEND RECOVERY LINK';
-  imageUrl = 'assets/img/icons/forgot-password-icons/Vector.png';
-  
   private _onDestroy$ = new Subject<void>();
 
   constructor(
-    fb: FormBuilder,
+    _fb: FormBuilder,
+    private _router: Router,
     private _securityService: SecurityService,
-    private _router: Router
+    private _snackBar: MatSnackBar
   ) { 
-    this.form = fb.group({
+    this.form = _fb.group({
       email: ['', [Validators.required, Validators.email,
         Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')]],
       recaptcha: ['', Validators.required]
@@ -45,7 +44,7 @@ export class ForgotPasswordComponent implements OnInit, OnDestroy {
     this.siteKey = environment.reCaptcha.siteKey;
   }
 
-  ngOnInit():void {
+  ngOnInit(): void {
   } 
 
   ngOnDestroy(): void {
@@ -57,37 +56,15 @@ export class ForgotPasswordComponent implements OnInit, OnDestroy {
     this._securityService.forgotPassword(this.formControls.email.value)
       .pipe(takeUntil(this._onDestroy$))
       .subscribe(data => {
-        if (!data) {
+        if (!data.id) {
+          this._snackBar.open(`We couldn't find an account with that email adress. Please check and try again.`, 'Close', {
+            duration: 10000
+          });
           return;
         }
-        console.log(data);
+        this.isPasswordSent = true;
       });
   }
-
-  // send(event: Event) {
-  //   event.preventDefault();
-  //   if (this.form.invalid) {
-  //     return;
-  //   }
-  //   this.imageUrl = 'assets/img/icons/forgot-password-icons/reset-password-sent.svg';
-  //   this.passwordSent = true;
-  //   this.sendEmail();
-  // }
-
-  // sendEmail(): void {
-  //   this._securityService.sendEmail(this.form.value.email)
-  //     .pipe(takeUntil(this._onDestroy$))
-  //     .subscribe({
-  //       next: (data) => {
-  //         if (!data) {
-  //           return;
-  //         }    
-  //       },
-  //       error: (error) => {
-  //         console.error('Error sending email:', error);
-  //       }
-  //     });
-  //   }
 
   redirectToLogin(): void {
     this._router.navigate(['login']);

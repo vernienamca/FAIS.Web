@@ -1,0 +1,38 @@
+.logo-container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; 
+  padding: 20px;
+}
+  
+.logo-container img  {
+  width: 200px; 
+  height: 60px; 
+}
+
+.rectangle {
+  flex-grow: 1; 
+  height: 10px; 
+  background-color: #043C79;
+  margin-top: 10px; 
+}
+
+.img-icon {
+  width: 110px;
+  height: 100px;
+}
+
+.header-text {
+  height: 41px;
+  color:#043C79;
+  font-weight: 600;
+  font-family: 'Poppins', sans-serif; 
+  font-size: 25px;
+}
+
+.back-homepage {
+  border-radius: 2px;
+  width: 250px;
+  margin-top: 10px;
+}
+

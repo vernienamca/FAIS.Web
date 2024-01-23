@@ -1,14 +1,11 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
-
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
-
-
-
 import { ActivatedRoute } from '@angular/router';
 import { SecurityService } from 'src/app/core/services/security.service';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'vex-reset-password',
@@ -16,19 +13,21 @@ import { SecurityService } from 'src/app/core/services/security.service';
   styleUrls: ['./reset-password.component.scss']
 
 })
-export class ResetPasswordComponent implements OnInit {
-
-  icon = faCheck;
-  greencheck = faCheck;
-  imageUrl = 'assets/img/icons/forgot-password-icons/password.png';
+export class ResetPasswordComponent implements OnInit, OnDestroy {
   form: FormGroup; 
+  isPasswordReset = false;
+  icon = faCheck;
   passwordInputType = 'password';
   confirmPasswordInputType = 'password';
   isPasswordVisible = false;
   isConfirmPasswordVisible = false;
-  success = false; 
-  resetEmail: string | null = null; 
   tempKey: string;
+  minPasswordLength: number;
+  minSpecialCharacters: number;
+  hasMinPasswordLength = false;
+  hasAtLeastOneNumber = false;
+  hasAtLeastOneLowercaseChar = false;
+  hasMinSpecialCharacters = false;
 
   get formControls() {
     return {
@@ -37,25 +36,55 @@ export class ResetPasswordComponent implements OnInit {
     };
   }
 
+  private _onDestroy$ = new Subject<void>();
+
   constructor(
     private _fb: FormBuilder,
     private _cd: ChangeDetectorRef,
-    private _route: ActivatedRoute    
+    private _route: ActivatedRoute,
+    private _router: Router,
+    private _securityService: SecurityService,  
+    private _snackBar: MatSnackBar
   ) {
     this.tempKey = this._route.snapshot.params['tempKey'];
     if (!this.tempKey) {
+      this._router.navigate(['/invalid-link']);
       return;
     }
+    this._securityService.getUserByTempKey(this.tempKey)
+      .pipe(takeUntil(this._onDestroy$))
+      .subscribe(data => {
+        if (!data) {
+          this._router.navigate(['/invalid-link']);
+          return;
+        }
+      });
+    
     this.form = this._fb.group({
-      password: ['', [Validators.required, Validators.minLength(8)]],
-      confirmPassword: ['', [Validators.required, Validators.minLength(8)]]
+      password: ['', [Validators.required]],
+      confirmPassword: ['', [Validators.required]]
     });
+
+    this._securityService.getSettings(1)
+      .pipe(takeUntil(this._onDestroy$))
+      .subscribe(data => {
+        if (!data) {
+          return;
+        }
+        this.minPasswordLength = data.minPasswordLength;
+        this.minSpecialCharacters = data.minSpecialCharacters;
+      });
   }
 
   ngOnInit(): void {
     this.form.get('password').valueChanges.subscribe(() => {
-        this._cd.markForCheck();
+      this._cd.markForCheck();
     });
+  }
+
+  ngOnDestroy(): void {
+    this._onDestroy$.next();
+    this._onDestroy$.complete();
   }
 
   togglePasswordVisibility(): void {
@@ -81,54 +110,34 @@ export class ResetPasswordComponent implements OnInit {
       this._cd.markForCheck();
     }
   }
+
+  onValidatePasswordCriteria(event: any): void {
+    this.hasMinPasswordLength = event.target.value.length >= this.minPasswordLength;
+    this.hasAtLeastOneNumber = /[0-9]/.test(event.target.value);
+    this.hasAtLeastOneLowercaseChar = /[a-z]/.test(event.target.value);
+    this.hasMinSpecialCharacters = (event.target.value.match(/[@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/g) || []).length >= this.minSpecialCharacters;
+  }
   
   submit(): void {
-
+    if (!this.formControls.confirmPassword.value) {
+      this.formControls.confirmPassword.markAsTouched();
+      this.formControls.confirmPassword.updateValueAndValidity();
+      return;
+    }
+    if (this.formControls.password.value !== this.formControls.confirmPassword.value) {
+      this._snackBar.open('The password confirmation does not match.', 'Close', {
+        duration: 10000
+      });
+      return;
+    }
+    this._securityService.resetPassword(this.tempKey, this.formControls.password.value)
+      .pipe(takeUntil(this._onDestroy$))
+      .subscribe(data => {
+        if (!data) {
+          return;
+        }
+        this.isPasswordReset = true;
+        setTimeout(() => this._router.navigate(['/login']), 5000);
+      });
   }
-
-  
-// send() {
- 
-//   if (this.form.get('password').valid && this.form.get('confirmPassword').valid && this.passwordsMatch()) {
-//     const newPassword = this.form.get('password').value;
-//     this._securityService.resetPassword(newPassword, this.tempKey).subscribe({
-//       next: data => {
-
-    
-//         console.log('Password reset successful:', data);
-       
-      
-//       },
-//     });
-//   } else {
-//     this._snackbar.open('Password requirements are not satisfied. Please check and try again.', 'Close', {
-//       duration: 5000,
-//     });
-//   }
-// }
-
-
-// passwordsMatch(): boolean {
-//   const password = this.form.get('password').value;
-//   const confirmPassword = this.form.get('confirmPassword').value;
-//   this.success = true;
-//   setTimeout(() => {
-//     this._router.navigate(['/login']);
-//   }, 5000);
-//   return password === confirmPassword;
-// }
-
-// passwordRequirements(): { minLength: boolean, hasNumber: boolean, hasLowercase: boolean, hasSpecialCharacter: boolean } {
-//   const password = this.form.get('password').value;
-//   const specialCharacterCount = (password.match(/[!@#$%^&*(),.?":{}|<>]/g) || []).length;
-
-//   return {
-//     minLength: password.length >= 8,
-//     hasNumber: /\d/.test(password),
-//     hasLowercase: /[a-z]/.test(password),
-//     hasSpecialCharacter: specialCharacterCount >= 2
-//   };
-// }
-
-
 }

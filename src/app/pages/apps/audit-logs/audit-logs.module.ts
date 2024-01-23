@@ -16,6 +16,7 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { AuditLogsListComponent } from './audit-logs-list/audit-logs-list.component';
 import { AuditLogsRoutingModule } from './audit-logs-routing.module';
 import { RelativeDateTimeModule } from 'src/@vex/pipes/relative-date-time/relative-date-time.module';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 @NgModule({
   declarations: [AuditLogsListComponent],
@@ -37,6 +38,7 @@ import { RelativeDateTimeModule } from 'src/@vex/pipes/relative-date-time/relati
     MatSelectModule,
     MatButtonToggleModule,
     RelativeDateTimeModule,
+    MatProgressBarModule
   ]
 })
 export class AuditLogsModule {
