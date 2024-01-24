@@ -1,5 +1,5 @@
-import { AfterViewInit, Component, ViewChild, Pipe, PipeTransform } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, UntypedFormControl, Validators } from '@angular/forms';
 import { OnInit } from '@angular/core';
 import { AppVersionComponent } from '../app-version/app-version.component';
 import { DialogInterface } from 'src/app/core/models/dialog';
@@ -16,6 +16,8 @@ import { ISettings } from 'src/app/core/models/settings';
   styleUrls: ['./system-settings.component.scss']
 })
 export class SystemSettingsComponent implements OnInit, AfterViewInit {
+  layoutCtrl = new UntypedFormControl('fullwidth');
+  regex = /^[0-9]+$/;
   inpMinVal: any;
   inpMaxVal: any;
   inpNumVal;
@@ -60,12 +62,12 @@ export class SystemSettingsComponent implements OnInit, AfterViewInit {
       emailAddress: [''],
       website: [''],
       address: [''],
-      minPasswordLength: [this.minPassOpt],
-      minSpecialCharacters: [this.minSpCharOpt],
-      passwordExpiry: [this.passExpOpt],
-      idleTime: [this.idleOpt],
-      maxSignOnAttempts: [this.signAtmpOpt],
-      enforcePasswordHistory: [this.enfPassOpt],
+      minPasswordLength: [''],
+      minSpecialCharacters: [''],
+      passwordExpiry: [''],
+      idleTime: [''],
+      maxSignOnAttempts: [''],
+      enforcePasswordHistory: [this.enfPassOpt,Validators.required],
       smtpServerName: [''],
       smtpPort: [''],
       smtpFromEmail: [''],
@@ -114,54 +116,24 @@ export class SystemSettingsComponent implements OnInit, AfterViewInit {
     }
   }
 
-  minPassOpt = [
-    {id: 1, value: 8},
-    {id: 2, value: 10}
-  ];
-
-  minSpCharOpt = [
-    {id: 1, value: 1},
-    {id: 2, value: 2}
-  ];
-
-  passExpOpt = [
-    {id: 1, value: 160},
-    {id: 2, value: 180}
-  ];
-
-  idleOpt = [
-    {id: 1, value: 15},
-    {id: 2, value: 20}
-  ];
-
-  signAtmpOpt = [
-    {id: 1, value: 3},
-    {id: 2, value: 5}
-  ];
-
   enfPassOpt = [
     {id: 1, value: 3},
-    {id: 2, value: 5}
+    {id: 2, value: 5},
+    {id: 3, value: 10}
   ];
 
-  inpOpts = [
-    this.minPassOpt,
-    this.minSpCharOpt,
-    this.passExpOpt,
-    this.idleOpt,
-    this.signAtmpOpt,
-    this.enfPassOpt
-  ];
-
-  onSubmit() : void{
-    if (this.settingsForm.get('smtpEnableSSL').value === false) {
-      this.settingsForm.get('smtpEnableSSL').patchValue('N')
+  onSubmit() : void{    
+    const ssl = this.settingsForm.get('smtpEnableSSL');
+    if (ssl.value === false) {
+      ssl.patchValue('N');
+      this.checkSSL = ssl.value !== 'N';
     }
+
     this._portalService.updatesettings(this.settingsForm.value)
     .pipe(takeUntil(this._onDestroy$))
     .subscribe({
-      next: (data) => {
-        console.log('Settings updated successfully:', data);
+      next: (data) => {        
+        ssl.value === 'N' ? ssl.patchValue(false) : ssl.patchValue('Y');
         this._snackbar.open('Settings updated successfully.', 'Close', {
           duration: 5000,
         });
@@ -194,15 +166,13 @@ export class SystemSettingsComponent implements OnInit, AfterViewInit {
     dlg.afterClosed().subscribe({
       next: confirmation =>{
         if(confirmation){          
-        this._snackbar.open('Update settings successfully.', 'Close', {
-          duration: 5000,
-        });
+        return;
       }
       },
       error: error =>{
-        this._snackbar.open('Error updating settings.', 'Close', {
-          duration: 5000,
-        });
+        if (error) {
+          return;
+        }
       }
     });
   }

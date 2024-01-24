@@ -3,12 +3,12 @@
         <vex-breadcrumbs [crumbs]="['System Management', 'System Settings']"></vex-breadcrumbs>
     </vex-secondary-toolbar>
 
-    <vex-page-layout-content class="container">
+    <vex-page-layout-content class="container" [class.container]="layoutCtrl.value === 'boxed'" [class.px-gutter]="layoutCtrl.value === 'fullwidth'">
         <form class="settings" id="settingsForm" [formGroup]="settingsForm" (ngSubmit)="onSubmit()">
             <div class="card flex flex-col sm:flex-row">
                 <div class="border-l flex-auto">
                     <div class="bg-base border-l-3 p-4 mt-3 flex flex-col sm:flex-row gap-3 items-center">
-                        <button class="rounded-full !bg-green !text-white" mat-raised-button
+                        <button [ngClass]="settingsForm.touched && settingsForm.invalid ? '!bg-gray':'!bg-green'" class="rounded-full !text-white" mat-raised-button [disabled]="settingsForm.touched && settingsForm.invalid"
                             type="button" (click)="save()">
                             <mat-icon class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" svgIcon="mat:save_as"></mat-icon>
                             <span>Save</span>
@@ -59,7 +59,7 @@
                                             class="block w-full" formControlName="address">
                                     </mat-form-field>
                                 </div>
-                                <hr class="w-full">
+                                <hr class="w-full my-8">
                             </div>
                             <vex-app-version></vex-app-version>
                         </mat-tab>
@@ -70,62 +70,40 @@
                                         <label for="min-pass" class="block mb-2 text-sm font-medium font-bold">Minimum
                                             Password Length</label>
                                         <mat-form-field appearance="outline" class="w-full">
-                                            <mat-select name="min-pass" id="min-pass" formControlName="minPasswordLength" [value]="minPassLength"
-                                                class="block w-full">
-                                                <mat-option *ngFor="let minPass of minPassOpt" [value]="minPass.value">
-                                                    {{minPass.value}}
-                                                </mat-option>
-                                            </mat-select>
+                                            <input matInput id="min-pass" type="text" [pattern]="regex" placeholder="Minimum Password Length" [(ngModel)]="minPassLength"
+                                                class="block w-full" formControlName="minPasswordLength">
                                         </mat-form-field>
                                     </div>
                                     <div class="mb-6">
-                                        <label for="min-schar" class="block mb-2 text-sm font-medium font-bold">Minimum
+                                        <label for="min-spchar" class="block mb-2 text-sm font-medium font-bold">Minimum
                                             Special Characters</label>
                                         <mat-form-field appearance="outline" class="w-full">
-                                            <mat-select name="min-schar" id="min-schar" formControlName="minSpecialCharacters" [value]="minSplChars"
-                                                class="block w-full">
-                                                <mat-option *ngFor="let minSpChar of minSpCharOpt"
-                                                    [value]="minSpChar.value">
-                                                    {{minSpChar.value}}
-                                                </mat-option>
-                                            </mat-select>
+                                            <input matInput id="min-spchar" type="text" [pattern]="regex" placeholder="Minimum Special Characters" [(ngModel)]="minSplChars"
+                                                class="block w-full" formControlName="minSpecialCharacters">
                                         </mat-form-field>
                                     </div>
                                     <div class="mb-6">
                                         <label for="pass-exp" class="block mb-2 text-sm font-medium font-bold">Password
                                             Expiry (days)</label>
                                         <mat-form-field appearance="outline" class="w-full">
-                                            <mat-select name="pass-exp" id="pass-exp" formControlName="passwordExpiry" [value]="passExpiry"
-                                                class="block w-full">
-                                                <mat-option *ngFor="let passExp of passExpOpt" [value]="passExp.value">
-                                                    {{passExp.value}}
-                                                </mat-option>
-                                            </mat-select>
+                                            <input matInput id="pass-exp" type="text" [pattern]="regex" placeholder="Password Expiry (days)" [(ngModel)]="passExpiry"
+                                                class="block w-full" formControlName="passwordExpiry">
                                         </mat-form-field>
                                     </div>
                                     <div class="mb-6">
                                         <label for="idle" class="block mb-2 text-sm font-medium font-bold">Idle Time (in
                                             minutes)</label>
                                         <mat-form-field appearance="outline" class="w-full">
-                                            <mat-select name="idle" id="idle" formControlName="idleTime" [value]="idleTime"
-                                                class="block w-full">
-                                                <mat-option *ngFor="let idle of idleOpt" [value]="idle.value">
-                                                    {{idle.value}}
-                                                </mat-option>
-                                            </mat-select>
+                                            <input matInput id="idle" type="text" [pattern]="regex" placeholder="Idle Time (in minutes)" [(ngModel)]="idleTime"
+                                                class="block w-full" formControlName="idleTime">
                                         </mat-form-field>
                                     </div>
                                     <div class="mb-6">
                                         <label for="sign-atmp" class="block mb-2 text-sm font-medium font-bold">Maximum
-                                            signing on attempts</label>
+                                            Signing On Attempts</label>
                                         <mat-form-field appearance="outline" class="w-full">
-                                            <mat-select name="sign-atmp" id="sign-atmp" formControlName="maxSignOnAttempts" [value]="maxSignAtmp"
-                                                class="block w-full">
-                                                <mat-option *ngFor="let signAtmp of signAtmpOpt"
-                                                    [value]="signAtmp.value">
-                                                    {{signAtmp.value}}
-                                                </mat-option>
-                                            </mat-select>
+                                            <input matInput id="sign-atmp" type="text" [pattern]="regex" placeholder="Maximum Signing On Attempts" [(ngModel)]="maxSignAtmp"
+                                                class="block w-full" formControlName="maxSignOnAttempts">
                                         </mat-form-field>
                                         <div class="block w-full">
                                             <span>The number of consecutive sign-on or password verification attempts
@@ -134,12 +112,12 @@
                                     </div>
                                     <div class="mb-6">
                                         <label for="enf-pass" class="block mb-2 text-sm font-medium font-bold">Enforce
-                                            Password history</label>
+                                            Password History <mat-hint matSuffix class="text-red-700">*</mat-hint></label>
                                         <mat-form-field appearance="outline" class="w-full">
                                             <mat-select name="enf-pass" id="enf-pass" formControlName="enforcePasswordHistory" [value]="enfPassHistory"
                                                 class="block w-full">
                                                 <mat-option *ngFor="let enfPass of enfPassOpt" [value]="enfPass.value">
-                                                    {{enfPass.value}}
+                                                    {{enfPass.value}} password remembered
                                                 </mat-option>
                                             </mat-select>
                                         </mat-form-field>
