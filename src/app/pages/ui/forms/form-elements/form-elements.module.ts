@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
 import { FormElementsRoutingModule } from './form-elements-routing.module';
 import { FormElementsComponent } from './form-elements.component';
 import { MatInputModule } from '@angular/material/input';
@@ -18,7 +17,6 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { SecondaryToolbarModule } from '../../../../../@vex/components/secondary-toolbar/secondary-toolbar.module';
 import { BreadcrumbsModule } from '../../../../../@vex/components/breadcrumbs/breadcrumbs.module';
 
-
 @NgModule({
   declarations: [FormElementsComponent],
   imports: [
@@ -27,7 +25,6 @@ import { BreadcrumbsModule } from '../../../../../@vex/components/breadcrumbs/br
     MatInputModule,
     MatIconModule,
     MatButtonModule,
-
     MatSelectModule,
     MatDatepickerModule,
     MatNativeDateModule,

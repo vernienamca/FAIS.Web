@@ -101,13 +101,13 @@ const routes: VexRoutes = [
             path: 'profile',
             children: [
               {
-                path: 'change-password',
-                loadChildren: () => import('./pages/pages/auth/change-password/change-password.module').then(m => m.ChangePasswordModule),
-              },
-              {
-                path: 'user-profile',
+                path: '',
                 loadChildren: () => import('./pages/apps/user/profile/profile.module.').then(m => m.ProfileModule),
               },
+              {
+                path: 'change-password',
+                loadChildren: () => import('./pages/pages/auth/change-password/change-password.module').then(m => m.ChangePasswordModule),
+              }
             ]
           },
         ]
