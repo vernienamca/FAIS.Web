@@ -22,6 +22,10 @@ export class PortalService {
     return this._portalApi.getModules();
   }
 
+  getModule(id: number): Observable<IModule> {
+    return this._portalApi.getModule(id);
+  }
+
   getRoles(): Observable<IRole[]> {
     return this._portalApi.getRoles();
   }
@@ -76,6 +80,10 @@ export class PortalService {
 
   getSettingsId(id: number): Observable<any> {
     return this._portalApi.getSettingsId(id);
+  }
+
+  updateModule(data: any): Observable<any> {
+    return this._portalApi.updateModule(data);
   }
 
   updatesettings(data: any): Observable<any> {

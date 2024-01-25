@@ -4,7 +4,6 @@ import { QuicklinkModule } from 'ngx-quicklink';
 import { VexRoutes } from '../../../../@vex/interfaces/vex-route.interface';
 import { ModuleListComponent } from './module-list/module-list.component';
 import { ModuleComponent } from './module.component';
-import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 const routes: VexRoutes = [
   {
@@ -15,7 +14,7 @@ const routes: VexRoutes = [
     }
   },
   {
-    path: ':edit-module',
+    path: 'edit/:id',
     component: ModuleComponent,
     data: {
       toolbarShadowEnabled: false
