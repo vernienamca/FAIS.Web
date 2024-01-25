@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { PageLayoutModule } from '../../../../@vex/components/page-layout/page-layout.module';
-import { BreadcrumbsModule } from '../../../../@vex/components/breadcrumbs/breadcrumbs.module';
+import { PageLayoutModule } from '../../../../../../@vex/components/page-layout/page-layout.module';
+import { BreadcrumbsModule } from '../../../../../../@vex/components/breadcrumbs/breadcrumbs.module';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
@@ -13,19 +13,16 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
-import { UserListComponent } from './user-list/user-list.component';
-import { UserRoutingModule } from './user-routing.module';
+import { StringInterpolationListComponent } from './string-interpolation-list.component';
+import { StringInterpolationRoutingModule } from './string-interpolation-routing.module';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatTabsModule } from '@angular/material/tabs';
 
-
-
-
 @NgModule({
-  declarations: [UserListComponent],
+  declarations: [StringInterpolationListComponent],
   imports: [
     CommonModule,
-    UserRoutingModule,
+    StringInterpolationRoutingModule,
     PageLayoutModule,
     BreadcrumbsModule,
     MatPaginatorModule,
@@ -41,8 +38,8 @@ import { MatTabsModule } from '@angular/material/tabs';
     MatSelectModule,
     MatButtonToggleModule,
     MatSlideToggleModule,
-    MatTabsModule
+    MatTabsModule,
   ]
 })
-export class UserModule {
+export class StringInterpolationModule {
 }

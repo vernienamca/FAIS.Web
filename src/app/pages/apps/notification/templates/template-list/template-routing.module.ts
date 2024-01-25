@@ -1,14 +1,16 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { QuicklinkModule } from 'ngx-quicklink';
-import { ChangePasswordComponent } from './change-password.component';
-import { VexRoutes } from '../../../../../@vex/interfaces/vex-route.interface';
-
+import { VexRoutes } from '../../../../../../@vex/interfaces/vex-route.interface';
+import { TemplateListComponent } from './template-list.component';
 
 const routes: VexRoutes = [
   {
     path: '',
-    component: ChangePasswordComponent
+    component: TemplateListComponent,
+    data: {
+      toolbarShadowEnabled: false
+    }
   }
 ];
 
@@ -16,5 +18,5 @@ const routes: VexRoutes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule, QuicklinkModule]
 })
-export class ChangePasswordRoutingModule {
+export class TemplateRoutingModule {
 }

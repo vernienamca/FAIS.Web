@@ -8,6 +8,7 @@ import { Observable, Subject, of } from 'rxjs';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { DatePipe } from '@angular/common';
 import { PortalService } from 'src/app/core/services/portal.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'vex-toolbar',
@@ -31,6 +32,7 @@ export class ToolbarComponent implements OnInit, OnDestroy  {
   private _onDestroy$ = new Subject<void>();
 
   constructor(
+    private _router: Router,
     private _layoutService: LayoutService,
     private _configService: ConfigService,
     private _navigationService: NavigationService,
@@ -75,14 +77,14 @@ export class ToolbarComponent implements OnInit, OnDestroy  {
   }
 
   showProfile(): void {
-    
+    this._router.navigate(['apps/profile']);
+  }
+
+  changePassword(): void{
+    this._router.navigate(['/apps/profile/change-password']);
   }
 
   logout(): void {
     this._authService.logout();
-  }
-
-  changePassword(): void{
-    this._authService.changePassword();
   }
 }

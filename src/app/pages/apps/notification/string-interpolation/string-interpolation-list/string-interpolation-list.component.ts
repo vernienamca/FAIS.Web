@@ -40,7 +40,7 @@ export class StringInterpolationListComponent implements OnInit, OnDestroy, Afte
     { label: "Actions", property: "actions", type: "button", visible: true }
   ];
 
-  layoutCtrl = new UntypedFormControl("fullWidth");
+  layoutCtrl = new UntypedFormControl("fullwidth");
   subject$: ReplaySubject<IStringInterpolation[]> = new ReplaySubject<IStringInterpolation[]>(1);
   data$: Observable<IStringInterpolation[]> = this.subject$.asObservable();
   interpolations: IStringInterpolation[];
@@ -62,7 +62,7 @@ export class StringInterpolationListComponent implements OnInit, OnDestroy, Afte
     private _router: Router
   ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this._portalService.getStringInterpolation()
       .pipe(takeUntil(this._onDestroy$))
       .subscribe((data) => {

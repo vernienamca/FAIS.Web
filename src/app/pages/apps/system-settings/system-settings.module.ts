@@ -1,20 +1,29 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
+import { PageLayoutModule } from '../../../../@vex/components/page-layout/page-layout.module';
+import { BreadcrumbsModule } from '../../../../@vex/components/breadcrumbs/breadcrumbs.module';
+import { SecondaryToolbarModule } from 'src/@vex/components/secondary-toolbar/secondary-toolbar.module';
 import { SystemSettingsRoutingModule } from './system-settings-routing.module';
 import { SystemSettingsComponent } from './components/system-settings/system-settings.component';
 import { MatTabsModule } from '@angular/material/tabs';
 import {MatGridListModule} from '@angular/material/grid-list';
 import { AppVersionComponent } from './components/app-version/app-version.component';
 import { MatTableModule } from '@angular/material/table';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { MatButtonModule } from '@angular/material/button';
+import { MatInputModule } from '@angular/material/input';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatSelectModule } from '@angular/material/select';
+import { DialogComponent } from '../dialog/dialog.component';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [
     SystemSettingsComponent,
-    AppVersionComponent
+    AppVersionComponent,
+    DialogComponent
   ],
   imports: [
     CommonModule,
@@ -22,9 +31,18 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     MatTabsModule,
     MatGridListModule,
     MatTableModule,
-    ReactiveFormsModule,
+    ReactiveFormsModule.withConfig({warnOnNgModelWithFormControl: 'never'}),
     MatIconModule,
-    FlexLayoutModule
+    FlexLayoutModule,
+    PageLayoutModule,
+    BreadcrumbsModule,
+    SecondaryToolbarModule,
+    MatButtonModule,
+    MatInputModule,
+    MatCheckboxModule,
+    MatSelectModule,
+    MatSnackBarModule,
+    FormsModule
   ]
 })
 export class SystemSettingsModule { }

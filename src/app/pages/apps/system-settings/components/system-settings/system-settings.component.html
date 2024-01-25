@@ -1,125 +1,192 @@
-<div class="breadcrumb">
-    <div class="row">
-        <div class="col">
-            <span>System Management > </span>
-            <span>System Settings > </span>
-            <span>Edit System Settings</span>
-        </div>
-    </div>
+<vex-page-layout>
+    <vex-secondary-toolbar>
+        <vex-breadcrumbs [crumbs]="['System Management', 'System Settings']"></vex-breadcrumbs>
+    </vex-secondary-toolbar>
 
-    <div class="options">
-        <div class="btn-opt m-5" fxLayout="row">
-            <button class="save" form="settingsForm">
-              <mat-icon svgIcon="mat:folder"></mat-icon>
-              <span>Save</span>
-            </button>
-            <button class="close">
-              <mat-icon svgIcon="mat:close"></mat-icon>
-              <span>Close</span>
-            </button>
-        </div>
-    </div>
-</div>
-
-<div class="settings" [formGroup]="settingsForm">
-    <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start" dynamicHeight class="tabs">
-        <mat-tab label="General">
-            <div class="gen-set">
-               <div class="gen-set-items">
-                <div class="row">
-                    <div class="form-input">
-                          <label for="comp-input">Company Name</label>
-                          <input type="text" id="comp-input" placeholder="Company Name" formControlName="company">
+    <vex-page-layout-content class="container" [class.container]="layoutCtrl.value === 'boxed'" [class.px-gutter]="layoutCtrl.value === 'fullwidth'">
+        <form class="settings" id="settingsForm" [formGroup]="settingsForm" (ngSubmit)="onSubmit()">
+            <div class="card flex flex-col sm:flex-row">
+                <div class="border-l flex-auto">
+                    <div class="bg-base border-l-3 p-4 mt-3 flex flex-col sm:flex-row gap-3 items-center">
+                        <button [ngClass]="settingsForm.touched && settingsForm.invalid ? '!bg-gray':'!bg-green'" class="rounded-full !text-white" mat-raised-button [disabled]="settingsForm.touched && settingsForm.invalid"
+                            type="button" (click)="save()">
+                            <mat-icon class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" svgIcon="mat:save_as"></mat-icon>
+                            <span>Save</span>
+                        </button>
                     </div>
-                    <div class="form-input">
-                      <label style="margin: 5px;" for="pn-input">Phone Number</label>
-                      <input type="text" id="pn-input" placeholder="Phone Number" formControlName="phone">
-                    </div>
-                  </div>
-                  <div class="row">
-                      <div class="form-input">
-                              <label for="em-input">Email Address</label>
-                              <input type="text" id="em-input" placeholder="Email Address" formControlName="email">
-                      </div>
-                      <div class="form-input">
-                              <label for="web-input">Website</label>
-                              <input type="text" id="web-input" placeholder="Website" formControlName="web">      
-                      </div>
-                  </div>
-                  <div class="form-input">
-                          <label for="addr-input">Address</label>
-                          <input type="text" id="addr-input" placeholder="Address" formControlName="address">    
-                  </div>
-                    <hr>
-               </div>
-            </div>
-            <vex-app-version></vex-app-version>
-        </mat-tab>
-        <mat-tab label="Configuration Settings">
-            <div class="conf-set">
-                <div class="gen-set-items">
-                 <div class="row">
-                     <div class="form-input">
-                           <label for="min-pass">Minimum Password Length</label>
-                           <select name="min-pass" id="min-pass" formControlName="minPass">
-                            <option *ngFor="let minPass of minPassOpt" [ngValue]="minPass">
-                                {{minPass.value}}
-                            </option>
-                          </select>
-                     </div>
-                     <div class="form-input">
-                       <label for="min-schar">Minimum Special Characters</label>
-                       <select name="min-schar" id="min-schar" formControlName="minSpChar">
-                        <option *ngFor="let minSpChar of minSpCharOpt" [ngValue]="minSpChar">
-                                {{minSpChar.value}}
-                            </option>
-                      </select>
-                     </div>
-                   </div>
-                   <div class="row">
-                       <div class="form-input">
-                               <label for="pass-exp">Password Expiry (days)</label>
-                               <select name="pass-exp" id="pass-exp" formControlName="passExp">
-                                    <option *ngFor="let passExp of passExpOpt" [ngValue]="passExp">
-                                {{passExp.value}}
-                            </option>
-                                </select>
-                       </div>
-                       <div class="form-input">
-                               <label for="idle">Idle Time (in minutes)</label>
-                               <select name="idle" id="idle" formControlName="idle">
-                                <option *ngFor="let idle of idleOpt" [ngValue]="idle">
-                                {{idle.value}}
-                            </option>
-                            </select>   
-                       </div>
-                   </div>
-                   <div class="row">
-                    <div class="form-input">
-                            <label for="sign-atmp">Maximum signing on attempts</label>
-                            <select name="sign-atmp" id="sign-atmp" formControlName="signAtmp">
-                            <option *ngFor="let signAtmp of signAtmpOpt" [ngValue]="signAtmp">
-                                {{signAtmp.value}}
-                            </option>
-                          </select>
-                          <div class="note">
-                            <span>The number of consecutive sign-on or password verification attempts that are not correct by users.</span>
-                          </div>
-                    </div>
-                    <div class="form-input">
-                            <label for="enf-pass">Enforce Password history <span class="req">*</span></label>
-                            <select name="enf-pass" id="enf-pass" formControlName="enfPass">
-                                <option *ngFor="let enfPass of enfPassOpt" [ngValue]="enfPass">
-                                    {{enfPass.value}}
-                                </option>
-                              </select>
-                            <div class="note">
-                                <span>The policy setting determines the number of unique new passwords that must be associated with a user account before an old password can be reused.</span>
+                    <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start" dynamicHeight class="tabs">
+                        <mat-tab label="General">
+                            <div class="gen-set px-8">
+                                <div class="grid md:grid-cols-2 md:gap-x-8 mt-8">
+                                    <div class="mb-6">
+                                        <label for="comp-input" class="block mb-2 text-sm font-medium font-bold">Company
+                                            Name</label>
+                                        <mat-form-field appearance="outline" class="w-full">
+                                            <input matInput id="comp-input" type="text" placeholder="Company Name" [(ngModel)]="companyName"
+                                                class="block w-full" formControlName="companyName">
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="mb-6">
+                                        <label for="pn-input" class="block mb-2 text-sm font-medium font-bold">Phone
+                                            Number</label>
+                                        <mat-form-field appearance="outline" class="w-full">
+                                            <input matInput id="pn-input" type="text" placeholder="Phone Number" [(ngModel)]="phoneNumber"
+                                                class="block w-full" formControlName="phoneNumber">
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="mb-6">
+                                        <label for="em-input" class="block mb-2 text-sm font-medium font-bold">Email
+                                            Address</label>
+                                        <mat-form-field appearance="outline" class="w-full">
+                                            <input matInput id="em-input" type="email" placeholder="Email Address" [(ngModel)]="email"
+                                                class="block w-full" formControlName="emailAddress">
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="mb-6">
+                                        <label for="web-input"
+                                            class="block mb-2 text-sm font-medium font-bold">Website</label>
+                                        <mat-form-field appearance="outline" class="w-full">
+                                            <input matInput id="web-input" type="text" placeholder="Website" [(ngModel)]="website"
+                                                class="block w-full" formControlName="website">
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="mb-2">
+                                    <label for="addr-input"
+                                        class="block mb-2 text-sm font-medium font-bold">Address</label>
+                                    <mat-form-field appearance="outline" class="w-full">
+                                        <input matInput id="addr-input" type="text" placeholder="Address" [(ngModel)]="address"
+                                            class="block w-full" formControlName="address">
+                                    </mat-form-field>
+                                </div>
+                                <hr class="w-full my-8">
                             </div>
-                    </div>
+                            <vex-app-version></vex-app-version>
+                        </mat-tab>
+                        <mat-tab label="Configuration Settings">
+                            <div class="conf-set px-8">
+                                <div class="grid md:grid-cols-2 md:gap-x-8 mt-8">
+                                    <div class="mb-6">
+                                        <label for="min-pass" class="block mb-2 text-sm font-medium font-bold">Minimum
+                                            Password Length</label>
+                                        <mat-form-field appearance="outline" class="w-full">
+                                            <input matInput id="min-pass" type="text" [pattern]="regex" placeholder="Minimum Password Length" [(ngModel)]="minPassLength"
+                                                class="block w-full" formControlName="minPasswordLength">
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="mb-6">
+                                        <label for="min-spchar" class="block mb-2 text-sm font-medium font-bold">Minimum
+                                            Special Characters</label>
+                                        <mat-form-field appearance="outline" class="w-full">
+                                            <input matInput id="min-spchar" type="text" [pattern]="regex" placeholder="Minimum Special Characters" [(ngModel)]="minSplChars"
+                                                class="block w-full" formControlName="minSpecialCharacters">
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="mb-6">
+                                        <label for="pass-exp" class="block mb-2 text-sm font-medium font-bold">Password
+                                            Expiry (days)</label>
+                                        <mat-form-field appearance="outline" class="w-full">
+                                            <input matInput id="pass-exp" type="text" [pattern]="regex" placeholder="Password Expiry (days)" [(ngModel)]="passExpiry"
+                                                class="block w-full" formControlName="passwordExpiry">
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="mb-6">
+                                        <label for="idle" class="block mb-2 text-sm font-medium font-bold">Idle Time (in
+                                            minutes)</label>
+                                        <mat-form-field appearance="outline" class="w-full">
+                                            <input matInput id="idle" type="text" [pattern]="regex" placeholder="Idle Time (in minutes)" [(ngModel)]="idleTime"
+                                                class="block w-full" formControlName="idleTime">
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="mb-6">
+                                        <label for="sign-atmp" class="block mb-2 text-sm font-medium font-bold">Maximum
+                                            Signing On Attempts</label>
+                                        <mat-form-field appearance="outline" class="w-full">
+                                            <input matInput id="sign-atmp" type="text" [pattern]="regex" placeholder="Maximum Signing On Attempts" [(ngModel)]="maxSignAtmp"
+                                                class="block w-full" formControlName="maxSignOnAttempts">
+                                        </mat-form-field>
+                                        <div class="block w-full">
+                                            <span>The number of consecutive sign-on or password verification attempts
+                                                that are not correct by users.</span>
+                                        </div>
+                                    </div>
+                                    <div class="mb-6">
+                                        <label for="enf-pass" class="block mb-2 text-sm font-medium font-bold">Enforce
+                                            Password History <mat-hint matSuffix class="text-red-700">*</mat-hint></label>
+                                        <mat-form-field appearance="outline" class="w-full">
+                                            <mat-select name="enf-pass" id="enf-pass" formControlName="enforcePasswordHistory" [value]="enfPassHistory"
+                                                class="block w-full">
+                                                <mat-option *ngFor="let enfPass of enfPassOpt" [value]="enfPass.value">
+                                                    {{enfPass.value}} password remembered
+                                                </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                        <div class="block w-full">
+                                            <span>The policy setting determines the number of unique new passwords that
+                                                must be associated with a user account before an old password can be
+                                                reused.</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </mat-tab>
+                        <mat-tab label="Simple Mail Transfer Protocol (SMTP)">
+                            <div class="smtp my-8 px-8">
+                                <div class="text-base">
+                                    <span class="font-bold">SMTP (Simple Mail Transfer Protocol)</span> server is an
+                                    application that's primary purpose is to send, receive, and/or relay outgoing mail
+                                    between email senders and receivers.
+                                </div>
+                                <div class="grid md:grid-cols-2 md:gap-x-8 mt-8">
+                                    <div class="mb-6">
+                                        <label for="smtp-name" class="block mb-2 text-sm font-medium font-bold">SMTP
+                                            Server Name</label>
+                                        <mat-form-field appearance="outline" class="w-full">
+                                            <input matInput id="smtp-name" type="text" placeholder="SMTP Server Name" [(ngModel)]="smtpServerName"
+                                                class="block w-full" formControlName="smtpServerName">
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="mb-6">
+                                        <label for="port" class="block mb-2 text-sm font-medium font-bold">SMTP Port</label>
+                                        <mat-form-field appearance="outline" class="w-full">
+                                            <input matInput id="port" type="text" placeholder="SMTP Port" [(ngModel)]="smtpPort"
+                                                class="block w-full" formControlName="smtpPort">
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="mb-2">
+                                        <label for="smtp-email" class="block mb-2 text-sm font-medium font-bold">SMTP
+                                            From Email</label>
+                                        <mat-form-field appearance="outline" class="w-full">
+                                            <input matInput id="smtp-email" type="text" placeholder="SMTP From Email" class="block w-full" [(ngModel)]="smtpFromEmail" formControlName="smtpFromEmail">
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="mb-2">
+                                        <label for="smtp-password" class="block mb-2 text-sm font-medium font-bold">SMTP Password</label>
+                                        <mat-form-field appearance="outline" class="w-full">
+                                            <input matInput id="smtp-password" [type]="hidePass ? 'password':'text'" placeholder="SMTP Password" class="block w-full" [(ngModel)]="smtpPass" formControlName="smtpPassword">
+                                            <mat-icon matSuffix svgIcon="mat:{{hidePass ? eyeClose : eyeOpen}}" (click)="hidePass = !hidePass"></mat-icon>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="text-base">
+                                    <div class="mb-6">
+                                        <div class="flex items-center">
+                                            <label for="smtp-password" class="block text-sm font-medium font-bold">SMTP
+                                                Enable SSL</label>
+                                            <mat-checkbox color="accent" formControlName="smtpEnableSSL" (change)="convertBooleanToString(checkSSL, $event.checked ? 'Y':'N')" [(ngModel)]="checkSSL"></mat-checkbox>
+                                        </div>
+                                        <p class="text-gray-700">The primary reason why SSL is used is to keep sensitive
+                                            information sent across the Internet encrypted so that only the intended
+                                            recipient can access it. This is important because the information you send
+                                            on the Internet is passed from computer to computer to get to the
+                                            destination server.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </mat-tab>
+                    </mat-tab-group>
                 </div>
-                </div>
-             </div>
-        </mat-tab>
-    </mat-tab-group>
-</div>
+            </div>
+        </form>
+    </vex-page-layout-content>
+</vex-page-layout>

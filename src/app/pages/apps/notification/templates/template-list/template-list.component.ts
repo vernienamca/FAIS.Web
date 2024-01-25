@@ -47,33 +47,16 @@ export class TemplateListComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @Input()
   columns: TableColumn<ITemplates>[] = [
-    {
-      label: "Subject",
-      property: "subject",
-      type: "text",
-      visible: true,
-      cssClasses: ["font-medium"],
-    },
-    { label: "Content", property: "content", type: "text", visible: true },
+    { label: "Subject", property: "subject", type: "text", visible: true, cssClasses: ["font-medium"] },
     { label: "Receiver", property: "receiver", type: "text", visible: true },
-    {
-      label: "Notification Type",
-      property: "notificationType",
-      type: "text",
-      visible: true,
-    },
+    { label: "Notification Type", property: "notificationType", type: "text", visible: true },
     { label: "Created By", property: "createdBy", type: "text", visible: true },
-    {
-      label: "Date Created",
-      property: "createdAt",
-      type: "text",
-      visible: true,
-    },
+    { label: "Date Created", property: "createdAt", type: "text", visible: true },
     { label: "Status", property: "isActive", type: "text", visible: true },
     { label: "Actions", property: "actions", type: "button", visible: true },
   ];
 
-  layoutCtrl = new UntypedFormControl("fullWidth");
+  layoutCtrl = new UntypedFormControl("fullwidth");
   subject$: ReplaySubject<ITemplates[]> = new ReplaySubject<ITemplates[]>(1);
   data$: Observable<ITemplates[]> = this.subject$.asObservable();
   templates: ITemplates[];
@@ -98,7 +81,7 @@ export class TemplateListComponent implements OnInit, OnDestroy, AfterViewInit {
       .map((column) => column.property);
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this._portalService.getAlerts()
       .pipe(takeUntil(this._onDestroy$))
       .subscribe((data) => {
