@@ -124,6 +124,6 @@ export class StringInterpolationListComponent implements OnInit, OnDestroy, Afte
   }
 
   createStringInterpolation(): void{
-    this._router.navigate(["apps/string-interpolation-add"]);
+    this._router.navigate(["apps/interpolation-add"]);
   }
 }

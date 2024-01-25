@@ -15,6 +15,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { StringInterpolationListComponent } from './string-interpolation-list.component';
 import { StringInterpolationRoutingModule } from './string-interpolation-routing.module';
+import { StringInterpolationAddRoutingModule } from '../string-interpolation-add/string-interpolation-add-routing.module';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatTabsModule } from '@angular/material/tabs';
 
@@ -23,6 +24,7 @@ import { MatTabsModule } from '@angular/material/tabs';
   imports: [
     CommonModule,
     StringInterpolationRoutingModule,
+    StringInterpolationAddRoutingModule,
     PageLayoutModule,
     BreadcrumbsModule,
     MatPaginatorModule,
