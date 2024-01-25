@@ -27,6 +27,7 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
   hasMinPasswordLength = false;
   hasAtLeastOneNumber = false;
   hasAtLeastOneLowercaseChar = false;
+  hasAtLeastOneUppercaseChar = false;
   hasMinSpecialCharacters = false;
 
   get formControls() {
@@ -115,6 +116,7 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
     this.hasMinPasswordLength = event.target.value.length >= this.minPasswordLength;
     this.hasAtLeastOneNumber = /[0-9]/.test(event.target.value);
     this.hasAtLeastOneLowercaseChar = /[a-z]/.test(event.target.value);
+    this.hasAtLeastOneUppercaseChar = /[A-Z\s]+/.test(event.target.value);
     this.hasMinSpecialCharacters = (event.target.value.match(/[@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/g) || []).length >= this.minSpecialCharacters;
   }
   

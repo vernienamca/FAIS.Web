@@ -1,8 +1,11 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { RouterModule } from '@angular/router';
+import { QuicklinkModule } from 'ngx-quicklink';
 import { ChangePasswordComponent } from './change-password.component';
+import { VexRoutes } from '../../../../../@vex/interfaces/vex-route.interface';
 
-const routes: Routes = [
+
+const routes: VexRoutes = [
   {
     path: '',
     component: ChangePasswordComponent
@@ -11,6 +14,7 @@ const routes: Routes = [
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule, QuicklinkModule]
 })
-export class ChangePasswordRoutingModule { }
+export class ChangePasswordRoutingModule {
+}

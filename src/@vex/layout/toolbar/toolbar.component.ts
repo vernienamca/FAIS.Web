@@ -32,13 +32,13 @@ export class ToolbarComponent implements OnInit, OnDestroy  {
   private _onDestroy$ = new Subject<void>();
 
   constructor(
+    private _router: Router,
     private _layoutService: LayoutService,
     private _configService: ConfigService,
     private _navigationService: NavigationService,
     private _authService: AuthService,
     private _portalService: PortalService,
-    private _datePipe: DatePipe,
-    private _router: Router
+    private _datePipe: DatePipe
   ) { 
     const userId = parseFloat(localStorage.getItem('user_id'));
     if (!userId) {
@@ -77,13 +77,14 @@ export class ToolbarComponent implements OnInit, OnDestroy  {
   }
 
   showProfile(): void {
-    this._router.navigate(['apps/profile/user-profile']);
-  }
-  logout(): void {
-    this._authService.logout();
+    this._router.navigate(['apps/profile']);
   }
 
   changePassword(): void{
-    this._authService.changePassword();
+    this._router.navigate(['/apps/profile/change-password']);
+  }
+
+  logout(): void {
+    this._authService.logout();
   }
 }

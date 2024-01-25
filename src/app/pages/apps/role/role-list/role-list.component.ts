@@ -181,10 +181,4 @@ export class RoleListComponent implements OnInit, OnDestroy, AfterViewInit {
   trackByProperty<T>(index: number, column: TableColumn<T>) {
     return column.property;
   }
-
-  onLabelChange(change: MatSelectChange, row: IModule) {
-    const index = this.roles.findIndex(c => c === row);
-    //this.customers[index].labels = change.value;
-    this.subject$.next(this.roles);
-  }
 }

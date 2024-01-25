@@ -21,6 +21,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { SecondaryToolbarModule } from 'src/@vex/components/secondary-toolbar/secondary-toolbar.module';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [ModuleListComponent, ModuleComponent],
@@ -45,7 +47,11 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
     MatSlideToggleModule,
     MatInputModule,
     FlexLayoutModule,
-    MatProgressBarModule
+    MatProgressBarModule,
+    SecondaryToolbarModule,
+    BreadcrumbsModule,
+    FlexLayoutModule,
+    MatSnackBarModule
   ]
 })
 export class ModuleModule {

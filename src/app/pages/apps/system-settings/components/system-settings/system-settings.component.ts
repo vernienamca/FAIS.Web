@@ -86,6 +86,7 @@ export class SystemSettingsComponent implements OnInit, AfterViewInit {
     .subscribe((data: any) => {
       if (!data) {
         return;
+        
       }
       this.settings = data;
 
