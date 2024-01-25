@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, UntypedFormControl, Validators } from '@angular/forms';
 import { takeUntil } from 'rxjs/operators';
 import { fadeInUp400ms } from '../../../../../@vex/animations/fade-in-up.animation';
 import { stagger60ms } from '../../../../../@vex/animations/stagger.animation';
@@ -26,6 +26,7 @@ export interface CountryState {
 })
 export class ChangePasswordComponent implements OnInit, OnDestroy {
   form: FormGroup; 
+  layoutCtrl = new UntypedFormControl('fullwidth');
   colors = colors;
   oldPasswordInputType = 'password';
   newPasswordInputType = 'password';
