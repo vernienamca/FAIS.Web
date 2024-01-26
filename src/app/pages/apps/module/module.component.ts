@@ -100,15 +100,15 @@ export class ModuleComponent implements OnInit, OnDestroy {
     data.updatedBy = parseInt(localStorage.getItem('user_id'));
 
     this._portalService.updateModule(data)
-    .pipe(takeUntil(this._onDestroy$))
-    .subscribe(data => {
-      if (!data) {
-        return;
-      }
-      let snackBarRef = this._snackBar.open('Module has been successfully updated.', 'Close');
-      snackBarRef.afterDismissed().subscribe(() => {
-        window.location.reload();
+      .pipe(takeUntil(this._onDestroy$))
+      .subscribe(data => {
+        if (!data) {
+          return;
+        }
+        let snackBarRef = this._snackBar.open('Module has been successfully updated.', 'Close');
+        snackBarRef.afterDismissed().subscribe(() => {
+          window.location.reload();
+        });
       });
-    });
   }
 }

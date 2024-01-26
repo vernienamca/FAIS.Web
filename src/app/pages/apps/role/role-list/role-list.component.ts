@@ -1,10 +1,9 @@
 import { AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { Observable, of, ReplaySubject, Subject } from 'rxjs';
+import { Observable, ReplaySubject, Subject } from 'rxjs';
 import { filter, finalize, takeUntil } from 'rxjs/operators';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { MatDialog } from '@angular/material/dialog';
 import { TableColumn } from '../../../../../@vex/interfaces/table-column.interface';
 import { aioTableLabels } from '../../../../../static-data/aio-table-data';
 import { SelectionModel } from '@angular/cdk/collections';
@@ -13,9 +12,7 @@ import { MAT_FORM_FIELD_DEFAULT_OPTIONS, MatFormFieldDefaultOptions } from '@ang
 import { stagger40ms } from '../../../../../@vex/animations/stagger.animation';
 import { UntypedFormControl } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { MatSelectChange } from '@angular/material/select';
 import { PortalService } from 'src/app/core/services/portal.service';
-import { IModule } from 'src/app/core/models/module';
 import { IRole } from 'src/app/core/models/role';
 import { Router } from '@angular/router';
 
@@ -74,7 +71,7 @@ export class RoleListComponent implements OnInit, OnDestroy, AfterViewInit {
     return this.columns.filter(column => column.visible).map(column => column.property);
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this._portalService.getRoles()
       .pipe(
         takeUntil(this._onDestroy$),
@@ -106,50 +103,16 @@ export class RoleListComponent implements OnInit, OnDestroy, AfterViewInit {
     this._onDestroy$.complete();
   }
 
-  ngAfterViewInit() {
+  ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }
 
-  createCustomer() {
-    // this._dialog.open(CustomerCreateUpdateComponent).afterClosed().subscribe((customer: Customer) => {
-    //   /**
-    //    * Customer is the updated customer (if the user pressed Save - otherwise it's null)
-    //    */
-    //   if (customer) {
-    //     /**
-    //      * Here we are updating our local array.
-    //      * You would probably make an HTTP request here.
-    //      */
-    //     this.customers.unshift(new Customer(customer));
-    //     this.subject$.next(this.customers);
-    //   }
-    // });
-  }
-
-  view(data: any) {
+  view(data: any): void {
     this._router.navigate([`apps/roles/${data.id}`]);
   }
 
-  deleteCustomer(customer: any) {
-    /**
-     * Here we are updating our local array.
-     * You would probably make an HTTP request here.
-     */
-    // this.customers.splice(this.customers.findIndex((existingCustomer) => existingCustomer.id === customer.id), 1);
-    // this.selection.deselect(customer);
-    // this.subject$.next(this.customers);
-  }
-
-  deleteCustomers(customers: any[]) {
-    /**
-     * Here we are updating our local array.
-     * You would probably make an HTTP request here.
-     */
-    customers.forEach(c => this.deleteCustomer(c));
-  }
-
-  onFilterChange(value: string) {
+  onFilterChange(value: string): void {
     if (!this.dataSource) {
       return;
     }
@@ -158,27 +121,25 @@ export class RoleListComponent implements OnInit, OnDestroy, AfterViewInit {
     this.dataSource.filter = value;
   }
 
-  toggleColumnVisibility(column, event) {
+  toggleColumnVisibility(column, event): void {
     event.stopPropagation();
     event.stopImmediatePropagation();
     column.visible = !column.visible;
   }
 
-  /** Whether the number of selected elements matches the total number of rows. */
-  isAllSelected() {
+  isAllSelected(): boolean {
     const numSelected = this.selection.selected.length;
     const numRows = this.dataSource.data.length;
     return numSelected === numRows;
   }
 
-  /** Selects all rows if they are not all selected; otherwise clear selection. */
-  masterToggle() {
+  masterToggle(): void {
     this.isAllSelected() ?
       this.selection.clear() :
       this.dataSource.data.forEach(row => this.selection.select(row));
   }
 
-  trackByProperty<T>(index: number, column: TableColumn<T>) {
+  trackByProperty<T>(index: number, column: TableColumn<T>): string {
     return column.property;
   }
 }
