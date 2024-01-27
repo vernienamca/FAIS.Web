@@ -26,7 +26,7 @@
         <button [matMenuTriggerFor]="columnFilterMenu" class="ml-4 flex-none" mat-icon-button matTooltip="Filter Columns" type="button">
           <mat-icon svgIcon="mat:filter_list"></mat-icon>
         </button>
-        <button (click)="createCustomer()" class="ml-4 flex-none" color="primary"
+        <button class="ml-4 flex-none" color="primary"
           mat-mini-fab matTooltip="Add Role" type="button">
           <mat-icon svgIcon="mat:add"></mat-icon>
         </button>
@@ -140,10 +140,6 @@
     <button (click)="view(data)" mat-menu-item>
       <mat-icon svgIcon="mat:edit"></mat-icon>
       <span>Edit</span>
-    </button>
-    <button (click)="deleteCustomer(data)" mat-menu-item>
-      <mat-icon svgIcon="mat:delete"></mat-icon>
-      <span>Delete</span>
     </button>
   </ng-template>
 </mat-menu>

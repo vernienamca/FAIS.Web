@@ -30,7 +30,7 @@ export class securityApi extends BaseApi {
     return this.put<any>(`${this._apiUrl}/user/reset-password/${tempKey}/${newPassword}`, {});
   }
 
-  changePassword(oldPassword: string,newPassword: string): Observable<any> {
-    return this.post<any>(`${this._apiUrl}/Security/change-password`, { oldPassword,newPassword });
+  changePassword(userId: number, oldPassword: string, newPassword: string): Observable<any> {
+    return this.put<any>(`${this._apiUrl}/user/change-password/${userId}/${oldPassword}/${newPassword}`, {});
   }
 }

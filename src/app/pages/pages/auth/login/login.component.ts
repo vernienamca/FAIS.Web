@@ -27,7 +27,7 @@ export class LoginComponent implements OnInit {
     private fb: UntypedFormBuilder,
     private cd: ChangeDetectorRef,
     private _router: Router,
-    private snackbar: MatSnackBar,
+    private _snackbar: MatSnackBar,
     private _authService: AuthService
   ) {}
 
@@ -51,7 +51,7 @@ export class LoginComponent implements OnInit {
           return;
         }
         if (!data.accessToken) {
-          this.snackbar.open(data.errorDescription, 'Close', {
+          this._snackbar.open(data.errorDescription, 'Close', {
             duration: 10000
           });
           return;
