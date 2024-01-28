@@ -61,11 +61,7 @@ export class PortalApi extends BaseApi {
         });
     }
 
-    openFolder(): Observable<any> {
-        return this.get<any>(`${this._apiUrl}/auditLog/open-folder`);
-    }
-
-    getSettingsId(id: number) : Observable<ISettings>{
+    getSetting(id: number) : Observable<ISettings>{
         return this.get<ISettings>(`${this._apiUrl}/settings/${id}`);
     }
 

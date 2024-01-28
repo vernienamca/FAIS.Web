@@ -16,6 +16,8 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { MatSelectChange } from '@angular/material/select';
 import { PortalService } from 'src/app/core/services/portal.service';
 import { IAuditLogs } from 'src/app/core/models/audit-logs';
+import { SharedLinkDialogComponent } from '../shared-link-dialog/shared-link-dialog.component';
+import { SecurityService } from 'src/app/core/services/security.service';
 
 @UntilDestroy()
 @Component({
@@ -70,7 +72,12 @@ export class AuditLogsListComponent implements OnInit, OnDestroy, AfterViewInit 
     return this.columns.filter(column => column.visible).map(column => column.property);
   }
 
-  constructor(private _portalService: PortalService) {}
+  constructor(
+    private _dialog: MatDialog,
+    private _portalService: PortalService,
+    private _securityService: SecurityService
+  ) {
+  }
 
   ngOnInit(): void {
     this._portalService.getAuditLogs()
@@ -150,8 +157,18 @@ export class AuditLogsListComponent implements OnInit, OnDestroy, AfterViewInit 
     this._portalService.exportAuditLogs();
   }
 
-  openFolder(): void {
-    this._portalService.openFolder();
+  openSharedFolderLink(): void {
+    this._securityService.getSettings(1)
+      .pipe(takeUntil(this._onDestroy$))
+      .subscribe(data => {
+        if (!data) {
+          return;
+        }
+        this._dialog.open(SharedLinkDialogComponent, {
+          data: data,
+          width: '700px'
+        });
+      });
   }
 
   onFilterUser(event: any): void {

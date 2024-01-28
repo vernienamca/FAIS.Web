@@ -74,12 +74,8 @@ export class PortalService {
     });
   }
 
-  openFolder() : void {
-    this._portalApi.openFolder().subscribe();
-  }
-
-  getSettingsId(id: number): Observable<any> {
-    return this._portalApi.getSettingsId(id);
+  getSetting(id: number): Observable<any> {
+    return this._portalApi.getSetting(id);
   }
 
   updateModule(data: any): Observable<any> {
