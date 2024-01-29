@@ -1,10 +1,9 @@
 import { Component } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, FormGroup, UntypedFormControl, Validators } from '@angular/forms';
 import { FormControl } from '@angular/forms';
-
 import {ThemePalette} from '@angular/material/core';
-
-
+import { fadeInUp400ms } from 'src/@vex/animations/fade-in-up.animation';
+import { stagger60ms } from 'src/@vex/animations/stagger.animation';
 
 export interface RolesElement {
   description: string;
@@ -15,7 +14,6 @@ export interface RolesElement {
 
 const ELEMENT_DATA: RolesElement[] = [
   { position: 'Admin', description: 'Description Accountant...', date: new Date('2023-07-18T14:00:00'), isToggled: false },
-
   {position: 'PAD Analyst', description: 'Description Librarian...',  date: new Date('2023-07-18T14:00:00'), isToggled: false },
   {position: 'PAD Verifier', description: 'Description Super Admin',  date: new Date('2023-07-18T14:00:00'),  isToggled: false },
   {position: 'PAD Approver', description: 'Description Accountant', date: new Date('2023-07-18T14:00:00'), isToggled: false },
@@ -25,19 +23,23 @@ const ELEMENT_DATA: RolesElement[] = [
   {position: 'Viewer', description: 'Description Accountant',  date: new Date('2023-07-18T14:00:00'),  isToggled: false },
   {position: 'PAD Librarian', description: 'Description Librarian..',  date: new Date('2023-07-18T14:00:00'),  isToggled: false },
   {position: 'ARMD Librarian', description: 'Description Super Admin...',  date: new Date('2023-07-18T14:00:00'),  isToggled: false },
-
 ];
 
 @Component({
-  selector: 'vex-user-add',
-  templateUrl: './user-add.component.html',
-  styleUrls: ['./user-add.component.scss'],
-
-  
+  selector: 'vex-user',
+  templateUrl: './user.component.html',
+  styleUrls: ['./user.component.scss'],
+  animations: [
+    stagger60ms,
+    fadeInUp400ms
+  ]
 })
 
-export class UserAddComponent {
+export class UserComponent {
+  form: FormGroup; 
+  layoutCtrl = new UntypedFormControl('fullwidth');
 
+  
   color: ThemePalette = 'accent';
   isToggled: boolean = false;
   selectedPhoto: string | null = null;
@@ -71,31 +73,26 @@ export class UserAddComponent {
       reader.onerror = error => reject(error);
     });
   }
-  constructor(private _fb: FormBuilder) {}
 
 
+  get formControls() {
+    return {
+      oldPassword: this.form.get('oldPassword')
+    };
+  }
 
-  settingsForm = this._fb.group({
-    ExampleData: '', 
-    accountstatus:'',
-    statusdate:'',
-    accexpiration:'',
-    emailaddress:'',
-    username: '', 
-    position:'',
-    TAFG:'',
-    division:'',
-    last:'',
-    company: '',
-    mobilenumber: '',
-    web: '',
-    address: '',
-   
-  });
+
+  constructor(
+    private _fb: FormBuilder
+  ) {
+    this.form = this._fb.group({
+      oldPassword: ['', [Validators.required]]
+    });
+  }
+
 
   save(){
-    console.log('form value',this.settingsForm.value);
-    
+
   }
 
 }
