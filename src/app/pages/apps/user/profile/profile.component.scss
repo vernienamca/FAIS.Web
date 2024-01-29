@@ -1,3 +1,23 @@
+
+.save{
+    background-color: #009246;
+    padding: 3px 15px;
+    border-radius: 5px;
+    margin-right: 8px;
+    display: flex;
+    align-items: center;
+  }
+  
+  .close{
+    background-color: #043C79;
+    padding: 3px 15px;
+    border-radius: 5px;
+    margin-left: 8px;
+    display: flex;
+    align-items: center;
+  }
+
+
 .breadcrumb .col{
     margin: 10px 50px;
     color: #043B7B;
@@ -5,10 +25,6 @@
 }
 
 .box-placeholder {
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    align-items: center;
     width: auto; 
     height: auto; 
     background-color:transparent; 
@@ -44,32 +60,20 @@
     width: 100px;
   }
 
-.save{
-    background-color: #009246;
-    padding: 3px 15px;
-    border-radius: 5px;
-    margin-right: 8px;
-    display: flex;
-    align-items: center;
-}
-
-.close{
-    background-color: #043C79;
-    padding: 3px 15px;
-    border-radius: 5px;
-    margin-left: 8px;
-    display: flex;
-    align-items: center;
-}
 
 ::ng-deep .mat-mdc-tab .mdc-tab__text-label,
 ::ng-deep .mat-mdc-tab-link .mdc-tab__text-label{
     color: #000 !important;
     min-width: 300px;
+ 
     display: flex;
     justify-content: center;
 }
+::ng-deep .mat-mdc-tab-header .mat-mdc-tab-labels {
+    padding-left: 20%;
+}
 
+  
 .gen-set{
     display: flex;
     justify-content: center;

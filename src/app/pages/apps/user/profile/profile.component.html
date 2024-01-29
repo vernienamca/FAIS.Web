@@ -1,73 +1,68 @@
-<vex-page-layout>
-    <vex-page-layout-header class="pb-16 flex flex-col items-start justify-center">
-      <div  class="w-full flex flex-col sm:flex-row justify-between">
-        <div class="header-container" style="margin-left: 30px;">
-          <h1 class="title mt-0 mb-1">My Profile</h1>
-          <vex-breadcrumbs [crumbs]="crumbs"></vex-breadcrumbs> 
-        </div>
-        <div class="hidden sm:block">
-         
-        </div>
-      </div>
-    </vex-page-layout-header>
-  </vex-page-layout>
-  
-  <div class="card overflow-auto -mt-16">
-    <div class="bg-app-bar h-16 border-b sticky left-0 flex items-center">
-      <div class="btn-opt" style="display: flex; align-items: start;">
-        <button class="save" (click)="save()" style="display: flex; align-items: center;">
-          <mat-icon svgIcon="mat:folder"></mat-icon> Save
+<vex-secondary-toolbar current="My Profile">
+  <vex-breadcrumbs [crumbs]="crumbs" class="flex-auto"></vex-breadcrumbs>
+  <button class="ml-2" color="primary" mat-icon-button type="button">
+    <mat-icon svgIcon="mat:more_vert"></mat-icon>
+  </button>
+</vex-secondary-toolbar>
+
+<div class="p-gutter container" [class.container]="layoutCtrl.value === 'boxed'" [class.px-gutter]="layoutCtrl.value === 'fullwidth'">
+  <div class="flex flex-col sm:flex-row gap-4">
+    <div class="card flex-auto">
+      <div class="px-6 py-4 border-b flex items-center gap-2">
+
+        <button [ngClass]="[ settingsForm.invalid ?'!bg-gray' : '!bg-green', '!text-contrast-white']"  mat-raised-button type="button" (click)="save()" [disabled]="settingsForm.invalid">
+          <mat-icon class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" svgIcon="mat:archive"></mat-icon> Save
         </button>
-        <button class="close" style="display: flex; align-items: center;" (click)="closeProfile()">
-          <mat-icon svgIcon="mat:close"></mat-icon> Close
+        
+        <button color="primary" mat-stroked-button type="button" [routerLink]="['/apps/modules']">
+          <mat-icon class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" svgIcon="mat:close"></mat-icon> Close
         </button>
       </div>
-    </div>
-  </div>
-  
+   
+<!--ONGOING FLEX LAYOUT CHANGING <---> 
+ 
   <div class="settings" [formGroup]="settingsForm">
     <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="center" dynamicHeight class="tabs">
-          <mat-tab label="General">
-              <div class="profile" style="margin-left: 40px; display: flex; align-items: flex-start;">
-                <div class="box-placeholder">
-                  <img [src]="this.settingsForm.value.selectedPhoto || 'assets/img/avatars/' + (this.userInfo?.photo)" alt="Selected Photo" class="center-image" width="150px" height="150px" style="border-radius: 8px;" >
-                  <div>
-                    <input type="file" (change)="onFileSelected($event)" accept="image/*" style="display: none" #fileInput />
-                  </div>
-                    <p style="font-size: 20px; font-family: 'Poppins'; margin-top: 10px;">{{ settingsForm.get('First').value }} {{ settingsForm.get('last').value }}</p>
+      <mat-tab label="General" >
+
+        <div class="profile" fxLayout="row" fxLayoutAlign="start start" style=" padding-left:4%;" >
+          <mat-card class="box-placeholder" fxLayout="column" fxLayoutAlign="center center">
+            <img [src]="'assets/img/avatars/' + (settingsForm.value.selectedPhoto || userInfo?.photo || 'default.jpg')" alt="Selected Photo" class="center-image" width="150px" height="150px" style="border-radius: 8px;">
+          
+            <p style="font-size: 20px; font-family: 'Poppins'; margin-top: 10px;">{{ settingsForm.get('First').value }} {{ settingsForm.get('last').value }}</p>
+          
+            <div class="Info" fxLayout="column" fxLayoutAlign="start" style="margin-top: 40px; height: auto; width: auto;">
+
+              <div fxLayout="row" fxLayoutAlign="space-between center">
+                <p style="color: gray;">Position:</p>
+                <p>{{ settingsForm.get('position').value }}</p>
+              </div>
+              <hr>
               
-                      <div class="Info" style="display: flex; flex-direction: column; align-items: left; margin-top: 40px; height: auto; width: auto;">
-                          <div class="row no-margin">
-                           
-                              <p style="color: gray;">Position:</p>
-                              <p>{{ settingsForm.get('position').value }}</p>
-                          </div>
-                          <hr>
-                          <div class="row no-margin">
-                            <p style="color: gray;">Region:</p>
-                            <div class="tafg-row">
-                                <ng-container *ngIf="TAFGControl?.value?.length > 0">
-                                    <p>{{ TAFGControl?.value?.join(', ') }}</p>
-                                  </ng-container>
-                                  
-                            </div>
-                          </div>
-                        
-                          <hr>
-                          <div class="row no-margin">
-                            <p style="margin-right: 30px; color: gray;">Last Login date:</p>
-                            <p style="font-size: 13px">{{ lastLoginDate }}</p>
-                        </div>
-                        
-                          <hr>
-                          <div class="row no-margin">
-                            <p style="margin-right: 30px; color: gray;">Expiration Date:</p>
-                            <p style="font-size: 13px">{{ settingsForm.get('accexpiration').value }}</p>
-                        </div>
-                      </div>
-                      <hr>
-                  </div>
-  
+              <div fxLayout="row" fxLayoutAlign="space-between center">
+                <p style="color: gray;">Region:</p>
+                <ng-container *ngIf="TAFGControl?.value?.length > 0">
+                  <p>{{ TAFGControl?.value?.join(', ') }}</p>
+                </ng-container>
+              </div>
+              <hr>
+              
+              <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="10px" >
+                <p style="color: gray;">Last Login date:</p>
+                <p fxFlex style="font-size: 13px">{{ settingsForm.get('lastLoginDate').value }}</p>
+              </div>
+              <hr>
+              
+              <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="10px" >
+                <p style="color: gray;">Expiration Date:</p>
+                <p fxFlex style="font-size: 13px">{{ settingsForm.get('accexpiration').value }}</p>
+              </div>
+              
+            </div>
+            <hr>
+          </mat-card>
+        
+        
                  <div class="gen-set" style="display: flex; justify-content: center; align-items: center; width: 80%; height: 100%;">
   
                       <div class="gen-set-items">
@@ -200,18 +195,16 @@
   
                           </div>
                       </div>
-            
+                    </div>
               <!-- USER ROLE NAVIGATION EDIT -->
        
               <mat-tab label="User Role ({{ userRoleCount() }})">
-                  <div class="conf-set">
+                <div class="conf-set">
                       <div class="Userprofile" style="padding-left: 50px; display: flex; align-items: flex-start;">
   
                         <div class="box-placeholder2">
-                          <img [src]="this.settingsForm.value.selectedPhoto || 'assets/img/avatars/' + (this.userInfo?.photo)" alt="Selected Photo" class="center-image" width="150px" height="150px" style="border-radius: 8px;" >
-                          <div>
-                            <input type="file" (change)="onFileSelected($event)" accept="image/*" style="display: none" #fileInput />
-                          </div>
+                          <img [src]="'assets/img/avatars/' + (this.settingsForm.value.selectedPhoto || userInfo?.photo || 'default.jpg')" alt="Selected Photo" class="center-image" width="150px" height="150px" style="border-radius: 8px;">
+                          
                             <p style="font-size: 20px; font-family: 'Poppins'; margin-top: 10px;">{{ settingsForm.get('First').value }} {{ settingsForm.get('last').value }}</p>
                       
                               <div class="Info" style="display: flex; flex-direction: column; align-items: left; margin-top: 40px;">
@@ -233,7 +226,7 @@
                                   <hr>
                                   <div class="row no-margin">
                                     <p style="margin-right: 30px; color: gray;">Last Login date:</p>
-                                    <p style="font-size: 13px">{{ lastLoginDate }}</p>
+                                    <p style="font-size: 13px">{{ settingsForm.get('lastLoginDate').value }}</p>
                                 </div>
                                 
                                   <hr>
@@ -270,4 +263,3 @@
                               </div>
                   </div>
   </div>
-  

@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
-import { FormControl } from '@angular/forms';
+import { FormBuilder,UntypedFormControl,FormControl,Validators } from '@angular/forms';
 import { ThemePalette } from '@angular/material/core';
 import { UserService } from 'src/app/core/services/user.service';
 import { PortalService } from 'src/app/core/services/portal.service';
@@ -25,6 +24,7 @@ export interface RolesElement {
 })
 
 export class ProfileComponent {
+  layoutCtrl = new UntypedFormControl('fullwidth');
   color: ThemePalette = 'accent';
   selectedPhoto: string | null = null;
   positions: string[] = [];
@@ -35,13 +35,12 @@ export class ProfileComponent {
   userInfo: any;
   USER_ROLE: RolesElement[] = [];
   separatorKeysCodes: number[] = [ENTER, COMMA];
-  lastLoginDate: string | null = null;
   TAFGControl = new FormControl();
   searchCtrl: FormControl = new FormControl();
 
   crumbs = [
     { name: 'Home', route: '/' },
-    { name: 'My Profile', route: '/apps/profile/user-profile' },
+    { name: 'My Profile', route: '/apps/profile' },
   ];
 
   settingsForm = this._fb.group({
@@ -50,15 +49,16 @@ export class ProfileComponent {
     statusdate: '',
     accexpiration: '',
     emailaddress: '',
-    username: '',
+    username:'',
     position: '',
     TAFG: '',
     division: '',
-    last: '',
-    mobilenumber: '',
+    last: ['', Validators.required],
+    mobilenumber: ['', [Validators.required, Validators.pattern(/^\+?\d{11,12}$/)]],
     First: '',
     selectedPhoto: '',
-    OUPFG: ''
+    OUPFG: '',
+    lastLoginDate: ''
   });
 
   private _onDestroy$ = new Subject<void>();
@@ -73,23 +73,11 @@ export class ProfileComponent {
     private _snackBar:MatSnackBar,
    ) { }
 
+
   userRoleCount(): number {
     return this.USER_ROLE.length;
   }
   
-  onFileSelected(event: any) {
-    const file = event.target.files[0];
-    this.selectedPhoto = `assets/img/avatars/${this.userInfo.photo}`;
-  }
-
-  isBase64(str: string): boolean {
-    return /^data:image\/[a-z]+;base64,/.test(str);
-  }
-
-@ViewChild("focus") myInputField: ElementRef;
-ngAfterViewInit() {
-this.myInputField.nativeElement.focus();
-}
 
   ngOnInit(): void {
     this.userId = localStorage.getItem('user_id');
@@ -116,9 +104,9 @@ this.myInputField.nativeElement.focus();
             First: this.userInfo.firstName,
             selectedPhoto: this.userInfo.photo,
             OUPFG: this.userInfo.oufg,
+            lastLoginDate: this._datePipe.transform(this.userInfo.lastLoginDate, 'MMMM d, yyyy h:mm a'),
           });
-  
-          this.settingsForm.disable();
+      
           this.TAFGControl.setValue(this.userInfo.tafGs || []);
           this.settingsForm.get('last')?.enable();
           this.settingsForm.get('mobilenumber')?.enable();
@@ -134,16 +122,6 @@ this.myInputField.nativeElement.focus();
             });
         });
     }
-  
-    this._userService.getLastLoginDate(+this.userId)
-    .pipe(takeUntil(this._onDestroy$))
-    .subscribe(data => {
-      if (!data) {
-        return;
-      }
-        this.lastLoginDate = this._datePipe.transform(data, 'MMMM d, yyyy h:mm a',);
-      }
-    );
   }
 
   ngOnDestroy(): void {
@@ -156,6 +134,7 @@ this.myInputField.nativeElement.focus();
   }
 
   save(): void {
+    console.log('Save function called');
     const userIdNumber = +this.userId;
     const data = {
       lastName: this.settingsForm.get('last')?.value,
@@ -169,10 +148,13 @@ this.myInputField.nativeElement.focus();
       if (!data) {
         return;
       }
-      this._snackBar.open('User updated successfully', 'OK', {
-        duration: 3000,
-      });
+     
+    });
+    this._snackBar.open('User updated successfully', 'OK', {
+      duration: 3000,
     });
   }
 }
+
+
   
