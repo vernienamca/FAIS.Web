@@ -81,11 +81,12 @@ export class SystemSettingsComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    this._portalService.getSettingsId(1)
+    this._portalService.getSetting(1)
     .pipe(takeUntil(this._onDestroy$))
     .subscribe((data: any) => {
       if (!data) {
         return;
+        
       }
       this.settings = data;
 

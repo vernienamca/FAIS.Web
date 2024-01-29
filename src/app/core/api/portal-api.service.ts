@@ -14,11 +14,15 @@ export class PortalApi extends BaseApi {
     private _apiUrl = `${environment.apiGatewayBaseUrl}`;
 
     getModules(): Observable<IModule[]> {
-        return this.get<IModule>(`${this._apiUrl}/module/get`);
+        return this.get<IModule[]>(`${this._apiUrl}/module/get`);
+    }
+
+    getModule(id: number): Observable<IModule> {
+        return this.get<IModule>(`${this._apiUrl}/module/${id}`);
     }
 
     getRoles(): Observable<IRole[]> {
-        return this.get<IRole>(`${this._apiUrl}/role/get`);
+        return this.get<IRole[]>(`${this._apiUrl}/role/get`);
     }
 
     getRoleId(id: number): Observable<IRole[]> {
@@ -57,12 +61,12 @@ export class PortalApi extends BaseApi {
         });
     }
 
-    openFolder(): Observable<any> {
-        return this.get<any>(`${this._apiUrl}/auditLog/open-folder`);
+    getSetting(id: number) : Observable<ISettings>{
+        return this.get<ISettings>(`${this._apiUrl}/settings/${id}`);
     }
 
-    getSettingsId(id: number) : Observable<ISettings>{
-        return this.get<ISettings>(`${this._apiUrl}/settings/${id}`);
+    updateModule(data: any): Observable<any> {
+        return this.put<any>(`${this._apiUrl}/module`, data);
     }
 
     updatesettings(data:any): Observable<any> {

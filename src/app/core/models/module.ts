@@ -3,7 +3,9 @@ export interface IModule {
   name: string;
   description: string;
   url: string;
-  isActive: boolean;
+  groupName: string;
+  icon: string;
+  isActive: string;
   statusDate: Date;
   createdBy: string,
   createdAt: Date,

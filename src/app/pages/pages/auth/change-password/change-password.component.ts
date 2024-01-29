@@ -174,9 +174,7 @@ export class ChangePasswordComponent implements OnInit, OnDestroy {
           });
           return;
         }
-        let snackBarRef = this._snackBar.open('Your password has been successfully changed.', 'Close', {
-          duration: 5000
-        });
+        let snackBarRef = this._snackBar.open('Your password has been successfully changed.', 'Close');
         snackBarRef.afterDismissed().subscribe(() => {
           window.location.reload();
         });

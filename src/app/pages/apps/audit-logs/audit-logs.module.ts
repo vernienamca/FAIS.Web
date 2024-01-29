@@ -17,9 +17,13 @@ import { AuditLogsListComponent } from './audit-logs-list/audit-logs-list.compon
 import { AuditLogsRoutingModule } from './audit-logs-routing.module';
 import { RelativeDateTimeModule } from 'src/@vex/pipes/relative-date-time/relative-date-time.module';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { SharedLinkDialogComponent } from './shared-link-dialog/shared-link-dialog.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatDividerModule } from '@angular/material/divider';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 @NgModule({
-  declarations: [AuditLogsListComponent],
+  declarations: [AuditLogsListComponent, SharedLinkDialogComponent],
   imports: [
     CommonModule,
     AuditLogsRoutingModule,
@@ -38,7 +42,10 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
     MatSelectModule,
     MatButtonToggleModule,
     RelativeDateTimeModule,
-    MatProgressBarModule
+    MatProgressBarModule,
+    MatDialogModule,
+    MatDividerModule,
+    FlexLayoutModule
   ]
 })
 export class AuditLogsModule {
