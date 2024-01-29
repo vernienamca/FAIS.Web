@@ -8,5 +8,5 @@ export interface IRole {
   createdAt: Date,
   updatedBy?: string;
   updatedAt?: Date;
-  rolePermissionModels?: any[]
+  // rolePermissionModels?: any[]
 }
