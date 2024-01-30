@@ -76,4 +76,8 @@ export class PortalApi extends BaseApi {
     updaterolepermission(data:any): Observable<any> {
         return this.put<any>(`${this._apiUrl}/role/update-role`, data);
     }
+
+    updateStringInterpolation(data: any): Observable<any> {
+        return this.put<any>(`${this._apiUrl}/interpolation`, data);
+    }
 }
