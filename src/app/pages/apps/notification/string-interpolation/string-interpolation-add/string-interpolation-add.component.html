@@ -43,19 +43,19 @@
     <div class="row">
       <div class="form-input col-lg-6">
         <label for="comp-input">Code</label>
-        <input type="text" id="comp-input" placeholder="Code" formControlName="TransactionCode">
+        <input type="text" id="comp-input" placeholder="Code" formControlName="transactionCode">
       </div>
 
       <div class="form-input col-lg-6">
         <label for="comp-input">Description</label>
-        <input type="text" id="comp-input" placeholder="Description" formControlName="TransactionDescription">
+        <input type="text" id="comp-input" placeholder="Description" formControlName="transactionDescription">
       </div>
     </div>
 
     <div class="row">
       <div class="form-input col-lg-3">
         <label for="comp-input">Notification Type</label>
-        <mat-select placeholder="Select Notification Type" formControlName="NotificationType">
+        <mat-select placeholder="Select Notification Type" formControlName="notificationType">
           <mat-option *ngFor="let notification of notificationType" [value]="notification">{{ notification
             }}</mat-option>
         </mat-select>
@@ -63,12 +63,12 @@
 
       <div class="form-input col-lg-3">
         <label for="comp-input">Active</label>
-        <mat-slide-toggle formControlName="IsActive"></mat-slide-toggle>
+        <mat-slide-toggle formControlName="isActive"></mat-slide-toggle>
       </div>
 
       <div class="form-input col-lg-3">
         <label for="comp-input">Status Date</label>
-        <input type="text" id="comp-input" placeholder="Example Data" formControlName="StatusDate">
+        <span class="flex-1">{{ currentDate }}</span>
       </div>
     </div>
   </div>

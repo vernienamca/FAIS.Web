@@ -6,7 +6,7 @@ import { StringInterpolationAddComponent } from './string-interpolation-add.comp
 
 const routes: Routes = [
   {
-    path: 'interpolation-add',
+    path: '',
     component: StringInterpolationAddComponent
   }
 ];
