@@ -50,7 +50,6 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     MatProgressBarModule,
     SecondaryToolbarModule,
     BreadcrumbsModule,
-    FlexLayoutModule,
     MatSnackBarModule
   ]
 })

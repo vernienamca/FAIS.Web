@@ -1,0 +1,22 @@
+<div class="flex items-center" mat-dialog-title>
+  <h2 class="title m-0 flex-auto">Shared Folder Link</h2>
+  <button class="text-secondary" mat-dialog-close mat-icon-button type="button">
+    <mat-icon svgIcon="mat:close"></mat-icon>
+  </button>
+</div>
+<mat-divider class="text-border"></mat-divider>
+<mat-dialog-content class="flex flex-col">
+  <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="5px">
+    <span fxFlex="5">
+      <mat-icon svgIcon="mat:info"></mat-icon>
+    </span>
+    <p fxFlex>To view the audit logs shared folder, copy the link below and paste it to your windows explorer.</p>
+  </div>
+  <p class="my-6">
+    <i>{{ sharedLink }}</i>
+  </p>
+  <img fxFlex src="../../../../../assets/img/instructions/audit-logs-shared-link.png" alt="Upload User Template">
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button cdkFocusInitial color="primary" mat-button mat-dialog-close type="button">Close</button>
+</mat-dialog-actions>

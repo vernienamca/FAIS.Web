@@ -18,6 +18,7 @@ import { SecondaryToolbarModule } from '../../../../@vex/components/secondary-to
 import { BreadcrumbsModule } from '../../../../@vex/components/breadcrumbs/breadcrumbs.module';
 import { MatButtonModule } from '@angular/material/button';
 import { PageLayoutModule } from '../../../../@vex/components/page-layout/page-layout.module';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 @NgModule({
   declarations: [DashboardAnalyticsComponent],
@@ -30,14 +31,14 @@ import { PageLayoutModule } from '../../../../@vex/components/page-layout/page-l
     WidgetQuickValueCenterModule,
     WidgetQuickValueStartModule,
     WidgetLargeGoalChartModule,
-
     WidgetAssistantModule,
     WidgetLargeChartModule,
     WidgetTableModule,
     SecondaryToolbarModule,
     BreadcrumbsModule,
     MatButtonModule,
-    PageLayoutModule
+    PageLayoutModule,
+    FlexLayoutModule
   ]
 })
 export class DashboardAnalyticsModule {
