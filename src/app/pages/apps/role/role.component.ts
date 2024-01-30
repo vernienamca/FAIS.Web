@@ -38,16 +38,21 @@ export class RoleComponent implements OnInit {
   // subject$: ReplaySubject<IRole> = new ReplaySubject<IRole>(1);
   // data$: Observable<IRole> = this.subject$.asObservable();
   user:any;
+  userId:number;
   roleName:string;
   roleDescription:string;
-  createdBy:string;
+  createdByName:string;
   createdAt:Date;
-  modifiedBy:string;
+  modifiedByName:string;
   dateModified:Date;
   isActiveModel:boolean;
   isActive:boolean;
   role: any;
   permissionList: IPermission[];
+
+  get permission(): FormArray {
+    return this.roleField.get('rolePermissionModel') as FormArray;
+  }
 
   private _roleId = this._route.snapshot.paramMap.get('id');
   private _onDestroy$ = new Subject<void>();
@@ -80,7 +85,9 @@ export class RoleComponent implements OnInit {
       if (!data) {
         return;
       }
-      this.user = data;          
+      this.user = data;    
+      this.userId = this.user.id;      
+      console.log('user',this.userId);
     });
   }
 
@@ -88,6 +95,8 @@ export class RoleComponent implements OnInit {
     this._portalService.getRoleId(Number(this._roleId))
     .pipe(takeUntil(this._onDestroy$))
     .subscribe((data: any) => {    
+      console.log(data);
+      
       if (!data) {
         return;
       }
@@ -96,9 +105,10 @@ export class RoleComponent implements OnInit {
       
       this.roleName = this.role.name;
       this.roleDescription = this.role.description;
-      this.createdBy = this.role.createdBy;
+      // this.createdBy = this.role.createdBy;
+      this.createdByName = this.role.createdByName;
       this.createdAt = this.role.createdAt;
-      this.modifiedBy = this.role.updatedBy;
+      this.modifiedByName = this.role.updatedByName;
       this.dateModified = this.role.updatedAt;
       this.isActive = this.role.isActive === 'Y';
  
@@ -106,7 +116,7 @@ export class RoleComponent implements OnInit {
 
     });
     
-  this.removeNullOnLoad();
+  // this.removeNullOnLoad();
 
   }
 
@@ -118,7 +128,7 @@ export class RoleComponent implements OnInit {
     permissions.value.forEach(e => {
       if (e === null) {
         for (let i = 0; i < permissionsControls.length; i++) {
-        this.removeModule(i)
+        this.removeModule(0)
         }
       }
     });
@@ -126,7 +136,7 @@ export class RoleComponent implements OnInit {
     
   }
 
-  addNewModule(list) : FormGroup
+  addNewModule(list, index) : FormGroup
   {        
     this.moduleGroup = this._fb.group({
       roleId: [list.roleId ?? Number(this._roleId)],
@@ -135,10 +145,24 @@ export class RoleComponent implements OnInit {
       isCreate: [list?.isCreate || true],
       isRead: [list?.isRead || true],
       isUpdate: [list?.isUpdate || false],
+      createdBy: [this.updateNameAtIndex(index,this.userId)],
+      updatedBy: [list?.updatedBy || Number(this._roleId)],
       isAdded: [true]
     })
 
     return this.moduleGroup;
+  }
+
+  updateNameAtIndex(index: number, createdBy: any) {
+    const formGroup = this.permission.controls;
+    console.log('fg',typeof formGroup);
+
+    for (const key in formGroup) {
+      if (formGroup.hasOwnProperty(key)) {
+        const control = formGroup[key];
+        console.log('ctrl',control);
+      }
+    }
   }
 
   onSubmit(): void{
@@ -185,8 +209,8 @@ export class RoleComponent implements OnInit {
     if (!data) { 
       return; 
     }
-    data.map(item => {
-      (<FormArray>this.roleField.get('rolePermissionModel')).push(this.addNewModule(item));
+    data.map((item,i) => {
+      (<FormArray>this.roleField.get('rolePermissionModel')).push(this.addNewModule(item,i));
     });
   }
 

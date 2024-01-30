@@ -57,7 +57,7 @@
                 <tbody>
                   <ng-template ngFor let-module let-i="index" [ngForOf]="roleField.get('rolePermissionModel')['controls']">
                     <tr>
-                      <th class="px-6 py-3 font-medium"><input type="text" class="bg-transparent" onfocus="this.blur()" readonly="readonly" [formControl]="module.get('name')"></th>
+                      <th class="px-6 py-3 font-medium"><input type="text" class="bg-transparent" onfocus="this.blur()" readonly="readonly" [formControl]="module.get('name')">{{i}}</th>
                       <td class="px-6 py-3"><mat-checkbox color="accent" [formControl]="module.get('isCreate')"></mat-checkbox></td>
                       <td class="px-6 py-3"><mat-checkbox color="accent" [formControl]="module.get('isRead')"></mat-checkbox></td>
                       <td class="px-6 py-3"><mat-checkbox color="accent" [formControl]="module.get('isUpdate')"></mat-checkbox></td>
@@ -77,7 +77,7 @@
             <div class="module-footer my-8 flex flex-row justify-around items-center">
               <div class="created-by-cont">
                 <span class="created-by font-bold mr-2">Created By:</span>
-                <span>{{createdBy}}</span>
+                <span>{{createdByName}}</span>
               </div>
               <div class="date-created-cont">
                 <span class="date-created font-bold mr-2">Date Created:</span>
@@ -85,7 +85,7 @@
               </div>
               <div class="modified-by-cont">
                 <span class="modified-by font-bold mr-2">Modified By:</span>
-                <span>{{modifiedBy}}</span>
+                <span>{{modifiedByName}}</span>
               </div>
               <div class="date-modified-cont">
                 <span class="date-modified font-bold mr-2">Date Modified:</span>
