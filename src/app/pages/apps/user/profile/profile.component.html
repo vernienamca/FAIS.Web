@@ -29,13 +29,13 @@
           <mat-card class="box-placeholder" fxLayout="column" fxLayoutAlign="center center">
             <img [src]="'assets/img/avatars/' + (settingsForm.value.selectedPhoto || userInfo?.photo || 'default.jpg')" alt="Selected Photo" class="center-image" width="150px" height="150px" style="border-radius: 8px;">
           
-            <p style="font-size: 20px; font-family: 'Poppins'; margin-top: 10px;">{{ settingsForm.get('First').value }} {{ settingsForm.get('last').value }}</p>
+            <p style="font-size: 20px; font-family: 'Poppins'; margin-top: 10px;">{{ settingsForm.value.First }} {{ settingsForm.value.last }}</p>
           
             <div class="Info" fxLayout="column" fxLayoutAlign="start" style="margin-top: 40px; height: auto; width: auto;">
 
               <div fxLayout="row" fxLayoutAlign="space-between center">
                 <p style="color: gray;">Position:</p>
-                <p>{{ settingsForm.get('position').value }}</p>
+                <p>{{ settingsForm.value.position }}</p>
               </div>
               <hr>
               
@@ -49,13 +49,13 @@
               
               <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="10px" >
                 <p style="color: gray;">Last Login date:</p>
-                <p fxFlex style="font-size: 13px">{{ settingsForm.get('lastLoginDate').value }}</p>
+                <p fxFlex style="font-size: 13px">{{ settingsForm.value.lastLoginDate }}</p>
               </div>
               <hr>
               
               <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="10px" >
                 <p style="color: gray;">Expiration Date:</p>
-                <p fxFlex style="font-size: 13px">{{ settingsForm.get('accexpiration').value }}</p>
+                <p fxFlex style="font-size: 13px">{{ settingsForm.value.accexpiration }}</p>
               </div>
               
             </div>
@@ -196,22 +196,21 @@
                           </div>
                       </div>
                     </div>
-              <!-- USER ROLE NAVIGATION EDIT -->
-       
-              <mat-tab label="User Role ({{ userRoleCount() }})">
+          
+              <mat-tab label="User Role ({{ USER_ROLE.length }})">
                 <div class="conf-set">
                       <div class="Userprofile" style="padding-left: 50px; display: flex; align-items: flex-start;">
   
                         <div class="box-placeholder2">
                           <img [src]="'assets/img/avatars/' + (this.settingsForm.value.selectedPhoto || userInfo?.photo || 'default.jpg')" alt="Selected Photo" class="center-image" width="150px" height="150px" style="border-radius: 8px;">
                           
-                            <p style="font-size: 20px; font-family: 'Poppins'; margin-top: 10px;">{{ settingsForm.get('First').value }} {{ settingsForm.get('last').value }}</p>
+                            <p style="font-size: 20px; font-family: 'Poppins'; margin-top: 10px;">{{ settingsForm.value.First }} {{ settingsForm.value.last }}</p>
                       
                               <div class="Info" style="display: flex; flex-direction: column; align-items: left; margin-top: 40px;">
                                   <div class="row no-margin">
                                    
                                       <p style="color: gray;">Position:</p>
-                                      <p>{{ settingsForm.get('position').value }}</p>
+                                      <p>{{ settingsForm.value.position }}</p>
                                   </div>
                                   <hr>
                                   <div class="row no-margin">
@@ -226,13 +225,13 @@
                                   <hr>
                                   <div class="row no-margin">
                                     <p style="margin-right: 30px; color: gray;">Last Login date:</p>
-                                    <p style="font-size: 13px">{{ settingsForm.get('lastLoginDate').value }}</p>
+                                    <p style="font-size: 13px">{{ settingsForm.value.lastLoginDate }}</p>
                                 </div>
                                 
                                   <hr>
                                   <div class="row no-margin">
                                     <p style="margin-right: 30px; color: gray;">Expiration Date:</p>
-                                    <p style="font-size: 13px">{{ settingsForm.get('accexpiration').value }}</p>
+                                    <p style="font-size: 13px">{{ settingsForm.value.accexpiration }}</p>
                                 </div>
                               </div>
                               <hr>

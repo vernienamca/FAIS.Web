@@ -71,13 +71,7 @@ export class ProfileComponent {
     private _datePipe: DatePipe,
     private _router: Router,
     private _snackBar:MatSnackBar,
-   ) { }
-
-
-  userRoleCount(): number {
-    return this.USER_ROLE.length;
-  }
-  
+   ) {}
 
   ngOnInit(): void {
     this.userId = localStorage.getItem('user_id');

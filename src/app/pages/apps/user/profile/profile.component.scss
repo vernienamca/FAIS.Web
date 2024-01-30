@@ -1,5 +1,5 @@
 
-.save{
+.save {
     background-color: #009246;
     padding: 3px 15px;
     border-radius: 5px;
@@ -8,7 +8,7 @@
     align-items: center;
   }
   
-  .close{
+  .close {
     background-color: #043C79;
     padding: 3px 15px;
     border-radius: 5px;
@@ -18,7 +18,7 @@
   }
 
 
-.breadcrumb .col{
+.breadcrumb .col {
     margin: 10px 50px;
     color: #043B7B;
     font-size: medium;
@@ -34,7 +34,7 @@
     white-space: nowrap; 
 }
 
-.btn-opt{
+.btn-opt {
     background-color: #E9ECEF;
     margin: 15px 50px;
     padding: 10px;
@@ -62,7 +62,7 @@
 
 
 ::ng-deep .mat-mdc-tab .mdc-tab__text-label,
-::ng-deep .mat-mdc-tab-link .mdc-tab__text-label{
+::ng-deep .mat-mdc-tab-link .mdc-tab__text-label {
     color: #000 !important;
     min-width: 300px;
  
@@ -74,17 +74,17 @@
 }
 
   
-.gen-set{
+.gen-set {
     display: flex;
     justify-content: center;
     margin-top: 30px;
 }
 
-.gen-set-items{
+.gen-set-items {
     width: 75%;
 }
 
-.row{
+.row {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -96,23 +96,23 @@
 }
 
 
-.note{
+.note {
     margin-top: 10px;
     color: #828282;
     
 }
 
-hr{
+hr {
     border-color:#ccc ;
     margin: 5px;
     width: 98%;
 }
 
-.tabs{
+.tabs {
     margin-left: 20px;
 }
 
-.req{
+.req {
     color: #FF0000;
 }
 
