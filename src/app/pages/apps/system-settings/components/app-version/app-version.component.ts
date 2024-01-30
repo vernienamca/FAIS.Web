@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 export interface PeriodicElement {
   versionNo: number;
@@ -22,11 +22,19 @@ export class AppVersionComponent {
   dataSource = ELEMENT_DATA;
   versionForm: FormGroup;
 
+  get formControls() {
+    return {
+      versionNo: this.versionForm.get('versionNo'),
+      versionDate: this.versionForm.get('versionDate'),
+      amendment: this.versionForm.get('amendment'),
+    }
+  }
+
   constructor(private _fb: FormBuilder) {
     this.versionForm = this._fb.group({
-      versionNo: '',
-      versionDate: '',
-      amendment: '',
+      versionNo: ['',Validators.required],
+      versionDate: ['',Validators.required],
+      amendment: ['',Validators.required],
     });
   }
 

@@ -8,24 +8,39 @@
     <div class="grid md:grid-cols-2 md:gap-x-8 mt-8">
       <div class="mb-6">
             <label for="v-num" class="block mb-2 text-sm font-medium font-bold">Version Number</label>
-            <mat-form-field appearance="outline" class="w-full">
+            <mat-form-field appearance="fill" class="w-full">
               <input matInput id="v-num" type="text" placeholder="Version Number" formControlName="versionNo"
                   class="block w-full">
+              <mat-error *ngIf="formControls.versionNo.touched && formControls.versionNo.invalid">
+                <span *ngIf="formControls.versionNo.getError('required')">
+                  Version Number is required
+                </span>
+              </mat-error>
             </mat-form-field>
       </div>
       <div class="mb-6">
         <label for="v-date" class="block mb-2 text-sm font-medium font-bold">Version Date</label>
-        <mat-form-field appearance="outline" class="w-full">
+        <mat-form-field appearance="fill" class="w-full">
           <input matInput id="v-date" type="text" placeholder="Version Date" formControlName="versionDate"
               class="block w-full">
+          <mat-error *ngIf="formControls.versionDate.touched && formControls.versionDate.invalid">
+            <span *ngIf="formControls.versionDate.getError('required')">
+              Version Date is required
+            </span>
+          </mat-error>
         </mat-form-field>
       </div>
     </div>
     <div class="mb-2">
       <label for="amend" class="block mb-2 text-sm font-medium font-bold">Amendment</label>
-      <mat-form-field appearance="outline" class="w-full">
+      <mat-form-field appearance="fill" class="w-full">
         <input matInput id="amend" type="text" placeholder="Amendment" formControlName="amendment"
             class="block w-full">
+        <mat-error *ngIf="formControls.amendment.touched && formControls.amendment.invalid">
+          <span *ngIf="formControls.amendment.getError('required')">
+            Amendment is required
+          </span>
+        </mat-error>
       </mat-form-field>
     </div>
   </div>
