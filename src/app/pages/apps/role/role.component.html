@@ -57,7 +57,7 @@
                 <tbody>
                   <ng-template ngFor let-module let-i="index" [ngForOf]="roleField.get('rolePermissionModel')['controls']">
                     <tr>
-                      <th class="px-6 py-3 font-medium"><input type="text" class="bg-transparent" onfocus="this.blur()" readonly="readonly" [formControl]="module.get('name')">{{i}}</th>
+                      <th class="px-6 py-3 font-medium"><input type="text" class="bg-transparent" onfocus="this.blur()" readonly="readonly" [formControl]="module.get('name')"></th>
                       <td class="px-6 py-3"><mat-checkbox color="accent" [formControl]="module.get('isCreate')"></mat-checkbox></td>
                       <td class="px-6 py-3"><mat-checkbox color="accent" [formControl]="module.get('isRead')"></mat-checkbox></td>
                       <td class="px-6 py-3"><mat-checkbox color="accent" [formControl]="module.get('isUpdate')"></mat-checkbox></td>

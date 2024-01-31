@@ -29,14 +29,10 @@ import { IPermission } from 'src/app/core/models/permission';
   ]
 })
 export class RoleComponent implements OnInit {
-  // displayedColumns: string[] = ['module-name', 'create', 'read', 'update', 'action'];
-  // dataSource: MatTableDataSource<IModule> | null;
   layoutCtrl = new UntypedFormControl('fullwidth');
 
   roleField: FormGroup;
   moduleGroup: FormGroup;
-  // subject$: ReplaySubject<IRole> = new ReplaySubject<IRole>(1);
-  // data$: Observable<IRole> = this.subject$.asObservable();
   user:any;
   userId:number;
   roleName:string;
@@ -86,17 +82,14 @@ export class RoleComponent implements OnInit {
         return;
       }
       this.user = data;    
-      this.userId = this.user.id;      
-      console.log('user',this.userId);
+      this.userId = this.user.id;
     });
   }
 
   ngOnInit(): void {
     this._portalService.getRoleId(Number(this._roleId))
     .pipe(takeUntil(this._onDestroy$))
-    .subscribe((data: any) => {    
-      console.log(data);
-      
+    .subscribe((data: any) => {
       if (!data) {
         return;
       }
@@ -105,7 +98,6 @@ export class RoleComponent implements OnInit {
       
       this.roleName = this.role.name;
       this.roleDescription = this.role.description;
-      // this.createdBy = this.role.createdBy;
       this.createdByName = this.role.createdByName;
       this.createdAt = this.role.createdAt;
       this.modifiedByName = this.role.updatedByName;
@@ -116,7 +108,7 @@ export class RoleComponent implements OnInit {
 
     });
     
-  // this.removeNullOnLoad();
+  this.removeNullOnLoad();
 
   }
 
@@ -136,7 +128,7 @@ export class RoleComponent implements OnInit {
     
   }
 
-  addNewModule(list, index) : FormGroup
+  addNewModule(list) : FormGroup
   {        
     this.moduleGroup = this._fb.group({
       roleId: [list.roleId ?? Number(this._roleId)],
@@ -145,28 +137,17 @@ export class RoleComponent implements OnInit {
       isCreate: [list?.isCreate || true],
       isRead: [list?.isRead || true],
       isUpdate: [list?.isUpdate || false],
-      createdBy: [this.updateNameAtIndex(index,this.userId)],
-      updatedBy: [list?.updatedBy || Number(this._roleId)],
+      createdAt: [list?.createdAt],
+      createdBy: [list?.createdBy],
+      updatedBy: [list.updatedBy],
       isAdded: [true]
     })
-
+        
     return this.moduleGroup;
   }
 
-  updateNameAtIndex(index: number, createdBy: any) {
-    const formGroup = this.permission.controls;
-    console.log('fg',typeof formGroup);
-
-    for (const key in formGroup) {
-      if (formGroup.hasOwnProperty(key)) {
-        const control = formGroup[key];
-        console.log('ctrl',control);
-      }
-    }
-  }
-
-  onSubmit(): void{
-    this.user = this.roleField.get('updatedBy').patchValue(this.user.id)
+  onSubmit(): void{   
+    this.user = this.roleField.get('updatedBy').patchValue(this.userId)
     this._portalService.updaterolepermission(this.roleField.value).subscribe({
       next: (data) => {
         console.log('Role updated successfully:', data);
@@ -190,6 +171,7 @@ export class RoleComponent implements OnInit {
     let dlg = this._dialog.open(AddModuleComponent, {
       width: '702px',
       data:{
+        userId: this.userId,
         title: 'Add Module',
         modules: <FormArray>this.roleField.controls['rolePermissionModel'].value
       },
@@ -209,8 +191,8 @@ export class RoleComponent implements OnInit {
     if (!data) { 
       return; 
     }
-    data.map((item,i) => {
-      (<FormArray>this.roleField.get('rolePermissionModel')).push(this.addNewModule(item,i));
+    data.map((item) => {
+      (<FormArray>this.roleField.get('rolePermissionModel')).push(this.addNewModule(item));
     });
   }
 

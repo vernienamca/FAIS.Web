@@ -41,7 +41,7 @@ export class RoleListComponent implements OnInit, OnDestroy, AfterViewInit {
   columns: TableColumn<IRole>[] = [
     { label: 'Role Name', property: 'name', type: 'text', visible: true, cssClasses: ['font-medium'] },
     { label: 'Description', property: 'description', type: 'text', visible: true },
-    { label: 'Modified By', property: 'updatedBy', type: 'text', visible: true },
+    { label: 'Modified By', property: 'updatedByName', type: 'text', visible: true },
     { label: 'Date Modified', property: 'updatedAt', type: 'text', visible: true },
     { label: 'Actions', property: 'actions', type: 'button', visible: true }
   ];

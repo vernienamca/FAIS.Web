@@ -62,9 +62,13 @@ export class AddModuleComponent implements OnInit, OnDestroy{
   }
 
   addModule(item):void{
+    const today = new Date();
     this.moduleDataRow = [...this.moduleDataRow, item];
 
     for (var i of this.moduleDataRow) {
+      i.createdAt = today;
+      i.createdBy = this.inputData.userId;
+      i.updatedBy = this.inputData.userId;
       i.isAdded = true;
     }
   }
