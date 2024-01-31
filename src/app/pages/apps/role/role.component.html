@@ -2,7 +2,7 @@
   <vex-secondary-toolbar>
     <vex-breadcrumbs [crumbs]="['System Management', 'Roles', 'Edit Role']"></vex-breadcrumbs>
   </vex-secondary-toolbar>
-  <vex-page-layout-content class="container">
+  <vex-page-layout-content class="container" [class.container]="layoutCtrl.value === 'boxed'" [class.px-gutter]="layoutCtrl.value === 'fullwidth'">
     <form id="roleField" [formGroup]="roleField" (ngSubmit)="onSubmit()">
     <div class="card flex flex-col sm:flex-row">
       <div class="border-l flex-auto">
@@ -33,7 +33,7 @@
           <div class="px-6 py-4 flex flex-col">
             <div class="flex flex-col">
               <div class="flex flex-row justify-between">
-                <h1 class="text-lg">Manage Permissions ({{roleField.get('rolePermissionModels')['controls'].length}})</h1>
+                <h1 class="text-lg">Manage Permissions ({{roleField.get('rolePermissionModel')['controls'].length}})</h1>
                 <button class="add-version-btn flex items-center !bg-green !text-white rounded-full" (click)="addModuleBtn()" mat-raised-button type="button">
                   <mat-icon svgIcon="mat:add"></mat-icon>
                   <span>Add Module</span>
@@ -44,7 +44,7 @@
               </div>
             </div>
             <div class="module-table py-4">
-              <table *ngIf="roleField.get('rolePermissionModels')['controls'].length>0" class="w-full text-sm text-left rtl:text-right">
+              <table *ngIf="roleField.get('rolePermissionModel')['controls'].length>0" class="w-full text-sm text-left rtl:text-right">
                 <thead class="text-gray-700 font-medium">
                     <tr>
                         <th class="px-6 py-3">Module Name</th>
@@ -55,7 +55,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                  <ng-template ngFor let-module let-i="index" [ngForOf]="roleField.get('rolePermissionModels')['controls']">
+                  <ng-template ngFor let-module let-i="index" [ngForOf]="roleField.get('rolePermissionModel')['controls']">
                     <tr>
                       <th class="px-6 py-3 font-medium"><input type="text" class="bg-transparent" onfocus="this.blur()" readonly="readonly" [formControl]="module.get('name')"></th>
                       <td class="px-6 py-3"><mat-checkbox color="accent" [formControl]="module.get('isCreate')"></mat-checkbox></td>
@@ -70,14 +70,14 @@
                   </ng-template>
                 </tbody>
             </table>
-            <div *ngIf="roleField.get('rolePermissionModels')['controls'].length===0">
+            <div *ngIf="roleField.get('rolePermissionModel')['controls'].length===0">
               <span class="flex justify-center my-4">No data available in table</span>
             </div>
             </div>
             <div class="module-footer my-8 flex flex-row justify-around items-center">
               <div class="created-by-cont">
                 <span class="created-by font-bold mr-2">Created By:</span>
-                <span>{{createdBy}}</span>
+                <span>{{createdByName}}</span>
               </div>
               <div class="date-created-cont">
                 <span class="date-created font-bold mr-2">Date Created:</span>
@@ -85,7 +85,7 @@
               </div>
               <div class="modified-by-cont">
                 <span class="modified-by font-bold mr-2">Modified By:</span>
-                <span>{{modifiedBy}}</span>
+                <span>{{modifiedByName}}</span>
               </div>
               <div class="date-modified-cont">
                 <span class="date-modified font-bold mr-2">Date Modified:</span>

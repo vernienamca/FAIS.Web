@@ -1,0 +1,238 @@
+<div class="breadcrumb d-flex">
+    <div class="row">
+        <div class="col">
+            <span>System Management ></span>
+            <span>Users ></span>
+            <span>Edit User</span>
+        </div>
+    </div>
+
+    <div class="options">
+        <div class="btn-opt m-5">
+            <button class="save" (click)="save()">Save</button>
+            <button class="close">Close</button>
+        </div>
+    </div>
+</div>
+<div class="settings" [formGroup]="settingsForm">
+    <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="center" dynamicHeight class="tabs">
+        <mat-tab label="General">
+            <div class="profile" style="padding-left: 50px; display: flex; align-items: flex-start;">
+
+                <div class="box-placeholder">
+                    <mat-icon color="primary" svgIcon="mat:account_circle" class="center-icon" size="48"></mat-icon>
+                    <div>
+                        <input type="file" (change)="onFileSelected($event)" accept="image/*" style="display: none" #fileInput />
+                        <button mat-button (click)="fileInput.click()">Attach Photo</button>
+                    </div>
+                </div>
+
+
+               <div class="gen-set" style="display: flex; justify-content: center; align-items: center; width: 80%; height: 100%;">
+
+                    <div class="gen-set-items">
+                        <div class="row">
+                            <div class="form-input">
+                                <label for="comp-input">Empno</label>
+                                <input type="text" id="comp-input" placeholder="Example Data" formControlName="ExampleData">
+                            </div>
+
+                        
+
+                            <!-- <div class="form-input">
+                                <label style="margin: 5px;" for="pn-input">Phone Number</label>
+                                <input type="text" id="pn-input" placeholder="Phone Number" formControlName="phone">
+                            </div> -->
+                        </div>
+                        <div class="row">
+                            <div class="form-input">
+                                <label for="em-input">Username</label>
+                                <input type="text" id="user-input" placeholder="Keach 101" formControlName="username">
+                            </div>
+
+                            <div class="form-input">
+                                <label for="comp-input">Position</label>
+                                <input type="text" id="comp-input" placeholder="Supervisor" formControlName="position">
+                            </div>
+
+                           
+                        </div>
+
+                        <div class="row">
+                            <div class="form-input">
+                                <label for="em-input">First Name</label>
+                                <input type="text" id="user-input" placeholder="Keach" formControlName="username">
+                            </div>
+                            <div class="form-input">
+                                <label for="web-input">Last Name</label>
+                                <input type="text" id="web-input" placeholder="Dela Cruz" formControlName="last">
+                            </div>
+
+                            
+                        </div>
+
+                        
+                        <div class="row">
+                            <div class="form-input">
+                                <label for="addr-input">Email Address</label>
+                                <input type="text" id="addr-input" placeholder="Keah@email.com" formControlName="email address">
+                            </div>
+                            <div class="form-input">
+                                <label for="web-input">Mobile Number</label>
+                                <input type="number" id="mobile-input" placeholder="09171233456" formControlName="mobilenumber">
+                            </div>
+
+                            
+                        </div>
+
+                        <div class="row">
+                            <div class="form-input">
+                                <label for="em-input">TA-FG</label>
+                                <input type="text" id="tafg-input" placeholder="TAFG" formControlName="TAFG">
+                            </div>
+                            <div class="form-input">
+                                <label for="web-input">OUP-FG</label>
+                                <input type="number" id="OUP-FGinput" placeholder="HO" formControlName="mobilenumber">
+                            </div>
+
+                            
+                        </div>
+                       
+                        <div class="form-input">
+                            <label for="addr-input">Division</label>
+                            <input type="text" id="div-input" placeholder="Division" formControlName="division">
+                     
+                       </div>
+
+                        <div class="row">
+                            <div class="form-input">
+                                <label for="acc-input"> Account Status</label>
+                                <input type="text" id="acc-input" placeholder="Active" formControlName="accountstatus">
+                            </div>
+                            <div class="form-input">
+                                <label for="web-input">Status Date</label>
+                                <input type="datetime" id="date-input" placeholder="status date " formControlName="statusdate">
+                            </div>
+
+                            
+                        </div>
+
+                        <div class="row">
+                            <div class="form-input">
+                                <label for="acc-input"> Account Expiration Date</label>
+                                <input type="datetime" id="accexpiration-input" placeholder="August 1, 2024" formControlName="accexpiration">
+                            </div>
+
+                            
+                        </div>
+
+
+                    </div>
+          
+            <!-- USER ROLE NAVIGATION EDIT -->
+     
+            <mat-tab label="User Role">
+                <div class="conf-set">
+                    <div class="Userprofile" style="padding-left: 50px; display: flex; align-items: flex-start;">
+            
+                        <div class="box-placeholder2">
+                            <mat-icon color="primary" svgIcon="mat:account_circle" class="center-icon" size="48"></mat-icon>
+                            <div style="display: flex; flex-direction: column; align-items: center;">
+                                <input type="file" (change)="onFileSelected($event)" accept="image/*" style="display: none" #fileInput />
+                                <button mat-button (click)="fileInput.click()" style="margin-top: 10px;">Attach Photo</button>
+                                <p style="font-size: 20px; font-style: Poppins; margin-top: 10px;">Keach Dela Cruz</p>
+                            </div>
+
+                   
+            
+                            <div class="StaticInfo" style="display: flex; flex-direction: column; align-items: left; margin-top: 40px;">
+                                <div class="row no-margin">
+                                 
+                                    <p>Position:</p>
+                                    <p>Supervisor</p>
+                                </div>
+                                <hr>
+                                <div class="row no-margin">
+                                 
+                                    <p style="margin-right: 30px;">Last Login date:</p>
+                                    <p>July 24, 2023 3:00 PM</p>
+                                </div>
+                                <hr>
+                                <div class="row no-margin">
+                              
+                                    <p>Region:</p>
+                                    <p>T1, T2</p>
+                                </div>
+                            </div>
+                            <hr>
+                        </div>
+                        
+      
+                        <div class="gen-set" style="display: flex; justify-content: center; align-items: center; width: 80%; height: 100%;">
+
+                        
+
+                            
+                            <div class="gen-set-items">
+                                
+                                <div class="table-header" style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                                    <div class="mt-4 ml-auto flex items-center">
+                                      <div class="bg-foreground rounded-full border px-4 py-2 max-w-[300px] flex-auto flex items-center border border-gray-300">
+                                        <mat-icon class="icon-sm text-secondary" svgIcon="mat:search"></mat-icon>
+                                        <input [formControl]="searchCtrl" class="px-4 py-2 border-0 outline-none w-full bg-transparent" 
+                                          placeholder="Search roles here..." type="search">
+                                      </div>
+                                      <button class="Add  ml-4 px-4 py-2 bg-blue-500 text-white rounded">Add</button>
+                                    </div>
+                                  </div>
+    
+                                <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" style="background-color: transparent;">
+
+                                    <!--- Note that these columns can be defined in any order.
+                                          The actual rendered columns are set as a property on the row definition" -->
+                                  
+                                    <!-- Position Column -->
+                                    <ng-container matColumnDef="position">
+                                      <th mat-header-cell *matHeaderCellDef> Role </th>
+                                      <td mat-cell *matCellDef="let element"> {{element.position}} </td>
+                                    </ng-container>
+                                  
+                                    <!-- Name Column -->
+                                    <ng-container matColumnDef="name">
+                                      <th mat-header-cell *matHeaderCellDef> Description </th>
+                                      <td mat-cell *matCellDef="let element"> {{element.description}} </td>
+                                    </ng-container>
+                                  
+                                    <!-- Weight Column -->
+                                    <ng-container matColumnDef="weight">
+                                      <th mat-header-cell *matHeaderCellDef> Date Added </th>
+                                      <td mat-cell *matCellDef="let element"> {{element.date}} </td>
+                                    </ng-container>
+                                  
+                                    <!-- Symbol Column -->
+                                    <ng-container matColumnDef="symbol">
+                                      <th mat-header-cell *matHeaderCellDef> Action </th>
+                                      <td mat-cell *matCellDef="let element">   <mat-slide-toggle (change)="handleToggle(element)" ></mat-slide-toggle> </td>
+                                    </ng-container>
+                                  
+                                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                                    <tr mat-row *matRowDef="let row; columns: displayedColumns;" [ngClass]="{'toggled-row': row.isToggled}"></tr>
+
+                                  </table>
+                                    
+
+                                  
+                                </div>
+                           
+        
+                            </div>
+                  
+               
+                      
+                      
+                </div>
+
+
+</div>
+
+<vex-activity></vex-activity>

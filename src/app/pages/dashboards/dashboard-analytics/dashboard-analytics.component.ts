@@ -1,16 +1,14 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { defaultChartOptions } from '../../../../@vex/utils/default-chart-options';
 import { Order, tableSalesData } from '../../../../static-data/table-sales-data';
 import { TableColumn } from '../../../../@vex/interfaces/table-column.interface';
-import { PortalService } from 'src/app/core/services/portal.service';
-import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'vex-dashboard-analytics',
   templateUrl: './dashboard-analytics.component.html',
   styleUrls: ['./dashboard-analytics.component.scss']
 })
-export class DashboardAnalyticsComponent implements OnInit, OnDestroy {
+export class DashboardAnalyticsComponent {
   tableColumns: TableColumn<Order>[] = [
     {
       label: '',
@@ -69,32 +67,4 @@ export class DashboardAnalyticsComponent implements OnInit, OnDestroy {
     },
     colors: ['#ff9800']
   });
-  greetings: string;
-
-  private _onDestroy$ = new Subject<void>();
-
-  constructor(
-    private _portalService: PortalService
-  ) {
-    const userId = parseInt(localStorage.getItem('user_id'));
-    if (!userId) {
-      return;
-    }
-    this._portalService.getGreetings(userId)
-      .pipe(takeUntil(this._onDestroy$))
-      .subscribe(data => {
-        this.greetings = data;
-        if (!data) {
-          return;
-        }
-      });
-  }
-
-  ngOnInit(): void {
-  }
-
-  ngOnDestroy(): void {
-    this._onDestroy$.next();
-    this._onDestroy$.complete();
-  }
 }

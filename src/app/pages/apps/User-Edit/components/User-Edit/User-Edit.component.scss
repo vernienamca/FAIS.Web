@@ -1,0 +1,165 @@
+.breadcrumb .col{
+    margin: 10px 50px;
+    color: #043B7B;
+    font-size: medium;
+}
+
+.box-placeholder {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    width: 329px; 
+    height: 260px; 
+    background-color:transparent; 
+    border: 1px solid #ccc; 
+ 
+}
+
+.box-placeholder2 {
+
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    width: 350px; 
+    height: 450px; 
+    background-color:transparent; 
+    border: 1px solid #ccc; 
+}
+
+
+.center-icon {
+    font-size: 50px;
+    height: 100px ;
+    width: 100px;
+  }
+
+.btn-opt{
+    background-color: #f1f1f1;
+    margin: 15px 50px;
+    padding: 10px;
+    color: #ffffff;
+}
+
+.btn-opt button > *{
+    margin: auto 5px;
+}
+
+.settings{
+    .mat-tab-label {
+        min-width: 25px !important; 
+        padding: 5px;
+      }
+}
+
+.save{
+    background-color: green;
+    padding: 7px 15px;
+    border-radius: 5px;
+    margin-right: 8px;
+}
+
+.close{
+    background-color: blue;
+    padding: 7px 15px;
+    border-radius: 5px;
+    margin-left: 8px;
+}
+
+::ng-deep .mat-mdc-tab .mdc-tab__text-label,
+::ng-deep .mat-mdc-tab-link .mdc-tab__text-label{
+    color: #000 !important;
+    min-width: 300px;
+    display: flex;
+    justify-content: center;
+}
+
+.gen-set{
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.gen-set-items{
+    width: 70%;
+}
+
+
+.form-input input,
+.form-input select{
+    width: 94%;
+    padding: 8px;
+}
+
+.form-input input,
+.form-input select{
+    border: 1px solid #7D7C7C;
+    border-radius: 5px;
+    margin-top: 5px;
+}
+
+.row{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 30px 0;
+}
+
+.no-margin {
+    margin: 0; 
+}
+
+.row .form-input{
+    flex-basis: 48%;
+}
+
+.form-input #div-input{
+    width: 97%;
+}
+
+.form-input label{
+    line-height: 50%;
+}
+
+.note{
+    margin-top: 10px;
+    color: #828282;
+    
+}
+
+hr{
+    border-color:#ccc ;
+    margin: 5px;
+    width: 98%;
+}
+
+.tabs{
+    margin-left: 20px;
+}
+
+.req{
+    color: #FF0000;
+}
+
+
+
+.toggled-row {
+    background-color: #d3cccc;
+  }
+
+
+.mat-mdc-slide-toggle.mat-accent {
+
+    --mdc-switch-selected-hover-handle-color: #06b900a1;
+
+    --mdc-switch-selected-hover-track-color: #06b900a1;
+
+    --mdc-switch-selected-pressed-track-color: #06b900a1;
+
+    --mdc-switch-selected-focus-track-color:  #06b900a1;
+
+    --mdc-switch-selected-focus-handle-color: #06b900a1;
+
+
+}

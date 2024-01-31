@@ -17,6 +17,8 @@ import { MatSelectChange } from '@angular/material/select';
 import { PortalService } from 'src/app/core/services/portal.service';
 import { IUser } from 'src/app/core/models/user';
 import { UserStatusEnum } from 'src/app/core/enums/user-status.enum';
+
+
 import { Router } from '@angular/router';
 
 @UntilDestroy()
@@ -42,15 +44,13 @@ export class UserListComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @Input()
   columns: TableColumn<IUser>[] = [
-    { label: 'Image', property: 'photo', type: 'image', visible: true },
     { label: 'Username', property: 'userName', type: 'text', visible: true, cssClasses: ['font-medium'] },
     { label: 'First Name', property: 'firstName', type: 'text', visible: true, cssClasses: ['font-medium'] },
     { label: 'Last Name', property: 'lastName', type: 'text', visible: true },
     { label: 'Position', property: 'position', type: 'text', visible: true },
     { label: 'Division', property: 'division', type: 'text', visible: true },
-    { label: 'TA-FG', property: 'tafGs', type: 'badge', visible: true },
-    { label: 'OUP-FG', property: 'oufg', type: 'badge', visible: true },
-    { label: 'Status', property: 'status', type: 'badge', visible: true },
+    { label: 'TA-FG', property: 'tafGs', type: 'text', visible: true },
+    { label: 'Status', property: 'status', type: 'text', visible: true },
     { label: 'Actions', property: 'actions', type: 'button', visible: true }
   ];
 
@@ -70,8 +70,9 @@ export class UserListComponent implements OnInit, OnDestroy, AfterViewInit {
   private _onDestroy$ = new Subject<void>();
 
   constructor(
+    private _dialog: MatDialog,
     private _portalService: PortalService,
-    private _router: Router
+    private router: Router
   ) {
   }
 
@@ -83,10 +84,10 @@ export class UserListComponent implements OnInit, OnDestroy, AfterViewInit {
     this._portalService.getUsers()
       .pipe(takeUntil(this._onDestroy$))
       .subscribe(data => {
-        console.log(data);
         if (!data) {
           return;
         }
+        console.log(data);
         this.subject$.next(data);
       });
 
@@ -113,13 +114,17 @@ export class UserListComponent implements OnInit, OnDestroy, AfterViewInit {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }
-
-  add() {
-    this._router.navigate(['user/add']);
+  createCustomer() {
+    this.router.navigate(['apps/user-add']);
   }
   
-  edit(user: any): void {
-    this._router.navigate([`apps/users/edit/${user.id}`]);
+  updateCustomer(customer: any) {
+  }
+
+  deleteCustomer(customer: any) {
+  }
+
+  deleteCustomers(customers: any[]) {
   }
 
   onFilterChange(value: string) {
