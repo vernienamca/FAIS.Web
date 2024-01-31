@@ -8,7 +8,7 @@
             <div class="card flex flex-col sm:flex-row">
                 <div class="border-l flex-auto">
                     <div class="bg-base border-l-3 p-4 mt-3 flex flex-col sm:flex-row gap-3 items-center">
-                        <button [ngClass]="settingsForm.touched && settingsForm.invalid ? '!bg-gray':'!bg-green'" class="rounded-full !text-white" mat-raised-button [disabled]="settingsForm.touched && settingsForm.invalid"
+                        <button [ngClass]="settingsForm.touched && settingsForm.invalid || appVersion.versionForm.touched && appVersion.versionForm.invalid ? '!bg-gray':'!bg-green'" class="rounded-full !text-white" mat-raised-button [disabled]="settingsForm.touched && settingsForm.invalid || appVersion.versionForm.touched && appVersion.versionForm.invalid"
                             type="button" (click)="save()">
                             <mat-icon class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" svgIcon="mat:save_as"></mat-icon>
                             <span>Save</span>
@@ -21,15 +21,20 @@
                                     <div class="mb-6">
                                         <label for="comp-input" class="block mb-2 text-sm font-medium font-bold">Company
                                             Name</label>
-                                        <mat-form-field appearance="outline" class="w-full">
+                                        <mat-form-field appearance="fill" class="w-full">
                                             <input matInput id="comp-input" type="text" placeholder="Company Name" [(ngModel)]="companyName"
                                                 class="block w-full" formControlName="companyName">
+                                            <mat-error *ngIf="formControls.companyName.touched && formControls.companyName.invalid">
+                                                <span *ngIf="formControls.companyName.getError('required')">
+                                                    Company Name is required
+                                                </span>
+                                            </mat-error>
                                         </mat-form-field>
                                     </div>
                                     <div class="mb-6">
                                         <label for="pn-input" class="block mb-2 text-sm font-medium font-bold">Phone
                                             Number</label>
-                                        <mat-form-field appearance="outline" class="w-full">
+                                        <mat-form-field appearance="fill" class="w-full">
                                             <input matInput id="pn-input" type="text" placeholder="Phone Number" [(ngModel)]="phoneNumber"
                                                 class="block w-full" formControlName="phoneNumber">
                                         </mat-form-field>
@@ -37,15 +42,20 @@
                                     <div class="mb-6">
                                         <label for="em-input" class="block mb-2 text-sm font-medium font-bold">Email
                                             Address</label>
-                                        <mat-form-field appearance="outline" class="w-full">
+                                        <mat-form-field appearance="fill" class="w-full">
                                             <input matInput id="em-input" type="email" placeholder="Email Address" [(ngModel)]="email"
                                                 class="block w-full" formControlName="emailAddress">
+                                            <mat-error *ngIf="formControls.emailAddress.touched && formControls.emailAddress.invalid">
+                                                <span *ngIf="formControls.emailAddress.getError('required')">
+                                                    Email Address is required
+                                                </span>
+                                            </mat-error>
                                         </mat-form-field>
                                     </div>
                                     <div class="mb-6">
                                         <label for="web-input"
                                             class="block mb-2 text-sm font-medium font-bold">Website</label>
-                                        <mat-form-field appearance="outline" class="w-full">
+                                        <mat-form-field appearance="fill" class="w-full">
                                             <input matInput id="web-input" type="text" placeholder="Website" [(ngModel)]="website"
                                                 class="block w-full" formControlName="website">
                                         </mat-form-field>
@@ -54,14 +64,19 @@
                                 <div class="mb-2">
                                     <label for="addr-input"
                                         class="block mb-2 text-sm font-medium font-bold">Address</label>
-                                    <mat-form-field appearance="outline" class="w-full">
+                                    <mat-form-field appearance="fill" class="w-full">
                                         <input matInput id="addr-input" type="text" placeholder="Address" [(ngModel)]="address"
                                             class="block w-full" formControlName="address">
+                                        <mat-error *ngIf="formControls.address.touched && formControls.address.invalid">
+                                            <span *ngIf="formControls.address.getError('required')">
+                                                Address is required
+                                            </span>
+                                        </mat-error>
                                     </mat-form-field>
                                 </div>
                                 <hr class="w-full my-8">
                             </div>
-                            <vex-app-version></vex-app-version>
+                            <vex-app-version #appVersion></vex-app-version>
                         </mat-tab>
                         <mat-tab label="Configuration Settings">
                             <div class="conf-set px-8">
@@ -69,31 +84,46 @@
                                     <div class="mb-6">
                                         <label for="min-pass" class="block mb-2 text-sm font-medium font-bold">Minimum
                                             Password Length</label>
-                                        <mat-form-field appearance="outline" class="w-full">
+                                        <mat-form-field appearance="fill" class="w-full">
                                             <input matInput id="min-pass" type="text" [pattern]="regex" placeholder="Minimum Password Length" [(ngModel)]="minPassLength"
                                                 class="block w-full" formControlName="minPasswordLength">
+                                            <mat-error *ngIf="formControls.minPasswordLength.touched && formControls.minPasswordLength.invalid">
+                                                <span *ngIf="formControls.minPasswordLength.getError('required')">
+                                                    Minimum Password Length is required
+                                                </span>
+                                            </mat-error>
                                         </mat-form-field>
                                     </div>
                                     <div class="mb-6">
                                         <label for="min-spchar" class="block mb-2 text-sm font-medium font-bold">Minimum
                                             Special Characters</label>
-                                        <mat-form-field appearance="outline" class="w-full">
+                                        <mat-form-field appearance="fill" class="w-full">
                                             <input matInput id="min-spchar" type="text" [pattern]="regex" placeholder="Minimum Special Characters" [(ngModel)]="minSplChars"
                                                 class="block w-full" formControlName="minSpecialCharacters">
+                                            <mat-error *ngIf="formControls.minSpecialCharacters.touched && formControls.minSpecialCharacters.invalid">
+                                                <span *ngIf="formControls.minSpecialCharacters.getError('required')">
+                                                    Minimum Special Characters is required
+                                                </span>
+                                            </mat-error>
                                         </mat-form-field>
                                     </div>
                                     <div class="mb-6">
                                         <label for="pass-exp" class="block mb-2 text-sm font-medium font-bold">Password
                                             Expiry (days)</label>
-                                        <mat-form-field appearance="outline" class="w-full">
+                                        <mat-form-field appearance="fill" class="w-full">
                                             <input matInput id="pass-exp" type="text" [pattern]="regex" placeholder="Password Expiry (days)" [(ngModel)]="passExpiry"
                                                 class="block w-full" formControlName="passwordExpiry">
+                                            <mat-error *ngIf="formControls.passwordExpiry.touched && formControls.passwordExpiry.invalid">
+                                                <span *ngIf="formControls.passwordExpiry.getError('required')">
+                                                    Password Expiry is required
+                                                </span>
+                                            </mat-error>    
                                         </mat-form-field>
                                     </div>
                                     <div class="mb-6">
                                         <label for="idle" class="block mb-2 text-sm font-medium font-bold">Idle Time (in
                                             minutes)</label>
-                                        <mat-form-field appearance="outline" class="w-full">
+                                        <mat-form-field appearance="fill" class="w-full">
                                             <input matInput id="idle" type="text" [pattern]="regex" placeholder="Idle Time (in minutes)" [(ngModel)]="idleTime"
                                                 class="block w-full" formControlName="idleTime">
                                         </mat-form-field>
@@ -101,9 +131,14 @@
                                     <div class="mb-6">
                                         <label for="sign-atmp" class="block mb-2 text-sm font-medium font-bold">Maximum
                                             Signing On Attempts</label>
-                                        <mat-form-field appearance="outline" class="w-full">
+                                        <mat-form-field appearance="fill" class="w-full">
                                             <input matInput id="sign-atmp" type="text" [pattern]="regex" placeholder="Maximum Signing On Attempts" [(ngModel)]="maxSignAtmp"
                                                 class="block w-full" formControlName="maxSignOnAttempts">
+                                            <mat-error *ngIf="formControls.maxSignOnAttempts.touched && formControls.maxSignOnAttempts.invalid">
+                                                <span *ngIf="formControls.maxSignOnAttempts.getError('required')">
+                                                    Maximum Signing On Attempts is required
+                                                </span>
+                                            </mat-error>
                                         </mat-form-field>
                                         <div class="block w-full">
                                             <span>The number of consecutive sign-on or password verification attempts
@@ -112,8 +147,8 @@
                                     </div>
                                     <div class="mb-6">
                                         <label for="enf-pass" class="block mb-2 text-sm font-medium font-bold">Enforce
-                                            Password History <mat-hint matSuffix class="text-red-700">*</mat-hint></label>
-                                        <mat-form-field appearance="outline" class="w-full">
+                                            Password History</label>
+                                        <mat-form-field appearance="fill" class="w-full">
                                             <mat-select name="enf-pass" id="enf-pass" formControlName="enforcePasswordHistory" [value]="enfPassHistory"
                                                 class="block w-full">
                                                 <mat-option *ngFor="let enfPass of enfPassOpt" [value]="enfPass.value">
@@ -141,30 +176,50 @@
                                     <div class="mb-6">
                                         <label for="smtp-name" class="block mb-2 text-sm font-medium font-bold">SMTP
                                             Server Name</label>
-                                        <mat-form-field appearance="outline" class="w-full">
+                                        <mat-form-field appearance="fill" class="w-full">
                                             <input matInput id="smtp-name" type="text" placeholder="SMTP Server Name" [(ngModel)]="smtpServerName"
                                                 class="block w-full" formControlName="smtpServerName">
+                                            <mat-error *ngIf="formControls.smtpServerName.touched && formControls.smtpServerName.invalid">
+                                                <span *ngIf="formControls.smtpServerName.getError('required')">
+                                                    SMTP Server Name is required
+                                                </span>
+                                            </mat-error>
                                         </mat-form-field>
                                     </div>
                                     <div class="mb-6">
                                         <label for="port" class="block mb-2 text-sm font-medium font-bold">SMTP Port</label>
-                                        <mat-form-field appearance="outline" class="w-full">
-                                            <input matInput id="port" type="text" placeholder="SMTP Port" [(ngModel)]="smtpPort"
+                                        <mat-form-field appearance="fill" class="w-full">
+                                            <input matInput id="port" type="text" [pattern]="regex" placeholder="SMTP Port" [(ngModel)]="smtpPort"
                                                 class="block w-full" formControlName="smtpPort">
+                                            <mat-error *ngIf="formControls.smtpPort.touched && formControls.smtpPort.invalid">
+                                                <span *ngIf="formControls.smtpPort.getError('required')">
+                                                    SMTP Port is required
+                                                </span>
+                                            </mat-error>
                                         </mat-form-field>
                                     </div>
                                     <div class="mb-2">
                                         <label for="smtp-email" class="block mb-2 text-sm font-medium font-bold">SMTP
                                             From Email</label>
-                                        <mat-form-field appearance="outline" class="w-full">
+                                        <mat-form-field appearance="fill" class="w-full">
                                             <input matInput id="smtp-email" type="text" placeholder="SMTP From Email" class="block w-full" [(ngModel)]="smtpFromEmail" formControlName="smtpFromEmail">
+                                            <mat-error *ngIf="formControls.smtpFromEmail.touched && formControls.smtpFromEmail.invalid">
+                                                <span *ngIf="formControls.smtpFromEmail.getError('required')">
+                                                    SMTP From Email is required
+                                                </span>
+                                            </mat-error>
                                         </mat-form-field>
                                     </div>
                                     <div class="mb-2">
                                         <label for="smtp-password" class="block mb-2 text-sm font-medium font-bold">SMTP Password</label>
-                                        <mat-form-field appearance="outline" class="w-full">
+                                        <mat-form-field appearance="fill" class="w-full">
                                             <input matInput id="smtp-password" [type]="hidePass ? 'password':'text'" placeholder="SMTP Password" class="block w-full" [(ngModel)]="smtpPass" formControlName="smtpPassword">
                                             <mat-icon matSuffix svgIcon="mat:{{hidePass ? eyeClose : eyeOpen}}" (click)="hidePass = !hidePass"></mat-icon>
+                                            <mat-error *ngIf="formControls.smtpPassword.touched && formControls.smtpPassword.invalid">
+                                                <span *ngIf="formControls.smtpPassword.getError('required')">
+                                                    SMTP Password is required
+                                                </span>
+                                            </mat-error>
                                         </mat-form-field>
                                     </div>
                                 </div>
