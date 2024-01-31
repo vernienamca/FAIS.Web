@@ -8,7 +8,7 @@
             <div class="card flex flex-col sm:flex-row">
                 <div class="border-l flex-auto">
                     <div class="bg-base border-l-3 p-4 mt-3 flex flex-col sm:flex-row gap-3 items-center">
-                        <button [ngClass]="settingsForm.touched && settingsForm.invalid && appVersion.versionForm.touched || appVersion.versionForm.invalid ? '!bg-gray':'!bg-green'" class="rounded-full !text-white" mat-raised-button [disabled]="settingsForm.touched && settingsForm.invalid && appVersion.versionForm.touched || appVersion.versionForm.invalid"
+                        <button [ngClass]="settingsForm.touched && settingsForm.invalid || appVersion.versionForm.touched && appVersion.versionForm.invalid ? '!bg-gray':'!bg-green'" class="rounded-full !text-white" mat-raised-button [disabled]="settingsForm.touched && settingsForm.invalid || appVersion.versionForm.touched && appVersion.versionForm.invalid"
                             type="button" (click)="save()">
                             <mat-icon class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" svgIcon="mat:save_as"></mat-icon>
                             <span>Save</span>
