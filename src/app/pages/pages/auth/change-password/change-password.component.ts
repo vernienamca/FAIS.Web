@@ -77,7 +77,7 @@ export class ChangePasswordComponent implements OnInit, OnDestroy {
           this.minSpecialCharacters = data.minSpecialCharacters;
         });
 
-      const userId = parseInt(localStorage.getItem('user_id'));
+      const userId = parseFloat(localStorage.getItem('user_id'));
       if (!userId) {
         return;
       }
