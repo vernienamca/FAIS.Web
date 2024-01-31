@@ -14,6 +14,7 @@
       </div>
     </div>
   </vex-page-layout-header>
+
   <vex-page-layout-content [class.container]="layoutCtrl.value === 'boxed'" [class.px-gutter]="layoutCtrl.value === 'fullwidth'" class="-mt-6">
     <div class="card overflow-auto -mt-16">
       <div class="bg-app-bar px-6 h-16 border-b sticky left-0 flex items-center">
@@ -26,77 +27,123 @@
         <button [matMenuTriggerFor]="columnFilterMenu" class="ml-4 flex-none" mat-icon-button matTooltip="Filter Columns" type="button">
           <mat-icon svgIcon="mat:filter_list"></mat-icon>
         </button>
-        <button (click)="add()" class="ml-4 flex-none" color="primary" mat-mini-fab matTooltip="Add User" type="button">
+        <button (click)="createCustomer()" class="ml-4 flex-none" color="primary"
+          mat-mini-fab matTooltip="Add User" type="button">
           <mat-icon svgIcon="mat:add"></mat-icon>
         </button>
       </div>
+
       <table @stagger [dataSource]="dataSource" class="w-full" mat-table matSort>
-        <ng-container matColumnDef="photo">
+        <!-- Checkbox Column -->
+        <ng-container matColumnDef="checkbox">
+          <th *matHeaderCellDef mat-header-cell>
+            <mat-checkbox (change)="$event ? masterToggle() : null"
+                          [checked]="selection.hasValue() && isAllSelected()"
+                          [indeterminate]="selection.hasValue() && !isAllSelected()"
+                          color="primary">
+            </mat-checkbox>
+          </th>
+          <td *matCellDef="let row" class="w-4" mat-cell>
+            <mat-checkbox (change)="$event ? selection.toggle(row) : null"
+                          (click)="$event.stopPropagation()"
+                          [checked]="selection.isSelected(row)"
+                          color="primary">
+            </mat-checkbox>
+          </td>
+        </ng-container>
+
+        <!-- Image Column -->
+        <ng-container matColumnDef="image">
           <th *matHeaderCellDef mat-header-cell></th>
           <td *matCellDef="let row" class="w-8 min-w-8 pr-0" mat-cell>
-            <img [src]="'assets/img/avatars/' + row['photo']" class="avatar h-8 w-8 align-middle">
+            <img [src]="row['imageSrc']" class="avatar h-8 w-8 align-middle">
           </td>
         </ng-container>
+
+        <!-- Text Columns -->
         <ng-container *ngFor="let column of columns; trackBy: trackByProperty">
           <ng-container *ngIf="column.type === 'text'" [matColumnDef]="column.property">
-            <th *matHeaderCellDef class="uppercase" mat-header-cell mat-sort-header>{{ column.label }}</th>
-            <td *matCellDef="let row" [ngClass]="column.cssClasses" mat-cell>
-              {{ row[column.property] }}
-            </td>
+            <th *matHeaderCellDef class="uppercase" mat-header-cell mat-sort-header> {{ column.label }}</th>
+            <ng-container *ngIf="column.property !== 'status'; else status">
+              <td *matCellDef="let row" [ngClass]="column.cssClasses" mat-cell>
+                {{ row[column.property] }}
+              </td>
+            </ng-container>
+            <ng-template #status>
+              <td *matCellDef="let row" mat-cell>
+                <div class="flex flex-wrap items-center gap-1">
+                  <div *ngIf="row[column.property] === userStatusEnum.Active" class="bg-green text-green-contrast label flex-none">Active</div>
+                  <div *ngIf="row[column.property] == userStatusEnum.Inactive" class="bg-amber text-amber-contrast label flex-none">Inactive</div>
+                  <div *ngIf="row[column.property] == userStatusEnum.Locked" class="bg-red text-red-contrast label flex-none">Locked</div>
+                </div>
+              </td>
+            </ng-template>
           </ng-container>
         </ng-container>
-        <ng-container matColumnDef="tafGs">
-          <th *matHeaderCellDef class="uppercase" mat-header-cell mat-sort-header>TA-FG</th>
+
+        <!-- Contact Column -->
+        <ng-container matColumnDef="contact">
+          <th *matHeaderCellDef mat-header-cell mat-sort-header></th>
           <td *matCellDef="let row" mat-cell>
-            <div class="flex items-center gap-1">
-              <div *ngFor="let tafg of row.tafGs" [ngClass]="['text-purple', 'bg-purple/10']" 
-                class="rounded px-2 py-1 font-medium text-xs flex-none">
-                {{ tafg }}
+            <div class="flex">
+              <a (click)="$event.stopPropagation()"
+                 class="w-8 h-8 p-0 leading-none flex items-center justify-center hover:bg-hover text-primary bg-primary/10"
+                 mat-icon-button>
+                <mat-icon class="icon-sm" svgIcon="mat:phone"></mat-icon>
+              </a>
+
+              <a (click)="$event.stopPropagation()"
+                 class="w-8 h-8 p-0 leading-none flex items-center justify-center ml-1 hover:bg-hover text-teal bg-teal/10"
+                 mat-icon-button>
+                <mat-icon class="icon-sm" svgIcon="mat:mail"></mat-icon>
+              </a>
+
+              <a (click)="$event.stopPropagation()"
+                 class="w-8 h-8 p-0 leading-none flex items-center justify-center ml-1 hover:bg-hover text-green bg-green/10"
+                 mat-icon-button>
+                <mat-icon class="icon-sm" svgIcon="mat:map"></mat-icon>
+              </a>
+            </div>
+          </td>
+        </ng-container>
+
+        <!-- Label Column -->
+        <ng-container matColumnDef="labels">
+          <th *matHeaderCellDef class="uppercase" mat-header-cell mat-sort-header>Labels</th>
+          <td *matCellDef="let row" mat-cell>
+            <div (click)="$event.stopPropagation()" class="flex items-center gap-1">
+              <div *ngFor="let label of row.labels"
+                   [ngClass]="[label.textClass, label.bgClass]"
+                   class="rounded px-2 py-1 font-medium text-xs flex-none">
+                {{ label.text }}
+              </div>
+              <div class="text-secondary bg-base text-hint cursor-pointer hover:bg-hover flex-none flex items-center justify-center">
+                <mat-icon class="icon-sm" svgIcon="mat:add"></mat-icon>
               </div>
             </div>
           </td>
         </ng-container>
-        <ng-container matColumnDef="oufg">
-          <th *matHeaderCellDef class="uppercase" mat-header-cell mat-sort-header>OUP-FG</th>
-          <td *matCellDef="let row" mat-cell>
-            <div class="flex items-center gap-1">
-              <div [ngClass]="['text-purple', 'bg-purple/10']" class="rounded px-2 py-1 font-medium text-xs flex-none">
-                {{ row['oufg'] }}
-              </div>
-            </div>
-          </td>
-        </ng-container>
-        <ng-container matColumnDef="status">
-          <th *matHeaderCellDef class="uppercase" mat-header-cell mat-sort-header>Status</th>
-          <td *matCellDef="let row" mat-cell>
-            <div class="flex items-center gap-1">
-              <div *ngIf="row['status'] === userStatusEnum.Active" [ngClass]="['text-green', 'bg-green/10']" 
-                class="rounded px-2 py-1 font-medium text-xs flex-none">
-                ACTIVE
-              </div>
-              <div *ngIf="row['status'] === userStatusEnum.Inactive" [ngClass]="['text-amber', 'bg-amber/10']" 
-                class="rounded px-2 py-1 font-medium text-xs flex-none">
-                INACTIVE
-              </div>
-              <div *ngIf="row['status'] === userStatusEnum.Locked" [ngClass]="['text-red', 'bg-red/10']" 
-                class="rounded px-2 py-1 font-medium text-xs flex-none">
-                LOCKED
-              </div>
-            </div>
-          </td>
-        </ng-container>
+
+        <!-- Action Column -->
         <ng-container matColumnDef="actions">
           <th *matHeaderCellDef mat-header-cell mat-sort-header>ACTIONS</th>
           <td *matCellDef="let row" class="w-10 text-secondary" mat-cell>
-            <button (click)="$event.stopPropagation()" [matMenuTriggerData]="{ customer: row }" [matMenuTriggerFor]="actionsMenu"
-              mat-icon-button type="button">
+            <button (click)="$event.stopPropagation()"
+                    [matMenuTriggerData]="{ customer: row }"
+                    [matMenuTriggerFor]="actionsMenu"
+                    mat-icon-button
+                    type="button">
               <mat-icon svgIcon="mat:more_horiz"></mat-icon>
             </button>
           </td>
         </ng-container>
+
         <tr *matHeaderRowDef="visibleColumns" mat-header-row></tr>
-        <tr @fadeInUp (click)="edit(row)" *matRowDef="let row; columns: visibleColumns;"
-          class="hover:bg-hover trans-ease-out cursor-pointer" mat-row></tr>
+        <tr (click)="updateCustomer(row)"
+            *matRowDef="let row; columns: visibleColumns;"
+            @fadeInUp
+            class="hover:bg-hover trans-ease-out cursor-pointer"
+            mat-row></tr>
       </table>
       <mat-paginator [pageSizeOptions]="pageSizeOptions" [pageSize]="pageSize" class="sticky left-0"></mat-paginator>
     </div>
@@ -112,9 +159,13 @@
 </mat-menu>
 <mat-menu #actionsMenu="matMenu" xPosition="before" yPosition="below">
   <ng-template let-customer="customer" matMenuContent>
-    <button (click)="edit(customer)" mat-menu-item>
+    <button (click)="updateCustomer(customer)" mat-menu-item>
       <mat-icon svgIcon="mat:edit"></mat-icon>
       <span>Edit</span>
+    </button>
+    <button (click)="deleteCustomer(customer)" mat-menu-item>
+      <mat-icon svgIcon="mat:delete"></mat-icon>
+      <span>Delete</span>
     </button>
   </ng-template>
 </mat-menu>

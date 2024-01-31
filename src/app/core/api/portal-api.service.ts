@@ -13,10 +13,6 @@ import { ISettings } from "../models/settings";
 export class PortalApi extends BaseApi {
     private _apiUrl = `${environment.apiGatewayBaseUrl}`;
 
-    getGreetings(id: number): Observable<string> {
-        return this.get<string>(`${this._apiUrl}/dashboard/greeting/${id}`);
-    }
-
     getModules(): Observable<IModule[]> {
         return this.get<IModule[]>(`${this._apiUrl}/module/get`);
     }
@@ -30,7 +26,11 @@ export class PortalApi extends BaseApi {
     }
 
     getRoleId(id: number): Observable<IRole[]> {
-        return this.get<IRole>(`${this._apiUrl}/role/role-permission/${id}`);
+        return this.get<IRole>(`${this._apiUrl}/permission/role/${id}`);
+    }
+
+    updaterolepermission(data:any): Observable<any> {
+        return this.put<any>(`${this._apiUrl}/permission/role`, data);
     }
 
     getUsers(): Observable<IUser[]> {
@@ -71,9 +71,5 @@ export class PortalApi extends BaseApi {
 
     updatesettings(data:any): Observable<any> {
         return this.put<any>(`${this._apiUrl}/settings`, data);
-    }
-
-    updaterolepermission(data:any): Observable<any> {
-        return this.put<any>(`${this._apiUrl}/role/update-role`, data);
     }
 }

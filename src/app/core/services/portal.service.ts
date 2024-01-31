@@ -16,13 +16,7 @@ import { ISettings } from '../models/settings';
 export class PortalService {
   constructor(
     private _portalApi: PortalApi, 
-    private _datePipe: DatePipe
-  ) { 
-  }
-
-  getGreetings(id: number): Observable<string> {
-    return this._portalApi.getGreetings(id);
-  }
+    private _datePipe: DatePipe) { }
 
   getModules(): Observable<IModule[]> {
     return this._portalApi.getModules();
@@ -38,6 +32,10 @@ export class PortalService {
 
   getRoleId(id: number): Observable<IRole[]> {
     return this._portalApi.getRoleId(id);
+  }
+
+  updaterolepermission(data: any): Observable<IRole[]> {
+    return this._portalApi.updaterolepermission(data);
   }
 
   getUsers(): Observable<IUser[]> {
@@ -86,9 +84,5 @@ export class PortalService {
 
   updatesettings(data: any): Observable<any> {
     return this._portalApi.updatesettings(data);
-  }
-
-  updaterolepermission(data: any): Observable<IRole[]> {
-    return this._portalApi.updaterolepermission(data);
   }
 }

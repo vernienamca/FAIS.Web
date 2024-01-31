@@ -16,7 +16,12 @@ import { BreadcrumbsModule } from '../../../../../@vex/components/breadcrumbs/br
 import { PageLayoutModule } from  '../../../../../@vex/components/page-layout/page-layout.module'
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
+import { SecondaryToolbarModule } from 'src/@vex/components/secondary-toolbar/secondary-toolbar.module';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+
 @NgModule({
   declarations: [
     ProfileComponent
@@ -38,7 +43,11 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     BreadcrumbsModule,
     PageLayoutModule,
     MatFormFieldModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    SecondaryToolbarModule,
+    FlexLayoutModule,
+    MatButtonModule,
+    MatCardModule
   ]
 })
 export class ProfileModule { }

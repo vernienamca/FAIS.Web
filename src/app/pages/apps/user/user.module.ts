@@ -17,20 +17,17 @@ import { UserListComponent } from './user-list/user-list.component';
 import { UserRoutingModule } from './user-routing.module';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatTabsModule } from '@angular/material/tabs';
-import { UserComponent } from './user.component';
-import { SecondaryToolbarModule } from 'src/@vex/components/secondary-toolbar/secondary-toolbar.module';
-import { FlexLayoutModule } from '@angular/flex-layout';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { MatInputModule } from '@angular/material/input';
+
+
+
 
 @NgModule({
-  declarations: [UserListComponent, UserComponent],
+  declarations: [UserListComponent],
   imports: [
     CommonModule,
     UserRoutingModule,
     PageLayoutModule,
     BreadcrumbsModule,
-    MatInputModule,
     MatPaginatorModule,
     MatTableModule,
     MatSortModule,
@@ -44,10 +41,7 @@ import { MatInputModule } from '@angular/material/input';
     MatSelectModule,
     MatButtonToggleModule,
     MatSlideToggleModule,
-    MatTabsModule,
-    SecondaryToolbarModule,
-    FlexLayoutModule,
-    MatSnackBarModule
+    MatTabsModule
   ]
 })
 export class UserModule {

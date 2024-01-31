@@ -1,14 +1,30 @@
-.breadcrumb .col{
+
+.save {
+    background-color: #009246;
+    padding: 3px 15px;
+    border-radius: 5px;
+    margin-right: 8px;
+    display: flex;
+    align-items: center;
+  }
+  
+  .close {
+    background-color: #043C79;
+    padding: 3px 15px;
+    border-radius: 5px;
+    margin-left: 8px;
+    display: flex;
+    align-items: center;
+  }
+
+
+.breadcrumb .col {
     margin: 10px 50px;
     color: #043B7B;
     font-size: medium;
 }
 
 .box-placeholder {
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    align-items: center;
     width: auto; 
     height: auto; 
     background-color:transparent; 
@@ -18,7 +34,7 @@
     white-space: nowrap; 
 }
 
-.btn-opt{
+.btn-opt {
     background-color: #E9ECEF;
     margin: 15px 50px;
     padding: 10px;
@@ -44,43 +60,31 @@
     width: 100px;
   }
 
-.save{
-    background-color: #009246;
-    padding: 3px 15px;
-    border-radius: 5px;
-    margin-right: 8px;
-    display: flex;
-    align-items: center;
-}
-
-.close{
-    background-color: #043C79;
-    padding: 3px 15px;
-    border-radius: 5px;
-    margin-left: 8px;
-    display: flex;
-    align-items: center;
-}
 
 ::ng-deep .mat-mdc-tab .mdc-tab__text-label,
-::ng-deep .mat-mdc-tab-link .mdc-tab__text-label{
+::ng-deep .mat-mdc-tab-link .mdc-tab__text-label {
     color: #000 !important;
     min-width: 300px;
+ 
     display: flex;
     justify-content: center;
 }
+::ng-deep .mat-mdc-tab-header .mat-mdc-tab-labels {
+    padding-left: 20%;
+}
 
-.gen-set{
+  
+.gen-set {
     display: flex;
     justify-content: center;
     margin-top: 30px;
 }
 
-.gen-set-items{
+.gen-set-items {
     width: 75%;
 }
 
-.row{
+.row {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -92,23 +96,23 @@
 }
 
 
-.note{
+.note {
     margin-top: 10px;
     color: #828282;
     
 }
 
-hr{
+hr {
     border-color:#ccc ;
     margin: 5px;
     width: 98%;
 }
 
-.tabs{
+.tabs {
     margin-left: 20px;
 }
 
-.req{
+.req {
     color: #FF0000;
 }
 
