@@ -45,10 +45,29 @@ export class SystemSettingsComponent implements OnInit, AfterViewInit {
   checkSSL: boolean;
   enableSSL: string;
 
-  @ViewChild(AppVersionComponent) appVersion: AppVersionComponent;
+  @ViewChild('appVersion') appVersion: AppVersionComponent;
 
   private _onDestroy$ = new Subject<void>();
 
+  get formControls() {
+    return {
+      companyName: this.settingsForm.get('companyName'),
+      emailAddress: this.settingsForm.get('emailAddress'),
+      address: this.settingsForm.get('address'),
+      minPasswordLength: this.settingsForm.get('minPasswordLength'),
+      minSpecialCharacters: this.settingsForm.get('minSpecialCharacters'),
+      passwordExpiry: this.settingsForm.get('passwordExpiry'),
+      maxSignOnAttempts: this.settingsForm.get('maxSignOnAttempts'),
+      enforcePasswordHistory: this.settingsForm.get('enforcePasswordHistory'),
+      smtpServerName: this.settingsForm.get('smtpServerName'),
+      smtpPort: this.settingsForm.get('smtpPort'),
+      smtpFromEmail: this.settingsForm.get('smtpFromEmail'),
+      smtpPassword: this.settingsForm.get('smtpPassword'),
+      versionNo: this.settingsForm.get('versionNo'),
+      versionDate: this.settingsForm.get('versionDate'),
+      amendment: this.settingsForm.get('amendment'),
+    };
+  }
 
   constructor(private _fb: FormBuilder,
     private _dialog: MatDialog,
@@ -57,21 +76,21 @@ export class SystemSettingsComponent implements OnInit, AfterViewInit {
     ) {
     this.settingsForm = this._fb.group({
       id: 1,
-      companyName: [''],
+      companyName: ['', Validators.required],
       phoneNumber : [''],
-      emailAddress: [''],
+      emailAddress: ['',Validators.required],
       website: [''],
-      address: [''],
-      minPasswordLength: [''],
-      minSpecialCharacters: [''],
-      passwordExpiry: [''],
+      address: ['',Validators.required],
+      minPasswordLength: ['',Validators.required],
+      minSpecialCharacters: ['',Validators.required],
+      passwordExpiry: ['',Validators.required],
       idleTime: [''],
-      maxSignOnAttempts: [''],
+      maxSignOnAttempts: ['',Validators.required],
       enforcePasswordHistory: [this.enfPassOpt,Validators.required],
-      smtpServerName: [''],
-      smtpPort: [''],
-      smtpFromEmail: [''],
-      smtpPassword: [''],
+      smtpServerName: ['',Validators.required],
+      smtpPort: ['',Validators.required],
+      smtpFromEmail: ['',Validators.required],
+      smtpPassword: ['',Validators.required],
       smtpEnableSSL: [''],
     });
   }
@@ -124,6 +143,8 @@ export class SystemSettingsComponent implements OnInit, AfterViewInit {
   ];
 
   onSubmit() : void{    
+    console.log(this.settingsForm.value);
+    
     const ssl = this.settingsForm.get('smtpEnableSSL');
     if (ssl.value === false) {
       ssl.patchValue('N');
@@ -152,7 +173,7 @@ export class SystemSettingsComponent implements OnInit, AfterViewInit {
   save() {
     const dialogInterface: DialogInterface = {
       dialogHeader: 'Save Settings?',
-      dialogContent: 'Do you want to save your changes?',
+      dialogContent: 'Do you want to proceed saving your changes?',
       cancelButtonLabel: 'Cancel',
       confirmButtonLabel: 'Ok',
       callbackMethod: () => {
