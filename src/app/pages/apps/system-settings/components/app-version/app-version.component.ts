@@ -46,7 +46,7 @@ export class AppVersionComponent implements OnInit, OnDestroy {
       versionNo: ['', Validators.required],
       versionDate: ['', Validators.required],
       amendment: ['', Validators.required],
-      createdBy: [1]
+      createdBy: [localStorage.getItem("user_id")]
     });
   }
 
