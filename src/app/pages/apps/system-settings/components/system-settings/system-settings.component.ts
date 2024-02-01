@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, UntypedFormControl, Validators } from '@angular/forms';
 import { OnInit } from '@angular/core';
 import { AppVersionComponent } from '../app-version/app-version.component';
@@ -15,7 +15,7 @@ import { ISettings } from 'src/app/core/models/settings';
   templateUrl: './system-settings.component.html',
   styleUrls: ['./system-settings.component.scss']
 })
-export class SystemSettingsComponent implements OnInit, AfterViewInit {
+export class SystemSettingsComponent implements OnInit, OnDestroy {
   layoutCtrl = new UntypedFormControl('fullwidth');
   regex = /^[0-9]+$/;
   inpMinVal: any;
@@ -69,37 +69,34 @@ export class SystemSettingsComponent implements OnInit, AfterViewInit {
     };
   }
 
-  constructor(private _fb: FormBuilder,
+  constructor(
+    private _fb: FormBuilder,
     private _dialog: MatDialog,
     private _snackbar: MatSnackBar,
-    private _portalService: PortalService,
+    private _portalService: PortalService
     ) {
     this.settingsForm = this._fb.group({
       id: 1,
       companyName: ['', Validators.required],
       phoneNumber : [''],
-      emailAddress: ['',Validators.required],
+      emailAddress: ['', Validators.required],
       website: [''],
-      address: ['',Validators.required],
-      minPasswordLength: ['',Validators.required],
-      minSpecialCharacters: ['',Validators.required],
-      passwordExpiry: ['',Validators.required],
+      address: ['', Validators.required],
+      minPasswordLength: ['', Validators.required],
+      minSpecialCharacters: ['', Validators.required],
+      passwordExpiry: ['', Validators.required],
       idleTime: [''],
-      maxSignOnAttempts: ['',Validators.required],
-      enforcePasswordHistory: [this.enfPassOpt,Validators.required],
-      smtpServerName: ['',Validators.required],
-      smtpPort: ['',Validators.required],
-      smtpFromEmail: ['',Validators.required],
-      smtpPassword: ['',Validators.required],
-      smtpEnableSSL: [''],
+      maxSignOnAttempts: ['', Validators.required],
+      enforcePasswordHistory: [this.enfPassOpt, Validators.required],
+      smtpServerName: ['', Validators.required],
+      smtpPort: ['', Validators.required],
+      smtpFromEmail: ['', Validators.required],
+      smtpPassword: ['', Validators.required],
+      smtpEnableSSL: ['']
     });
   }
-  ngAfterViewInit() {
-    // this.settingsForm.addControl('versionForm', this.appVersion.versionForm);
-    // this.appVersion.versionForm.setParent(this.settingsForm);
-  }
 
-  ngOnInit(): void {
+  ngOnInit(): void {    
     this._portalService.getSetting(1)
     .pipe(takeUntil(this._onDestroy$))
     .subscribe((data: any) => {
@@ -130,6 +127,12 @@ export class SystemSettingsComponent implements OnInit, AfterViewInit {
     });    
   }
 
+  
+  ngOnDestroy(): void {
+    this._onDestroy$.next();
+    this._onDestroy$.complete();
+  }
+
   convertBooleanToString(bool: boolean, newValue:string): void {
     if (bool === true) {
       this.settingsForm.get('smtpEnableSSL').patchValue(newValue);
@@ -142,9 +145,7 @@ export class SystemSettingsComponent implements OnInit, AfterViewInit {
     {id: 3, value: 10}
   ];
 
-  onSubmit() : void{    
-    console.log(this.settingsForm.value);
-    
+  update(): void {        
     const ssl = this.settingsForm.get('smtpEnableSSL');
     if (ssl.value === false) {
       ssl.patchValue('N');
@@ -161,7 +162,6 @@ export class SystemSettingsComponent implements OnInit, AfterViewInit {
         });
       },
       error: (error) => {
-        console.error('Error updating System Settings:', error);
         this._snackbar.open('Error updating System Settings.', 'Close', {
           duration: 5000,
         });
@@ -177,7 +177,7 @@ export class SystemSettingsComponent implements OnInit, AfterViewInit {
       cancelButtonLabel: 'Cancel',
       confirmButtonLabel: 'Ok',
       callbackMethod: () => {
-        this.onSubmit();
+        this.update();
       },
     };
      let dlg = this._dialog.open(DialogComponent, {

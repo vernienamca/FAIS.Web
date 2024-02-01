@@ -85,4 +85,12 @@ export class PortalService {
   updatesettings(data: any): Observable<any> {
     return this._portalApi.updatesettings(data);
   }
+
+  getAppVersions(): Observable<any[]> {
+    return this._portalApi.getAppVersions();
+  }
+
+  addVersion(data: any): Observable<any> {
+    return this._portalApi.addVersion(data);
+  }
 }
