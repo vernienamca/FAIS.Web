@@ -4,7 +4,7 @@
     </vex-secondary-toolbar>
 
     <vex-page-layout-content class="container" [class.container]="layoutCtrl.value === 'boxed'" [class.px-gutter]="layoutCtrl.value === 'fullwidth'">
-        <form class="settings" id="settingsForm" [formGroup]="settingsForm" (ngSubmit)="onSubmit()">
+        <form class="settings" id="settingsForm" [formGroup]="settingsForm">
             <div class="card flex flex-col sm:flex-row">
                 <div class="border-l flex-auto">
                     <div class="bg-base border-l-3 p-4 mt-3 flex flex-col sm:flex-row gap-3 items-center">

@@ -72,4 +72,13 @@ export class PortalApi extends BaseApi {
     updatesettings(data:any): Observable<any> {
         return this.put<any>(`${this._apiUrl}/settings`, data);
     }
+
+    getAppVersions(): Observable<any[]> {
+        return this.get<any>(`${this._apiUrl}/version/get`);
+    }
+
+    addVersion(data:any): Observable<any> {
+        return this.post<any>(`${this._apiUrl}/version`, data);
+    }
+    
 }
