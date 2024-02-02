@@ -9,6 +9,7 @@ import { IStringInterpolation } from '../models/string-interpolation';
 import { ITemplates } from '../models/templates';
 import { DatePipe } from '@angular/common';
 import { ISettings } from '../models/settings';
+import { ICostCenters } from '../models/cost-centers';
 
 @Injectable({
   providedIn: 'root'
@@ -92,5 +93,9 @@ export class PortalService {
 
   addVersion(data: any): Observable<any> {
     return this._portalApi.addVersion(data);
+  }
+
+  getCostCenters(): Observable<ICostCenters[]> {
+    return this._portalApi.getCostCenters();
   }
 }
