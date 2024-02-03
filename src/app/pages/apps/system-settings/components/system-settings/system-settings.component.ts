@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, UntypedFormControl, Validators } from '@angular/forms';
 import { OnInit } from '@angular/core';
 import { AppVersionComponent } from '../app-version/app-version.component';
@@ -15,7 +15,7 @@ import { ISettings } from 'src/app/core/models/settings';
   templateUrl: './system-settings.component.html',
   styleUrls: ['./system-settings.component.scss']
 })
-export class SystemSettingsComponent implements OnInit, AfterViewInit {
+export class SystemSettingsComponent implements OnInit, OnDestroy {
   layoutCtrl = new UntypedFormControl('fullwidth');
   regex = /^[0-9]+$/;
   inpMinVal: any;
@@ -45,42 +45,58 @@ export class SystemSettingsComponent implements OnInit, AfterViewInit {
   checkSSL: boolean;
   enableSSL: string;
 
-  @ViewChild(AppVersionComponent) appVersion: AppVersionComponent;
+  @ViewChild('appVersion') appVersion: AppVersionComponent;
 
   private _onDestroy$ = new Subject<void>();
 
+  get formControls() {
+    return {
+      companyName: this.settingsForm.get('companyName'),
+      emailAddress: this.settingsForm.get('emailAddress'),
+      address: this.settingsForm.get('address'),
+      minPasswordLength: this.settingsForm.get('minPasswordLength'),
+      minSpecialCharacters: this.settingsForm.get('minSpecialCharacters'),
+      passwordExpiry: this.settingsForm.get('passwordExpiry'),
+      maxSignOnAttempts: this.settingsForm.get('maxSignOnAttempts'),
+      enforcePasswordHistory: this.settingsForm.get('enforcePasswordHistory'),
+      smtpServerName: this.settingsForm.get('smtpServerName'),
+      smtpPort: this.settingsForm.get('smtpPort'),
+      smtpFromEmail: this.settingsForm.get('smtpFromEmail'),
+      smtpPassword: this.settingsForm.get('smtpPassword'),
+      versionNo: this.settingsForm.get('versionNo'),
+      versionDate: this.settingsForm.get('versionDate'),
+      amendment: this.settingsForm.get('amendment'),
+    };
+  }
 
-  constructor(private _fb: FormBuilder,
+  constructor(
+    private _fb: FormBuilder,
     private _dialog: MatDialog,
     private _snackbar: MatSnackBar,
-    private _portalService: PortalService,
+    private _portalService: PortalService
     ) {
     this.settingsForm = this._fb.group({
       id: 1,
-      companyName: [''],
+      companyName: ['', Validators.required],
       phoneNumber : [''],
-      emailAddress: [''],
+      emailAddress: ['', Validators.required],
       website: [''],
-      address: [''],
-      minPasswordLength: [''],
-      minSpecialCharacters: [''],
-      passwordExpiry: [''],
+      address: ['', Validators.required],
+      minPasswordLength: ['', Validators.required],
+      minSpecialCharacters: ['', Validators.required],
+      passwordExpiry: ['', Validators.required],
       idleTime: [''],
-      maxSignOnAttempts: [''],
-      enforcePasswordHistory: [this.enfPassOpt,Validators.required],
-      smtpServerName: [''],
-      smtpPort: [''],
-      smtpFromEmail: [''],
-      smtpPassword: [''],
-      smtpEnableSSL: [''],
+      maxSignOnAttempts: ['', Validators.required],
+      enforcePasswordHistory: [this.enfPassOpt, Validators.required],
+      smtpServerName: ['', Validators.required],
+      smtpPort: ['', Validators.required],
+      smtpFromEmail: ['', Validators.required],
+      smtpPassword: ['', Validators.required],
+      smtpEnableSSL: ['']
     });
   }
-  ngAfterViewInit() {
-    // this.settingsForm.addControl('versionForm', this.appVersion.versionForm);
-    // this.appVersion.versionForm.setParent(this.settingsForm);
-  }
 
-  ngOnInit(): void {
+  ngOnInit(): void {    
     this._portalService.getSetting(1)
     .pipe(takeUntil(this._onDestroy$))
     .subscribe((data: any) => {
@@ -111,6 +127,12 @@ export class SystemSettingsComponent implements OnInit, AfterViewInit {
     });    
   }
 
+  
+  ngOnDestroy(): void {
+    this._onDestroy$.next();
+    this._onDestroy$.complete();
+  }
+
   convertBooleanToString(bool: boolean, newValue:string): void {
     if (bool === true) {
       this.settingsForm.get('smtpEnableSSL').patchValue(newValue);
@@ -123,7 +145,7 @@ export class SystemSettingsComponent implements OnInit, AfterViewInit {
     {id: 3, value: 10}
   ];
 
-  onSubmit() : void{    
+  update(): void {        
     const ssl = this.settingsForm.get('smtpEnableSSL');
     if (ssl.value === false) {
       ssl.patchValue('N');
@@ -140,7 +162,6 @@ export class SystemSettingsComponent implements OnInit, AfterViewInit {
         });
       },
       error: (error) => {
-        console.error('Error updating System Settings:', error);
         this._snackbar.open('Error updating System Settings.', 'Close', {
           duration: 5000,
         });
@@ -152,11 +173,11 @@ export class SystemSettingsComponent implements OnInit, AfterViewInit {
   save() {
     const dialogInterface: DialogInterface = {
       dialogHeader: 'Save Settings?',
-      dialogContent: 'Do you want to save your changes?',
+      dialogContent: 'Do you want to proceed saving your changes?',
       cancelButtonLabel: 'Cancel',
       confirmButtonLabel: 'Ok',
       callbackMethod: () => {
-        this.onSubmit();
+        this.update();
       },
     };
      let dlg = this._dialog.open(DialogComponent, {

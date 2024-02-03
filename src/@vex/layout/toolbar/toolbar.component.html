@@ -2,13 +2,11 @@
   <button (click)="openSidenav()" [class.hidden]="!mobileQuery" mat-icon-button type="button">
     <mat-icon svgIcon="mat:menu"></mat-icon>
   </button>
-
   <a *ngIf="isVerticalLayout$ | async"
      [routerLink]="['/']"
      class="ltr:mr-4 rtl:ml-4 block flex items-center">
     <img alt="Logo" class="select-none" src="assets/img/demo/logo.svg" />
   </a>
-
   <mat-menu #documentMenu="matMenu">
     <button mat-menu-item>
       <mat-icon svgIcon="mat:description"></mat-icon>

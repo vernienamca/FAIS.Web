@@ -3,7 +3,6 @@ import { LayoutService } from '../../services/layout.service';
 import { ConfigService } from '../../config/config.service';
 import { map, takeUntil } from 'rxjs/operators';
 import { NavigationService } from '../../services/navigation.service';
-import { PopoverService } from '../../components/popover/popover.service';
 import { Observable, Subject, of } from 'rxjs';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { DatePipe } from '@angular/common';
@@ -40,7 +39,7 @@ export class ToolbarComponent implements OnInit, OnDestroy  {
     private _portalService: PortalService,
     private _datePipe: DatePipe
   ) { 
-    const userId = parseFloat(localStorage.getItem('user_id'));
+    const userId = parseInt(localStorage.getItem('user_id'));
     if (!userId) {
       return;
     }

@@ -18,6 +18,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSelectModule } from '@angular/material/select';
 import { DialogComponent } from '../dialog/dialog.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatDividerModule } from '@angular/material/divider';
 
 @NgModule({
   declarations: [
@@ -42,7 +43,8 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     MatCheckboxModule,
     MatSelectModule,
     MatSnackBarModule,
-    FormsModule
+    FormsModule,
+    MatDividerModule
   ]
 })
 export class SystemSettingsModule { }
