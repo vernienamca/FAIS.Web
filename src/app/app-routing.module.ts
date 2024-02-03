@@ -75,7 +75,7 @@ const routes: VexRoutes = [
           },
           {
             path: 'interpolations',
-            loadChildren: () => import('./pages/apps/notification/string-interpolation/string-interpolation-list/string-interpolation.module').then(m =>m.StringInterpolationModule)
+            loadChildren: () => import('./pages/apps/notification/string-interpolation/string-interpolation.module').then(m =>m.StringInterpolationModule)
           },
           {
             path: 'interpolation-add',

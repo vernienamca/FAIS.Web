@@ -1,0 +1,77 @@
+<vex-secondary-toolbar current="Edit String Interpolation">
+  <vex-breadcrumbs [crumbs]="['System Management', 'Interpolations', 'Edit Interpolation']" class="flex-auto"></vex-breadcrumbs>
+  <button class="ml-2" color="primary" mat-icon-button type="button">
+    <mat-icon svgIcon="mat:more_vert"></mat-icon>
+  </button>
+</vex-secondary-toolbar>
+<div class="p-gutter container" [class.container]="layoutCtrl.value === 'boxed'" [class.px-gutter]="layoutCtrl.value === 'fullwidth'">
+  <div class="flex flex-col sm:flex-row gap-4">
+    <div class="card flex-auto">
+      <div class="px-6 py-4 border-b flex items-center gap-2">
+        <button [ngClass]="['!bg-green', '!text-contrast-white']" mat-raised-button type="button" (click)="save()">
+          <mat-icon class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" svgIcon="mat:archive"></mat-icon> Save
+        </button>
+        <button color="primary" mat-stroked-button type="button" [routerLink]="['/apps/modules']">
+          <mat-icon class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" svgIcon="mat:close"></mat-icon> Close
+        </button>
+      </div>
+      <div class="px-6 py-4 flex flex-col">
+        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
+          <form [formGroup]="form" class="flex flex-col flex-auto form-container">
+            <div class="flex flex-col sm:flex-row sm:gap-4">
+              <mat-form-field appearance="fill" class="flex-auto">
+                <mat-label>Transaction Code</mat-label>
+                <input matInput formControlName="transactionCode" required>
+                <mat-error *ngIf="formControls.transactionCode.touched && formControls.transactionCode.invalid">
+                  <span *ngIf="formControls.transactionCode.getError('required')">
+                    Transaction Code name is required
+                  </span>
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="flex flex-col sm:flex-row sm:gap-4">
+              <mat-form-field appearance="fill" class="flex-auto">
+                <mat-label>Description</mat-label>
+                <input matInput formControlName="description">
+              </mat-form-field>
+            </div>
+            
+            <div class="flex flex-col sm:flex-row sm:gap-4">
+              <mat-form-field appearance="fill" class="flex-auto">
+                <mat-label>Notification Type</mat-label>
+                <mat-select formControlName="notificationType" required>
+                  <mat-option value="1">Banner</mat-option>
+                  <mat-option value="2">Standard</mat-option>
+                </mat-select>
+                <mat-error *ngIf="formControls.notificationType.touched && formControls.notificationType.invalid">
+                  <span *ngIf="formControls.notificationType.getError('required')">
+                    Notification Type is required
+                  </span>
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="flex flex-col sm:flex-row sm:gap-4">
+              <mat-slide-toggle color="accent" labelPosition="before" formControlName="isActive" (change)="onToggleStatus($event)">
+                {{ statusLabel }}
+              </mat-slide-toggle>
+            </div>
+            <blockquote fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px" [style.marginTop.px]="30">
+              <span fxFlex>
+                <strong>Created By</strong>: {{ createdByDisplay }}
+              </span>
+              <span fxFlex>
+                <strong>Date Created</strong>: {{ createdAt | date: 'MM/dd/yyyy hh:mm a' }}
+              </span>
+              <span fxFlex>
+                <strong>Modified By</strong>: {{ updatedBy }}
+              </span>
+              <span fxFlex>
+                <strong>Date Modified</strong>: {{ updatedAt ? (updatedAt | date: 'MM/dd/yyyy hh:mm a') : 'N/A' }}
+              </span>
+            </blockquote>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
