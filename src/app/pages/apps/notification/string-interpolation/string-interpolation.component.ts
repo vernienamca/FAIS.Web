@@ -6,26 +6,25 @@ import { Subject, takeUntil } from 'rxjs';
 import { PortalService } from 'src/app/core/services/portal.service';
 
 @Component({
-  selector: 'vex-module',
-  templateUrl: './module.component.html',
-  styleUrls: ['./module.component.scss']
+  selector: 'vex-string-interpolation',
+  templateUrl: './string-interpolation.component.html',
+  styleUrls: ['./string-interpolation.component.scss']
 })
-export class ModuleComponent implements OnInit, OnDestroy {
+export class StringInterpolationComponent implements OnInit, OnDestroy {
   form: FormGroup; 
   layoutCtrl = new UntypedFormControl('fullwidth');
   statusLabel = 'Active';
-  createdBy: string;
+  createdByDisplay: string;
+  createdBy: number;
   createdAt: Date;
   updatedBy: string;
   updatedAt: Date;
 
   get formControls() {
     return {
-      name: this.form.get('name'),
+      transactionCode: this.form.get('transactionCode'),
       description: this.form.get('description'),
-      url: this.form.get('url'),
-      groupName: this.form.get('groupName'),
-      icon: this.form.get('icon'),
+      notificationType: this.form.get('notificationType'),
       isActive: this.form.get('isActive')
     };
   }
@@ -39,29 +38,27 @@ export class ModuleComponent implements OnInit, OnDestroy {
     private _snackBar: MatSnackBar
   ) {
     this.form = this._fb.group({
-      name: ['', [Validators.required]],
+      transactionCode: ['', [Validators.required]],
       description: ['', []],
-      url: ['', []],
-      groupName: ['', [Validators.required]],
-      icon: ['', []],
+      notificationType: ['', [Validators.required]],
       isActive: [true, []],
     });
 
     const id = parseInt(this._route.snapshot.paramMap.get('id'));
-    this._portalService.getModule(id)
+    this._portalService.getStringInterpolation(id)
       .pipe(takeUntil(this._onDestroy$))
       .subscribe(data => {
         if (!data) {
           return;
         }
+        console.log(data);
         this.form.setValue({
-          name: data.name,
+          transactionCode: data.transactionCode,
           description: data.description || '',
-          url: data.url || '',
-          groupName: data.groupName,
-          icon: data.icon || '',
+          notificationType: data.notificationType,
           isActive: data.isActive === 'Y'
         });
+        this.createdByDisplay = data.createdByDisplay;
         this.createdBy = data.createdBy;
         this.createdAt = data.createdAt;
         this.updatedBy = data.updatedBy || 'N/A';
@@ -84,31 +81,36 @@ export class ModuleComponent implements OnInit, OnDestroy {
   }
 
   save(): void {
-    if (!this.formControls.name.value) {
-      this.formControls.name.markAsTouched();
-      this.formControls.name.updateValueAndValidity();
+    if (!this.formControls.transactionCode.value) {
+      this.formControls.transactionCode.markAsTouched();
+      this.formControls.transactionCode.updateValueAndValidity();
       return;
     }
-    if (!this.formControls.groupName.value) {
-      this.formControls.groupName.markAsTouched();
-      this.formControls.groupName.updateValueAndValidity();
+    if (!this.formControls.description.value) {
+      this.formControls.description.markAsTouched();
+      this.formControls.description.updateValueAndValidity();
       return;
     }
     const data = Object.assign({}, this.form.value);
     data.id = parseInt(this._route.snapshot.paramMap.get('id'));
     data.isActive = data.isActive ? 'Y' : 'N'; 
+    //ASK V: when to change status date / logic behind status date field
+    data.createdAt = this.createdAt;
+    data.createdBy = this.createdBy;
     data.updatedBy = parseInt(localStorage.getItem('user_id'));
 
-  this._portalService.updateModule(data)
+console.log(data);
+
+  this._portalService.updateStringInterpolation(data)
       .pipe(takeUntil(this._onDestroy$))
       .subscribe(data => {
         if (!data) {
           return;
         }
-        let snackBarRef = this._snackBar.open('Module has been successfully updated.', 'Close');
+        let snackBarRef = this._snackBar.open('String Interpolation has been successfully updated.', 'Close');
         snackBarRef.afterDismissed().subscribe(() => {
           window.location.reload();
         });
       });
-  }
+   }
 }

@@ -1,11 +1,12 @@
 export interface IStringInterpolation {
     id: number,
     transactionCode: string,
-    transactionDescription: string,
+    description: string,
     isActive: string,
     statusDate: Date,
     notificationType: string,
-    createdBy: string,
+    createdByDisplay: string,
+    createdBy: number;
     createdAt: Date,
     updatedBy: string,
     updatedAt: Date

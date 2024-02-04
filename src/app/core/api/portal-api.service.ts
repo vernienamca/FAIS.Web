@@ -45,8 +45,12 @@ export class PortalApi extends BaseApi {
         return this.get<IAuditLogs>(`${this._apiUrl}/auditLog/get`);
     }
 
-    getStringInterpolation(): Observable<IStringInterpolation[]> {
+    getStringInterpolations(): Observable<IStringInterpolation[]> {
         return this.get<IStringInterpolation>(`${this._apiUrl}/notification/interpolations`);
+    }
+
+    getStringInterpolation(id: number): Observable<IStringInterpolation> {
+        return this.get<IStringInterpolation>(`${this._apiUrl}/notification/interpolation/${id}`);
     }
 
     getTemplates(): Observable<ITemplates[]> {
@@ -71,6 +75,10 @@ export class PortalApi extends BaseApi {
 
     updatesettings(data:any): Observable<any> {
         return this.put<any>(`${this._apiUrl}/settings`, data);
+    }
+
+    updateStringInterpolation(data: any): Observable<any> {
+        return this.put<any>(`${this._apiUrl}/notification/interpolation`, data);
     }
 
     getAppVersions(): Observable<any[]> {

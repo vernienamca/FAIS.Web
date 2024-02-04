@@ -50,8 +50,12 @@ export class PortalService {
     return this._portalApi.getAuditLogs();
   }
 
-  getStringInterpolation(): Observable<IStringInterpolation[]> {
-    return this._portalApi.getStringInterpolation();
+  getStringInterpolations(): Observable<IStringInterpolation[]> {
+    return this._portalApi.getStringInterpolations();
+  }
+
+  getStringInterpolation(id: number): Observable<IStringInterpolation> {
+    return this._portalApi.getStringInterpolation(id);
   }
 
   getAlerts(): Observable<ITemplates[]> {
@@ -84,6 +88,10 @@ export class PortalService {
 
   updatesettings(data: any): Observable<any> {
     return this._portalApi.updatesettings(data);
+  }
+
+  updateStringInterpolation(data: any): Observable<any> {
+    return this._portalApi.updateStringInterpolation(data);
   }
 
   getAppVersions(): Observable<any[]> {

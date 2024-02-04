@@ -115,7 +115,7 @@
             <th *matHeaderCellDef mat-header-cell mat-sort-header>ACTION</th>
             <td *matCellDef="let row" class="w-10 text-secondary" mat-cell>
               <button (click)="$event.stopPropagation()"
-                      [matMenuTriggerData]="{ customer: row }"
+                      [matMenuTriggerData]="{ interpolation: row }"
                       [matMenuTriggerFor]="actionsMenu"
                       mat-icon-button
                       type="button">
@@ -125,31 +125,24 @@
           </ng-container>
   
           <tr *matHeaderRowDef="visibleColumns" mat-header-row></tr>
-          <tr
-              *matRowDef="let row; columns: visibleColumns;"
-              @fadeInUp
-              class="hover:bg-hover trans-ease-out cursor-pointer"
-              mat-row></tr>
+          <tr (click)="edit(row)" *matRowDef="let row; columns: visibleColumns;" @fadeInUp 
+          class="hover:bg-hover trans-ease-out cursor-pointer" mat-row></tr>
         </table>
   
         <mat-paginator [pageSizeOptions]="pageSizeOptions" [pageSize]="pageSize" class="sticky left-0"></mat-paginator>
       </div>
-  
     </vex-page-layout-content>
-  
   </vex-page-layout>
-  
   <mat-menu #columnFilterMenu="matMenu" xPosition="before" yPosition="below">
-    <button (click)="toggleColumnVisibility(column, $event)" *ngFor="let column of columns"
-            class="mat-menu-item block">
+    <button (click)="toggleColumnVisibility(column, $event)" *ngFor="let column of columns" class="mat-menu-item block">
       <mat-checkbox (click)="$event.stopPropagation()" [(ngModel)]="column.visible" color="primary">
         {{ column.label }}
       </mat-checkbox>
     </button>
   </mat-menu>
   <mat-menu #actionsMenu="matMenu" xPosition="before" yPosition="below">
-    <ng-template let-customer="customer" matMenuContent>
-      <button mat-menu-item>
+    <ng-template let-interpolation="interpolation" matMenuContent>
+      <button (click)="edit(interpolation)" mat-menu-item>
         <mat-icon svgIcon="mat:edit"></mat-icon>
         <span>Edit</span>
       </button>

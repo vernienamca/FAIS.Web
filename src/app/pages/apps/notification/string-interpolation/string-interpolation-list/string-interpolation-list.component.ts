@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild } from "@angular/core";
 import { Observable, ReplaySubject, Subject } from "rxjs";
-import { filter, takeUntil } from "rxjs/operators";
+import { filter, takeUntil, finalize } from "rxjs/operators";
 import { MatTableDataSource } from "@angular/material/table";
 import { MatPaginator } from "@angular/material/paginator";
 import { MatSort } from "@angular/material/sort";
@@ -50,6 +50,7 @@ export class StringInterpolationListComponent implements OnInit, OnDestroy, Afte
   dataSource: MatTableDataSource<IStringInterpolation> | null;
   selection = new SelectionModel<IStringInterpolation>(true, []);
   searchCtrl = new UntypedFormControl();
+  isListLoading = true;
 
   get visibleColumns() {
     return this.columns.filter((column) => column.visible).map((column) => column.property);
@@ -63,8 +64,11 @@ export class StringInterpolationListComponent implements OnInit, OnDestroy, Afte
   ) {}
 
   ngOnInit(): void {
-    this._portalService.getStringInterpolation()
-      .pipe(takeUntil(this._onDestroy$))
+    this._portalService.getStringInterpolations()
+      .pipe(
+        takeUntil(this._onDestroy$),
+        finalize(() => this.isListLoading = false)
+      )
       .subscribe((data) => {
         if (!data) {
           return;
@@ -81,9 +85,9 @@ export class StringInterpolationListComponent implements OnInit, OnDestroy, Afte
         this.dataSource.data = interpolations;
       });
 
-    this.searchCtrl.valueChanges
-      .pipe(untilDestroyed(this))
-      .subscribe((value) => this.onFilterChange(value));
+    this.searchCtrl.valueChanges.pipe(
+      untilDestroyed(this)
+      ).subscribe((value) => this.onFilterChange(value));
   }
 
   ngOnDestroy(): void {
@@ -94,6 +98,11 @@ export class StringInterpolationListComponent implements OnInit, OnDestroy, Afte
   ngAfterViewInit() : void {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
+  }
+
+  edit(interpolation: any): void {
+    console.log(interpolation);
+    this._router.navigate([`apps/interpolations/edit/${interpolation.id}`]);
   }
 
   onFilterChange(value: string) : void {
@@ -124,6 +133,6 @@ export class StringInterpolationListComponent implements OnInit, OnDestroy, Afte
   }
 
   createStringInterpolation(): void{
-    this._router.navigate(["apps/string-interpolation-add"]);
+    this._router.navigate(["apps/interpolation-add"]);
   }
 }

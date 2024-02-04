@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { PageLayoutModule } from '../../../../../../@vex/components/page-layout/page-layout.module';
-import { BreadcrumbsModule } from '../../../../../../@vex/components/breadcrumbs/breadcrumbs.module';
+import { PageLayoutModule } from '../../../../../@vex/components/page-layout/page-layout.module';
+import { BreadcrumbsModule } from '../../../../../@vex/components/breadcrumbs/breadcrumbs.module';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
@@ -13,13 +13,19 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
-import { StringInterpolationListComponent } from './string-interpolation-list.component';
+import { StringInterpolationListComponent } from './string-interpolation-list/string-interpolation-list.component';
 import { StringInterpolationRoutingModule } from './string-interpolation-routing.module';
+import { StringInterpolationComponent } from './string-interpolation.component';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { MatTabsModule } from '@angular/material/tabs';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { SecondaryToolbarModule } from 'src/@vex/components/secondary-toolbar/secondary-toolbar.module';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
-  declarations: [StringInterpolationListComponent],
+  declarations: [StringInterpolationListComponent, StringInterpolationComponent],
   imports: [
     CommonModule,
     StringInterpolationRoutingModule,
@@ -37,8 +43,14 @@ import { MatTabsModule } from '@angular/material/tabs';
     ReactiveFormsModule,
     MatSelectModule,
     MatButtonToggleModule,
+    MatFormFieldModule,
     MatSlideToggleModule,
-    MatTabsModule,
+    MatInputModule,
+    FlexLayoutModule,
+    MatProgressBarModule,
+    SecondaryToolbarModule,
+    BreadcrumbsModule,
+    MatSnackBarModule
   ]
 })
 export class StringInterpolationModule {
