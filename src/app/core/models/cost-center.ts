@@ -1,4 +1,4 @@
-export interface ICostCenters {
+export interface ICostCenter {
     id: number;
     fgCode: string;
     number: string;

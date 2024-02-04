@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { CostCentersListComponent } from './cost-centers-list.component';
 
-describe('AioTableComponent', () => {
+describe('CostCentersListComponent', () => {
   let component: CostCentersListComponent;
   let fixture: ComponentFixture<CostCentersListComponent>;
 

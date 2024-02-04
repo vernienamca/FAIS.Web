@@ -15,7 +15,7 @@ import { UntypedFormControl } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { MatSelectChange } from '@angular/material/select';
 import { PortalService } from 'src/app/core/services/portal.service';
-import { ICostCenters } from 'src/app/core/models/cost-centers';
+import { ICostCenter } from 'src/app/core/models/cost-center';
 
 @UntilDestroy()
 @Component({
@@ -39,7 +39,7 @@ export class CostCentersListComponent implements OnInit, OnDestroy, AfterViewIni
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @Input()
-  columns: TableColumn<ICostCenters>[] = [
+  columns: TableColumn<ICostCenter>[] = [
     { label: 'FG Code', property: 'fgCode', type: 'text', visible: true },
     { label: 'Cost Center No.', property: 'number', type: 'text', visible: true },
     { label: 'Cost Center Name', property: 'name', type: 'text', visible: true },
@@ -47,18 +47,17 @@ export class CostCentersListComponent implements OnInit, OnDestroy, AfterViewIni
   ];
 
   layoutCtrl = new UntypedFormControl('fullwidth');
-  subject$: ReplaySubject<ICostCenters[]> = new ReplaySubject<ICostCenters[]>(1);
-  data$: Observable<ICostCenters[]> = this.subject$.asObservable();
-  costcenters: ICostCenters[];
+  subject$: ReplaySubject<ICostCenter[]> = new ReplaySubject<ICostCenter[]>(1);
+  data$: Observable<ICostCenter[]> = this.subject$.asObservable();
+  costcenters: ICostCenter[];
   totalCount: number = 0;
   pageSize = 10;
   pageSizeOptions: number[] = [5, 10, 20, 50];
-  dataSource: MatTableDataSource<ICostCenters> | null;
-  selection = new SelectionModel<ICostCenters>(true, []);
+  dataSource: MatTableDataSource<ICostCenter> | null;
+  selection = new SelectionModel<ICostCenter>(true, []);
   searchCtrl = new UntypedFormControl();
   labels = aioTableLabels;      
-  isListLoading = true;                                              
-  // users = [];
+  isListLoading = true;  
 
   public filteredUsers: ReplaySubject<string[]> = new ReplaySubject<string[]>(1);
   private _onDestroy$ = new Subject<void>();
@@ -88,7 +87,7 @@ export class CostCentersListComponent implements OnInit, OnDestroy, AfterViewIni
 
     this.dataSource = new MatTableDataSource();
     this.data$
-      .pipe(filter<ICostCenters[]>(Boolean))
+      .pipe(filter<ICostCenter[]>(Boolean))
       .subscribe(costcenters => {
         this.totalCount = costcenters.length;
         this.costcenters = costcenters;
@@ -131,17 +130,17 @@ export class CostCentersListComponent implements OnInit, OnDestroy, AfterViewIni
     return numSelected === numRows;
   }
 
-  masterToggle() {
+  masterToggle(): void {
     this.isAllSelected() ?
       this.selection.clear() :
       this.dataSource.data.forEach(row => this.selection.select(row));
   }
 
-  trackByProperty<T>(index: number, column: TableColumn<T>) {
+  trackByProperty<T>(index: number, column: TableColumn<T>): string {
     return column.property;
   }
 
-  onLabelChange(change: MatSelectChange, row: ICostCenters) {
+  onLabelChange(change: MatSelectChange, row: ICostCenter): void {
     const index = this.costcenters.findIndex(c => c === row);
     this.subject$.next(this.costcenters);
   }
