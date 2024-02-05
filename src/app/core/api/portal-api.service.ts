@@ -9,6 +9,7 @@ import { IStringInterpolation } from "../models/string-interpolation";
 import { ITemplates } from "../models/templates";
 import { HttpResponse } from '@angular/common/http';
 import { ISettings } from "../models/settings";
+import { IChart } from "../models/chart";
 
 export class PortalApi extends BaseApi {
     private _apiUrl = `${environment.apiGatewayBaseUrl}`;
@@ -88,5 +89,16 @@ export class PortalApi extends BaseApi {
     addVersion(data:any): Observable<any> {
         return this.post<any>(`${this._apiUrl}/version`, data);
     }
+
+    getChartAccounts(): Observable<IChart[]> {
+        return this.get<IChart[]>(`${this._apiUrl}/ChartOfAccounts/Get`);
+    }
     
+    exportChartLogs(): Observable<HttpResponse<Blob>>  {
+        return this.get(`${this._apiUrl}/ChartOfAccounts/export`, 
+        {
+            observe: 'response',
+            responseType: 'blob' as 'json'
+        });
+    }
 }

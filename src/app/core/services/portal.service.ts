@@ -9,6 +9,7 @@ import { IStringInterpolation } from '../models/string-interpolation';
 import { ITemplates } from '../models/templates';
 import { DatePipe } from '@angular/common';
 import { ISettings } from '../models/settings';
+import { IChart } from '../models/chart';
 
 @Injectable({
   providedIn: 'root'
@@ -101,4 +102,25 @@ export class PortalService {
   addVersion(data: any): Observable<any> {
     return this._portalApi.addVersion(data);
   }
+
+  getChartAccounts(): Observable<IChart[]> {
+    return this._portalApi.getChartAccounts();
+  }
+
+  exportChartLogs(): void {
+    this._portalApi.exportChartLogs().subscribe(response => {
+      const contentDisposition = response.headers.get('Content-Disposition');
+      const filename = contentDisposition 
+        ? contentDisposition.split(';')[1].trim().split('=')[1] 
+        : 'Chart_Logs_' + this._datePipe.transform(new Date(), 'medium') + '.xlsx';
+
+      const blob = new Blob([response.body], { type: 'application/actet-stream' });
+
+      const link = document.createElement('a');
+      link.href = window.URL.createObjectURL(blob);
+      link.download = filename;
+      link.click();
+    });
+  }
 }
+
