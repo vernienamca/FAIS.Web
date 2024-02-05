@@ -9,6 +9,7 @@ import { IStringInterpolation } from "../models/string-interpolation";
 import { ITemplates } from "../models/templates";
 import { HttpResponse } from '@angular/common/http';
 import { ISettings } from "../models/settings";
+import { ICostCenter } from "../models/cost-center";
 import { IChart } from "../models/chart";
 
 export class PortalApi extends BaseApi {
@@ -89,6 +90,11 @@ export class PortalApi extends BaseApi {
     addVersion(data:any): Observable<any> {
         return this.post<any>(`${this._apiUrl}/version`, data);
     }
+
+    getCostCenters(): Observable<ICostCenter[]> {
+        return this.get<ICostCenter>(`${this._apiUrl}/costcenter/get`);
+    }
+
 
     getChartAccounts(): Observable<IChart[]> {
         return this.get<IChart[]>(`${this._apiUrl}/ChartOfAccounts/Get`);
