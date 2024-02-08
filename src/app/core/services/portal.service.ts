@@ -108,11 +108,10 @@ export class PortalService {
     return this._portalApi.getCostCenters();
   }
 
-
   getChartAccounts(): Observable<IChart[]> {
     return this._portalApi.getChartAccounts();
   }
-
+  
   exportChartLogs(): void {
     this._portalApi.exportChartLogs().subscribe(response => {
       const contentDisposition = response.headers.get('Content-Disposition');

@@ -54,7 +54,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
     MatSnackBarModule,
     MatFormFieldModule,
     MatInputModule,
-    MatSlideToggleModule,
+    MatSlideToggleModule
   ]
 })
 export class ChartAccountModule {

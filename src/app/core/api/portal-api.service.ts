@@ -95,13 +95,12 @@ export class PortalApi extends BaseApi {
         return this.get<ICostCenter>(`${this._apiUrl}/costcenter/get`);
     }
 
-
     getChartAccounts(): Observable<IChart[]> {
-        return this.get<IChart[]>(`${this._apiUrl}/ChartOfAccounts/Get`);
+        return this.get<IChart[]>(`${this._apiUrl}/chartofaccounts/get`);
     }
     
     exportChartLogs(): Observable<HttpResponse<Blob>>  {
-        return this.get(`${this._apiUrl}/ChartOfAccounts/export`, 
+        return this.get(`${this._apiUrl}/chartofaccounts/export`, 
         {
             observe: 'response',
             responseType: 'blob' as 'json'
