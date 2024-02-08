@@ -74,6 +74,10 @@ const routes: VexRoutes = [
             }
           },
           {
+            path: 'chart-accounts',
+            loadChildren: () => import('./pages/apps/chart/chart-account.module').then(m => m.ChartAccountModule),
+          },
+          {
             path: 'interpolations',
             loadChildren: () => import('./pages/apps/notification/string-interpolation/string-interpolation.module').then(m =>m.StringInterpolationModule)
           },
