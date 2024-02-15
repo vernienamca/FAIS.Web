@@ -10,6 +10,7 @@ import { ITemplates } from "../models/templates";
 import { HttpResponse } from '@angular/common/http';
 import { ISettings } from "../models/settings";
 import { ICostCenter } from "../models/cost-center";
+import { IProFormaEntry } from "../models/pro-forma-entry";
 
 export class PortalApi extends BaseApi {
     private _apiUrl = `${environment.apiGatewayBaseUrl}`;
@@ -92,6 +93,18 @@ export class PortalApi extends BaseApi {
 
     getCostCenters(): Observable<ICostCenter[]> {
         return this.get<ICostCenter>(`${this._apiUrl}/costcenter/get`);
+    }
+
+    getProFormaEntries(): Observable<IProFormaEntry[]> {
+        return this.get<IProFormaEntry>(`${this._apiUrl}/proformaentry/get`);
+    }
+
+    exportProFormaEntries(): Observable<HttpResponse<Blob>>  {
+        return this.get(`${this._apiUrl}/proFormaentry/export`, 
+        {
+            observe: 'response',
+            responseType: 'blob' as 'json'
+        });
     }
 
 }
