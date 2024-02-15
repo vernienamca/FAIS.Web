@@ -10,6 +10,7 @@ import { ITemplates } from "../models/templates";
 import { HttpResponse } from '@angular/common/http';
 import { ISettings } from "../models/settings";
 import { ICostCenter } from "../models/cost-center";
+import { ILibraryTypeOption } from "../models/library-type-option";
 
 export class PortalApi extends BaseApi {
     private _apiUrl = `${environment.apiGatewayBaseUrl}`;
@@ -92,6 +93,18 @@ export class PortalApi extends BaseApi {
 
     getCostCenters(): Observable<ICostCenter[]> {
         return this.get<ICostCenter>(`${this._apiUrl}/costcenter/get`);
+    }
+
+    getLibraryTypeOptions(): Observable<ILibraryTypeOption[]> {
+        return this.get<ILibraryTypeOption>(`${this._apiUrl}/librarytypeoption/get`);
+    }
+
+    exportLibraryTypeOptions(): Observable<HttpResponse<Blob>>  {
+        return this.get(`${this._apiUrl}/librarytypeoption/export`, 
+        {
+            observe: 'response',
+            responseType: 'blob' as 'json'
+        });
     }
 
 }

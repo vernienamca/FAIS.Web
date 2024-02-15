@@ -106,6 +106,10 @@ const routes: VexRoutes = [
             path: 'cost-centers',
             loadChildren: () => import('./pages/apps/cost-centers/cost-centers.module').then(m => m.CostCentersModule)
           },
+          {
+            path: 'library-type-options',
+            loadChildren: () => import('./pages/apps/library-type-options/library-type-options.module').then(m => m.LibraryTypeOptionsModule)
+          },
         ]
       },
       {
