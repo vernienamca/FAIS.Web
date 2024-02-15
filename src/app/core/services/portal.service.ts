@@ -126,7 +126,15 @@ export class PortalService {
   getCostCenters(): Observable<ICostCenter[]> {
     return this._portalApi.getCostCenters();
   }
+
   getLibraryTypeOptions(): Observable<ILibraryTypeOption[]> {
     return this._portalApi.getLibraryTypeOptions();
   }
+  getLibraryTypeOption(id: number): Observable<ILibraryTypeOption> {
+    return this._portalApi.getLibraryTypeOption(id);
+  }
+  updateLibraryTypeOption(data: any): Observable<any> {
+    return this._portalApi.updateLibraryTypeOption(data);
+  }
+
 }

@@ -1,8 +1,8 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
-import { LibraryTypeOptionListComponent } from './library-type-options-list.component';
+import { LibraryTypeOptionListComponent } from './library-type-option-list.component';
 
-describe('ProFormaEntriesListComponent', () => {
+describe('LibraryTypeOptionListComponent', () => {
   let component: LibraryTypeOptionListComponent;
   let fixture: ComponentFixture<LibraryTypeOptionListComponent>;
 

@@ -4,6 +4,7 @@ export interface ILibraryTypeOption {
     code: string;
     description: string;
     status: number;
+    remarks: string;
     createdBy: string;
     createdAt: Date;
     updatedBy?: string;

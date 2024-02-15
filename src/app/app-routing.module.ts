@@ -108,7 +108,7 @@ const routes: VexRoutes = [
           },
           {
             path: 'library-type-options',
-            loadChildren: () => import('./pages/apps/library-type-options/library-type-options.module').then(m => m.LibraryTypeOptionsModule)
+            loadChildren: () => import('./pages/apps/library-type-option/library-type-option.module').then(m => m.LibraryTypeOptionModule)
           },
         ]
       },

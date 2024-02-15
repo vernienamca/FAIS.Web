@@ -99,12 +99,20 @@ export class PortalApi extends BaseApi {
         return this.get<ILibraryTypeOption>(`${this._apiUrl}/librarytypeoption/get`);
     }
 
+    getLibraryTypeOption(id: number): Observable<ILibraryTypeOption> {
+        return this.get<ILibraryTypeOption>(`${this._apiUrl}/librarytypeoption/${id}`);
+    }
+
     exportLibraryTypeOptions(): Observable<HttpResponse<Blob>>  {
         return this.get(`${this._apiUrl}/librarytypeoption/export`, 
         {
             observe: 'response',
             responseType: 'blob' as 'json'
         });
+    }
+
+    updateLibraryTypeOption(data: any): Observable<any> {
+        return this.put<any>(`${this._apiUrl}/librarytypeoption`, data);
     }
 
 }

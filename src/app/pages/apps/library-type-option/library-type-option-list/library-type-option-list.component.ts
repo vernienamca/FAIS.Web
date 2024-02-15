@@ -21,9 +21,9 @@ import { Router } from '@angular/router';
 
 @UntilDestroy()
 @Component({
-  selector: 'vex-aio-table',
-  templateUrl: './library-type-options-list.component.html',
-  styleUrls: ['./library-type-options-list.component.scss'],
+  selector: 'vex-library-type-option-table',
+  templateUrl: './library-type-option-list.component.html',
+  styleUrls: ['./library-type-option-list.component.scss'],
   animations: [
     fadeInUp400ms,
     stagger40ms
@@ -98,6 +98,7 @@ var data: ILibraryTypeOption[]= [{
   code: "C001",
   description: "Option - 01",
   status: 1,
+  remarks: "Approved",
   createdBy: null,
   createdAt: null
 }];
@@ -167,10 +168,10 @@ var data: ILibraryTypeOption[]= [{
   }
 
   add() {
-    this._router.navigate(['library-type-option/add']);
+    this._router.navigate(['library-type-options/add']);
   }
   
   edit(libraryTypeOption: any): void {
-    this._router.navigate([`apps/library-type-option/edit/${libraryTypeOption.code}`]);
+    this._router.navigate([`apps/library-type-options/edit/${libraryTypeOption.code}`]);
   }
 }
