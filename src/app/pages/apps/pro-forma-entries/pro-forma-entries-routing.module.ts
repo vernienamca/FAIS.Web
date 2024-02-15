@@ -3,6 +3,7 @@ import { RouterModule } from '@angular/router';
 import { QuicklinkModule } from 'ngx-quicklink';
 import { VexRoutes } from '../../../../@vex/interfaces/vex-route.interface';
 import { ProFormaEntriesListComponent } from './pro-forma-entries-list/pro-forma-entries-list.component';
+import { ProFormaEntryComponent } from './pro-forma-entry.component';
 
 const routes: VexRoutes = [
   {
@@ -12,6 +13,13 @@ const routes: VexRoutes = [
       toolbarShadowEnabled: false
     }
   },
+  {
+    path: 'edit/:id',
+    component: ProFormaEntryComponent,
+    data: {
+      toolbarShadowEnabled: false
+    }
+  }
 ];
 
 @NgModule({

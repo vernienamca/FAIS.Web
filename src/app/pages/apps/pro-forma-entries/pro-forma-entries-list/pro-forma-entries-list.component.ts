@@ -21,7 +21,7 @@ import { Router } from '@angular/router';
 
 @UntilDestroy()
 @Component({
-  selector: 'vex-aio-table',
+  selector: 'vex-pro-forma-entries-table',
   templateUrl: './pro-forma-entries-list.component.html',
   styleUrls: ['./pro-forma-entries-list.component.scss'],
   animations: [
@@ -169,6 +169,6 @@ var data: IProFormaEntry[]= [{
   }
   
   edit(proFormaEntry: any): void {
-    this._router.navigate([`apps/pro-forma-entry/edit/${proFormaEntry.id}`]);
+    this._router.navigate([`apps/pro-forma-entries/edit/${proFormaEntry.id}`]);
   }
 }

@@ -20,9 +20,15 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { MatInputModule } from '@angular/material/input';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatTabsModule } from '@angular/material/tabs';
+import { SecondaryToolbarModule } from 'src/@vex/components/secondary-toolbar/secondary-toolbar.module';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { ProFormaEntryComponent } from './pro-forma-entry.component';
 
 @NgModule({
-  declarations: [ProFormaEntriesListComponent],
+  declarations: [ProFormaEntriesListComponent, ProFormaEntryComponent],
   imports: [
     CommonModule,
     ProFormaEntriesRoutingModule,
@@ -44,7 +50,12 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     MatProgressBarModule,
     MatDialogModule,
     MatDividerModule,
-    FlexLayoutModule
+    FlexLayoutModule,
+    MatInputModule,
+    MatSlideToggleModule,
+    MatTabsModule,
+    SecondaryToolbarModule,
+    MatSnackBarModule
   ]
 })
 export class ProFormaEntriesModule {
