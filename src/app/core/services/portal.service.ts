@@ -80,25 +80,6 @@ export class PortalService {
     });
   }
 
-  
-  
-  exportLibraryTypeOptions(): void {
-    this._portalApi.exportLibraryTypeOptions().subscribe(response => {
-      const contentDisposition = response.headers.get('Content-Disposition');
-      const filename = contentDisposition 
-        ? contentDisposition.split(';')[1].trim().split('=')[1] 
-        : 'Library_Type_Options_' + this._datePipe.transform(new Date(), 'medium') + '.xlsx';
-
-      const blob = new Blob([response.body], { type: 'application/actet-stream' });
-
-      const link = document.createElement('a');
-      link.href = window.URL.createObjectURL(blob);
-      link.download = filename;
-      link.click();
-    });
-  }
-
-
   getSetting(id: number): Observable<any> {
     return this._portalApi.getSetting(id);
   }
@@ -136,5 +117,19 @@ export class PortalService {
   updateLibraryTypeOption(data: any): Observable<any> {
     return this._portalApi.updateLibraryTypeOption(data);
   }
+  exportLibraryTypeOptions(): void {
+    this._portalApi.exportLibraryTypeOptions().subscribe(response => {
+      const contentDisposition = response.headers.get('Content-Disposition');
+      const filename = contentDisposition 
+        ? contentDisposition.split(';')[1].trim().split('=')[1] 
+        : 'Library_Type_Options_' + this._datePipe.transform(new Date(), 'medium') + '.xlsx';
 
+      const blob = new Blob([response.body], { type: 'application/actet-stream' });
+
+      const link = document.createElement('a');
+      link.href = window.URL.createObjectURL(blob);
+      link.download = filename;
+      link.click();
+    });
+  }
 }

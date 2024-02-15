@@ -115,7 +115,7 @@ export class LibraryTypeOptionComponent implements OnInit, OnDestroy {
         if (!data) {
           return;
         }
-        let snackBarRef = this._snackBar.open('Library Type Option has been successfully updated.', 'Close');
+        let snackBarRef = this._snackBar.open('Library type option has been successfully updated.', 'Close');
         snackBarRef.afterDismissed().subscribe(() => {
           window.location.reload();
         });
