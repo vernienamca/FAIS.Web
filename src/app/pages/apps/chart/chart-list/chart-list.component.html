@@ -4,8 +4,7 @@
       class="w-full flex flex-col sm:flex-row justify-between">
       <div>
         <h1 class="title mt-0 mb-1">Chart of Accounts ({{ totalCount }})</h1>
-        <vex-breadcrumbs [crumbs]="crumbs" class="flex-auto"></vex-breadcrumbs>
-      </div>
+        <vex-breadcrumbs [crumbs]="['System Libraries', 'Chart of Accounts']"></vex-breadcrumbs>      </div>
       <div class="hidden sm:block">
         <mat-button-toggle-group [formControl]="layoutCtrl" class="mt-4 sm:mt-0">
           <mat-button-toggle value="boxed">Boxed</mat-button-toggle>

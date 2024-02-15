@@ -110,7 +110,7 @@ export class PortalApi extends BaseApi {
     }
 
     addChartOfAccounts(chartOfAccounts: IChart): Observable<IChart> {
-        return this.post<IChart>(`${this._apiUrl}/ChartOfAccounts`, chartOfAccounts);
+        return this.post<IChart>(`${this._apiUrl}/chartofaccounts`, chartOfAccounts);
     }
 
     getChartOfAccountsById(id: number): Observable<IChart> {
@@ -118,14 +118,14 @@ export class PortalApi extends BaseApi {
     }
 
     getLibraryTypes(): Observable<ILibraryTypes[]> {
-        return this.get<ILibraryTypes[]>(`${this._apiUrl}/LibraryType/Get`);
+        return this.get<ILibraryTypes[]>(`${this._apiUrl}/librarytype/get`);
     }
 
     getLibraryOptions(): Observable<ILibraryOptions[]>{
-        return this.get<ILibraryOptions[]>(`${this._apiUrl}/LibraryTypeOption`);
+        return this.get<ILibraryOptions[]>(`${this._apiUrl}/librarytypeoption`);
     }
     
     updateChartOfAccounts(id: number, data: any): Observable<IChart> {
-        return this.put<IChart>(`${this._apiUrl}/ChartOfAccounts/${id}`, data);
+        return this.put<IChart>(`${this._apiUrl}/chartofaccounts/${id}`, data);
     }
 }

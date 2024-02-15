@@ -15,8 +15,6 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { PortalService } from 'src/app/core/services/portal.service';
 import { IChart } from 'src/app/core/models/chart';
 import { Router } from '@angular/router';
-import { ActivatedRoute } from '@angular/router';
-
 
 @UntilDestroy()
 @Component({
@@ -36,7 +34,6 @@ import { ActivatedRoute } from '@angular/router';
     }
   ]
 })
-
 
 export class ChartListComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
@@ -64,22 +61,15 @@ export class ChartListComponent implements OnInit, OnDestroy, AfterViewInit {
   labels = aioTableLabels;
   isListLoading = false;
 
-  
   get visibleColumns() {
     return this.columns.filter(column => column.visible).map(column => column.property);
   }
 
   private _onDestroy$ = new Subject<void>();
 
-  crumbs = [
-    { name: 'System Libraries', route: '/' },
-    { name: 'Chart of Accounts', route: '/' },
-  ];
-
   constructor(
     private _router: Router,
-    private _portalService: PortalService,
-    private _route: ActivatedRoute
+    private _portalService: PortalService
   ){}
 
   ngOnInit(): void {
