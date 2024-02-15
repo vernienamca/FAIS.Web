@@ -9,13 +9,16 @@ import { IStringInterpolation } from '../models/string-interpolation';
 import { ITemplates } from '../models/templates';
 import { DatePipe } from '@angular/common';
 import { ISettings } from '../models/settings';
+import { IChart } from '../models/chart';
+import { ILibraryTypes } from "../models/library-types";
+import { ILibraryOptions } from '../models/library-options';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PortalService {
   constructor(
-    private _portalApi: PortalApi, 
+    private _portalApi: PortalApi,
     private _datePipe: DatePipe) { }
 
   getModules(): Observable<IModule[]> {
@@ -41,7 +44,7 @@ export class PortalService {
   getUsers(): Observable<IUser[]> {
     return this._portalApi.getUsers();
   }
-  
+
   getUser(id: number): Observable<any> {
     return this._portalApi.getUser(id);
   }
@@ -61,12 +64,12 @@ export class PortalService {
   getAlerts(): Observable<ITemplates[]> {
     return this._portalApi.getTemplates();
   }
-  
+
   exportAuditLogs(): void {
     this._portalApi.exportAuditLogs().subscribe(response => {
       const contentDisposition = response.headers.get('Content-Disposition');
-      const filename = contentDisposition 
-        ? contentDisposition.split(';')[1].trim().split('=')[1] 
+      const filename = contentDisposition
+        ? contentDisposition.split(';')[1].trim().split('=')[1]
         : 'Audit_Logs_' + this._datePipe.transform(new Date(), 'medium') + '.xlsx';
 
       const blob = new Blob([response.body], { type: 'application/actet-stream' });
@@ -101,4 +104,44 @@ export class PortalService {
   addVersion(data: any): Observable<any> {
     return this._portalApi.addVersion(data);
   }
+
+  getChartAccounts(): Observable<IChart[]> {
+    return this._portalApi.getChartAccounts();
+  }
+
+  exportChartLogs(): void {
+    this._portalApi.exportChartLogs().subscribe(response => {
+      const contentDisposition = response.headers.get('Content-Disposition');
+      const filename = contentDisposition
+        ? contentDisposition.split(';')[1].trim().split('=')[1]
+        : 'Chart_Logs_' + this._datePipe.transform(new Date(), 'medium') + '.xlsx';
+
+      const blob = new Blob([response.body], { type: 'application/actet-stream' });
+
+      const link = document.createElement('a');
+      link.href = window.URL.createObjectURL(blob);
+      link.download = filename;
+      link.click();
+    });
+  }
+
+  addChartOfAccounts(chartOfAccounts: IChart): Observable<IChart> {
+    return this._portalApi.addChartOfAccounts(chartOfAccounts);
+  }
+
+  getChartOfAccountsById(id: number): Observable<IChart> {
+    return this._portalApi.getChartOfAccountsById(id);
+  }
+
+  getLibraryTypes(): Observable<ILibraryTypes[]> {
+    return this._portalApi.getLibraryTypes();
+  }
+  
+  getLibraryOptions(): Observable<ILibraryOptions[]> {
+    return this._portalApi.getLibraryOptions();
+  }
+
+  updateChartOfAccounts(id: number, data: any): Observable<any> {
+    return this._portalApi.updateChartOfAccounts(id,data);
+}
 }

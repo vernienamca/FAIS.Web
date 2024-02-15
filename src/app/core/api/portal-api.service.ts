@@ -9,6 +9,9 @@ import { IStringInterpolation } from "../models/string-interpolation";
 import { ITemplates } from "../models/templates";
 import { HttpResponse } from '@angular/common/http';
 import { ISettings } from "../models/settings";
+import { IChart } from "../models/chart";
+import { ILibraryTypes } from "../models/library-types";
+import { ILibraryOptions } from "../models/library-options";
 
 export class PortalApi extends BaseApi {
     private _apiUrl = `${environment.apiGatewayBaseUrl}`;
@@ -29,7 +32,7 @@ export class PortalApi extends BaseApi {
         return this.get<IRole>(`${this._apiUrl}/permission/role/${id}`);
     }
 
-    updaterolepermission(data:any): Observable<any> {
+    updaterolepermission(data: any): Observable<any> {
         return this.put<any>(`${this._apiUrl}/permission/role`, data);
     }
 
@@ -57,15 +60,15 @@ export class PortalApi extends BaseApi {
         return this.get<ITemplates>(`${this._apiUrl}/notification/templates`);
     }
 
-    exportAuditLogs(): Observable<HttpResponse<Blob>>  {
-        return this.get(`${this._apiUrl}/auditLog/export`, 
-        {
-            observe: 'response',
-            responseType: 'blob' as 'json'
-        });
+    exportAuditLogs(): Observable<HttpResponse<Blob>> {
+        return this.get(`${this._apiUrl}/auditLog/export`,
+            {
+                observe: 'response',
+                responseType: 'blob' as 'json'
+            });
     }
 
-    getSetting(id: number) : Observable<ISettings>{
+    getSetting(id: number): Observable<ISettings> {
         return this.get<ISettings>(`${this._apiUrl}/settings/${id}`);
     }
 
@@ -73,7 +76,7 @@ export class PortalApi extends BaseApi {
         return this.put<any>(`${this._apiUrl}/module`, data);
     }
 
-    updatesettings(data:any): Observable<any> {
+    updatesettings(data: any): Observable<any> {
         return this.put<any>(`${this._apiUrl}/settings`, data);
     }
 
@@ -85,8 +88,39 @@ export class PortalApi extends BaseApi {
         return this.get<any>(`${this._apiUrl}/version/get`);
     }
 
-    addVersion(data:any): Observable<any> {
+    addVersion(data: any): Observable<any> {
         return this.post<any>(`${this._apiUrl}/version`, data);
     }
+
+    getChartAccounts(): Observable<IChart[]> {
+        return this.get<IChart[]>(`${this._apiUrl}/ChartOfAccounts/Get`);
+    }
+
+    exportChartLogs(): Observable<HttpResponse<Blob>> {
+        return this.get(`${this._apiUrl}/ChartOfAccounts/export`,
+            {
+                observe: 'response',
+                responseType: 'blob' as 'json'
+            });
+    }
+
+    addChartOfAccounts(chartOfAccounts: IChart): Observable<IChart> {
+        return this.post<IChart>(`${this._apiUrl}/ChartOfAccounts`, chartOfAccounts);
+    }
+
+    getChartOfAccountsById(id: number): Observable<IChart> {
+        return this.get<IChart>(`${this._apiUrl}/chartofaccounts/${id}`);
+    }
+
+    getLibraryTypes(): Observable<ILibraryTypes[]> {
+        return this.get<ILibraryTypes[]>(`${this._apiUrl}/LibraryType/Get`);
+    }
+
+    getLibraryOptions(): Observable<ILibraryOptions[]>{
+        return this.get<ILibraryOptions[]>(`${this._apiUrl}/LibraryTypeOption`);
+    }
     
+    updateChartOfAccounts(id: number, data: any): Observable<IChart> {
+        return this.put<IChart>(`${this._apiUrl}/ChartOfAccounts/${id}`, data);
+    }
 }

@@ -128,7 +128,6 @@ export class ProfileComponent {
   }
 
   save(): void {
-    console.log('Save function called');
     const userIdNumber = +this.userId;
     const data = {
       lastName: this.settingsForm.get('last')?.value,
