@@ -9,6 +9,7 @@ import { IStringInterpolation } from "../models/string-interpolation";
 import { ITemplates } from "../models/templates";
 import { HttpResponse } from '@angular/common/http';
 import { ISettings } from "../models/settings";
+import { ICostCenter } from "../models/cost-center";
 import { IChart } from "../models/chart";
 import { ILibraryTypes } from "../models/library-types";
 import { ILibraryOptions } from "../models/library-options";
@@ -92,16 +93,20 @@ export class PortalApi extends BaseApi {
         return this.post<any>(`${this._apiUrl}/version`, data);
     }
 
-    getChartAccounts(): Observable<IChart[]> {
-        return this.get<IChart[]>(`${this._apiUrl}/ChartOfAccounts/Get`);
+    getCostCenters(): Observable<ICostCenter[]> {
+        return this.get<ICostCenter>(`${this._apiUrl}/costcenter/get`);
     }
 
-    exportChartLogs(): Observable<HttpResponse<Blob>> {
-        return this.get(`${this._apiUrl}/ChartOfAccounts/export`,
-            {
-                observe: 'response',
-                responseType: 'blob' as 'json'
-            });
+    getChartAccounts(): Observable<IChart[]> {
+        return this.get<IChart[]>(`${this._apiUrl}/chartofaccounts/get`);
+    }
+    
+    exportChartLogs(): Observable<HttpResponse<Blob>>  {
+        return this.get(`${this._apiUrl}/chartofaccounts/export`, 
+        {
+            observe: 'response',
+            responseType: 'blob' as 'json'
+        });
     }
 
     addChartOfAccounts(chartOfAccounts: IChart): Observable<IChart> {

@@ -9,6 +9,7 @@ import { IStringInterpolation } from '../models/string-interpolation';
 import { ITemplates } from '../models/templates';
 import { DatePipe } from '@angular/common';
 import { ISettings } from '../models/settings';
+import { ICostCenter } from '../models/cost-center';
 import { IChart } from '../models/chart';
 import { ILibraryTypes } from "../models/library-types";
 import { ILibraryOptions } from '../models/library-options';
@@ -105,15 +106,19 @@ export class PortalService {
     return this._portalApi.addVersion(data);
   }
 
+  getCostCenters(): Observable<ICostCenter[]> {
+    return this._portalApi.getCostCenters();
+  }
+
   getChartAccounts(): Observable<IChart[]> {
     return this._portalApi.getChartAccounts();
   }
-
+  
   exportChartLogs(): void {
     this._portalApi.exportChartLogs().subscribe(response => {
       const contentDisposition = response.headers.get('Content-Disposition');
-      const filename = contentDisposition
-        ? contentDisposition.split(';')[1].trim().split('=')[1]
+      const filename = contentDisposition 
+        ? contentDisposition.split(';')[1].trim().split('=')[1] 
         : 'Chart_Logs_' + this._datePipe.transform(new Date(), 'medium') + '.xlsx';
 
       const blob = new Blob([response.body], { type: 'application/actet-stream' });
