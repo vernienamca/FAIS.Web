@@ -74,6 +74,10 @@ const routes: VexRoutes = [
             }
           },
           {
+            path: 'chart-accounts',
+            loadChildren: () => import('./pages/apps/chart/chart-account.module').then(m => m.ChartAccountModule),
+          },
+          {
             path: 'interpolations',
             loadChildren: () => import('./pages/apps/notification/string-interpolation/string-interpolation.module').then(m =>m.StringInterpolationModule)
           },
@@ -107,9 +111,13 @@ const routes: VexRoutes = [
             loadChildren: () => import('./pages/apps/cost-centers/cost-centers.module').then(m => m.CostCentersModule)
           },
           {
+            path: 'pro-forma-entries',
+            loadChildren: () => import('./pages/apps/pro-forma-entries/pro-forma-entries.module').then(m => m.ProFormaEntriesModule)
+          },
+          {
             path: 'library-type-options',
             loadChildren: () => import('./pages/apps/library-type-option/library-type-option.module').then(m => m.LibraryTypeOptionModule)
-          },
+          }
         ]
       },
       {

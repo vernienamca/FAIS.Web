@@ -11,6 +11,8 @@ import { DatePipe } from '@angular/common';
 import { ISettings } from '../models/settings';
 import { ICostCenter } from '../models/cost-center';
 import { ILibraryTypeOption } from '../models/library-type-option';
+import { IProFormaEntry } from '../models/pro-forma-entry';
+import { IChart } from '../models/chart';
 
 @Injectable({
   providedIn: 'root'
@@ -80,6 +82,7 @@ export class PortalService {
     });
   }
 
+
   getSetting(id: number): Observable<any> {
     return this._portalApi.getSetting(id);
   }
@@ -108,21 +111,16 @@ export class PortalService {
     return this._portalApi.getCostCenters();
   }
 
-  getLibraryTypeOptions(): Observable<ILibraryTypeOption[]> {
-    return this._portalApi.getLibraryTypeOptions();
+  getChartAccounts(): Observable<IChart[]> {
+    return this._portalApi.getChartAccounts();
   }
-  getLibraryTypeOption(id: number): Observable<ILibraryTypeOption> {
-    return this._portalApi.getLibraryTypeOption(id);
-  }
-  updateLibraryTypeOption(data: any): Observable<any> {
-    return this._portalApi.updateLibraryTypeOption(data);
-  }
-  exportLibraryTypeOptions(): void {
-    this._portalApi.exportLibraryTypeOptions().subscribe(response => {
+  
+  exportChartLogs(): void {
+    this._portalApi.exportChartLogs().subscribe(response => {
       const contentDisposition = response.headers.get('Content-Disposition');
       const filename = contentDisposition 
         ? contentDisposition.split(';')[1].trim().split('=')[1] 
-        : 'Library_Type_Options_' + this._datePipe.transform(new Date(), 'medium') + '.xlsx';
+        : 'Chart_Logs_' + this._datePipe.transform(new Date(), 'medium') + '.xlsx';
 
       const blob = new Blob([response.body], { type: 'application/actet-stream' });
 
@@ -132,4 +130,61 @@ export class PortalService {
       link.click();
     });
   }
+
+  getLibraryTypeOptions(): Observable<ILibraryTypeOption[]> {
+    return this._portalApi.getLibraryTypeOptions();
+  }
+
+  getLibraryTypeOption(id: number): Observable<ILibraryTypeOption> {
+    return this._portalApi.getLibraryTypeOption(id);
+  }
+
+  updateLibraryTypeOption(data: any): Observable<any> {
+    return this._portalApi.updateLibraryTypeOption(data);
+  }
+
+  exportLibraryTypeOptions(): void {
+    this._portalApi.exportLibraryTypeOptions().subscribe(response => {
+      const contentDisposition = response.headers.get('Content-Disposition');
+      const filename = contentDisposition 
+        ? contentDisposition.split(';')[1].trim().split('=')[1] 
+        : 'Library_Type_Options_' + this._datePipe.transform(new Date(), 'medium') + '.xlsx';
+
+        const blob = new Blob([response.body], { type: 'application/actet-stream' });
+  
+        const link = document.createElement('a');
+        link.href = window.URL.createObjectURL(blob);
+        link.download = filename;
+        link.click();
+      });
+    }
+
+  getProFormaEntries(): Observable<IProFormaEntry[]> {
+    return this._portalApi.getProFormaEntries();
+  }
+
+  getProFormaEntry(id: number): Observable<IProFormaEntry> {
+    return this._portalApi.getProFormaEntry(id);
+  }
+
+  updateProFormaEntry(data: any): Observable<any> {
+    return this._portalApi.updateProFormaEntry(data);
+  }  
+
+  exportProFormaEntries(): void {
+    this._portalApi.exportProFormaEntries().subscribe(response => {
+      const contentDisposition = response.headers.get('Content-Disposition');
+      const filename = contentDisposition 
+        ? contentDisposition.split(';')[1].trim().split('=')[1] 
+        : 'Pro_Forma_Entries_' + this._datePipe.transform(new Date(), 'medium') + '.xlsx';
+
+        const blob = new Blob([response.body], { type: 'application/actet-stream' });
+  
+        const link = document.createElement('a');
+        link.href = window.URL.createObjectURL(blob);
+        link.download = filename;
+        link.click();
+      });
+  }
 }
+

@@ -11,6 +11,8 @@ import { HttpResponse } from '@angular/common/http';
 import { ISettings } from "../models/settings";
 import { ICostCenter } from "../models/cost-center";
 import { ILibraryTypeOption } from "../models/library-type-option";
+import { IProFormaEntry } from "../models/pro-forma-entry";
+import { IChart } from "../models/chart";
 
 export class PortalApi extends BaseApi {
     private _apiUrl = `${environment.apiGatewayBaseUrl}`;
@@ -95,6 +97,26 @@ export class PortalApi extends BaseApi {
         return this.get<ICostCenter>(`${this._apiUrl}/costcenter/get`);
     }
 
+    getProFormaEntries(): Observable<IProFormaEntry[]> {
+        return this.get<IProFormaEntry>(`${this._apiUrl}/proformaentry/get`);
+    }
+
+    getProFormaEntry(id: number): Observable<IProFormaEntry> {
+        return this.get<IProFormaEntry>(`${this._apiUrl}/proformaentry/${id}`);
+    }
+
+    updateProFormaEntry(data: any): Observable<any> {
+        return this.put<any>(`${this._apiUrl}/proformaentry`, data);
+    }
+
+    exportProFormaEntries(): Observable<HttpResponse<Blob>>  {
+        return this.get(`${this._apiUrl}/proFormaentry/export`,  
+        {
+            observe: 'response',
+            responseType: 'blob' as 'json'
+        });
+    }
+
     getLibraryTypeOptions(): Observable<ILibraryTypeOption[]> {
         return this.get<ILibraryTypeOption>(`${this._apiUrl}/librarytypeoption/get`);
     }
@@ -104,15 +126,27 @@ export class PortalApi extends BaseApi {
     }
 
     exportLibraryTypeOptions(): Observable<HttpResponse<Blob>>  {
-        return this.get(`${this._apiUrl}/librarytypeoption/export`, 
+        return this.get(`${this._apiUrl}/librarytypeoption/export`,   
         {
             observe: 'response',
             responseType: 'blob' as 'json'
         });
     }
 
+
     updateLibraryTypeOption(data: any): Observable<any> {
         return this.put<any>(`${this._apiUrl}/librarytypeoption`, data);
     }
 
+    getChartAccounts(): Observable<IChart[]> {
+        return this.get<IChart[]>(`${this._apiUrl}/chartofaccounts/get`);
+    }
+    
+    exportChartLogs(): Observable<HttpResponse<Blob>>  {
+        return this.get(`${this._apiUrl}/chartofaccounts/export`, 
+        {
+            observe: 'response',
+            responseType: 'blob' as 'json'
+        });
+    }
 }
