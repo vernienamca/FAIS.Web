@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, Validators, FormBuilder, UntypedFormControl  } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute } from '@angular/router';
+import { ColumnMode } from '@swimlane/ngx-datatable';
 import { Subject, takeUntil } from 'rxjs';
 import { IProFormaEntry } from 'src/app/core/models/pro-forma-entry';
 import { PortalService } from 'src/app/core/services/portal.service';
@@ -29,6 +30,73 @@ export class ProFormaEntryComponent implements OnInit, OnDestroy {
   }
 
   private _onDestroy$ = new Subject<void>();
+  editing = {};
+  // rows = [];
+  rows = [
+    { faisrefno: '',
+    transactionseq: '',
+    costcenter: '',
+    glno: '',
+    rcagl: '',
+    prefix: '',
+    sl: '',
+    otherscode: '',
+    dce: '',
+    plantcode: '',
+    wo: '',
+    refbillno: '',
+    source: '',
+    nature: '',
+    ayyyy: '',
+    fg: '',
+    debit: '',
+    credit: '',
+    trandate: '',
+    yearmonthposted: '',
+    datecreated: '',
+    usercreated: '',
+    sortorderno: '',
+    udf1: '',
+    udf2: '',
+    remove: '',
+   }
+  ];
+  columns = [{ id: "faisrefno", name: "FAIS Ref No.", type: "text" },
+            { id: "transactionseq", name: "Transaction Seq", type: "text" },
+            { id: "costcenter", name: "Cost Center", type: "text" },
+            { id: "glno", name: "GL No.", type: "text" },
+            { id: "rcagl", name: "RCA GL", type: "text" },
+            { id: "prefix", name: "Prefix", type: "text" },
+            { id: "sl", name: "SL", type: "text" },
+            { id: "otherscode", name: "Others Code", type: "text" },
+            { id: "dce", name: "DCE", type: "text" },
+            { id: "plantcode", name: "Plant Code", type: "text" },
+            { id: "wo", name: "WO", type: "text" },
+            { id: "refbillno", name: "Ref./Bill No.", type: "text" },
+            { id: "source", name: "Source", type: "text" },
+            { id: "nature", name: "Nature", type: "text" },
+            { id: "ayyyy", name: "A_YYYY", type: "text" },
+            { id: "fg", name: "FG", type: "text" },
+            { id: "debit", name: "Debit", type: "text" },
+            { id: "credit", name: "Credit", type: "text" },
+            { id: "trandate", name: "Tran Date" },
+            { id: "yearmonthposted", name: "Year Month Posted", type: "text" },
+            { id: "datecreated", name: "Date Created", type: "text" },
+            { id: "usercreated", name: "User Created", type: "text" },
+            { id: "sortorderno", name: "Sort Order No.", type: "text" },
+            { id: "udf1", name: "UDF 1", type: "text" },
+            { id: "udf2", name: "UDF 2", type: "text" },
+            { id: "remove", name: "Remove", type: "button" }];
+
+  ColumnMode = ColumnMode;
+  
+  updateValue(event, cell, rowIndex) {
+    console.log('inline editing rowIndex', rowIndex);
+    this.editing[rowIndex + '-' + cell] = false;
+    this.rows[rowIndex][cell] = event.target.value;
+    this.rows = [...this.rows];
+    console.log('UPDATED!', this.rows[rowIndex][cell]);
+  }
  
   constructor(
     private _fb: FormBuilder,

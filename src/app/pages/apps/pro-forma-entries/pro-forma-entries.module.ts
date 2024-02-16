@@ -26,6 +26,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { SecondaryToolbarModule } from 'src/@vex/components/secondary-toolbar/secondary-toolbar.module';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { ProFormaEntryComponent } from './pro-forma-entry.component';
+import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 
 @NgModule({
   declarations: [ProFormaEntriesListComponent, ProFormaEntryComponent],
@@ -55,7 +56,8 @@ import { ProFormaEntryComponent } from './pro-forma-entry.component';
     MatSlideToggleModule,
     MatTabsModule,
     SecondaryToolbarModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    NgxDatatableModule,
   ]
 })
 export class ProFormaEntriesModule {
