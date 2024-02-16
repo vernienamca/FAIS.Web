@@ -11,6 +11,7 @@ import { HttpResponse } from '@angular/common/http';
 import { ISettings } from "../models/settings";
 import { ICostCenter } from "../models/cost-center";
 import { IProFormaEntry } from "../models/pro-forma-entry";
+import { IChart } from "../models/chart";
 
 export class PortalApi extends BaseApi {
     private _apiUrl = `${environment.apiGatewayBaseUrl}`;
@@ -108,11 +109,22 @@ export class PortalApi extends BaseApi {
     }
 
     exportProFormaEntries(): Observable<HttpResponse<Blob>>  {
-        return this.get(`${this._apiUrl}/proFormaentry/export`, 
+        return this.get(`${this._apiUrl}/proFormaentry/export`,  
         {
             observe: 'response',
             responseType: 'blob' as 'json'
         });
     }
 
+    getChartAccounts(): Observable<IChart[]> {
+        return this.get<IChart[]>(`${this._apiUrl}/chartofaccounts/get`);
+    }
+    
+    exportChartLogs(): Observable<HttpResponse<Blob>>  {
+        return this.get(`${this._apiUrl}/chartofaccounts/export`, 
+        {
+            observe: 'response',
+            responseType: 'blob' as 'json'
+        });
+    }
 }
