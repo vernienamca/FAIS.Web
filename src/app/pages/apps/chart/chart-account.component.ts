@@ -50,12 +50,14 @@ export class ChartAccountComponent implements OnInit, OnDestroy {
   }
   
   onDeleteRow(item: any): void {
-    const index = this.salesGrid.collectionView.items.indexOf(item);
-    if (index !== -1) {
-      this.salesGrid.collectionView.sourceCollection.splice(index, 1);
-      this.salesGrid.collectionView.refresh();
-    }
+   
+      const index = this.salesGrid.collectionView.items.indexOf(item);
+        this.salesGrid.collectionView.sourceCollection.splice(index, 1);
+        this.salesGrid.collectionView.refresh();
   }
+
+
+
   
   getSalesData(count: number) {
     const maxRowsToShow = 5;
@@ -176,7 +178,7 @@ export class ChartAccountComponent implements OnInit, OnDestroy {
   onToggleStatus($event: any): void {
     this.statusLabel = !$event.checked ? 'Inactive' : 'Active';
   }
-
+  
   onLibraryTypeSelected(event: MatSelectChange): void {
     this.selectedLibraryTypeId = event.value;
     this._portalService.getLibraryOptions()
