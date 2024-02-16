@@ -3,6 +3,11 @@
 @use '@angular/material' as mat;
 @import "@angular/material/theming";
 
+
+@import '/node_modules/@swimlane/ngx-datatable/index.css';
+@import '/node_modules/@swimlane/ngx-datatable/themes/material.scss';
+@import '/node_modules/@swimlane/ngx-datatable/assets/icons.css';
+
 // SCSS Variables
 @import "var";
 

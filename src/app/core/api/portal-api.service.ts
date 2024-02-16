@@ -10,6 +10,7 @@ import { ITemplates } from "../models/templates";
 import { HttpResponse } from '@angular/common/http';
 import { ISettings } from "../models/settings";
 import { ICostCenter } from "../models/cost-center";
+import { IProFormaEntry } from "../models/pro-forma-entry";
 import { IChart } from "../models/chart";
 
 export class PortalApi extends BaseApi {
@@ -93,6 +94,26 @@ export class PortalApi extends BaseApi {
 
     getCostCenters(): Observable<ICostCenter[]> {
         return this.get<ICostCenter>(`${this._apiUrl}/costcenter/get`);
+    }
+
+    getProFormaEntries(): Observable<IProFormaEntry[]> {
+        return this.get<IProFormaEntry>(`${this._apiUrl}/proformaentry/get`);
+    }
+
+    getProFormaEntry(id: number): Observable<IProFormaEntry> {
+        return this.get<IProFormaEntry>(`${this._apiUrl}/proformaentry/${id}`);
+    }
+
+    updateProFormaEntry(data: any): Observable<any> {
+        return this.put<any>(`${this._apiUrl}/proformaentry`, data);
+    }
+
+    exportProFormaEntries(): Observable<HttpResponse<Blob>>  {
+        return this.get(`${this._apiUrl}/proFormaentry/export`,  
+        {
+            observe: 'response',
+            responseType: 'blob' as 'json'
+        });
     }
 
     getChartAccounts(): Observable<IChart[]> {
