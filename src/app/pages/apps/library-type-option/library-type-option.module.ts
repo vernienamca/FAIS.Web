@@ -51,8 +51,6 @@ import { MatInputModule } from '@angular/material/input';
     MatDialogModule,
     MatDividerModule,
     FlexLayoutModule,
-
-    
     MatInputModule,
     MatSlideToggleModule,
     MatTabsModule,

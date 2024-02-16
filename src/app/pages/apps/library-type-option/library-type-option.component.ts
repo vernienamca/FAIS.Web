@@ -44,7 +44,6 @@ export class LibraryTypeOptionComponent implements OnInit, OnDestroy {
       description: ['', [Validators.required]],
       status: ['', [Validators.required]],
       remarks: ['']
-      // ,isActive: [true, []]
     });
 
     const id = parseInt(this._route.snapshot.paramMap.get('id'));
@@ -60,7 +59,6 @@ export class LibraryTypeOptionComponent implements OnInit, OnDestroy {
           description: data.description || '',
           status: data.status,
           remarks: data.remarks
-          // ,isActive: data.isActive === 'Y'
         });
         this.createdBy = data.createdBy;
         this.createdAt = data.createdAt;
