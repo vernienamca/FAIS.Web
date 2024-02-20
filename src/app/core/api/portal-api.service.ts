@@ -13,6 +13,7 @@ import { ICostCenter } from "../models/cost-center";
 import { ILibraryTypeOption } from "../models/library-type-option";
 import { IProFormaEntry } from "../models/pro-forma-entry";
 import { IChart } from "../models/chart";
+import { ILibraryTypes } from "../models/library-types";
 
 export class PortalApi extends BaseApi {
     private _apiUrl = `${environment.apiGatewayBaseUrl}`;
@@ -118,11 +119,15 @@ export class PortalApi extends BaseApi {
     }
 
     getLibraryTypeOptions(): Observable<ILibraryTypeOption[]> {
-        return this.get<ILibraryTypeOption>(`${this._apiUrl}/librarytypeoption/get`);
+        return this.get<ILibraryTypeOption>(`${this._apiUrl}/librarytypeoption`);
     }
 
     getLibraryTypeOption(id: number): Observable<ILibraryTypeOption> {
         return this.get<ILibraryTypeOption>(`${this._apiUrl}/librarytypeoption/${id}`);
+    }
+
+    getLibraryType(): Observable<ILibraryTypes[]> {
+        return this.get<ILibraryTypes>(`${this._apiUrl}/librarytype/get`);
     }
 
     exportLibraryTypeOptions(): Observable<HttpResponse<Blob>>  {
@@ -136,6 +141,10 @@ export class PortalApi extends BaseApi {
 
     updateLibraryTypeOption(data: any): Observable<any> {
         return this.put<any>(`${this._apiUrl}/librarytypeoption`, data);
+    }
+
+    createLibraryTypeOption(data: any): Observable<any> {
+        return this.post<any>(`${this._apiUrl}/librarytypeoption`, data);
     }
 
     getChartAccounts(): Observable<IChart[]> {

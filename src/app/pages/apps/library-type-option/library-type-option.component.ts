@@ -1,9 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, Validators, FormBuilder, UntypedFormControl  } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
-import { ILibraryTypeOption } from 'src/app/core/models/library-type-option';
+import { PageMode } from 'src/app/core/enums/page-mode.enum';
+import { ILibraryTypes } from 'src/app/core/models/library-types';
 import { PortalService } from 'src/app/core/services/portal.service';
 
 @Component({
@@ -12,21 +13,24 @@ import { PortalService } from 'src/app/core/services/portal.service';
   styleUrls: ['./library-type-option.component.scss']
 })
 export class LibraryTypeOptionComponent implements OnInit, OnDestroy {
+  pageMode: PageMode;
   form: FormGroup; 
   layoutCtrl = new UntypedFormControl('fullwidth');
-  statusLabel = 'Active';
+  statusLabel: string = 'Active';
   createdBy: string;
   createdAt: Date;
   updatedBy: string;
   updatedAt: Date;
+  types: ILibraryTypes[];
+  libraryTypes = [];
 
   get formControls() {
     return {
-      type: this.form.get('type'),
+      libraryTypeId: this.form.get('libraryTypeId'),
       code: this.form.get('code'),
       description: this.form.get('description'),
-      status: this.form.get('status'),
-      remarks: this.form.get('remarks')
+      status: this.form.get('isActive'),
+      remark: this.form.get('remark')
     };
   }
 
@@ -36,37 +40,53 @@ export class LibraryTypeOptionComponent implements OnInit, OnDestroy {
     private _fb: FormBuilder,
     private _route: ActivatedRoute,
     private _portalService: PortalService,
-    private _snackBar: MatSnackBar
+    private _snackBar: MatSnackBar,
+    private _router: Router
   ) {
     this.form = this._fb.group({
-      type: ['', [Validators.required]],
+      libraryTypeId: ['', [Validators.required]],
       code: ['', [Validators.required]],
       description: ['', [Validators.required]],
-      status: ['', [Validators.required]],
-      remarks: ['']
+      isActive: [true],
+      remark: ['']
     });
 
     const id = parseInt(this._route.snapshot.paramMap.get('id'));
-    this._portalService.getLibraryTypeOption(id)
+    this.pageMode = this._route.snapshot.data.pageMode;
+    
+    this._portalService.getLibraryType()
+    .pipe(takeUntil(this._onDestroy$))
+    .subscribe(libraryTypes => {
+      if (!libraryTypes) {
+        return;
+      }
+      this.types = libraryTypes;
+      this.libraryTypes = libraryTypes.map(function(a) {return [a.id, a.name];}).filter((value, index, self) => self.indexOf(value) === index);
+    });
+
+    if (this.pageMode === 2) {
+      this._portalService.getLibraryTypeOption(id)
       .pipe(takeUntil(this._onDestroy$))
       .subscribe(data => {
         if (!data) {
           return;
         }
-        this.form.setValue({
-          type: data.type,
+
+        this.form.patchValue({
           code: data.code || '',
           description: data.description || '',
-          status: data.status,
-          remarks: data.remarks
+          isActive: data.isActive === 'Y',
+          remark: data.remark
         });
-        this.createdBy = data.createdBy;
+        this.form.get('libraryTypeId').setValue(data.libraryTypeId, data.libraryTypeName)
+        this.statusLabel = data.isActive === 'Y' ? 'Active' : 'Inactive'; 
+        this.createdBy = data.createdByName;
         this.createdAt = data.createdAt;
-        this.updatedBy = data.updatedBy || 'N/A';
+        this.updatedBy = data.updatedByName || 'N/A';
         this.updatedAt = data.updatedAt;
 
-        this.form.controls['url'].disable();
       });
+    }
   }
 
   ngOnInit(): void {
@@ -82,9 +102,9 @@ export class LibraryTypeOptionComponent implements OnInit, OnDestroy {
   }
 
   save(): void {
-    if (!this.formControls.type.value) {
-      this.formControls.type.markAsTouched();
-      this.formControls.type.updateValueAndValidity();
+    if (!this.formControls.libraryTypeId.value) {
+      this.formControls.libraryTypeId.markAsTouched();
+      this.formControls.libraryTypeId.updateValueAndValidity();
       return;
     }
     if (!this.formControls.description.value) {
@@ -97,17 +117,30 @@ export class LibraryTypeOptionComponent implements OnInit, OnDestroy {
       this.formControls.code.updateValueAndValidity();
       return;
     }
-    if (!this.formControls.status.value) {
-      this.formControls.status.markAsTouched();
-      this.formControls.status.updateValueAndValidity();
-      return;
-    }
+    
     const data = Object.assign({}, this.form.value);
     data.id = parseInt(this._route.snapshot.paramMap.get('id'));
     data.isActive = data.isActive ? 'Y' : 'N'; 
-    data.updatedBy = parseInt(localStorage.getItem('user_id'));
 
-  this._portalService.updateLibraryTypeOption(data)
+    if (this.pageMode === 1) {
+      data.createdBy = parseInt(localStorage.getItem('user_id'));
+
+      this._portalService.createLibraryTypeOption(data)
+      .pipe(takeUntil(this._onDestroy$))
+      .subscribe(data => {
+        if (!data) {
+          return;
+        }
+        let snackBarRef = this._snackBar.open('Library type option has been successfully added.', 'Close');
+        snackBarRef.afterDismissed().subscribe(() => {
+          this._router.navigateByUrl('apps/library-options');
+        });
+      });
+    }
+    else if (this.pageMode === 2) {
+      data.updatedBy = parseInt(localStorage.getItem('user_id'));
+
+      this._portalService.updateLibraryTypeOption(data)
       .pipe(takeUntil(this._onDestroy$))
       .subscribe(data => {
         if (!data) {
@@ -118,5 +151,13 @@ export class LibraryTypeOptionComponent implements OnInit, OnDestroy {
           window.location.reload();
         });
       });
+    }
+  }
+
+  onFilterUser(event: any): void {        
+    if (!event.value) {
+      return;
+    }
+    this.types = this.types.filter(t => t.name === event.value);
   }
 }

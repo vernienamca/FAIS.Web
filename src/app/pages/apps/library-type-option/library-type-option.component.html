@@ -8,10 +8,10 @@
   <div class="flex flex-col sm:flex-row gap-4">
     <div class="card flex-auto">
       <div class="px-6 py-4 border-b flex items-center gap-2">
-        <button [ngClass]="['!bg-green', '!text-contrast-white']" mat-raised-button type="button" (click)="save()">
+        <button [ngClass]="form.touched && form.invalid ? '!bg-gray':'!bg-green'" class="!text-contrast-white" mat-raised-button type="button" (click)="save()" [disabled]="form.touched && form.invalid">
           <mat-icon class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" svgIcon="mat:archive"></mat-icon> Save
         </button>
-        <button color="primary" mat-stroked-button type="button" [routerLink]="['/apps/librarytypeoption']">
+        <button color="primary" mat-raised-button type="button" [routerLink]="['/apps/library-options']">
           <mat-icon class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" svgIcon="mat:close"></mat-icon> Close
         </button>
       </div>
@@ -21,18 +21,21 @@
             <div class="flex flex-col sm:flex-row sm:gap-4">
               <mat-form-field appearance="fill" class="flex-auto">
                 <mat-label>Library Type</mat-label>
-                <input matInput formControlName="type" required>
-                <mat-error *ngIf="formControls.type.touched && formControls.type.invalid">
-                  <span *ngIf="formControls.type.getError('required')">
+                <mat-select placeholder="Select Library Type" formControlName="libraryTypeId" (selectionChange)="onFilterUser($event)"
+                  class="border-0 outline-none w-full bg-transparent flex-auto"> 
+                  <mat-option *ngFor="let libraryType of libraryTypes" [value]="libraryType[0]">{{libraryType[1]}}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="formControls.libraryTypeId.touched && formControls.libraryTypeId.invalid">
+                  <span *ngIf="formControls.libraryTypeId.getError('required')">
                     Library type is required
                   </span>
                 </mat-error>
               </mat-form-field>
             </div>
             <div class="flex flex-col sm:flex-row sm:gap-4">
-              <mat-form-field appearance="fill" class="flex-auto">
+              <mat-form-field appearance="fill" class="flex-auto" [ngClass]="{'option-code': pageMode === 2}">
                 <mat-label>Option Code</mat-label>
-                <input matInput formControlName="code" required>
+                <input matInput formControlName="code" required [readonly]="pageMode === 2">
                 <mat-error *ngIf="formControls.code.touched && formControls.code.invalid">
                   <span *ngIf="formControls.code.getError('required')">
                     Option code is required
@@ -54,9 +57,9 @@
             <div class="flex flex-col sm:flex-row sm:gap-4">
               <mat-form-field appearance="fill" class="flex-auto">
                 <mat-label>Remarks</mat-label>
-                <input matInput formControlName="remarks" required>
-                <mat-error *ngIf="formControls.remarks.touched && formControls.remarks.invalid">
-                  <span *ngIf="formControls.remarks.getError('required')">
+                <input matInput formControlName="remark" required>
+                <mat-error *ngIf="formControls.remark.touched && formControls.remark.invalid">
+                  <span *ngIf="formControls.remark.getError('required')">
                     Remarks is required
                   </span>
                 </mat-error>
@@ -67,7 +70,7 @@
                 {{ statusLabel }}
               </mat-slide-toggle>
             </div>
-            <blockquote fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px" [style.marginTop.px]="30">
+            <blockquote *ngIf="pageMode === 2" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px" [style.marginTop.px]="30">
               <span fxFlex>
                 <strong>Created By</strong>: {{ createdBy }}
               </span>

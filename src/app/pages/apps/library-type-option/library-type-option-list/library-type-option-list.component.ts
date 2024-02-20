@@ -18,6 +18,7 @@ import { PortalService } from 'src/app/core/services/portal.service';
 import { ILibraryTypeOption } from 'src/app/core/models/library-type-option';
 import { LibraryTypeOptionStatusEnum } from 'src/app/core/enums/library-type-option-status.enum';
 import { Router } from '@angular/router';
+import { ILibraryTypes } from 'src/app/core/models/library-types';
 
 @UntilDestroy()
 @Component({
@@ -43,10 +44,10 @@ export class LibraryTypeOptionListComponent implements OnInit, OnDestroy, AfterV
   @Input()
   columns: TableColumn<ILibraryTypeOption>[] = [
     { label: 'No.', property: 'no', type: 'text', visible: true },
-    { label: 'Library Type', property: 'type', type: 'text', visible: true },
+    { label: 'Library Type', property: 'libraryTypeName', type: 'text', visible: true },
     { label: 'Option Code', property: 'code', type: 'text', visible: true },
     { label: 'Option Description', property: 'description', type: 'text', visible: true },
-    { label: 'Status', property: 'status', type: 'badge', visible: true },
+    { label: 'Status', property: 'isActive', type: 'badge', visible: true },
     { label: 'Actions', property: 'actions', type: 'button', visible: true }
   ];
 
@@ -62,6 +63,8 @@ export class LibraryTypeOptionListComponent implements OnInit, OnDestroy, AfterV
   searchCtrl = new UntypedFormControl();
   labels = aioTableLabels;      
   isListLoading = true;  
+  types: ILibraryTypes[];
+  libraryTypes = [];
 
   libraryTypeOptionStatusEnum = LibraryTypeOptionStatusEnum;
 
@@ -80,29 +83,32 @@ export class LibraryTypeOptionListComponent implements OnInit, OnDestroy, AfterV
   }
 
   ngOnInit(): void {
-    // this._portalService.getLibraryTypeOptions()
-    //   .pipe(
-    //     takeUntil(this._onDestroy$),
-    //     finalize(() => this.isListLoading = false)
-    //   )
-    //   .subscribe(data => {
-    //     if (!data) {
-    //       return;
-    //     }
-    //     this.subject$.next(data);
-    //   });
-    this.isListLoading = false
-var data: ILibraryTypeOption[]= [{
-  no: 1,
-  type: "Asset Category",
-  code: "C001",
-  description: "Option - 01",
-  status: 1,
-  remarks: "Approved",
-  createdBy: null,
-  createdAt: null
-}];
+    this._portalService.getLibraryTypeOptions()
+    .pipe(
+      takeUntil(this._onDestroy$),
+      finalize(() => this.isListLoading = false))
+    .subscribe(data => {
+      if (!data) {
+        return;
+      }
       this.subject$.next(data);
+    });
+
+    this._portalService.getLibraryType()
+    .pipe(takeUntil(this._onDestroy$))
+    .subscribe(libraryTypes => {
+      if (!libraryTypes) {
+        return;
+      }
+      this.types = libraryTypes;
+      this.libraryTypes = libraryTypes.map(function(a) {return a.name;}).filter((value, index, self) => self.indexOf(value) === index);
+      this.libraryTypes.push("All");      
+      this.libraryTypes.sort((a, b) => {
+        return (a === "All") ? -1 : (b === "All") ? 1 : b.localeCompare(a);
+      });
+    });
+
+    this.isListLoading = false
 
     this.dataSource = new MatTableDataSource();
     this.data$
@@ -167,11 +173,19 @@ var data: ILibraryTypeOption[]= [{
     this._portalService.exportLibraryTypeOptions();
   }
 
+  onFilterUser(event: any): void {    
+    if (!event.value || event.value == "All") {
+      this.dataSource.data = this.librarytypeoptions;
+      return;
+    }
+    this.dataSource.data = this.librarytypeoptions.filter(t => t.libraryTypeName === event.value);
+  }
+
   add() {
-    this._router.navigate(['library-type-options/add']);
+    this._router.navigate(['apps/library-options/add']);
   }
   
   edit(libraryTypeOption: any): void {
-    this._router.navigate([`apps/library-type-options/edit/${libraryTypeOption.code}`]);
+    this._router.navigate([`apps/library-options/edit/${libraryTypeOption.id}`]);
   }
 }

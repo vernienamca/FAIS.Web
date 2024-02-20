@@ -1,12 +1,16 @@
 export interface ILibraryTypeOption {
+    id:number;
     no: number;
-    type: string;
+    libraryTypeId: string;
+    libraryTypeName: string;
     code: string;
     description: string;
-    status: number;
-    remarks: string;
-    createdBy: string;
+    isActive: string;
+    remark: string;
+    createdBy: number;
+    createdByName: string;
     createdAt: Date;
-    updatedBy?: string;
+    updatedBy?: number;
+    updatedByName: string;
     updatedAt?: Date;
 }

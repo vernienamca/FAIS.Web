@@ -13,6 +13,7 @@ import { ICostCenter } from '../models/cost-center';
 import { ILibraryTypeOption } from '../models/library-type-option';
 import { IProFormaEntry } from '../models/pro-forma-entry';
 import { IChart } from '../models/chart';
+import { ILibraryTypes } from '../models/library-types';
 
 @Injectable({
   providedIn: 'root'
@@ -158,6 +159,14 @@ export class PortalService {
         link.click();
       });
     }
+
+  createLibraryTypeOption(data: any): Observable<any> {
+    return this._portalApi.createLibraryTypeOption(data);
+  }
+
+  getLibraryType(): Observable<ILibraryTypes[]> {
+    return this._portalApi.getLibraryType();
+  }
 
   getProFormaEntries(): Observable<IProFormaEntry[]> {
     return this._portalApi.getProFormaEntries();
