@@ -14,6 +14,13 @@ const routes: VexRoutes = [
     }
   },
   {
+    path: 'add',
+    component: StringInterpolationComponent,
+    data: {
+      toolbarShadowEnabled: false
+    }
+  },
+  {
     path: 'edit/:id',
     component: StringInterpolationComponent,
     data: {

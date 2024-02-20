@@ -45,27 +45,30 @@ export class StringInterpolationComponent implements OnInit, OnDestroy {
     });
 
     const id = parseInt(this._route.snapshot.paramMap.get('id'));
-    this._portalService.getStringInterpolation(id)
-      .pipe(takeUntil(this._onDestroy$))
-      .subscribe(data => {
-        if (!data) {
-          return;
-        }
-        console.log(data);
-        this.form.setValue({
-          transactionCode: data.transactionCode,
-          description: data.description || '',
-          notificationType: data.notificationType,
-          isActive: data.isActive === 'Y'
-        });
-        this.createdByDisplay = data.createdByDisplay;
-        this.createdBy = data.createdBy;
-        this.createdAt = data.createdAt;
-        this.updatedBy = data.updatedBy || 'N/A';
-        this.updatedAt = data.updatedAt;
+    if(id != null && id != 0)
+    {
+      this._portalService.getStringInterpolation(id)
+        .pipe(takeUntil(this._onDestroy$))
+        .subscribe(data => {
+          if (!data) {
+            return;
+          }
+          console.log(data);
+          this.form.setValue({
+            transactionCode: data.transactionCode,
+            description: data.description || '',
+            notificationType: data.notificationType,
+            isActive: data.isActive === 'Y'
+          });
+          this.createdByDisplay = data.createdByDisplay;
+          this.createdBy = data.createdBy;
+          this.createdAt = data.createdAt;
+          this.updatedBy = data.updatedBy || 'N/A';
+          this.updatedAt = data.updatedAt;
 
-        this.form.controls['url'].disable();
-      });
+          this.form.controls['url'].disable();
+        });
+    }
   }
 
   ngOnInit(): void {
@@ -98,8 +101,6 @@ export class StringInterpolationComponent implements OnInit, OnDestroy {
     data.createdAt = this.createdAt;
     data.createdBy = this.createdBy;
     data.updatedBy = parseInt(localStorage.getItem('user_id'));
-
-console.log(data);
 
   this._portalService.updateStringInterpolation(data)
       .pipe(takeUntil(this._onDestroy$))
