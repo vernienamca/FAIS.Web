@@ -21,10 +21,10 @@
         </button>
       </div>
 
-      <div class="flex flex-col sm:flex-row gap-6">
-        <form [formGroup]="form" fxFlex="100"  [style.margin-left.px]="20" [style.marginTop.px]="30"[style.margin-right.px]="30">
-          <div fxLayout="row" fxLayoutGap="20px">
-            <mat-form-field appearance="fill">
+      <div class=" px-6 py-4 flex flex-col sm:flex-row gap-6">
+        <form [formGroup]="form" class="flex flex-col flex-auto form-container">
+          <div class="flex flex-col sm:flex-row sm:gap-4">
+            <mat-form-field appearance="fill" class=" flex-auto">
               <mat-label>Account Group</mat-label>
               <mat-select formControlName="accountgroup" (selectionChange)="onLibraryTypeSelected($event)">
                 <mat-option *ngFor="let libraryType of filteredLibraryTypes" [value]="libraryType.id">
@@ -33,14 +33,14 @@
               </mat-select>
             </mat-form-field>
 
-            <mat-form-field appearance="fill">
+            <mat-form-field appearance="fill" class=" flex-auto">
               <mat-label>RCA SL</mat-label>
               <input matInput formControlName="rcasl">
             </mat-form-field>
           </div>
    
-          <div fxLayout="row" fxLayoutGap="20px">
-            <mat-form-field appearance="fill" >
+          <div class="flex flex-col sm:flex-row sm:gap-4">
+            <mat-form-field appearance="fill" class=" flex-auto">
               <mat-label>Sub-Account Group</mat-label>
               <mat-select formControlName="subaccount" >
                 <mat-option *ngFor="let libraryTypeOptions of (isEditMode?  filteredOptions : filteredLibraryOptions)" [value]="libraryTypeOptions.id">
@@ -55,8 +55,8 @@
             </mat-form-field>
           </div>
 
-          <div fxLayout="row">
-            <mat-form-field appearance="fill" fxFlex="49.5">
+          <div class="flex flex-col sm:flex-row sm:gap-4">
+            <mat-form-field appearance="fill" class = " flex-auto">
               <mat-label>RCA Ledger Title</mat-label>
               <input matInput formControlName="title">
             </mat-form-field>
@@ -65,7 +65,7 @@
         </form>
       </div>
 
-      <div class="table-container" [style.margin-top.px]="50">
+      <div class="table-container" [style.margin-top.px]="50" >
         <div class="flex flex-row" fxLayoutAlign="end" [style.margin-bottom.px]="10" [style.margin-right.px]="30">
           <button class="rounded-full !bg-green !text-white" mat-raised-button type="button" (click)="addNewRow()">
             <mat-icon svgIcon="mat:add"></mat-icon>
@@ -75,24 +75,22 @@
 
         <mat-divider style="margin: 10px 0;"></mat-divider>
 
-        <div class="scrollable-container">
-          <div fxLayout="row" fxLayoutAlign="start center" [style.margin-left.px]="30" >
-            <wj-flex-grid #salesGrid [itemsSource]="salesData" [allowResizing]="'None'" [selectionMode]="'Row'" [quickAutoSize]=true  [autoRowHeights]="true" >
-              <wj-flex-grid-column binding="gl" header="GL"  [minWidth]="400" ></wj-flex-grid-column>
-              <wj-flex-grid-column binding="sl" header="SL"  [minWidth]="400"></wj-flex-grid-column>
-              <wj-flex-grid-column binding="ledgerTitle" header="Ledger Title" [minWidth]="350" [wordWrap] = "true"></wj-flex-grid-column>
-              <wj-flex-grid-column binding="action" header="Action" [minWidth]="330" [isReadOnly]="true">
-                <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-cell="cell">
-                  <button mat-button (click)="onDeleteRow(cell.item)">
-                    <mat-icon>close</mat-icon>
-                  </button>
-                </ng-template>
-              </wj-flex-grid-column>
-
-            </wj-flex-grid>
-          </div>
+        <div class="wijmotable">
+          <wj-flex-grid class="main-grid px-4 py-4" #salesGrid [itemsSource]="salesData" [selectionMode]="'Row'" [allowResizing]="false" style="width: 100%; border:none ; padding-right: 2%;" >
+            <wj-flex-grid-column binding="gl" header="GL" width="30*" ></wj-flex-grid-column>
+            <wj-flex-grid-column binding="sl" header="SL"  width="30*"></wj-flex-grid-column>
+            <wj-flex-grid-column binding="ledgerTitle" header="Ledger Title"  width="30*" wordWrap="true" ></wj-flex-grid-column>
+            <wj-flex-grid-column binding="action" header="Action"  width="10*" >
+              <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-cell="cell">
+                <button mat-button (click)="onDeleteRow(cell.item)">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </ng-template>
+            </wj-flex-grid-column>
+          </wj-flex-grid>
+        
         </div>
-      
+        
         <div class="flex flex-row" fxLayoutAlign="end" [style.margin-top.px]="10" [style.margin-right.px]="40">
           <div id="thePager"></div>
         </div>
@@ -102,7 +100,7 @@
       <div class="flex flex-col sm:flex-row sm:gap-4" [style.margin-left.px]="20" [style.margin-top.px]="10"
         [style.margin-bottom.px]="30">
         <div [formGroup]="form">
-          <mat-slide-toggle color="accent" labelPosition="before" formControlName="isActive"
+          <mat-slide-toggle  labelPosition="before" formControlName="isActive"
             (change)="onToggleStatus($event)">
             {{ statusLabel }}
           </mat-slide-toggle>

@@ -6,7 +6,6 @@ import { Subject, takeUntil } from 'rxjs';
 import { PortalService } from 'src/app/core/services/portal.service';
 import { IChart, IChartDetails } from 'src/app/core/models/chart';
 import { ILibraryTypes } from "../../../core/models/library-types";
-import { Router } from '@angular/router';
 import { MatSelectChange } from '@angular/material/select';
 import * as wjcCore from '@grapecity/wijmo';
 import { CollectionViewNavigator } from '@grapecity/wijmo.input';
@@ -56,9 +55,6 @@ export class ChartAccountComponent implements OnInit, OnDestroy {
         this.salesGrid.collectionView.refresh();
   }
 
-
-
-  
   getSalesData(count: number) {
     const maxRowsToShow = 5;
     const pageSize = Math.min(count, maxRowsToShow);
@@ -88,13 +84,12 @@ export class ChartAccountComponent implements OnInit, OnDestroy {
   }
   
   private _onDestroy$ = new Subject<void>();
-
+  
   constructor(
     private _fb: FormBuilder,
     private _route: ActivatedRoute,
     private _portalService: PortalService,
-    private _snackBar: MatSnackBar,
-    private _router: Router
+    private _snackBar: MatSnackBar
   ) {
     this.form = this._fb.group({
       accountgroup: ['', [Validators.required]],
@@ -105,7 +100,7 @@ export class ChartAccountComponent implements OnInit, OnDestroy {
       isActive: [true, []],
     });
   }
-  
+
   ngOnInit(): void {
     this.salesData = this.getSalesData(5);
     this.id = parseInt(this._route.snapshot.paramMap.get('id'));
@@ -195,9 +190,8 @@ export class ChartAccountComponent implements OnInit, OnDestroy {
   
   save(): void {
     const wijmoValid = this.salesData.sourceCollection.some((item: any) => {
-      return item.gl === '' || item.sl === '' || item.ledgerTitle === '';
-      });
-
+      return item.gl === '' || /^[a-zA-Z]+$/.test(item.gl) || item.sl === '' || /^[a-zA-Z]+$/.test(item.sl) || item.ledgerTitle === '';
+    });
       if (wijmoValid) {
         this._snackBar.open('Please fill in or delete the rows in the table.', 'Close', {
           duration: 5000,
@@ -205,7 +199,10 @@ export class ChartAccountComponent implements OnInit, OnDestroy {
         return;
       }
 
-      const chartOfAccountDetailsDTOArray: IChartDetails[] = this.salesData.items.map((item: any) => {
+      const collectionView = this.salesGrid.collectionView;  
+      const allItems = collectionView.sourceCollection as any[];
+    
+       const chartOfAccountDetailsDTOArray: IChartDetails[] = allItems.map((item: any) => {
         return {
           id: item.id || 0, 
           chartOfAccountsId: this.id || 0,  
@@ -246,25 +243,36 @@ export class ChartAccountComponent implements OnInit, OnDestroy {
             if (!data) {
               return;
             }
-            this._snackBar.open('Chart of Accounts updated successfully.', 'Close', {
-              duration: 5000,
-            });
+            if (data.errorDescription) {
+              this._snackBar.open(data.errorDescription, 'Close', {
+                duration: 5000,
+              });
+            } else {
+              this._snackBar.open('Chart of Accounts updated successfully.', 'Close', {
+                duration: 5000,
+              });
+            }
           });
         } else {
-      
-      this._portalService.addChartOfAccounts(chartOfAccounts)
-        .pipe(takeUntil(this._onDestroy$))
-        .subscribe(data => {
-          if (!data) {
-            return;
-          }
-          this._snackBar.open('Chart of Accounts added successfully.', 'Close', {
-            duration: 5000,
+    
+          this._portalService.addChartOfAccounts(chartOfAccounts)
+          .pipe(takeUntil(this._onDestroy$))
+          .subscribe(data => {
+            if (!data) {
+              return;
+            }
+            if (data.errorDescription) {
+              this._snackBar.open(data.errorDescription, 'Close', {
+                duration: 5000,
+              });
+            } else {
+              this._snackBar.open('Chart of Accounts added successfully.', 'Close', {
+                duration: 5000,
+              });
+              this.form.reset();
+              this.salesData.sourceCollection = [];
+            }
           });
-          this.form.reset();
-          this.salesData.sourceCollection = [];
-        });
-    }
+        }
   }
-  }
-
+}

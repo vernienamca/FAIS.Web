@@ -130,7 +130,7 @@ export class PortalService {
     });
   }
 
-  addChartOfAccounts(chartOfAccounts: IChart): Observable<IChart> {
+  addChartOfAccounts(chartOfAccounts: any): Observable<any> {
     return this._portalApi.addChartOfAccounts(chartOfAccounts);
   }
 
