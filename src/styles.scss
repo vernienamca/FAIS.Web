@@ -2,7 +2,15 @@
 @import "~highlight.js/styles/androidstudio.css";
 // Vex Core
 @import "./@vex/styles/core";
+@import '@grapecity/wijmo.styles/wijmo.css';
 
+.wj-cells .wj-cell.wj-state-multi-selected {
+  background: #6366f1 !important;
+}
+
+.wj-cells .wj-cell.wj-state-selected {
+  background: #3B3486 !important;
+}
 /*
   You can override any CSS Variable or style here
   Example:

@@ -1,0 +1,48 @@
+.save {
+  background-color: #009246;
+  padding: 3px 15px;
+  border-radius: 5px;
+  margin-right: 8px;
+  display: flex;
+  align-items: center;
+}
+
+.close {
+  background-color: #043C79;
+  padding: 3px 15px;
+  border-radius: 5px;
+  margin-left: 8px;
+  display: flex;
+  align-items: center;
+}
+
+.req-hint {
+  color: #FF0000;
+}
+
+mat-form-field {
+  width: 60%;
+}
+
+.is-active {
+  margin-top: 20px;
+}
+
+.is-active > span {
+  margin-right: 20px;
+}
+
+::ng-deep .mat-mdc-form-field.url-field .mat-mdc-text-field-wrapper {
+  background-color: #EFEFEF;
+}
+
+.mat-mdc-slide-toggle.mat-accent {
+  --mdc-switch-selected-track-color: #008000;
+  --mdc-switch-selected-handle-color: #008000;
+  --mdc-switch-selected-hover-track-color: #008000;
+  --mdc-switch-selected-hover-handle-color: #008000;
+  --mdc-switch-selected-pressed-track-color: #008000;
+  --mdc-switch-selected-pressed-handle-color: #008000;
+  --mdc-switch-selected-focus-track-color: #008000;
+  --mdc-switch-selected-focus-handle-color: #008000;
+}

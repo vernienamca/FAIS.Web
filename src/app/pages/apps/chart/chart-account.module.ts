@@ -20,14 +20,16 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { ChartAccountComponent } from './chart-account.component';
 import { SecondaryToolbarModule } from 'src/@vex/components/secondary-toolbar/secondary-toolbar.module';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import {WjGridModule} from '@grapecity/wijmo.angular2.grid';
 
 @NgModule({
-  declarations: [ChartListComponent],
+  declarations: [ChartListComponent,ChartAccountComponent],
   imports: [
     CommonModule,
     ChartAccountRoutingModule,
@@ -54,7 +56,8 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
     MatSnackBarModule,
     MatFormFieldModule,
     MatInputModule,
-    MatSlideToggleModule
+    MatSlideToggleModule,
+    WjGridModule
   ]
 })
 export class ChartAccountModule {

@@ -34,7 +34,7 @@ export class PortalApi extends BaseApi {
         return this.get<IRole>(`${this._apiUrl}/permission/role/${id}`);
     }
 
-    updaterolepermission(data:any): Observable<any> {
+    updaterolepermission(data: any): Observable<any> {
         return this.put<any>(`${this._apiUrl}/permission/role`, data);
     }
 
@@ -62,15 +62,15 @@ export class PortalApi extends BaseApi {
         return this.get<ITemplates>(`${this._apiUrl}/notification/templates`);
     }
 
-    exportAuditLogs(): Observable<HttpResponse<Blob>>  {
-        return this.get(`${this._apiUrl}/auditLog/export`, 
-        {
-            observe: 'response',
-            responseType: 'blob' as 'json'
-        });
+    exportAuditLogs(): Observable<HttpResponse<Blob>> {
+        return this.get(`${this._apiUrl}/auditLog/export`,
+            {
+                observe: 'response',
+                responseType: 'blob' as 'json'
+            });
     }
 
-    getSetting(id: number) : Observable<ISettings>{
+    getSetting(id: number): Observable<ISettings> {
         return this.get<ISettings>(`${this._apiUrl}/settings/${id}`);
     }
 
@@ -78,7 +78,7 @@ export class PortalApi extends BaseApi {
         return this.put<any>(`${this._apiUrl}/module`, data);
     }
 
-    updatesettings(data:any): Observable<any> {
+    updatesettings(data: any): Observable<any> {
         return this.put<any>(`${this._apiUrl}/settings`, data);
     }
 
@@ -90,7 +90,7 @@ export class PortalApi extends BaseApi {
         return this.get<any>(`${this._apiUrl}/version/get`);
     }
 
-    addVersion(data:any): Observable<any> {
+    addVersion(data: any): Observable<any> {
         return this.post<any>(`${this._apiUrl}/version`, data);
     }
 
@@ -157,5 +157,21 @@ export class PortalApi extends BaseApi {
             observe: 'response',
             responseType: 'blob' as 'json'
         });
+    }
+
+    addChartOfAccounts(chartOfAccounts: any): Observable<any> {
+        return this.post<any>(`${this._apiUrl}/chartofaccounts`, chartOfAccounts);
+    }
+
+    getChartOfAccountsById(id: number): Observable<IChart> {
+        return this.get<IChart>(`${this._apiUrl}/chartofaccounts/${id}`);
+    }
+
+    getLibraryTypes(): Observable<ILibraryTypes[]> {
+        return this.get<ILibraryTypes[]>(`${this._apiUrl}/librarytype/get`);
+    }
+    
+    updateChartOfAccounts(id: number, data: any): Observable<any> {
+        return this.put<any>(`${this._apiUrl}/chartofaccounts/${id}`, data);
     }
 }

@@ -1,0 +1,130 @@
+<vex-secondary-toolbar [current]="isEditMode ? 'Edit Chart of Accounts' : 'Add Chart of Accounts'">
+  <vex-breadcrumbs
+    [crumbs]="['System Libraries', 'Chart of Accounts', isEditMode ? 'Edit Chart of Accounts' : 'Add Chart of Accounts']"
+    class="flex-auto"></vex-breadcrumbs>
+  <button class="ml-2" color="primary" mat-icon-button type="button">
+    <mat-icon svgIcon="mat:more_vert"></mat-icon>
+  </button>
+</vex-secondary-toolbar>
+<div class="p-gutter container" [class.container]="layoutCtrl.value === 'boxed'"
+  [class.px-gutter]="layoutCtrl.value === 'fullwidth'">
+  <div class="flex flex-col sm:flex-row gap-4">
+    <div class="card flex-auto">
+      <div class="px-6 py-4 border-b flex items-center gap-2">
+        <button [ngClass]="[form.invalid ?'!bg-gray' : '!bg-green', '!text-contrast-white']" mat-raised-button
+          type="button" (click)="save()" [disabled]="form.invalid">
+
+          <mat-icon class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" svgIcon="mat:archive"></mat-icon> Save
+        </button>
+        <button color="primary" mat-stroked-button type="button" [routerLink]="['/apps/chart-accounts']">
+          <mat-icon class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" svgIcon="mat:close"></mat-icon> Close
+        </button>
+      </div>
+
+      <div class=" px-6 py-4 flex flex-col sm:flex-row gap-6">
+        <form [formGroup]="form" class="flex flex-col flex-auto form-container">
+          <div class="flex flex-col sm:flex-row sm:gap-4">
+            <mat-form-field appearance="fill" class=" flex-auto">
+              <mat-label>Account Group</mat-label>
+              <mat-select formControlName="accountgroup" (selectionChange)="onLibraryTypeSelected($event)">
+                <mat-option *ngFor="let libraryType of filteredLibraryTypes" [value]="libraryType.id">
+                  {{ libraryType.name }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" class=" flex-auto">
+              <mat-label>RCA SL</mat-label>
+              <input matInput formControlName="rcasl">
+            </mat-form-field>
+          </div>
+   
+          <div class="flex flex-col sm:flex-row sm:gap-4">
+            <mat-form-field appearance="fill" class=" flex-auto">
+              <mat-label>Sub-Account Group</mat-label>
+              <mat-select formControlName="subaccount" >
+                <mat-option *ngFor="let libraryTypeOptions of (isEditMode?  filteredOptions : filteredLibraryOptions)" [value]="libraryTypeOptions.id">
+                  {{ libraryTypeOptions.description }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+        
+            <mat-form-field appearance="fill">
+              <mat-label>RCA GL</mat-label>
+              <input matInput formControlName="rcagl">
+            </mat-form-field>
+          </div>
+
+          <div class="flex flex-col sm:flex-row sm:gap-4">
+            <mat-form-field appearance="fill" class = " flex-auto">
+              <mat-label>RCA Ledger Title</mat-label>
+              <input matInput formControlName="title">
+            </mat-form-field>
+          </div>
+
+        </form>
+      </div>
+
+      <div class="table-container" [style.margin-top.px]="50" >
+        <div class="flex flex-row" fxLayoutAlign="end" [style.margin-bottom.px]="10" [style.margin-right.px]="30">
+          <button class="rounded-full !bg-green !text-white" mat-raised-button type="button" (click)="addNewRow()">
+            <mat-icon svgIcon="mat:add"></mat-icon>
+            <span>Add</span>
+          </button>
+        </div>
+
+        <mat-divider style="margin: 10px 0;"></mat-divider>
+
+        <div class="wijmotable">
+          <wj-flex-grid class="main-grid px-4 py-4" #salesGrid [itemsSource]="salesData" [selectionMode]="'Row'" [allowResizing]="false" style="width: 100%; border:none ; padding-right: 2%;" >
+            <wj-flex-grid-column binding="gl" header="GL" width="30*" ></wj-flex-grid-column>
+            <wj-flex-grid-column binding="sl" header="SL"  width="30*"></wj-flex-grid-column>
+            <wj-flex-grid-column binding="ledgerTitle" header="Ledger Title"  width="30*" wordWrap="true" ></wj-flex-grid-column>
+            <wj-flex-grid-column binding="action" header="Action"  width="10*" >
+              <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-cell="cell">
+                <button mat-button (click)="onDeleteRow(cell.item)">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </ng-template>
+            </wj-flex-grid-column>
+          </wj-flex-grid>
+        
+        </div>
+        
+        <div class="flex flex-row" fxLayoutAlign="end" [style.margin-top.px]="10" [style.margin-right.px]="40">
+          <div id="thePager"></div>
+        </div>
+      </div>
+
+
+      <div class="flex flex-col sm:flex-row sm:gap-4" [style.margin-left.px]="20" [style.margin-top.px]="10"
+        [style.margin-bottom.px]="30">
+        <div [formGroup]="form">
+          <mat-slide-toggle  labelPosition="before" formControlName="isActive"
+            (change)="onToggleStatus($event)">
+            {{ statusLabel }}
+          </mat-slide-toggle>
+
+          <span [style.margin-left.px]="20"> <strong>Status Date: </strong>{{ statusDate | date: 'MM/dd/yyyy' }}</span>
+        </div>
+      </div>
+
+      <blockquote fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px" [style.marginTop.px]="30"
+        *ngIf="isEditMode" [style.margin-left.px]="30" [style.margin-right.px]="30">
+        <span fxFlex>
+          <strong>Created By</strong>: {{ createdBy }}
+        </span>
+        <span fxFlex>
+          <strong>Date Created</strong>: {{ createdAt | date: 'MM/dd/yyyy hh:mm a' }}
+        </span>
+        <span fxFlex>
+          <strong>Modified By</strong>: {{ updatedBy }}
+        </span>
+        <span fxFlex>
+          <strong>Date Modified</strong>: {{ updatedAt ? (updatedAt | date: 'MM/dd/yyyy hh:mm a') : 'N/A' }}
+        </span>
+      </blockquote>
+
+    </div>
+  </div>
+</div>

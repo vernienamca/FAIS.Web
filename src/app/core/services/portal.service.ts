@@ -20,7 +20,7 @@ import { ILibraryTypes } from '../models/library-types';
 })
 export class PortalService {
   constructor(
-    private _portalApi: PortalApi, 
+    private _portalApi: PortalApi,
     private _datePipe: DatePipe) { }
 
   getModules(): Observable<IModule[]> {
@@ -46,7 +46,7 @@ export class PortalService {
   getUsers(): Observable<IUser[]> {
     return this._portalApi.getUsers();
   }
-  
+
   getUser(id: number): Observable<any> {
     return this._portalApi.getUser(id);
   }
@@ -66,12 +66,12 @@ export class PortalService {
   getAlerts(): Observable<ITemplates[]> {
     return this._portalApi.getTemplates();
   }
-  
+
   exportAuditLogs(): void {
     this._portalApi.exportAuditLogs().subscribe(response => {
       const contentDisposition = response.headers.get('Content-Disposition');
-      const filename = contentDisposition 
-        ? contentDisposition.split(';')[1].trim().split('=')[1] 
+      const filename = contentDisposition
+        ? contentDisposition.split(';')[1].trim().split('=')[1]
         : 'Audit_Logs_' + this._datePipe.transform(new Date(), 'medium') + '.xlsx';
 
       const blob = new Blob([response.body], { type: 'application/actet-stream' });
@@ -195,5 +195,20 @@ export class PortalService {
         link.click();
       });
   }
-}
 
+  addChartOfAccounts(chartOfAccounts: any): Observable<any> {
+    return this._portalApi.addChartOfAccounts(chartOfAccounts);
+  }
+
+  getChartOfAccountsById(id: number): Observable<IChart> {
+    return this._portalApi.getChartOfAccountsById(id);
+  }
+
+  getLibraryTypes(): Observable<ILibraryTypes[]> {
+    return this._portalApi.getLibraryTypes();
+  }
+  
+  updateChartOfAccounts(id: number, data: any): Observable<any> {
+    return this._portalApi.updateChartOfAccounts(id,data);
+}
+}
