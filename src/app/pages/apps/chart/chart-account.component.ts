@@ -136,7 +136,7 @@ export class ChartAccountComponent implements OnInit, OnDestroy {
                     return;
                   }
                   const libraryOptions = libraryData;
-                  this.filteredOptions = libraryOptions.filter(type => type.no === selectedLibraryType.id);
+                  this.filteredOptions = libraryOptions.filter(type => parseInt(type.libraryTypeId) === selectedLibraryType.id);
                   this.filteredLibraryOptions = this.filteredOptions.filter(type => type.description === data.subAcountGroup);
                   const selectedLibraryOption = this.filteredLibraryOptions[0];
 
