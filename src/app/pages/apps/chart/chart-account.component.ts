@@ -10,7 +10,7 @@ import { MatSelectChange } from '@angular/material/select';
 import * as wjcCore from '@grapecity/wijmo';
 import { CollectionViewNavigator } from '@grapecity/wijmo.input';
 import { FlexGrid } from '@grapecity/wijmo.grid';
-import { ILibraryOptions } from 'src/app/core/models/library-options';
+import { ILibraryTypeOption } from 'src/app/core/models/library-type-option';
 
 @Component({
   selector: 'vex-module',
@@ -29,8 +29,8 @@ export class ChartAccountComponent implements OnInit, OnDestroy {
   updatedAt: Date;
   isEditMode: boolean = false;
   filteredLibraryTypes: ILibraryTypes[] = [];
-  filteredLibraryOptions: ILibraryOptions[] =[];
-  filteredOptions: ILibraryOptions[] =[];
+  filteredLibraryOptions: ILibraryTypeOption[] =[];
+  filteredOptions: ILibraryTypeOption[] =[];
   id: number;
   selectedLibraryTypeId: number;
   selectedItems: any[] = [];
@@ -129,14 +129,14 @@ export class ChartAccountComponent implements OnInit, OnDestroy {
                 cv: this.salesData
               });
               const selectedLibraryType = this.filteredLibraryTypes.find(type => type.name === data.acountGroup);
-              this._portalService.getLibraryOptions()
+              this._portalService.getLibraryTypeOptions()
                 .pipe(takeUntil(this._onDestroy$))
                 .subscribe(libraryData => {
                   if (!libraryData) {
                     return;
                   }
                   const libraryOptions = libraryData;
-                  this.filteredOptions = libraryOptions.filter(type => type.libraryTypeId === selectedLibraryType.id);
+                  this.filteredOptions = libraryOptions.filter(type => type.no === selectedLibraryType.id);
                   this.filteredLibraryOptions = this.filteredOptions.filter(type => type.description === data.subAcountGroup);
                   const selectedLibraryOption = this.filteredLibraryOptions[0];
 
@@ -176,15 +176,14 @@ export class ChartAccountComponent implements OnInit, OnDestroy {
   
   onLibraryTypeSelected(event: MatSelectChange): void {
     this.selectedLibraryTypeId = event.value;
-    this._portalService.getLibraryOptions()
+    this._portalService.getLibraryTypeOptions()
       .pipe(takeUntil(this._onDestroy$))
       .subscribe(libraryData => {
         if (!libraryData) {
           return;
         }
-  
         const libraryOptions = libraryData;
-        this.filteredLibraryOptions = libraryOptions.filter(type => type.libraryTypeId === this.selectedLibraryTypeId);
+        this.filteredLibraryOptions = libraryOptions.filter(type => parseInt(type.libraryTypeId) === this.selectedLibraryTypeId);
       });
   }
   

@@ -14,7 +14,6 @@ import { ILibraryTypeOption } from "../models/library-type-option";
 import { IProFormaEntry } from "../models/pro-forma-entry";
 import { IChart } from "../models/chart";
 import { ILibraryTypes } from "../models/library-types";
-import { ILibraryOptions } from "../models/library-options";
 
 export class PortalApi extends BaseApi {
     private _apiUrl = `${environment.apiGatewayBaseUrl}`;
@@ -170,10 +169,6 @@ export class PortalApi extends BaseApi {
 
     getLibraryTypes(): Observable<ILibraryTypes[]> {
         return this.get<ILibraryTypes[]>(`${this._apiUrl}/librarytype/get`);
-    }
-
-    getLibraryOptions(): Observable<ILibraryOptions[]>{
-        return this.get<ILibraryOptions[]>(`${this._apiUrl}/librarytypeoption`);
     }
     
     updateChartOfAccounts(id: number, data: any): Observable<any> {
