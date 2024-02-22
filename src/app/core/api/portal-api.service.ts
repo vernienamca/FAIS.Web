@@ -10,6 +10,8 @@ import { ITemplates } from "../models/templates";
 import { HttpResponse } from '@angular/common/http';
 import { ISettings } from "../models/settings";
 import { ICostCenter } from "../models/cost-center";
+import { ILibraryTypeOption } from "../models/library-type-option";
+import { IProFormaEntry } from "../models/pro-forma-entry";
 import { IChart } from "../models/chart";
 import { ILibraryTypes } from "../models/library-types";
 import { ILibraryOptions } from "../models/library-options";
@@ -95,6 +97,55 @@ export class PortalApi extends BaseApi {
 
     getCostCenters(): Observable<ICostCenter[]> {
         return this.get<ICostCenter>(`${this._apiUrl}/costcenter/get`);
+    }
+
+    getProFormaEntries(): Observable<IProFormaEntry[]> {
+        return this.get<IProFormaEntry>(`${this._apiUrl}/proformaentry/get`);
+    }
+
+    getProFormaEntry(id: number): Observable<IProFormaEntry> {
+        return this.get<IProFormaEntry>(`${this._apiUrl}/proformaentry/${id}`);
+    }
+
+    updateProFormaEntry(data: any): Observable<any> {
+        return this.put<any>(`${this._apiUrl}/proformaentry`, data);
+    }
+
+    exportProFormaEntries(): Observable<HttpResponse<Blob>>  {
+        return this.get(`${this._apiUrl}/proFormaentry/export`,  
+        {
+            observe: 'response',
+            responseType: 'blob' as 'json'
+        });
+    }
+
+    getLibraryTypeOptions(): Observable<ILibraryTypeOption[]> {
+        return this.get<ILibraryTypeOption>(`${this._apiUrl}/librarytypeoption`);
+    }
+
+    getLibraryTypeOption(id: number): Observable<ILibraryTypeOption> {
+        return this.get<ILibraryTypeOption>(`${this._apiUrl}/librarytypeoption/${id}`);
+    }
+
+    getLibraryType(): Observable<ILibraryTypes[]> {
+        return this.get<ILibraryTypes>(`${this._apiUrl}/librarytype/get`);
+    }
+
+    exportLibraryTypeOptions(): Observable<HttpResponse<Blob>>  {
+        return this.get(`${this._apiUrl}/librarytypeoption/export`,   
+        {
+            observe: 'response',
+            responseType: 'blob' as 'json'
+        });
+    }
+
+
+    updateLibraryTypeOption(data: any): Observable<any> {
+        return this.put<any>(`${this._apiUrl}/librarytypeoption`, data);
+    }
+
+    createLibraryTypeOption(data: any): Observable<any> {
+        return this.post<any>(`${this._apiUrl}/librarytypeoption`, data);
     }
 
     getChartAccounts(): Observable<IChart[]> {
