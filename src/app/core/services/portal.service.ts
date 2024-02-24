@@ -12,6 +12,7 @@ import { ISettings } from '../models/settings';
 import { ICostCenter } from '../models/cost-center';
 import { IProFormaEntry } from '../models/pro-forma-entry';
 import { IChart } from '../models/chart';
+import { IAlert } from '../models/alert';
 
 @Injectable({
   providedIn: 'root'
@@ -133,18 +134,49 @@ export class PortalService {
   getProFormaEntries(): Observable<IProFormaEntry[]> {
     return this._portalApi.getProFormaEntries();
   }
+
   getProFormaEntry(id: number): Observable<IProFormaEntry> {
     return this._portalApi.getProFormaEntry(id);
   }
+  
   updateProFormaEntry(data: any): Observable<any> {
     return this._portalApi.updateProFormaEntry(data);
-  }  
+  }
+
   exportProFormaEntries(): void {
     this._portalApi.exportProFormaEntries().subscribe(response => {
       const contentDisposition = response.headers.get('Content-Disposition');
       const filename = contentDisposition 
         ? contentDisposition.split(';')[1].trim().split('=')[1] 
         : 'Pro_Forma_Entries_' + this._datePipe.transform(new Date(), 'medium') + '.xlsx';
+
+        const blob = new Blob([response.body], { type: 'application/actet-stream' });
+  
+        const link = document.createElement('a');
+        link.href = window.URL.createObjectURL(blob);
+        link.download = filename;
+        link.click();
+      });
+  }
+
+  // getAlerts(): Observable<IAlert[]> {
+  //   return this._portalApi.getAlerts();
+  // }
+
+  getAlert(id: number): Observable<IAlert> {
+    return this._portalApi.getAlert(id);
+  }
+  
+  updateAlert(data: any): Observable<any> {
+    return this._portalApi.updateAlert(data);
+  }
+
+  exportAlerts(): void {
+    this._portalApi.exportAlerts().subscribe(response => {
+      const contentDisposition = response.headers.get('Content-Disposition');
+      const filename = contentDisposition 
+        ? contentDisposition.split(';')[1].trim().split('=')[1] 
+        : 'Alerts_' + this._datePipe.transform(new Date(), 'medium') + '.xlsx';
 
         const blob = new Blob([response.body], { type: 'application/actet-stream' });
   

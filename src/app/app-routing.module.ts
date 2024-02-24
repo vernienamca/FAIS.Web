@@ -114,6 +114,10 @@ const routes: VexRoutes = [
             path: 'pro-forma-entries',
             loadChildren: () => import('./pages/apps/pro-forma-entries/pro-forma-entries.module').then(m => m.ProFormaEntriesModule)
           },
+          {
+            path: 'alerts',
+            loadChildren: () => import('./pages/apps/alert/alert.module').then(m => m.AlertModule)
+          },
         ]
       },
       {

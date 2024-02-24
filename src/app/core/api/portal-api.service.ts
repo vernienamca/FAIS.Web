@@ -12,6 +12,7 @@ import { ISettings } from "../models/settings";
 import { ICostCenter } from "../models/cost-center";
 import { IProFormaEntry } from "../models/pro-forma-entry";
 import { IChart } from "../models/chart";
+import { IAlert } from "../models/alert";
 
 export class PortalApi extends BaseApi {
     private _apiUrl = `${environment.apiGatewayBaseUrl}`;
@@ -122,6 +123,26 @@ export class PortalApi extends BaseApi {
     
     exportChartLogs(): Observable<HttpResponse<Blob>>  {
         return this.get(`${this._apiUrl}/chartofaccounts/export`, 
+        {
+            observe: 'response',
+            responseType: 'blob' as 'json'
+        });
+    }
+
+
+    getAlerts(): Observable<IAlert[]> {
+        return this.get<IAlert>(`${this._apiUrl}/alert/get`);
+    }
+
+    getAlert(id: number): Observable<IAlert> {
+        return this.get<IAlert>(`${this._apiUrl}/alert/${id}`);
+    }
+
+    updateAlert(data: any): Observable<any> {
+        return this.put<any>(`${this._apiUrl}/proformaentry`, data);
+    }alert
+    exportAlerts(): Observable<HttpResponse<Blob>>  {
+        return this.get(`${this._apiUrl}/alert/export`,  
         {
             observe: 'response',
             responseType: 'blob' as 'json'
