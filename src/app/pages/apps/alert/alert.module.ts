@@ -27,6 +27,7 @@ import { SecondaryToolbarModule } from 'src/@vex/components/secondary-toolbar/se
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { AlertComponent } from './alert.component';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
+import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 
 @NgModule({
   declarations: [AlertListComponent, AlertComponent],
@@ -58,6 +59,7 @@ import { NgxDatatableModule } from '@swimlane/ngx-datatable';
     SecondaryToolbarModule,
     MatSnackBarModule,
     NgxDatatableModule,
+    CKEditorModule
   ]
 })
 export class AlertModule {

@@ -190,7 +190,8 @@
                   class="block mb-2 text-sm font-medium font-bold"
                   >Content *</label
                 >
-                <mat-form-field appearance="fill" class="w-full">
+                <ckeditor [editor]="Editor" formControlName="content"></ckeditor>
+                <!-- <mat-form-field appearance="fill" class="w-full">
                   <input
                     matInput
                     id="content-input"
@@ -199,6 +200,7 @@
                     class="block w-full"
                     formControlName="content"
                   />
+
                 </mat-form-field>
                 <mat-error
                   *ngIf="
@@ -208,7 +210,7 @@
                   <span *ngIf="formControls.subject.getError('required')">
                     Content is required
                   </span>
-                </mat-error>
+                </mat-error> -->
               </div>
             </div>
             

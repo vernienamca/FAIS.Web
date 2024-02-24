@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, Validators, FormBuilder, UntypedFormControl  } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute } from '@angular/router';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { Subject, takeUntil } from 'rxjs';
 import { IAlert } from 'src/app/core/models/alert';
 import { PortalService } from 'src/app/core/services/portal.service';
@@ -49,6 +50,8 @@ export class AlertComponent implements OnInit, OnDestroy {
   createdAt: Date;
   updatedBy: string;
   updatedAt: Date;
+  
+  public Editor = ClassicEditor;
 
   get formControls() {
     return {
