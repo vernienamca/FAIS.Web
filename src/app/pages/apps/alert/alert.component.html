@@ -244,7 +244,8 @@
               >
               <mat-form-field appearance="fill" class="flex-auto">
                 <mat-select formControlName="roles" required>
-                  <mat-option value="{{i.text}}" *ngFor="let i of rolesList"><mat-icon>{{i.icon}}</mat-icon> {{i.text}}</mat-option>
+                  <mat-option value="{{i.id}}" *ngFor="let i of rolesList">{{i.name}}</mat-option>
+                  <!-- <mat-icon>{{i.icon}}</mat-icon>  -->
                 </mat-select>
                 <mat-error
                   *ngIf="
@@ -265,7 +266,7 @@
               >
               <mat-form-field appearance="fill" class="flex-auto">
                 <mat-select formControlName="users" required>
-                  <mat-option value="{{i.text}}" *ngFor="let i of usersList"><mat-icon>{{i.icon}}</mat-icon> {{i.text}}</mat-option>
+                  <mat-option value="{{i.id}}" *ngFor="let i of usersList"><label>{{i.firstName}} {{i.lastName}}</label> | <label>{{i.position}}</label></mat-option>
                 </mat-select>
                 <mat-error
                   *ngIf="
