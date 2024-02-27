@@ -35,7 +35,7 @@ export class ChartAccountComponent implements OnInit, OnDestroy {
   selectedLibraryTypeId: number;
   selectedItems: any[] = [];
   salesData = this.getSalesData(5);
-  statusDate: Date = new Date();
+  statusDate: Date | null = null;
 
   addNewRow(): void {
     const newItem = {
@@ -84,7 +84,7 @@ export class ChartAccountComponent implements OnInit, OnDestroy {
   }
   
   private _onDestroy$ = new Subject<void>();
-  
+
   constructor(
     private _fb: FormBuilder,
     private _route: ActivatedRoute,
@@ -102,7 +102,7 @@ export class ChartAccountComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.salesData = this.getSalesData(5);
+    this.salesData = this.getSalesData(0);
     this.id = parseInt(this._route.snapshot.paramMap.get('id'));
     this._portalService.getLibraryTypes()
     .pipe(takeUntil(this._onDestroy$))
@@ -148,6 +148,7 @@ export class ChartAccountComponent implements OnInit, OnDestroy {
                 title: data.rcaLedgerTitle,
                 isActive: data.isActive,    
               });
+              this.statusDate = data.statusDate
               this.createdBy = data.createdBy
               this.updatedBy = data.updatedBy || 'NA'
               this.updatedAt = data.updatedAt 
@@ -197,7 +198,7 @@ export class ChartAccountComponent implements OnInit, OnDestroy {
         });
         return;
       }
-
+ 
       const collectionView = this.salesGrid.collectionView;  
       const allItems = collectionView.sourceCollection as any[];
     
@@ -236,21 +237,30 @@ export class ChartAccountComponent implements OnInit, OnDestroy {
       };
 
       if (this.isEditMode) {
+        const isAnyControlTouched = Object.values(this.form.controls).some(control => control.dirty);
         this._portalService.updateChartOfAccounts(this.id, chartOfAccounts)
           .pipe(takeUntil(this._onDestroy$))
           .subscribe(data => {
             if (!data) {
               return;
             }
+
+            if (isAnyControlTouched) {
+              chartOfAccounts.statusDate = new Date(); 
+            }
+
             if (data.errorDescription) {
               this._snackBar.open(data.errorDescription, 'Close', {
-                duration: 5000,
+                duration: 3000,
               });
             } else {
-              this._snackBar.open('Chart of Accounts updated successfully.', 'Close', {
-                duration: 5000,
+             let snackBarRef = this._snackBar.open('Chart of Accounts updated successfully.', 'Close', {
+                duration: 3000,
               });
-            }
+              snackBarRef.afterDismissed().subscribe(() => {
+                window.location.reload();
+            });
+          }
           });
         } else {
     
@@ -262,16 +272,17 @@ export class ChartAccountComponent implements OnInit, OnDestroy {
             }
             if (data.errorDescription) {
               this._snackBar.open(data.errorDescription, 'Close', {
-                duration: 5000,
+                duration: 3000,
               });
             } else {
-              this._snackBar.open('Chart of Accounts added successfully.', 'Close', {
-                duration: 5000,
+              let snackBarRef = this._snackBar.open('Chart of Accounts added successfully.', 'Close', {
+                duration: 3000,
               });
-              this.form.reset();
-              this.salesData.sourceCollection = [];
-            }
+              snackBarRef.afterDismissed().subscribe(() => {
+                window.location.reload();
+            });
+          }
           });
         }
   }
-}
+  }

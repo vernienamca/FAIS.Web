@@ -62,6 +62,17 @@
             </mat-form-field>
           </div>
 
+      <div class="flex flex-col sm:flex-row sm:gap-4" [style.margin-left.px]="10" [style.margin-top.px]="10"
+      [style.margin-bottom.px]="30">
+      <div [formGroup]="form">
+        <mat-slide-toggle  labelPosition="before" formControlName="isActive"
+          (change)="onToggleStatus($event)">
+          {{ statusLabel }}
+        </mat-slide-toggle>
+
+        <span [style.margin-left.px]="20"> <strong>Status Date: </strong>{{ statusDate | date: 'MM/dd/yyyy' }}</span>
+      </div>
+    </div>
         </form>
       </div>
 
@@ -80,9 +91,9 @@
             <wj-flex-grid-column binding="gl" header="GL" width="30*" ></wj-flex-grid-column>
             <wj-flex-grid-column binding="sl" header="SL"  width="30*"></wj-flex-grid-column>
             <wj-flex-grid-column binding="ledgerTitle" header="Ledger Title"  width="30*" wordWrap="true" ></wj-flex-grid-column>
-            <wj-flex-grid-column binding="action" header="Action"  width="10*" >
-              <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-cell="cell">
-                <button mat-button (click)="onDeleteRow(cell.item)">
+            <wj-flex-grid-column binding="action" header="Action"  width="10*" [isReadOnly]="true" >
+              <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-cell="cell"  >
+                <button mat-button (click)="onDeleteRow(cell.item)" >
                   <mat-icon>close</mat-icon>
                 </button>
               </ng-template>
@@ -91,23 +102,12 @@
         
         </div>
         
-        <div class="flex flex-row" fxLayoutAlign="end" [style.margin-top.px]="10" [style.margin-right.px]="40">
+        <div class="flex flex-row" fxLayoutAlign="end" [style.margin-top.px]="10" [style.margin-right.px]="40" [style.margin-bottom.px]="20">
           <div id="thePager"></div>
         </div>
       </div>
 
 
-      <div class="flex flex-col sm:flex-row sm:gap-4" [style.margin-left.px]="20" [style.margin-top.px]="10"
-        [style.margin-bottom.px]="30">
-        <div [formGroup]="form">
-          <mat-slide-toggle  labelPosition="before" formControlName="isActive"
-            (change)="onToggleStatus($event)">
-            {{ statusLabel }}
-          </mat-slide-toggle>
-
-          <span [style.margin-left.px]="20"> <strong>Status Date: </strong>{{ statusDate | date: 'MM/dd/yyyy' }}</span>
-        </div>
-      </div>
 
       <blockquote fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px" [style.marginTop.px]="30"
         *ngIf="isEditMode" [style.margin-left.px]="30" [style.margin-right.px]="30">
