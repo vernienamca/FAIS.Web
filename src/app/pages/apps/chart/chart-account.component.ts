@@ -227,7 +227,7 @@ export class ChartAccountComponent implements OnInit, OnDestroy {
         rcaSL: this.formControls.rcasl.value,
         rcaLedgerTitle: this.formControls.title.value,
         isActive: this.formControls.isActive.value ? 'Y' : 'N',
-        statusDate: this.statusDate,
+        statusDate: this.statusDate = new Date(),
         createdBy: (localStorage.getItem('user_id')),
         createdAt: this.createdAt = new Date(),
         updatedBy: (localStorage.getItem('user_id')),
