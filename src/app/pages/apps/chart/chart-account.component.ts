@@ -227,7 +227,7 @@ export class ChartAccountComponent implements OnInit, OnDestroy {
         rcaSL: this.formControls.rcasl.value,
         rcaLedgerTitle: this.formControls.title.value,
         isActive: this.formControls.isActive.value ? 'Y' : 'N',
-        statusDate: this.statusDate = new Date(),
+        statusDate: this.form.dirty ? new Date() : this.statusDate,
         createdBy: (localStorage.getItem('user_id')),
         createdAt: this.createdAt = new Date(),
         updatedBy: (localStorage.getItem('user_id')),
@@ -237,16 +237,11 @@ export class ChartAccountComponent implements OnInit, OnDestroy {
       };
 
       if (this.isEditMode) {
-        const isAnyControlTouched = Object.values(this.form.controls).some(control => control.dirty);
         this._portalService.updateChartOfAccounts(this.id, chartOfAccounts)
           .pipe(takeUntil(this._onDestroy$))
           .subscribe(data => {
             if (!data) {
               return;
-            }
-
-            if (isAnyControlTouched) {
-              chartOfAccounts.statusDate = new Date(); 
             }
 
             if (data.errorDescription) {
