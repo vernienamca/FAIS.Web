@@ -11,6 +11,7 @@ import * as wjcCore from '@grapecity/wijmo';
 import { CollectionViewNavigator } from '@grapecity/wijmo.input';
 import { FlexGrid } from '@grapecity/wijmo.grid';
 import { ILibraryTypeOption } from 'src/app/core/models/library-type-option';
+import { isEqual} from 'lodash';
 
 @Component({
   selector: 'vex-module',
@@ -36,6 +37,7 @@ export class ChartAccountComponent implements OnInit, OnDestroy {
   selectedItems: any[] = [];
   salesData = this.getSalesData(5);
   statusDate: Date | null = null;
+  initialFormValues: any;
 
   addNewRow(): void {
     const newItem = {
@@ -148,6 +150,8 @@ export class ChartAccountComponent implements OnInit, OnDestroy {
                 title: data.rcaLedgerTitle,
                 isActive: data.isActive,    
               });
+
+              this.initialFormValues = this.form.value;
               this.statusDate = data.statusDate
               this.createdBy = data.createdBy
               this.updatedBy = data.updatedBy || 'NA'
@@ -227,13 +231,13 @@ export class ChartAccountComponent implements OnInit, OnDestroy {
         rcaSL: this.formControls.rcasl.value,
         rcaLedgerTitle: this.formControls.title.value,
         isActive: this.formControls.isActive.value ? 'Y' : 'N',
-        statusDate: this.form.dirty ? new Date() : this.statusDate,
+        statusDate: this.areFormsEqual(this.initialFormValues, this.form.value) ? this.statusDate : new Date(),
         createdBy: (localStorage.getItem('user_id')),
         createdAt: this.createdAt = new Date(),
         updatedBy: (localStorage.getItem('user_id')),
         updatedAt: this.updatedAt,
         chartOfAccountDetailsDTO: chartOfAccountDetailsDTOArray,
-        chartOfAccountDetailModel: [],
+        chartOfAccountDetailModel: []
       };
 
       if (this.isEditMode) {
@@ -279,5 +283,18 @@ export class ChartAccountComponent implements OnInit, OnDestroy {
           }
           });
         }
+  }
+
+  private areFormsEqual(formValue1: any, formValue2: any): boolean {
+    const convertNumberToString = (obj: any) => {
+      for (const key in obj) {
+        if (typeof obj[key] === 'number') {
+          obj[key] = obj[key].toString();
+        }
+      }
+    };
+    convertNumberToString(formValue1);
+    convertNumberToString(formValue2);
+    return JSON.stringify(formValue1) === JSON.stringify(formValue2) ;
   }
   }
