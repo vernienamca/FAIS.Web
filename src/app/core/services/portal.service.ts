@@ -176,7 +176,7 @@ export class PortalService {
     return this._portalApi.getProFormaEntry(id);
   }
   addProFormaEntry(proFormaEntry: any): Observable<any> {
-    return this._portalApi.addProFormaEntry(chartOfAccounts);
+    return this._portalApi.addProFormaEntry(proFormaEntry);
   }
   updateProFormaEntry(id: number, data: any): Observable<any> {
     return this._portalApi.updateProFormaEntry(id,data);
