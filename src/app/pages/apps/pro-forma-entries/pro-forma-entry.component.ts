@@ -19,7 +19,7 @@ import { ILibraryTypeOption } from 'src/app/core/models/library-type-option';
 })
 
 export class ProFormaEntryComponent implements OnInit, OnDestroy {
-  @ViewChild('salesGrid') salesGrid: FlexGrid;
+  @ViewChild('proformaGrid') proformaGrid: FlexGrid;
   form: FormGroup;
   layoutCtrl = new FormBuilder().control('fullwidth');
   statusLabel = 'Active';
@@ -34,7 +34,7 @@ export class ProFormaEntryComponent implements OnInit, OnDestroy {
   id: number;
   selectedLibraryTypeId: number;
   selectedItems: any[] = [];
-  salesData = this.getSalesData(5);
+  proformaData = this.getProFormaData(5);
   statusDate: Date = new Date();
 
   addNewRow(): void {
@@ -65,18 +65,18 @@ export class ProFormaEntryComponent implements OnInit, OnDestroy {
       udf2: '',
       action: '',
     };
-    this.salesGrid.collectionView.sourceCollection.unshift(newItem);
-    this.salesGrid.collectionView.refresh();
+    this.proformaGrid.collectionView.sourceCollection.unshift(newItem);
+    this.proformaGrid.collectionView.refresh();
   }
   
   onDeleteRow(item: any): void {
    
-      const index = this.salesGrid.collectionView.items.indexOf(item);
-        this.salesGrid.collectionView.sourceCollection.splice(index, 1);
-        this.salesGrid.collectionView.refresh();
+      const index = this.proformaGrid.collectionView.items.indexOf(item);
+        this.proformaGrid.collectionView.sourceCollection.splice(index, 1);
+        this.proformaGrid.collectionView.refresh();
   }
 
-  getSalesData(count: number) {
+  getProFormaData(count: number) {
     const maxRowsToShow = 5;
     const pageSize = Math.min(count, maxRowsToShow);
 
@@ -139,7 +139,7 @@ export class ProFormaEntryComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.salesData = this.getSalesData(5);
+    this.proformaData = this.getProFormaData(5);
     this.id = parseInt(this._route.snapshot.paramMap.get('id'));
     this._portalService.getLibraryTypes()
     .pipe(takeUntil(this._onDestroy$))
@@ -159,11 +159,11 @@ export class ProFormaEntryComponent implements OnInit, OnDestroy {
           .pipe(takeUntil(this._onDestroy$))
           .subscribe(
             (data: IProFormaEntry) => {
-              this.salesData = new wjcCore.CollectionView(data.proFormaEntryDetailModel, { pageSize: 5 });
+              this.proformaData = new wjcCore.CollectionView(data.proFormaEntryDetailModel, { pageSize: 5 });
               new CollectionViewNavigator('#thePager', {
                 byPage: true,
                 headerFormat: 'Page {currentPage:n0} of {pageCount:n0}',
-                cv: this.salesData
+                cv: this.proformaData
               });
             //   const selectedLibraryType = this.filteredLibraryTypes.find(type => type.name === data.acountGroup);
             //   this._portalService.getLibraryTypeOptions()
@@ -194,7 +194,7 @@ export class ProFormaEntryComponent implements OnInit, OnDestroy {
       new CollectionViewNavigator('#thePager', {
         byPage: true,
         headerFormat: 'Page {currentPage:n0} of {pageCount:n0}',
-        cv: this.salesData
+        cv: this.proformaData
       });
     }
   }
@@ -222,7 +222,7 @@ export class ProFormaEntryComponent implements OnInit, OnDestroy {
   }
   
   save(): void {
-    const wijmoInvalid = this.salesData.sourceCollection.some((item: any) => {
+    const wijmoInvalid = this.proformaData.sourceCollection.some((item: any) => {
       return item.gl === '' || /^[a-zA-Z]+$/.test(item.gl) || item.sl === '' || /^[a-zA-Z]+$/.test(item.sl) || item.ledgerTitle === '';
     });
       if (wijmoInvalid) {
@@ -232,7 +232,7 @@ export class ProFormaEntryComponent implements OnInit, OnDestroy {
         return;
       }
 
-      const collectionView = this.salesGrid.collectionView;  
+      const collectionView = this.proformaGrid.collectionView;  
       const allItems = collectionView.sourceCollection as any[];
     
        const proFormaDetailsDTOArray: IProFormaEntryDetails[] = allItems.map((item: any) => {
@@ -320,7 +320,7 @@ export class ProFormaEntryComponent implements OnInit, OnDestroy {
                 duration: 5000,
               });
               this.form.reset();
-              this.salesData.sourceCollection = [];
+              this.proformaData.sourceCollection = [];
             }
           });
         }

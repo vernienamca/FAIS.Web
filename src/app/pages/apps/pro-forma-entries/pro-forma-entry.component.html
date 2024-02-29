@@ -50,7 +50,7 @@
         <mat-divider style="margin: 10px 0;"></mat-divider>
 
         <div class="wijmotable">
-          <wj-flex-grid class="main-grid px-4 py-4" #salesGrid [itemsSource]="salesData" [selectionMode]="'Row'" [allowResizing]="false" style="width: 100%; border:none ; padding-right: 2%;" >
+          <wj-flex-grid class="main-grid px-4 py-4" #proformagrid [itemsSource]="proformaData" [selectionMode]="'Row'" [allowResizing]="false" style="width: 100%; border:none ; padding-right: 2%;" >
             <wj-flex-grid-column binding="faisrefno" header="FAIS Ref No." width="30*" ></wj-flex-grid-column>
             <wj-flex-grid-column binding="transactionseq" header="Transaction Seq." width="30*" ></wj-flex-grid-column>
             <wj-flex-grid-column binding="costcenter" header="Cost Center" width="30*" ></wj-flex-grid-column>

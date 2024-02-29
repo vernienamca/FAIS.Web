@@ -106,6 +106,8 @@ export class PortalApi extends BaseApi {
         return this.get<IProFormaEntry>(`${this._apiUrl}/proformaentry/${id}`);
     }
     addProFormaEntry(proformaentry: any): Observable<any> {
+        console.log("request proforma");
+        console.log(proformaentry);
         return this.post<any>(`${this._apiUrl}/proformaentries`, proformaentry);
     }
 
