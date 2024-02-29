@@ -114,6 +114,10 @@ const routes: VexRoutes = [
             path: 'pro-forma-entries',
             loadChildren: () => import('./pages/apps/pro-forma-entries/pro-forma-entries.module').then(m => m.ProFormaEntriesModule)
           },
+          {
+            path: 'library-options',
+            loadChildren: () => import('./pages/apps/library-type-option/library-type-option.module').then(m => m.LibraryTypeOptionModule)
+          }
         ]
       },
       {

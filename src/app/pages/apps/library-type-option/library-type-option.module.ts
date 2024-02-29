@@ -13,26 +13,25 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
-import { ChartListComponent } from '../chart/chart-list/chart-list.component';
-import { ChartAccountRoutingModule } from '../chart/chart-account-routing.module';
+import { LibraryTypeOptionListComponent } from './library-type-option-list/library-type-option-list.component';
+import { LibraryTypeOptionRoutingModule } from './library-type-option-routing.module';
 import { RelativeDateTimeModule } from 'src/@vex/pipes/relative-date-time/relative-date-time.module';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { ChartAccountComponent } from './chart-account.component';
-import { SecondaryToolbarModule } from 'src/@vex/components/secondary-toolbar/secondary-toolbar.module';
+import { LibraryTypeOptionComponent } from './library-type-option.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
+import { SecondaryToolbarModule } from 'src/@vex/components/secondary-toolbar/secondary-toolbar.module';
+import { MatTabsModule } from '@angular/material/tabs';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import {WjGridModule} from '@grapecity/wijmo.angular2.grid';
+import { MatInputModule } from '@angular/material/input';
 
 @NgModule({
-  declarations: [ChartListComponent,ChartAccountComponent],
+  declarations: [LibraryTypeOptionListComponent, LibraryTypeOptionComponent],
   imports: [
     CommonModule,
-    ChartAccountRoutingModule,
+    LibraryTypeOptionRoutingModule,
     PageLayoutModule,
     BreadcrumbsModule,
     MatPaginatorModule,
@@ -52,13 +51,12 @@ import {WjGridModule} from '@grapecity/wijmo.angular2.grid';
     MatDialogModule,
     MatDividerModule,
     FlexLayoutModule,
-    SecondaryToolbarModule,
-    MatSnackBarModule,
-    MatFormFieldModule,
     MatInputModule,
     MatSlideToggleModule,
-    WjGridModule
+    MatTabsModule,
+    SecondaryToolbarModule,
+    MatSnackBarModule
   ]
 })
-export class ChartAccountModule {
+export class LibraryTypeOptionModule {
 }

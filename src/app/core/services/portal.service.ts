@@ -10,15 +10,17 @@ import { ITemplates } from '../models/templates';
 import { DatePipe } from '@angular/common';
 import { ISettings } from '../models/settings';
 import { ICostCenter } from '../models/cost-center';
+import { ILibraryTypeOption } from '../models/library-type-option';
 import { IProFormaEntry } from '../models/pro-forma-entry';
 import { IChart } from '../models/chart';
+import { ILibraryTypes } from '../models/library-types';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PortalService {
   constructor(
-    private _portalApi: PortalApi, 
+    private _portalApi: PortalApi,
     private _datePipe: DatePipe) { }
 
   getModules(): Observable<IModule[]> {
@@ -44,7 +46,7 @@ export class PortalService {
   getUsers(): Observable<IUser[]> {
     return this._portalApi.getUsers();
   }
-  
+
   getUser(id: number): Observable<any> {
     return this._portalApi.getUser(id);
   }
@@ -64,12 +66,12 @@ export class PortalService {
   getAlerts(): Observable<ITemplates[]> {
     return this._portalApi.getTemplates();
   }
-  
+
   exportAuditLogs(): void {
     this._portalApi.exportAuditLogs().subscribe(response => {
       const contentDisposition = response.headers.get('Content-Disposition');
-      const filename = contentDisposition 
-        ? contentDisposition.split(';')[1].trim().split('=')[1] 
+      const filename = contentDisposition
+        ? contentDisposition.split(';')[1].trim().split('=')[1]
         : 'Audit_Logs_' + this._datePipe.transform(new Date(), 'medium') + '.xlsx';
 
       const blob = new Blob([response.body], { type: 'application/actet-stream' });
@@ -130,15 +132,54 @@ export class PortalService {
     });
   }
 
+  getLibraryTypeOptions(): Observable<ILibraryTypeOption[]> {
+    return this._portalApi.getLibraryTypeOptions();
+  }
+
+  getLibraryTypeOption(id: number): Observable<ILibraryTypeOption> {
+    return this._portalApi.getLibraryTypeOption(id);
+  }
+
+  updateLibraryTypeOption(data: any): Observable<any> {
+    return this._portalApi.updateLibraryTypeOption(data);
+  }
+
+  exportLibraryTypeOptions(): void {
+    this._portalApi.exportLibraryTypeOptions().subscribe(response => {
+      const contentDisposition = response.headers.get('Content-Disposition');
+      const filename = contentDisposition 
+        ? contentDisposition.split(';')[1].trim().split('=')[1] 
+        : 'Library_Type_Options_' + this._datePipe.transform(new Date(), 'medium') + '.xlsx';
+
+        const blob = new Blob([response.body], { type: 'application/actet-stream' });
+  
+        const link = document.createElement('a');
+        link.href = window.URL.createObjectURL(blob);
+        link.download = filename;
+        link.click();
+      });
+    }
+
+  createLibraryTypeOption(data: any): Observable<any> {
+    return this._portalApi.createLibraryTypeOption(data);
+  }
+
+  getLibraryType(): Observable<ILibraryTypes[]> {
+    return this._portalApi.getLibraryType();
+  }
+
   getProFormaEntries(): Observable<IProFormaEntry[]> {
     return this._portalApi.getProFormaEntries();
   }
+
   getProFormaEntry(id: number): Observable<IProFormaEntry> {
     return this._portalApi.getProFormaEntry(id);
   }
+
   updateProFormaEntry(data: any): Observable<any> {
     return this._portalApi.updateProFormaEntry(data);
   }  
+
   exportProFormaEntries(): void {
     this._portalApi.exportProFormaEntries().subscribe(response => {
       const contentDisposition = response.headers.get('Content-Disposition');
@@ -153,6 +194,21 @@ export class PortalService {
         link.download = filename;
         link.click();
       });
-    }
-}
+  }
 
+  addChartOfAccounts(chartOfAccounts: any): Observable<any> {
+    return this._portalApi.addChartOfAccounts(chartOfAccounts);
+  }
+
+  getChartOfAccountsById(id: number): Observable<IChart> {
+    return this._portalApi.getChartOfAccountsById(id);
+  }
+
+  getLibraryTypes(): Observable<ILibraryTypes[]> {
+    return this._portalApi.getLibraryTypes();
+  }
+  
+  updateChartOfAccounts(id: number, data: any): Observable<any> {
+    return this._portalApi.updateChartOfAccounts(id,data);
+}
+}

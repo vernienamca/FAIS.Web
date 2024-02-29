@@ -3,8 +3,9 @@
     <div [class.container]="layoutCtrl.value === 'boxed'" [class.px-gutter]="layoutCtrl.value === 'fullwidth'" 
       class="w-full flex flex-col sm:flex-row justify-between">
       <div>
-        <h1 class="title mt-0 mb-1">Chart of Accounts ({{ totalCount }})</h1>
-        <vex-breadcrumbs [crumbs]="['System Libraries', 'Chart of Accounts']"></vex-breadcrumbs>      </div>
+        <h1 class="title mt-0 mb-1">Library Type Options ({{ totalCount }})</h1>
+        <vex-breadcrumbs [crumbs]="['System Libraries', 'Library Type Options']"></vex-breadcrumbs>
+      </div>
       <div class="hidden sm:block">
         <mat-button-toggle-group [formControl]="layoutCtrl" class="mt-4 sm:mt-0">
           <mat-button-toggle value="boxed">Boxed</mat-button-toggle>
@@ -15,49 +16,59 @@
   </vex-page-layout-header>
   <vex-page-layout-content [class.container]="layoutCtrl.value === 'boxed'" [class.px-gutter]="layoutCtrl.value === 'fullwidth'" class="-mt-6">
     <div class="card overflow-auto -mt-16">
-      <div class="bg-app-bar px-6 h-16 border-b sticky left-0 flex items-center" fxLayout="row" fxLayoutGap="10px">
-        <div class="bg-foreground rounded-full border px-4 max-w-[300px] flex-auto flex items-center border border-gray-300">
-          <mat-icon class="icon-sm text-secondary" svgIcon="mat:search"></mat-icon>
-          <input [formControl]="searchCtrl" class="px-4 py-2 border-0 outline-none w-full bg-transparent" 
-            placeholder="Search chart accounts here..." type="search">
+      <div class="bg-app-bar px-6 h-16 border-b sticky left-0 flex items-center">
+        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
+          <div class="bg-foreground rounded-full border px-4 flex-auto flex items-center border border-gray-300">
+            <mat-select placeholder="Select Library Type" (selectionChange)="onFilterUser($event)" [style.width.px]="327"
+              class="py-2 border-0 outline-none w-full bg-transparent flex-auto"> 
+              <mat-option *ngFor="let libraryType of libraryTypes" [value]="libraryType">{{libraryType}}</mat-option>
+            </mat-select>
+          </div>
+          <div class="bg-foreground rounded-full border px-4 max-w-[300px] flex-auto flex items-center border border-gray-300">
+            <mat-icon class="icon-sm text-secondary" svgIcon="mat:search"></mat-icon>
+            <input [formControl]="searchCtrl" class="px-4 py-2 border-0 outline-none w-full bg-transparent" 
+              placeholder="Search library type option here..." type="search">
+          </div>
         </div>
-
-        <button class="rounded-full !bg-green !text-white" mat-raised-button type="button" [routerLink]="['add']">
-          <mat-icon svgIcon="mat:add"></mat-icon>
-          <span>Add</span>
-        </button>
-        
         <span class="flex-1"></span>
-     
-        <button color="primary" mat-raised-button type="button" (click)="exportChartLogs()">
-          <mat-icon svgIcon="mat:download"></mat-icon>
-          <span>Export All</span>
-        </button>
-
-      <button [matMenuTriggerFor]="columnFilterMenu" class="ml-4 flex-none" mat-icon-button matTooltip="Filter Columns" type="button">
-        <mat-icon svgIcon="mat:filter_list"></mat-icon>
-      </button>
+        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
+          <button color="primary" mat-raised-button type="button" (click)="exportLibraryTypeOptions()">
+            <mat-icon svgIcon="mat:download"></mat-icon>
+            <span>Export all</span>
+          </button>
+          <button (click)="add()" class="ml-4 flex-none" color="primary" mat-mini-fab matTooltip="Add User" type="button">
+            <mat-icon svgIcon="mat:add"></mat-icon>
+          </button>
+        </div>
       </div>
       <mat-progress-bar *ngIf="isListLoading" mode="indeterminate" color="primary"></mat-progress-bar>
       <table @stagger [dataSource]="dataSource" class="w-full" mat-table matSort>
-        
+        <!-- Checkbox Column -->
         <ng-container matColumnDef="checkbox">
           <th *matHeaderCellDef mat-header-cell>
-            <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()"
-              [indeterminate]="selection.hasValue() && !isAllSelected()" color="primary">
+            <mat-checkbox (change)="$event ? masterToggle() : null"
+                          [checked]="selection.hasValue() && isAllSelected()"
+                          [indeterminate]="selection.hasValue() && !isAllSelected()"
+                          color="primary">
             </mat-checkbox>
           </th>
           <td *matCellDef="let row" class="w-4" mat-cell>
-            <mat-checkbox (change)="$event ? selection.toggle(row) : null" (click)="$event.stopPropagation()" 
-              [checked]="selection.isSelected(row)" color="primary">
+            <mat-checkbox (change)="$event ? selection.toggle(row) : null"
+                          (click)="$event.stopPropagation()"
+                          [checked]="selection.isSelected(row)"
+                          color="primary">
             </mat-checkbox>
           </td>
         </ng-container>
 
+         <!-- Text Columns -->
         <ng-container *ngFor="let column of columns; trackBy: trackByProperty">
           <ng-container *ngIf="column.type === 'text'" [matColumnDef]="column.property">
             <th *matHeaderCellDef class="uppercase" mat-header-cell mat-sort-header> {{ column.label }}</th>
-            <ng-container *ngIf="column.property === 'updatedAt'; else text">
+            <ng-container *ngIf="column.property === 'no'">
+              <td mat-cell *matCellDef="let row; let i = index"> {{ i + 1 }} </td>
+            </ng-container>
+            <ng-container *ngIf="column.property === 'createdAt'; else text">
               <td *matCellDef="let row" [ngClass]="column.cssClasses" mat-cell>
                 {{ row[column.property] | date: 'MM/dd/yyyy hh:mm a' }}
               </td>
@@ -69,56 +80,34 @@
             </ng-template>
           </ng-container>
         </ng-container>
-
-        <ng-container matColumnDef="labels">
-          <th *matHeaderCellDef class="uppercase" mat-header-cell mat-sort-header>Labels</th>
-          <td *matCellDef="let row" mat-cell>
-            <div (click)="$event.stopPropagation()" class="flex items-center gap-1">
-              <div *ngFor="let label of row.labels"
-                   [ngClass]="[label.textClass, label.bgClass]"
-                   class="rounded px-2 py-1 font-medium text-xs flex-none">
-                {{ label.text }}
-              </div>
-              <div class="text-secondary bg-base text-hint cursor-pointer hover:bg-hover flex-none flex items-center justify-center">
-                <mat-icon class="icon-sm" svgIcon="mat:add"></mat-icon>
-              </div>
-            </div>
-          </td>
-        </ng-container>
-
+  
+        
         <ng-container matColumnDef="isActive">
           <th *matHeaderCellDef class="uppercase" mat-header-cell mat-sort-header>Status</th>
           <td *matCellDef="let row" mat-cell>
             <div class="flex items-center gap-1">
-              <div *ngIf="row.isActive; else inactive" [ngClass]="['text-green', 'bg-green/10']" 
+              <div *ngIf="row['isActive'] == 'Y'" [ngClass]="['text-green', 'bg-green/10']" 
                 class="rounded px-2 py-1 font-medium text-xs flex-none">
                 ACTIVE
               </div>
-              <ng-template #inactive>
-                <div [ngClass]="['text-amber', 'bg-amber/10']" 
-                  class="rounded px-2 py-1 font-medium text-xs flex-none">
-                  INACTIVE
-                </div>
-              </ng-template>
+              <div *ngIf="row['isActive'] == 'N'" [ngClass]="['text-amber', 'bg-amber/10']" 
+                class="rounded px-2 py-1 font-medium text-xs flex-none">
+                INACTIVE
+              </div>
             </div>
           </td>
         </ng-container>
-        
         <ng-container matColumnDef="actions">
-          <th *matHeaderCellDef mat-header-cell mat-sort-header>ACTION</th>
+          <th *matHeaderCellDef mat-header-cell mat-sort-header>ACTIONS</th>
           <td *matCellDef="let row" class="w-10 text-secondary" mat-cell>
-            <button (click)="$event.stopPropagation()"
-                    [matMenuTriggerData]="{ chart: row }"
-                    [matMenuTriggerFor]="actionsMenu"
-                    mat-icon-button
-                    type="button">
+            <button (click)="$event.stopPropagation()" [matMenuTriggerData]="{ librarytypeoption: row }" [matMenuTriggerFor]="actionsMenu"
+              mat-icon-button type="button">
               <mat-icon svgIcon="mat:more_horiz"></mat-icon>
             </button>
           </td>
         </ng-container>
-
         <tr *matHeaderRowDef="visibleColumns" mat-header-row></tr>
-        <tr (click)="edit(row)" *matRowDef="let row; columns: visibleColumns;" @fadeInUp 
+        <tr @fadeInUp (click)="edit(row)" *matRowDef="let row; columns: visibleColumns;"
           class="hover:bg-hover trans-ease-out cursor-pointer" mat-row></tr>
       </table>
       <mat-paginator [pageSizeOptions]="pageSizeOptions" [pageSize]="pageSize" class="sticky left-0"></mat-paginator>
@@ -133,8 +122,8 @@
   </button>
 </mat-menu>
 <mat-menu #actionsMenu="matMenu" xPosition="before" yPosition="below">
-  <ng-template let-chart="chart" matMenuContent>
-    <button (click)="edit(chart)" mat-menu-item>
+  <ng-template let-librarytypeoption="librarytypeoption" matMenuContent>
+    <button (click)="edit(librarytypeoption)" mat-menu-item>
       <mat-icon svgIcon="mat:edit"></mat-icon>
       <span>Edit</span>
     </button>

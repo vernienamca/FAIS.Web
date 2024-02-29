@@ -2,29 +2,31 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { QuicklinkModule } from 'ngx-quicklink';
 import { VexRoutes } from '../../../../@vex/interfaces/vex-route.interface';
-import { ChartListComponent } from '../chart/chart-list/chart-list.component';
-import { ChartAccountComponent } from './chart-account.component';
+import { LibraryTypeOptionListComponent } from './library-type-option-list/library-type-option-list.component';
+import { LibraryTypeOptionComponent } from './library-type-option.component';
+import { PageMode } from 'src/app/core/enums/page-mode.enum';
 
 const routes: VexRoutes = [
   {
     path: '',
-    component: ChartListComponent,
+    component: LibraryTypeOptionListComponent,
     data: {
       toolbarShadowEnabled: false
     }
   },
-
   {
     path: 'edit/:id',
-    component: ChartAccountComponent,
+    component: LibraryTypeOptionComponent,
     data: {
+      pageMode: PageMode.Edit,
       toolbarShadowEnabled: false
     }
   },
   {
     path: 'add',
-    component: ChartAccountComponent,
+    component: LibraryTypeOptionComponent,
     data: {
+      pageMode: PageMode.Add,
       toolbarShadowEnabled: false
     }
   }
@@ -34,5 +36,5 @@ const routes: VexRoutes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule, QuicklinkModule]
 })
-export class ChartAccountRoutingModule {
+export class LibraryTypeOptionRoutingModule {
 }
