@@ -91,11 +91,9 @@ export class ProFormaEntryComponent implements OnInit, OnDestroy {
   ColumnMode = ColumnMode;
   
   updateValue(event, cell, rowIndex) {
-    console.log('inline editing rowIndex', rowIndex);
     this.editing[rowIndex + '-' + cell] = false;
     this.rows[rowIndex][cell] = event.target.value;
     this.rows = [...this.rows];
-    console.log('UPDATED!', this.rows[rowIndex][cell]);
   }
  
   constructor(
@@ -163,7 +161,7 @@ export class ProFormaEntryComponent implements OnInit, OnDestroy {
     }
     const data = Object.assign({}, this.form.value);
     data.id = parseInt(this._route.snapshot.paramMap.get('id'));
-    data.isActive = data.isActive ? 'Y' : 'N'; 
+    // data.isActive = data.isActive ? 'Y' : 'N'; 
     data.updatedBy = parseInt(localStorage.getItem('user_id'));
 
   this._portalService.updateProFormaEntry(data)

@@ -165,7 +165,7 @@ var data: IProFormaEntry[]= [{
   }
 
   add() {
-    this._router.navigate(['pro-forma-entry/add']);
+    this._router.navigate(['apps/pro-forma-entries/add']);
   }
   
   edit(proFormaEntry: any): void {
