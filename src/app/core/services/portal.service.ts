@@ -175,10 +175,12 @@ export class PortalService {
   getProFormaEntry(id: number): Observable<IProFormaEntry> {
     return this._portalApi.getProFormaEntry(id);
   }
-
-  updateProFormaEntry(data: any): Observable<any> {
-    return this._portalApi.updateProFormaEntry(data);
-  }  
+  addProFormaEntry(proFormaEntry: any): Observable<any> {
+    return this._portalApi.addProFormaEntry(chartOfAccounts);
+  }
+  updateProFormaEntry(id: number, data: any): Observable<any> {
+    return this._portalApi.updateProFormaEntry(id,data);
+}
 
   exportProFormaEntries(): void {
     this._portalApi.exportProFormaEntries().subscribe(response => {

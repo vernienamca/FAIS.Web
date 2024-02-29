@@ -27,6 +27,8 @@ import { SecondaryToolbarModule } from 'src/@vex/components/secondary-toolbar/se
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { ProFormaEntryComponent } from './pro-forma-entry.component';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import {WjGridModule} from '@grapecity/wijmo.angular2.grid';
 
 @NgModule({
   declarations: [ProFormaEntriesListComponent, ProFormaEntryComponent],
@@ -58,6 +60,8 @@ import { NgxDatatableModule } from '@swimlane/ngx-datatable';
     SecondaryToolbarModule,
     MatSnackBarModule,
     NgxDatatableModule,
+    MatFormFieldModule,
+    WjGridModule
   ]
 })
 export class ProFormaEntriesModule {

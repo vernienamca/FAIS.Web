@@ -45,7 +45,7 @@ export class ProFormaEntriesListComponent implements OnInit, OnDestroy, AfterVie
     { label: 'Transaction ID', property: 'id', type: 'text', visible: true },
     { label: 'Transaction Type', property: 'type', type: 'text', visible: true },
     { label: 'Transaction Description', property: 'description', type: 'text', visible: true },
-    { label: 'Status', property: 'status', type: 'badge', visible: true },
+    { label: 'Status', property: 'isActive', type: 'badge', visible: true },
     { label: 'Actions', property: 'actions', type: 'button', visible: true }
   ];
 
@@ -79,27 +79,27 @@ export class ProFormaEntriesListComponent implements OnInit, OnDestroy, AfterVie
   }
 
   ngOnInit(): void {
-    // this._portalService.getProFormaEntries()
-    //   .pipe(
-    //     takeUntil(this._onDestroy$),
-    //     finalize(() => this.isListLoading = false)
-    //   )
-    //   .subscribe(data => {
-    //     if (!data) {
-    //       return;
-    //     }
-    //     this.subject$.next(data);
-    //   });
+    this._portalService.getProFormaEntries()
+      .pipe(
+        takeUntil(this._onDestroy$),
+        finalize(() => this.isListLoading = false)
+      )
+      .subscribe(data => {
+        if (!data) {
+          return;
+        }
+        this.subject$.next(data);
+      });
     this.isListLoading = false
-var data: IProFormaEntry[]= [{
-  id: 1,
-  type: "Add",
-  description: "to record asset movement report - addition",
-  status: 1,
-  createdBy: null,
-  createdAt: null
-}];
-      this.subject$.next(data);
+// var data: IProFormaEntry[]= [{
+//   id: 1,
+//   type: "Add",
+//   description: "to record asset movement report - addition",
+//   // status: 1,
+//   createdBy: null,
+//   createdAt: null
+// }];
+      // this.subject$.next(data);
 
     this.dataSource = new MatTableDataSource();
     this.data$

@@ -105,9 +105,13 @@ export class PortalApi extends BaseApi {
     getProFormaEntry(id: number): Observable<IProFormaEntry> {
         return this.get<IProFormaEntry>(`${this._apiUrl}/proformaentry/${id}`);
     }
+    addProFormaEntry(proformaentry: any): Observable<any> {
+        return this.post<any>(`${this._apiUrl}/proformaentries`, proformaentry);
+    }
 
-    updateProFormaEntry(data: any): Observable<any> {
-        return this.put<any>(`${this._apiUrl}/proformaentry`, data);
+    
+    updateProFormaEntry(id: number, data: any): Observable<any> {
+        return this.put<any>(`${this._apiUrl}/proformaentries/${id}`, data);
     }
 
     exportProFormaEntries(): Observable<HttpResponse<Blob>>  {

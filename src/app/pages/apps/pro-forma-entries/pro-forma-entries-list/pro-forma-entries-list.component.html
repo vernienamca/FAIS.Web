@@ -30,7 +30,7 @@
             <mat-icon svgIcon="mat:download"></mat-icon>
             <span>Export all</span>
           </button>
-          <button (click)="add()" class="ml-4 flex-none" color="primary" mat-mini-fab matTooltip="Add Proforma Entry" type="button">
+          <button (click)="add()" class="ml-4 flex-none" color="primary" mat-mini-fab matTooltip="Add User" type="button">
             <mat-icon svgIcon="mat:add"></mat-icon>
           </button>
         </div>
@@ -71,24 +71,21 @@
             </ng-template>
           </ng-container>
         </ng-container>
-  
-        
-        <ng-container matColumnDef="status">
+
+        <ng-container matColumnDef="isActive">
           <th *matHeaderCellDef class="uppercase" mat-header-cell mat-sort-header>Status</th>
           <td *matCellDef="let row" mat-cell>
             <div class="flex items-center gap-1">
-              <div *ngIf="row['status'] === proFormaEntryStatusEnum.Active" [ngClass]="['text-green', 'bg-green/10']" 
+              <div *ngIf="row.isActive; else inactive" [ngClass]="['text-green', 'bg-green/10']" 
                 class="rounded px-2 py-1 font-medium text-xs flex-none">
                 ACTIVE
               </div>
-              <div *ngIf="row['status'] === proFormaEntryStatusEnum.Inactive" [ngClass]="['text-amber', 'bg-amber/10']" 
-                class="rounded px-2 py-1 font-medium text-xs flex-none">
-                INACTIVE
-              </div>
-              <div *ngIf="row['status'] === proFormaEntryStatusEnum.Locked" [ngClass]="['text-red', 'bg-red/10']" 
-                class="rounded px-2 py-1 font-medium text-xs flex-none">
-                LOCKED
-              </div>
+              <ng-template #inactive>
+                <div [ngClass]="['text-amber', 'bg-amber/10']" 
+                  class="rounded px-2 py-1 font-medium text-xs flex-none">
+                  INACTIVE
+                </div>
+              </ng-template>
             </div>
           </td>
         </ng-container>
