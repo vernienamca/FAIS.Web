@@ -11,6 +11,7 @@ import * as wjcCore from '@grapecity/wijmo';
 import { CollectionViewNavigator } from '@grapecity/wijmo.input';
 import { FlexGrid } from '@grapecity/wijmo.grid';
 import { ILibraryTypeOption } from 'src/app/core/models/library-type-option';
+import { isEqual} from 'lodash';
 
 @Component({
   selector: 'vex-module',
@@ -35,7 +36,8 @@ export class ChartAccountComponent implements OnInit, OnDestroy {
   selectedLibraryTypeId: number;
   selectedItems: any[] = [];
   salesData = this.getSalesData(5);
-  statusDate: Date = new Date();
+  statusDate: Date | null = null;
+  initialFormValues: any;
 
   addNewRow(): void {
     const newItem = {
@@ -84,7 +86,7 @@ export class ChartAccountComponent implements OnInit, OnDestroy {
   }
   
   private _onDestroy$ = new Subject<void>();
-  
+
   constructor(
     private _fb: FormBuilder,
     private _route: ActivatedRoute,
@@ -102,7 +104,7 @@ export class ChartAccountComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.salesData = this.getSalesData(5);
+    this.salesData = this.getSalesData(0);
     this.id = parseInt(this._route.snapshot.paramMap.get('id'));
     this._portalService.getLibraryTypes()
     .pipe(takeUntil(this._onDestroy$))
@@ -148,6 +150,9 @@ export class ChartAccountComponent implements OnInit, OnDestroy {
                 title: data.rcaLedgerTitle,
                 isActive: data.isActive,    
               });
+
+              this.initialFormValues = this.form.value;
+              this.statusDate = data.statusDate
               this.createdBy = data.createdBy
               this.updatedBy = data.updatedBy || 'NA'
               this.updatedAt = data.updatedAt 
@@ -197,7 +202,7 @@ export class ChartAccountComponent implements OnInit, OnDestroy {
         });
         return;
       }
-
+ 
       const collectionView = this.salesGrid.collectionView;  
       const allItems = collectionView.sourceCollection as any[];
     
@@ -226,13 +231,13 @@ export class ChartAccountComponent implements OnInit, OnDestroy {
         rcaSL: this.formControls.rcasl.value,
         rcaLedgerTitle: this.formControls.title.value,
         isActive: this.formControls.isActive.value ? 'Y' : 'N',
-        statusDate: this.statusDate,
+        statusDate: this.areFormsEqual(this.initialFormValues, this.form.value) ? this.statusDate : new Date(),
         createdBy: (localStorage.getItem('user_id')),
         createdAt: this.createdAt = new Date(),
         updatedBy: (localStorage.getItem('user_id')),
         updatedAt: this.updatedAt,
         chartOfAccountDetailsDTO: chartOfAccountDetailsDTOArray,
-        chartOfAccountDetailModel: [],
+        chartOfAccountDetailModel: []
       };
 
       if (this.isEditMode) {
@@ -242,15 +247,19 @@ export class ChartAccountComponent implements OnInit, OnDestroy {
             if (!data) {
               return;
             }
+
             if (data.errorDescription) {
               this._snackBar.open(data.errorDescription, 'Close', {
-                duration: 5000,
+                duration: 3000,
               });
             } else {
-              this._snackBar.open('Chart of Accounts updated successfully.', 'Close', {
-                duration: 5000,
+             let snackBarRef = this._snackBar.open('Chart of Accounts updated successfully.', 'Close', {
+                duration: 3000,
               });
-            }
+              snackBarRef.afterDismissed().subscribe(() => {
+                window.location.reload();
+            });
+          }
           });
         } else {
     
@@ -262,16 +271,30 @@ export class ChartAccountComponent implements OnInit, OnDestroy {
             }
             if (data.errorDescription) {
               this._snackBar.open(data.errorDescription, 'Close', {
-                duration: 5000,
+                duration: 3000,
               });
             } else {
-              this._snackBar.open('Chart of Accounts added successfully.', 'Close', {
-                duration: 5000,
+              let snackBarRef = this._snackBar.open('Chart of Accounts added successfully.', 'Close', {
+                duration: 3000,
               });
-              this.form.reset();
-              this.salesData.sourceCollection = [];
-            }
+              snackBarRef.afterDismissed().subscribe(() => {
+                window.location.reload();
+            });
+          }
           });
         }
   }
-}
+
+  private areFormsEqual(formValue1: any, formValue2: any): boolean {
+    const convertNumberToString = (obj: any) => {
+      for (const key in obj) {
+        if (typeof obj[key] === 'number') {
+          obj[key] = obj[key].toString();
+        }
+      }
+    };
+    convertNumberToString(formValue1);
+    convertNumberToString(formValue2);
+    return JSON.stringify(formValue1) === JSON.stringify(formValue2) ;
+  }
+  }
