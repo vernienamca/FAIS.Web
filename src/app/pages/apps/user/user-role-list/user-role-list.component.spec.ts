@@ -1,19 +1,20 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { ProfileComponent } from './profile.component';
 
-describe('ProfileComponent', () => {
-  let component: ProfileComponent;
-  let fixture: ComponentFixture<ProfileComponent>;
+import { UserRoleListComponent } from './user-role-list.component';
+
+describe('UserRoleListComponent', () => {
+  let component: UserRoleListComponent;
+  let fixture: ComponentFixture<UserRoleListComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ProfileComponent]
+      declarations: [UserRoleListComponent]
     })
       .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ProfileComponent);
+    fixture = TestBed.createComponent(UserRoleListComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -13,9 +13,10 @@
     <p fxFlex>To view the audit logs shared folder, copy the link below and paste it to your windows explorer.</p>
   </div>
   <p class="my-6">
-    <i>{{ sharedLink }}</i>
+    <i *ngIf="!isListLoading">{{ sharedLink }}</i>
   </p>
-  <img fxFlex src="../../../../../assets/img/instructions/audit-logs-shared-link.png" alt="Upload User Template">
+  <mat-progress-bar *ngIf="isListLoading" mode="indeterminate" color="primary"></mat-progress-bar>
+  <img *ngIf="!isListLoading" src="../../../../../assets/img/instructions/audit-logs-shared-link.png" alt="Shared Folder Link">
 </mat-dialog-content>
 <mat-dialog-actions align="end">
   <button cdkFocusInitial color="primary" mat-button mat-dialog-close type="button">Close</button>

@@ -86,19 +86,15 @@ const routes: VexRoutes = [
             loadChildren: () => import('./pages/apps/notification/templates/template-list/template.module').then(m =>m.TemplateModule)
           },
           {
-            path: 'user-edit',
-            loadChildren: () => import('./pages/apps/User-Edit/User-Edit.module').then(m => m.UserEditModule),
-          },
-          {
             path: 'editor',
             loadChildren: () => import('./pages/apps/editor/editor.module').then(m => m.EditorModule),
           },
           {
-            path: 'profile',
+            path: 'my-profile',
             children: [
               {
                 path: '',
-                loadChildren: () => import('./pages/apps/user/profile/profile.module.').then(m => m.ProfileModule),
+                loadChildren: () => import('./pages/apps/user/user.module').then(m => m.UserModule),
               },
               {
                 path: 'change-password',

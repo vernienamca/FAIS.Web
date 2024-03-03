@@ -5,7 +5,6 @@ export interface IStringInterpolation {
     isActive: string,
     statusDate: Date,
     notificationType: string,
-    createdByDisplay: string,
     createdBy: number;
     createdAt: Date,
     updatedBy: string,

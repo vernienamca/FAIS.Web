@@ -19,3 +19,16 @@ export interface IUser {
   updatedBy?: string;
   updatedAt?: Date
 }
+
+export interface IUserRole {
+  id: number;
+  name: string;
+  description: string;
+  isActive: boolean;
+  statusDate: string,
+  createdBy: number,
+  createdAt: Date,
+  updatedBy?: number,
+  updatedAt?: Date,
+  isNew: boolean
+}

@@ -1,26 +1,23 @@
-import { Component, Inject, OnDestroy } from "@angular/core";
+import { Component, Inject, OnInit } from "@angular/core";
 import { MAT_DIALOG_DATA } from "@angular/material/dialog";
-import { Subject } from "rxjs";
 
 @Component({
   selector: 'app-shared-link-dialog',
   templateUrl: './shared-link-dialog.component.html',
   styleUrls: ['./shared-link-dialog.component.scss']
 })
-export class SharedLinkDialogComponent implements OnDestroy {
+export class SharedLinkDialogComponent implements OnInit {
   sharedLink: string;
-
-  private _onDestroy$ = new Subject<void>();
+  isListLoading = true;
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) data
+    @Inject(MAT_DIALOG_DATA) private _data: any
   ) { 
-    this.sharedLink = data.auditLogsFilePath;
+    this.sharedLink = this._data;
   }
 
-  ngOnDestroy() {
-    this._onDestroy$.next();
-    this._onDestroy$.complete();
+  ngOnInit() {
+    this.isListLoading = false;
   }
 }
 

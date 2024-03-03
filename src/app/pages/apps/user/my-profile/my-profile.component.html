@@ -1,0 +1,221 @@
+<vex-secondary-toolbar current="My Profile">
+  <vex-breadcrumbs [crumbs]="['System Management', 'My Profile']" class="flex-auto"></vex-breadcrumbs>
+  <button class="ml-2" color="primary" mat-icon-button type="button">
+    <mat-icon svgIcon="mat:more_vert"></mat-icon>
+  </button>
+</vex-secondary-toolbar>
+<div [@stagger]="true" class="p-gutter container" [class.container]="layoutCtrl.value === 'boxed'" [class.px-gutter]="layoutCtrl.value === 'fullwidth'">
+  <div class="flex flex-col sm:flex-row gap-4">
+    <div @fadeInUp class="card flex-auto">
+      <div class="px-6 py-4 border-b flex items-center gap-2">
+        <button [ngClass]="[false ? '!bg-gray' : '!bg-green', '!text-contrast-white']" mat-raised-button type="button" [disabled]="false" (click)="save()">
+          <mat-icon class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" svgIcon="mat:archive"></mat-icon> Save
+        </button>
+        <button color="primary" mat-stroked-button type="button" [routerLink]="['/apps/help-center/getting-started']">
+          <mat-icon class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" svgIcon="mat:close"></mat-icon> Close
+        </button>
+      </div>
+      <div class="px-6 py-4 flex flex-col">
+        <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="30px">
+          <div fxFlex="20" class="card overflow-hidden">
+            <div class="p-4 text-center hover:bg-hover trans-ease-out cursor-pointer relative" matRipple>
+              <img [src]="photo" class="avatar h-24 w-24 mx-auto">
+              <button color="primary" mat-button type="button" class="my-2" [disabled]="true">
+                <span>Attach Photo</span>
+                <mat-icon class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" svgIcon="mat:upload"></mat-icon>
+              </button>
+            </div>
+          </div>
+          <div fxFlex>
+            <mat-tab-group>
+              <mat-tab label="General">
+                <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
+                  <form [formGroup]="form" class="flex flex-col flex-auto form-container p-6">
+                    <div class="flex flex-col sm:flex-row sm:gap-4">
+                      <mat-form-field appearance="fill" class="flex-auto">
+                        <mat-label>Employee Number</mat-label>
+                        <input matInput formControlName="employeeNumber">
+                      </mat-form-field>
+                    </div>
+                    <div class="flex flex-col sm:flex-row sm:gap-4">
+                      <mat-form-field appearance="fill" class="flex-auto">
+                        <mat-label>Username</mat-label>
+                        <input matInput formControlName="username" required>
+                        <mat-error *ngIf="formControls.username.touched && formControls.username.invalid">
+                          <span *ngIf="formControls.username.getError('required')">
+                            Username is required
+                          </span>
+                        </mat-error>
+                      </mat-form-field>
+                      <mat-form-field appearance="fill" class="flex-auto">
+                        <mat-label>Position</mat-label>
+                        <mat-select formControlName="position" required>
+                          <mat-option value="1">PAD Analyst</mat-option>
+                          <mat-option value="2">Administrator</mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="formControls.position.touched && formControls.position.invalid">
+                          <span *ngIf="formControls.position.getError('required')">
+                            Position is required
+                          </span>
+                        </mat-error>
+                      </mat-form-field>
+                    </div>
+                    <div class="flex flex-col sm:flex-row sm:gap-4">
+                      <mat-form-field appearance="fill" class="flex-auto">
+                        <mat-label>First Name</mat-label>
+                        <input matInput formControlName="firstName" required>
+                        <mat-error *ngIf="formControls.firstName.touched && formControls.firstName.invalid">
+                          <span *ngIf="formControls.firstName.getError('required')">
+                            First name is required
+                          </span>
+                        </mat-error>
+                      </mat-form-field>
+                      <mat-form-field appearance="fill" class="flex-auto">
+                        <mat-label>Last Name</mat-label>
+                        <input matInput formControlName="lastName" required>
+                        <mat-error *ngIf="formControls.lastName.touched && formControls.lastName.invalid">
+                          <span *ngIf="formControls.lastName.getError('required')">
+                            Last name is required
+                          </span>
+                        </mat-error>
+                      </mat-form-field>
+                    </div>
+                    <div class="flex flex-col sm:flex-row sm:gap-4">
+                      <mat-form-field appearance="fill" class="flex-auto">
+                        <mat-label>Email Address</mat-label>
+                        <input matInput formControlName="emailAddress" required>
+                        <mat-error *ngIf="formControls.emailAddress.touched && formControls.emailAddress.invalid">
+                          <span *ngIf="formControls.emailAddress.getError('required')">
+                            Email address is required
+                          </span>
+                        </mat-error>
+                      </mat-form-field>
+                      <mat-form-field appearance="fill" class="flex-auto">
+                        <mat-label>Mobile Number</mat-label>
+                        <input matInput formControlName="mobileNumber" required>
+                        <mat-error *ngIf="formControls.mobileNumber.touched && formControls.mobileNumber.invalid">
+                          <span *ngIf="formControls.mobileNumber.getError('required')">
+                            Mobile number is required
+                          </span>
+                        </mat-error>
+                      </mat-form-field>
+                    </div>
+                    <div class="flex flex-col sm:flex-row sm:gap-4">
+                      <mat-form-field appearance="fill" class="flex-auto">
+                        <mat-label>TA-FG</mat-label>
+                        <mat-select formControlName="taFG" multiple>
+                          <mat-option value="T1">T1</mat-option>
+                          <mat-option value="T2">T2</mat-option>
+                          <mat-option value="T4">T4</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                      <mat-form-field appearance="fill" class="flex-auto">
+                        <mat-label>OUP-FG</mat-label>
+                        <mat-select formControlName="oupFG">
+                          <mat-option value="7">HO</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                    <div class="flex flex-col sm:flex-row sm:gap-4">
+                      <mat-form-field appearance="fill" class="flex-auto">
+                        <mat-label>Division</mat-label>
+                        <mat-select formControlName="division">
+                          <mat-option value="3">PAD</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                    <div class="flex flex-col sm:flex-row sm:gap-4">
+                      <mat-form-field appearance="fill" class="flex-auto">
+                        <mat-label>Account Status</mat-label>
+                        <mat-select formControlName="accountStatus" required>
+                          <mat-option value="1">Active</mat-option>
+                          <mat-option value="2">Inactive</mat-option>
+                          <mat-option value="3">Locked</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                      <mat-form-field appearance="fill" class="flex-auto">
+                        <mat-label>Status Date</mat-label>
+                        <input matInput formControlName="statusDate">
+                      </mat-form-field>
+                    </div>
+                    <div class="flex flex-col sm:flex-row sm:gap-4">
+                      <mat-form-field appearance="fill" class="flex-auto">
+                        <mat-label>Account Expiration</mat-label>
+                        <input matInput [matDatepicker]="dateExpiredPicker" inputFormat="MM/dd/yyyy" autocomplete="off" 
+                          id="dateExpired" formControlName="dateExpired" type="text" required>
+                        <mat-datepicker-toggle matSuffix [for]="dateExpiredPicker"></mat-datepicker-toggle>
+                        <mat-datepicker #dateExpiredPicker></mat-datepicker>
+                      </mat-form-field>
+                    </div>
+                  </form>
+                </div>
+              </mat-tab>
+              <mat-tab [label]="userRoleTabLabel">
+                <div class="p-6">
+                  <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
+                    <span fxFlex="5">
+                      <mat-icon svgIcon="mat:info"></mat-icon>
+                    </span>
+                    <p fxFlex>Everyone can have a different role depending on what they need. Assign role(s) to give them access to modules.</p>
+                  </div>
+                  <div fxLayout="column" fxLayoutAlign="start stretch" [style.marginTop.px]="10">
+                    
+                    <div class="card overflow-auto">
+                      <div class="bg-app-bar px-6 h-16 border-b sticky left-0 flex items-center">
+                        <div class="bg-foreground rounded-full border px-4 max-w-[300px] flex-auto flex items-center border border-gray-300">
+                          <mat-icon class="icon-sm text-secondary" svgIcon="mat:search"></mat-icon>
+                          <input [formControl]="searchCtrl" class="px-4 py-2 border-0 outline-none w-full bg-transparent" 
+                            placeholder="Search user roles here..." type="search">
+                        </div>
+                      </div>
+                      <mat-progress-bar *ngIf="isListLoading" mode="indeterminate" color="primary"></mat-progress-bar>
+                      <table @stagger [dataSource]="dataSource" class="w-full" mat-table matSort>
+                        <!-- Text Columns -->
+                        <ng-container *ngFor="let column of columns; trackBy: trackByProperty">
+                          <ng-container *ngIf="column.type === 'text'" [matColumnDef]="column.property">
+                            <th *matHeaderCellDef class="uppercase" mat-header-cell mat-sort-header> {{ column.label }}</th>
+                            <ng-container *ngIf="column.property === 'createdAt'; else text">
+                              <td *matCellDef="let row" [ngClass]="column.cssClasses" mat-cell>
+                                {{ row[column.property] | date: 'MM/dd/yyyy hh:mm a' }}
+                              </td>
+                            </ng-container>
+                            <ng-template #text>
+                              <td *matCellDef="let row" mat-cell>
+                                {{ row[column.property] }}
+                              </td>
+                            </ng-template>
+                          </ng-container>
+                        </ng-container>
+
+                        <!-- Label Column -->
+                        <ng-container matColumnDef="labels">
+                          <th *matHeaderCellDef class="uppercase" mat-header-cell mat-sort-header>Labels</th>
+                          <td *matCellDef="let row" mat-cell>
+                            <div (click)="$event.stopPropagation()" class="flex items-center gap-1">
+                              <div *ngFor="let label of row.labels"
+                                    [ngClass]="[label.textClass, label.bgClass]"
+                                    class="rounded px-2 py-1 font-medium text-xs flex-none">
+                                {{ label.text }}
+                              </div>
+                              <div class="text-secondary bg-base text-hint cursor-pointer hover:bg-hover flex-none flex items-center justify-center">
+                                <mat-icon class="icon-sm" svgIcon="mat:add"></mat-icon>
+                              </div>
+                            </div>
+                          </td>
+                        </ng-container>
+                        <tr *matHeaderRowDef="visibleColumns" mat-header-row></tr>
+                        <tr *matRowDef="let row; columns: visibleColumns;" @fadeInUp 
+                          class="hover:bg-hover trans-ease-out cursor-pointer" mat-row></tr>
+                      </table>
+                      <mat-paginator [pageSizeOptions]="pageSizeOptions" [pageSize]="pageSize" class="sticky left-0"></mat-paginator>
+                    </div>
+                  </div>
+                </div>
+              </mat-tab>
+            </mat-tab-group>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

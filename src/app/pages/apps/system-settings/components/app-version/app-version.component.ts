@@ -1,36 +1,65 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MAT_FORM_FIELD_DEFAULT_OPTIONS, MatFormFieldDefaultOptions } from '@angular/material/form-field';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { Observable, ReplaySubject, Subject, filter, takeUntil } from 'rxjs';
+import { IPVersion } from 'net';
+import { Observable, ReplaySubject, Subject, filter, finalize, takeUntil } from 'rxjs';
+import { fadeInUp400ms } from 'src/@vex/animations/fade-in-up.animation';
+import { stagger40ms } from 'src/@vex/animations/stagger.animation';
+import { TableColumn } from 'src/@vex/interfaces/table-column.interface';
 import { PortalService } from 'src/app/core/services/portal.service';
 
 @Component({
   selector: 'vex-app-version',
   templateUrl: './app-version.component.html',
-  styleUrls: ['./app-version.component.scss']
+  styleUrls: ['./app-version.component.scss'],
+  animations: [
+    fadeInUp400ms,
+    stagger40ms
+  ],
+  providers: [
+    {
+      provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
+      useValue: {
+        appearance: 'fill'
+      } as MatFormFieldDefaultOptions
+    }
+  ]
 })
 export class AppVersionComponent implements OnInit, OnDestroy {
+  form: FormGroup; 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   userId: number;
-  displayedColumns: string[] = ['version', 'date', 'amendment'];
+  columns: TableColumn<any>[] = [
+    { label: 'Version Number', property: 'versionNo', type: 'text', visible: true, cssClasses: ['font-medium'] },
+    { label: 'Version Date', property: 'versionDate', type: 'text', visible: true },
+    { label: 'Amendment', property: 'amendment', type: 'text', visible: true },
+  ];
   subject$: ReplaySubject<any[]> = new ReplaySubject<any[]>(1);
   dataSource: MatTableDataSource<any[]> | null;
   data$: Observable<any[]> = this.subject$.asObservable();
-  versionForm: FormGroup;
+  pageSize = 10;
+  pageSizeOptions: number[] = [5, 10, 20, 50];
   currentDate: Date = new Date();
   versionDate: string;
+  totalCount: number = 0;
+  isListLoading = true;
 
   get formControls() {
     return {
-      versionNo: this.versionForm.get('versionNo'),
-      versionDate: this.versionForm.get('versionDate'),
-      amendment: this.versionForm.get('amendment')
+      versionNo: this.form.get('versionNo'),
+      versionDate: this.form.get('versionDate'),
+      amendment: this.form.get('amendment')
     }
+  }
+
+  get visibleColumns() {
+    return this.columns.filter(column => column.visible).map(column => column.property);
   }
 
   private _onDestroy$ = new Subject<void>();
@@ -39,36 +68,41 @@ export class AppVersionComponent implements OnInit, OnDestroy {
     private _fb: FormBuilder,
     private _portalService: PortalService,
     private _datePipe: DatePipe,
-    private _snackbar: MatSnackBar,
+    private _snackBar: MatSnackBar
   ) {
     this.versionDate = this._datePipe.transform(this.currentDate, 'MM/dd/yyyy h:mm a');
-    this.versionForm = this._fb.group({
+    this.form = this._fb.group({
       versionNo: ['', Validators.required],
       versionDate: ['', Validators.required],
       amendment: ['', Validators.required],
-      createdBy: [localStorage.getItem("user_id")]
+      createdBy: [localStorage.getItem("user_id"), []]
     });
   }
 
   ngOnInit(): void {
     this._portalService.getAppVersions()
       .pipe(
-        takeUntil(this._onDestroy$)
+        takeUntil(this._onDestroy$),
+        finalize(() => this.isListLoading = false)
       )
       .subscribe(data => {
         if (!data) {
           return;
         }
-
         this.subject$.next(data);
       });
 
     this.dataSource = new MatTableDataSource();
     this.data$
       .pipe(filter<any[]>(Boolean))
-      .subscribe(vers => {
-        this.dataSource.data = vers['result'];        
+      .subscribe(data => {
+        console.log(data);
+        this.totalCount = data.length;
+        this.dataSource.data = data;        
       });
+    
+    this.formControls.versionDate.setValue(this._datePipe.transform(new Date(), 'longDate'))
+    this.form.controls['versionDate'].disable();
   }
 
   ngOnDestroy(): void {
@@ -76,30 +110,34 @@ export class AppVersionComponent implements OnInit, OnDestroy {
     this._onDestroy$.complete();
   }
 
-  save() {
-    this.versionForm.patchValue({ versionDate: this.currentDate});
-    this._portalService.addVersion(this.versionForm.value)
+  save(): void {
+    if (!this.formControls.versionNo.value) {
+      this.formControls.versionNo.markAsTouched();
+      this.formControls.versionNo.updateValueAndValidity();
+      return;
+    }
+    if (!this.formControls.amendment.value) {
+      this.formControls.amendment.markAsTouched();
+      this.formControls.amendment.updateValueAndValidity();
+      return;
+    }
+    const data = Object.assign({}, this.form.value);
+    data.createdBy = parseInt(localStorage.getItem('user_id'));
+
+    this._portalService.createVersion(data)
       .pipe(takeUntil(this._onDestroy$))
-      .subscribe({
-        next: (data) => {
-          const newData = data['result'];
-          this.dataSource.data = newData;
-
-          this.versionForm.reset();
-          this.versionDate = this._datePipe.transform(this.currentDate, 'MM/dd/yyyy h:mm a');
-
-          this._snackbar.open('App version added successfully .', 'Close', {
-            duration: 5000,
-          });
-        },
-        error: (error) => {
-          this._snackbar.open('Error adding App Version.', 'Close', {
-            duration: 5000,
-          });
+      .subscribe(data => {
+        if (!data) {
+          return;
         }
-      }
-      );
-
+        let snackBarRef = this._snackBar.open('Application version has been successfully saved.', 'Close');
+        snackBarRef.afterDismissed().subscribe(() => {
+          window.location.reload();
+        });
+      });
   }
 
+  trackByProperty<T>(index: number, column: TableColumn<T>): string {
+    return column.property;
+  }
 }

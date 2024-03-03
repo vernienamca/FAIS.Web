@@ -19,6 +19,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { DialogComponent } from '../dialog/dialog.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 @NgModule({
   declarations: [
@@ -44,7 +46,9 @@ import { MatDividerModule } from '@angular/material/divider';
     MatSelectModule,
     MatSnackBarModule,
     FormsModule,
-    MatDividerModule
+    MatDividerModule,
+    MatProgressBarModule,
+    MatPaginatorModule
   ]
 })
 export class SystemSettingsModule { }
