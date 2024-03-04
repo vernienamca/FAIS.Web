@@ -24,6 +24,13 @@
               placeholder="Search cost centers here..." type="search">
           </div>
         </div>
+        <span class="flex-1"></span>
+        <button [matMenuTriggerFor]="columnFilterMenu" class="ml-4 flex-none" mat-icon-button matTooltip="Filter Columns" type="button">
+          <mat-icon svgIcon="mat:filter_list"></mat-icon>
+        </button>
+        <button (click)="add()" class="ml-4 flex-none" color="primary" mat-mini-fab matTooltip="Add Cost Center" type="button">
+          <mat-icon svgIcon="mat:add"></mat-icon>
+        </button>
       </div>
       <mat-progress-bar *ngIf="isListLoading" mode="indeterminate" color="primary"></mat-progress-bar>
       <table @stagger [dataSource]="dataSource" class="w-full" mat-table matSort>
@@ -61,6 +68,15 @@
             </ng-template>
           </ng-container>
         </ng-container>
+        <ng-container matColumnDef="actions">
+          <th *matHeaderCellDef mat-header-cell mat-sort-header>ACTIONS</th>
+          <td *matCellDef="let row" class="w-10 text-secondary" mat-cell>
+            <button (click)="$event.stopPropagation()" [matMenuTriggerData]="{ costcenter: row }" [matMenuTriggerFor]="actionsMenu"
+              mat-icon-button type="button">
+              <mat-icon svgIcon="mat:more_horiz"></mat-icon>
+            </button>
+          </td>
+        </ng-container>
   
         
         <tr *matHeaderRowDef="visibleColumns" mat-header-row></tr>
@@ -83,6 +99,10 @@
   </button>
 </mat-menu>
 <mat-menu #actionsMenu="matMenu" xPosition="before" yPosition="below">
-  <ng-template let-customer="customer" matMenuContent>
+  <ng-template let-costcenter="costcenter" matMenuContent>
+    <button (click)="edit(costcenter)" mat-menu-item>
+      <mat-icon svgIcon="mat:edit"></mat-icon>
+      <span>Edit</span>
+    </button>
   </ng-template>
 </mat-menu>

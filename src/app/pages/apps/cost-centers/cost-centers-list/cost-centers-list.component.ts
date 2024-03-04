@@ -16,6 +16,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { MatSelectChange } from '@angular/material/select';
 import { PortalService } from 'src/app/core/services/portal.service';
 import { ICostCenter } from 'src/app/core/models/cost-center';
+import { Router } from '@angular/router';
 
 @UntilDestroy()
 @Component({
@@ -43,7 +44,8 @@ export class CostCentersListComponent implements OnInit, OnDestroy, AfterViewIni
     { label: 'FG Code', property: 'fgCode', type: 'text', visible: true },
     { label: 'Cost Center No.', property: 'number', type: 'text', visible: true },
     { label: 'Cost Center Name', property: 'name', type: 'text', visible: true },
-    { label: 'Short Name', property: 'shortName', type: 'text', visible: true }
+    { label: 'Short Name', property: 'shortName', type: 'text', visible: true },
+    { label: 'Actions', property: 'actions', type: 'button', visible: true }
   ];
 
   layoutCtrl = new UntypedFormControl('fullwidth');
@@ -68,7 +70,8 @@ export class CostCentersListComponent implements OnInit, OnDestroy, AfterViewIni
 
   constructor(
     private _dialog: MatDialog,
-    private _portalService: PortalService
+    private _portalService: PortalService,
+    private _router: Router
   ) {
   }
 
@@ -145,4 +148,12 @@ export class CostCentersListComponent implements OnInit, OnDestroy, AfterViewIni
     this.subject$.next(this.costcenters);
   }
 
+
+  add() {
+    this._router.navigate(['apps/cost-centers/add']);
+  }
+  
+  edit(costCenter: any): void {
+    this._router.navigate([`apps/cost-centers/edit/${costCenter.id}`]);
+  }
 }
