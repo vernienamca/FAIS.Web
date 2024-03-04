@@ -3,6 +3,7 @@ import { RouterModule } from '@angular/router';
 import { QuicklinkModule } from 'ngx-quicklink';
 import { VexRoutes } from '../../../../@vex/interfaces/vex-route.interface';
 import { CostCentersListComponent } from './cost-centers-list/cost-centers-list.component';
+import { CostCenterComponent } from './cost-center.component';
 
 const routes: VexRoutes = [
   {
@@ -12,6 +13,20 @@ const routes: VexRoutes = [
       toolbarShadowEnabled: false
     }
   },
+  {
+    path: 'edit/:id',
+    component: CostCenterComponent,
+    data: {
+      toolbarShadowEnabled: false
+    }
+  },
+  {
+    path: 'add',
+    component: CostCenterComponent,
+    data: {
+      toolbarShadowEnabled: false
+    }
+  }
 ];
 
 @NgModule({
