@@ -149,7 +149,7 @@ export class CostCentersListComponent implements OnInit, OnDestroy, AfterViewIni
   }
 
 
-  add() {
+  add(): void {
     this._router.navigate(['apps/cost-centers/add']);
   }
   

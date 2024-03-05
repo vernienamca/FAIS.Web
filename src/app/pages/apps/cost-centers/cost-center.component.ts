@@ -1,24 +1,19 @@
-import { Component, OnDestroy, OnInit } from "@angular/core";
-import {
-    FormGroup,
-    Validators,
-    FormBuilder,
-    UntypedFormControl,
-} from "@angular/forms";
-import { MatSnackBar } from "@angular/material/snack-bar";
-import { ActivatedRoute } from "@angular/router";
-import { Subject, takeUntil } from "rxjs";
-import { PortalService } from "src/app/core/services/portal.service";
+import { Component, OnDestroy } from '@angular/core';
+import { FormGroup, Validators, FormBuilder, UntypedFormControl } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { ActivatedRoute } from '@angular/router';
+import { Subject, takeUntil } from 'rxjs';
+import { PortalService } from 'src/app/core/services/portal.service';
 
 @Component({
-    selector: "vex-cost-center",
-    templateUrl: "./cost-center.component.html",
-    styleUrls: ["./cost-center.component.scss"],
+    selector: 'vex-cost-center',
+    templateUrl: './cost-center.component.html',
+    styleUrls: ['./cost-center.component.scss'],
 })
-export class CostCenterComponent implements OnInit, OnDestroy {
+export class CostCenterComponent implements OnDestroy {
     form: FormGroup;
-    layoutCtrl = new UntypedFormControl("fullwidth");
-    statusLabel = "Active";
+    layoutCtrl = new UntypedFormControl('fullwidth');
+    statusLabel = 'Active';
     createdBy: string;
     createdAt: Date;
     updatedBy: string;
@@ -26,10 +21,10 @@ export class CostCenterComponent implements OnInit, OnDestroy {
 
     get formControls() {
         return {
-            fgCode: this.form.get("fgCode"),
-            number: this.form.get("number"),
-            name: this.form.get("name"),
-            shortName: this.form.get("shortName"),
+            fgCode: this.form.get('fgCode'),
+            number: this.form.get('number'),
+            name: this.form.get('name'),
+            shortName: this.form.get('shortName'),
         };
     }
 
@@ -42,13 +37,13 @@ export class CostCenterComponent implements OnInit, OnDestroy {
         private _snackBar: MatSnackBar
     ) {
         this.form = this._fb.group({
-            fgCode: ["", [Validators.required]],
-            number: ["", [Validators.required]],
-            name: ["", [Validators.required]],
-            shortName: ["", [Validators.required]],
+            fgCode: ['', [Validators.required]],
+            number: ['', [Validators.required]],
+            name: ['', [Validators.required]],
+            shortName: ['', [Validators.required]],
         });
 
-        const id = parseInt(this._route.snapshot.paramMap.get("id"));
+        const id = parseInt(this._route.snapshot.paramMap.get('id'));
         if (id) {
             this._portalService
                 .getCostCenter(id)
@@ -65,15 +60,13 @@ export class CostCenterComponent implements OnInit, OnDestroy {
                     });
                     this.createdBy = data.createdBy;
                     this.createdAt = data.createdAt;
-                    this.updatedBy = data.updatedBy || "N/A";
+                    this.updatedBy = data.updatedBy || 'N/A';
                     this.updatedAt = data.updatedAt;
 
-                    this.form.controls["url"].disable();
+                    this.form.controls['url'].disable();
                 });
         }
     }
-
-    ngOnInit(): void {}
 
     ngOnDestroy(): void {
         this._onDestroy$.next();
@@ -81,16 +74,16 @@ export class CostCenterComponent implements OnInit, OnDestroy {
     }
 
     onToggleStatus($event: any): void {
-        this.statusLabel = !$event.checked ? "Inactive" : "Active";
+        this.statusLabel = !$event.checked ? 'Inactive' : 'Active';
     }
 
     save(): void {
         const data = Object.assign({}, this.form.value);
-        var id = parseInt(this._route.snapshot.paramMap.get("id"));
+        var id = parseInt(this._route.snapshot.paramMap.get('id'));
 
         if (id) {
             data.id = id;
-            data.updatedBy = parseInt(localStorage.getItem("user_id"));
+            data.updatedBy = parseInt(localStorage.getItem('user_id'));
 
             this._portalService
                 .updateCostCenter(data)
@@ -99,17 +92,14 @@ export class CostCenterComponent implements OnInit, OnDestroy {
                     if (!data) {
                         return;
                     }
-                    let snackBarRef = this._snackBar.open(
-                        "Cost Center has been successfully updated.",
-                        "Close"
-                    );
+                    let snackBarRef = this._snackBar.open('Cost Center has been successfully updated.','Close');
                     snackBarRef.afterDismissed().subscribe(() => {
                         window.location.reload();
                     });
                 });
         }
         else {
-            data.createdBy = parseInt(localStorage.getItem("user_id"));
+            data.createdBy = parseInt(localStorage.getItem('user_id'));
 
             this._portalService
                 .createCostCenter(data)
@@ -118,10 +108,7 @@ export class CostCenterComponent implements OnInit, OnDestroy {
                     if (!data) {
                         return;
                     }
-                    let snackBarRef = this._snackBar.open(
-                        "Cost Center has been successfully created.",
-                        "Close"
-                    );
+                    let snackBarRef = this._snackBar.open('Cost Center has been successfully created.','Close');
                     snackBarRef.afterDismissed().subscribe(() => {
                         window.location.reload();
                     });
