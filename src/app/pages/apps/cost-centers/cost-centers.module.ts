@@ -26,10 +26,9 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatInputModule } from '@angular/material/input';
 import { SecondaryToolbarModule } from 'src/@vex/components/secondary-toolbar/secondary-toolbar.module';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { CostCenterComponent } from './cost-center.component';
 
 @NgModule({
-  declarations: [CostCentersListComponent, CostCenterComponent],
+  declarations: [CostCentersListComponent],
   imports: [
     CommonModule,
     CostCentersRoutingModule,

@@ -44,8 +44,7 @@ export class CostCentersListComponent implements OnInit, OnDestroy, AfterViewIni
     { label: 'FG Code', property: 'fgCode', type: 'text', visible: true },
     { label: 'Cost Center No.', property: 'number', type: 'text', visible: true },
     { label: 'Cost Center Name', property: 'name', type: 'text', visible: true },
-    { label: 'Short Name', property: 'shortName', type: 'text', visible: true },
-    { label: 'Actions', property: 'actions', type: 'button', visible: true }
+    { label: 'Short Name', property: 'shortName', type: 'text', visible: true }
   ];
 
   layoutCtrl = new UntypedFormControl('fullwidth');
@@ -146,14 +145,5 @@ export class CostCentersListComponent implements OnInit, OnDestroy, AfterViewIni
   onLabelChange(change: MatSelectChange, row: ICostCenter): void {
     const index = this.costcenters.findIndex(c => c === row);
     this.subject$.next(this.costcenters);
-  }
-
-
-  add(): void {
-    this._router.navigate(['apps/cost-centers/add']);
-  }
-  
-  edit(costCenter: any): void {
-    this._router.navigate([`apps/cost-centers/edit/${costCenter.id}`]);
   }
 }
