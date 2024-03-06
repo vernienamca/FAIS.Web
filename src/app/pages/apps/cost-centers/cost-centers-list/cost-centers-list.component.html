@@ -24,6 +24,10 @@
               placeholder="Search cost centers here..." type="search">
           </div>
         </div>
+        <span class="flex-1"></span>
+        <button [matMenuTriggerFor]="columnFilterMenu" class="ml-4 flex-none" mat-icon-button matTooltip="Filter Columns" type="button">
+          <mat-icon svgIcon="mat:filter_list"></mat-icon>
+        </button>
       </div>
       <mat-progress-bar *ngIf="isListLoading" mode="indeterminate" color="primary"></mat-progress-bar>
       <table @stagger [dataSource]="dataSource" class="w-full" mat-table matSort>
@@ -81,8 +85,4 @@
       {{ column.label }}
     </mat-checkbox>
   </button>
-</mat-menu>
-<mat-menu #actionsMenu="matMenu" xPosition="before" yPosition="below">
-  <ng-template let-customer="customer" matMenuContent>
-  </ng-template>
 </mat-menu>

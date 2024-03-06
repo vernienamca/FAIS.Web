@@ -107,7 +107,11 @@ export class PortalApi extends BaseApi {
     }
 
     getCostCenters(): Observable<ICostCenter[]> {
-        return this.get<ICostCenter>(`${this._apiUrl}/costcenter/get`);
+        return this.get<ICostCenter[]>(`${this._apiUrl}/costcenter/get`);
+    }
+
+    getCostCenter(id: number): Observable<ICostCenter> {
+        return this.get<ICostCenter>(`${this._apiUrl}/costcenter/${id}`);
     }
 
     getProFormaEntries(): Observable<IProFormaEntry[]> {

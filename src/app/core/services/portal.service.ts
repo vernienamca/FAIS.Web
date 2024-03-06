@@ -129,6 +129,9 @@ export class PortalService {
   getCostCenters(): Observable<ICostCenter[]> {
     return this._portalApi.getCostCenters();
   }
+  getCostCenter(id: number): Observable<ICostCenter> {
+    return this._portalApi.getCostCenter(id);
+  }
 
   getChartAccounts(): Observable<IChart[]> {
     return this._portalApi.getChartAccounts();

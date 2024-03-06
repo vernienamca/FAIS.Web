@@ -20,6 +20,12 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { ModuleRoutingModule } from '../module/module-routing.module';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatInputModule } from '@angular/material/input';
+import { SecondaryToolbarModule } from 'src/@vex/components/secondary-toolbar/secondary-toolbar.module';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [CostCentersListComponent],
@@ -44,7 +50,13 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     MatProgressBarModule,
     MatDialogModule,
     MatDividerModule,
-    FlexLayoutModule
+    FlexLayoutModule,
+    ModuleRoutingModule,
+    MatFormFieldModule,
+    MatSlideToggleModule,
+    MatInputModule,
+    SecondaryToolbarModule,
+    MatSnackBarModule
   ]
 })
 export class CostCentersModule {
