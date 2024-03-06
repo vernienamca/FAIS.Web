@@ -86,11 +86,3 @@
     </mat-checkbox>
   </button>
 </mat-menu>
-<mat-menu #actionsMenu="matMenu" xPosition="before" yPosition="below">
-  <ng-template let-costcenter="costcenter" matMenuContent>
-    <button (click)="edit(costcenter)" mat-menu-item>
-      <mat-icon svgIcon="mat:edit"></mat-icon>
-      <span>Edit</span>
-    </button>
-  </ng-template>
-</mat-menu>
