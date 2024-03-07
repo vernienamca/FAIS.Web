@@ -16,4 +16,3 @@ export interface IAssetProfile {
     createdBy: string;
     updatedBy?:string;
   }
-  
