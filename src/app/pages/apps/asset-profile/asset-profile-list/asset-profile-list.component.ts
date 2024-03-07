@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { Observable, of, ReplaySubject, Subject } from 'rxjs';
-import { filter, finalize, takeUntil } from 'rxjs/operators';
+import { Observable,ReplaySubject, Subject, finalize, takeUntil } from 'rxjs';
+import { filter} from 'rxjs/operators';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -13,14 +13,14 @@ import { stagger40ms } from '../../../../../@vex/animations/stagger.animation';
 import { UntypedFormControl } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { PortalService } from 'src/app/core/services/portal.service';
-import { IChart } from 'src/app/core/models/chart';
 import { Router } from '@angular/router';
+import { IAssetProfile } from 'src/app/core/models/asset-profile';
 
 @UntilDestroy()
 @Component({
   selector: 'vex-aio-table',
-  templateUrl: './chart-list.component.html',
-  styleUrls: ['./chart-list.component.scss'],
+  templateUrl: './asset-profile-list.component.html',
+  styleUrls: ['./asset-profile-list.component.scss'],
   animations: [
     fadeInUp400ms,
     stagger40ms
@@ -35,28 +35,29 @@ import { Router } from '@angular/router';
   ]
 })
 
-export class ChartListComponent implements OnInit, OnDestroy, AfterViewInit {
+export class AssetProfileListComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @Input()
-  columns: TableColumn<IChart>[] = [
-    { label: 'Account Group', property: 'acountGroup', type: 'text', visible: true, cssClasses: ['font-medium'] },
-    { label: 'Sub-Account Group', property: 'subAcountGroup', type: 'text', visible: true },
-    { label: 'Rca Gl', property: 'rcaGL', type: 'text', visible: true },
-    { label: 'Rca Sl', property: 'rcaSL', type: 'text', visible: true },
-    { label: 'Rca Ledger Title', property: 'rcaLedgerTitle', type: 'text', visible: true },
+  columns: TableColumn<IAssetProfile>[] = [
+    { label: 'Asset Name', property: 'name', type: 'text', visible: true, cssClasses: ['font-medium'] },
+    { label: 'Asset Category', property: 'category', type: 'text', visible: true },
+    { label: 'Rca Gl', property: 'rcaGLId', type: 'text', visible: true },
+    { label: 'Sl No.', property: 'rcaslId', type: 'text', visible: true },
+    { label: 'Economic Life', property: 'costCenter', type: 'text', visible: true },
+    { label: 'Residual Life', property: 'residualLife', type: 'text', visible: true},
     { label: 'Status', property: 'isActive', type: 'badge', visible: true },
     { label: 'Actions', property: 'actions', type: 'button', visible: true }
   ];
   layoutCtrl = new UntypedFormControl('fullwidth');
-  subject$: ReplaySubject<IChart[]> = new ReplaySubject<IChart[]>(1);
-  data$: Observable<IChart[]> = this.subject$.asObservable();
-  charts: IChart[];
+  subject$: ReplaySubject<IAssetProfile[]> = new ReplaySubject<IAssetProfile[]>(1);
+  data$: Observable<IAssetProfile[]> = this.subject$.asObservable();
+  profiles: IAssetProfile[];
   totalCount: number = 0;
   pageSize = 10;
   pageSizeOptions: number[] = [5, 10, 20, 50];
-  dataSource: MatTableDataSource<IChart> | null;
-  selection = new SelectionModel<IChart>(true, []);
+  dataSource: MatTableDataSource<IAssetProfile> | null;
+  selection = new SelectionModel<IAssetProfile>(true, []);
   searchCtrl = new UntypedFormControl();
   labels = aioTableLabels;
   isListLoading = false;
@@ -73,27 +74,27 @@ export class ChartListComponent implements OnInit, OnDestroy, AfterViewInit {
   ){}
 
   ngOnInit(): void {
-    this._portalService.getChartAccounts()
-      .pipe(
-        takeUntil(this._onDestroy$),
-        finalize(() => this.isListLoading = false)
-      )
-      .subscribe(data => {
-        if (!data) {
-          return;
-        }
-        this.subject$.next(data);
-      });
-
+    this._portalService.getAssetProfile()
+    .pipe(
+      takeUntil(this._onDestroy$),
+      finalize(() => this.isListLoading = false)
+    )
+    .subscribe(data => {
+      if (!data) {
+        return;
+      }
+      this.subject$.next(data);
+    });
+    
     this.dataSource = new MatTableDataSource();
     this.data$
-      .pipe(filter<IChart[]>(Boolean))
-      .subscribe(charts => {
-        this.totalCount = charts.length;
-        this.charts = charts;
-        this.dataSource.data = charts;
+      .pipe(filter<IAssetProfile[]>(Boolean))
+      .subscribe(profiles => {
+        this.totalCount = profiles.length;
+        this.profiles = profiles;
+        this.dataSource.data = profiles;
       });
-
+     
     this.searchCtrl.valueChanges.pipe(
       untilDestroyed(this)
     ).subscribe(value => this._onFilterChange(value));
@@ -110,7 +111,7 @@ export class ChartListComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   edit(chart: any): void {
-    this._router.navigate([`apps/chart-accounts/edit/${chart.id}`]);
+    this._router.navigate([`apps/asset-profile/edit/${chart.id}`]);
   }
   
   exportChartLogs(): void {
@@ -134,5 +135,6 @@ export class ChartListComponent implements OnInit, OnDestroy, AfterViewInit {
     value = value.trim();
     value = value.toLowerCase();
     this.dataSource.filter = value;
+    
   }
 }

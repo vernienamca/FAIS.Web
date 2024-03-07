@@ -3,8 +3,8 @@
     <div [class.container]="layoutCtrl.value === 'boxed'" [class.px-gutter]="layoutCtrl.value === 'fullwidth'" 
       class="w-full flex flex-col sm:flex-row justify-between">
       <div>
-        <h1 class="title mt-0 mb-1">Chart of Accounts ({{ totalCount }})</h1>
-        <vex-breadcrumbs [crumbs]="['System Libraries', 'Chart of Accounts']"></vex-breadcrumbs>      </div>
+        <h1 class="title mt-0 mb-1">Asset Profile({{ totalCount }})</h1>
+        <vex-breadcrumbs [crumbs]="['Profile Management', 'Asset Profile']"></vex-breadcrumbs>      </div>
       <div class="hidden sm:block">
         <mat-button-toggle-group [formControl]="layoutCtrl" class="mt-4 sm:mt-0">
           <mat-button-toggle value="boxed">Boxed</mat-button-toggle>
@@ -19,24 +19,20 @@
         <div class="bg-foreground rounded-full border px-4 max-w-[300px] flex-auto flex items-center border border-gray-300">
           <mat-icon class="icon-sm text-secondary" svgIcon="mat:search"></mat-icon>
           <input [formControl]="searchCtrl" class="px-4 py-2 border-0 outline-none w-full bg-transparent" 
-            placeholder="Search chart accounts here..." type="search">
+            placeholder="Search library type option..." type="search">
         </div>
         
         <span class="flex-1"></span>
-     
-        <button color="primary" mat-raised-button type="button" (click)="exportChartLogs()">
-          <mat-icon svgIcon="mat:download"></mat-icon>
-          <span>Export All</span>
-        </button>
-
+    
       <button [matMenuTriggerFor]="columnFilterMenu" class="ml-4 flex-none" mat-icon-button matTooltip="Filter Columns" type="button">
         <mat-icon svgIcon="mat:filter_list"></mat-icon>
       </button>
 
       <button class="ml-4 flex-none" color="primary" [routerLink]="['add']"
-      mat-mini-fab matTooltip="Add Chart of Account" type="button">
+      mat-mini-fab matTooltip="Add asset profile" type="button">
       <mat-icon svgIcon="mat:add"></mat-icon>
     </button>
+
       </div>
       <mat-progress-bar *ngIf="isListLoading" mode="indeterminate" color="primary"></mat-progress-bar>
       <table @stagger [dataSource]="dataSource" class="w-full" mat-table matSort>
@@ -90,7 +86,6 @@
             </div>
           </td>
         </ng-container>
-        
         <ng-container matColumnDef="actions">
           <th *matHeaderCellDef mat-header-cell mat-sort-header>ACTION</th>
           <td *matCellDef="let row" class="w-10 text-secondary" mat-cell>

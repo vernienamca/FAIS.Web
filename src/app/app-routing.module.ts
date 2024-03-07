@@ -113,6 +113,10 @@ const routes: VexRoutes = [
           {
             path: 'library-options',
             loadChildren: () => import('./pages/apps/library-type-option/library-type-option.module').then(m => m.LibraryTypeOptionModule)
+          },
+          {
+            path: 'asset-profile',
+            loadChildren: () => import('./pages/apps/asset-profile/asset-profile.module').then(m => m.AssetProfileModule)
           }
         ]
       },

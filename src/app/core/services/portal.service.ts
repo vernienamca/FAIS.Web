@@ -14,6 +14,7 @@ import { ILibraryTypeOption } from '../models/library-type-option';
 import { IProFormaEntry } from '../models/pro-forma-entry';
 import { IChart } from '../models/chart';
 import { ILibraryTypes } from '../models/library-types';
+import { IAssetProfile } from '../models/asset-profile';
 
 @Injectable({
   providedIn: 'root'
@@ -232,4 +233,7 @@ export class PortalService {
   updateChartOfAccounts(id: number, data: any): Observable<any> {
     return this._portalApi.updateChartOfAccounts(id,data);
 }
+  getAssetProfile(): Observable<IAssetProfile[]> {
+    return this._portalApi.getAssetProfile();
+  }
 }
