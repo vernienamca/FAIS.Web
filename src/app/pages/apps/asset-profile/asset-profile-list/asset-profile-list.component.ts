@@ -135,6 +135,5 @@ export class AssetProfileListComponent implements OnInit, OnDestroy, AfterViewIn
     value = value.trim();
     value = value.toLowerCase();
     this.dataSource.filter = value;
-    
   }
 }

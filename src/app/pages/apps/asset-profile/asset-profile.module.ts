@@ -52,7 +52,7 @@ import { AssetProfileRoutingModule } from './asset-profile-routing.module';
     MatSnackBarModule,
     MatFormFieldModule,
     MatInputModule,
-    MatSlideToggleModule,
+    MatSlideToggleModule
   ]
 })
 export class AssetProfileModule {
