@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { BehaviorSubject, Observable, of } from 'rxjs';
 import { PortalApi } from '../api/portal-api.service';
 import { IModule } from '../models/module';
 import { IRole } from '../models/role';
-import { IUser } from '../models/user';
+import { IUser, IUserRole } from '../models/user';
 import { IAuditLogs } from '../models/audit-logs';
 import { IStringInterpolation } from '../models/string-interpolation';
 import { ITemplates } from '../models/templates';
@@ -19,9 +19,19 @@ import { ILibraryTypes } from '../models/library-types';
   providedIn: 'root'
 })
 export class PortalService {
+  isMyProfile$ = new BehaviorSubject<boolean>(false);
+  addedUserRole$ = new BehaviorSubject<IUserRole>(null);
+  userRoleIds$ = new BehaviorSubject<number[]>(null);
+
   constructor(
-    private _portalApi: PortalApi,
-    private _datePipe: DatePipe) { }
+    private _portalApi: PortalApi, 
+    private _datePipe: DatePipe
+  ) {
+  }
+
+  getGreetings(id: number): Observable<string> {
+    return this._portalApi.getGreetings(id);
+  }
 
   getModules(): Observable<IModule[]> {
     return this._portalApi.getModules();
@@ -49,6 +59,10 @@ export class PortalService {
 
   getUser(id: number): Observable<any> {
     return this._portalApi.getUser(id);
+  }
+
+  getUserRoles(userId: number): Observable<IUserRole[]> {
+    return this._portalApi.getUserRoles(userId);
   }
 
   getAuditLogs(): Observable<IAuditLogs[]> {
@@ -96,20 +110,27 @@ export class PortalService {
     return this._portalApi.updatesettings(data);
   }
 
-  updateStringInterpolation(data: any): Observable<any> {
-    return this._portalApi.updateStringInterpolation(data);
+  createInterpolation(data: IStringInterpolation): Observable<IStringInterpolation> {
+    return this._portalApi.createInterpolation(data);
+  }
+
+  updateInterpolation(id: number, data: any): Observable<any> {
+    return this._portalApi.updateInterpolation(id, data);
   }
 
   getAppVersions(): Observable<any[]> {
     return this._portalApi.getAppVersions();
   }
 
-  addVersion(data: any): Observable<any> {
-    return this._portalApi.addVersion(data);
+  createVersion(data: any): Observable<any> {
+    return this._portalApi.createVersion(data);
   }
 
   getCostCenters(): Observable<ICostCenter[]> {
     return this._portalApi.getCostCenters();
+  }
+  getCostCenter(id: number): Observable<ICostCenter> {
+    return this._portalApi.getCostCenter(id);
   }
 
   getChartAccounts(): Observable<IChart[]> {

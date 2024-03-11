@@ -84,22 +84,12 @@ export class ModuleComponent implements OnInit, OnDestroy {
   }
 
   save(): void {
-    if (!this.formControls.name.value) {
-      this.formControls.name.markAsTouched();
-      this.formControls.name.updateValueAndValidity();
-      return;
-    }
-    if (!this.formControls.groupName.value) {
-      this.formControls.groupName.markAsTouched();
-      this.formControls.groupName.updateValueAndValidity();
-      return;
-    }
     const data = Object.assign({}, this.form.value);
     data.id = parseInt(this._route.snapshot.paramMap.get('id'));
     data.isActive = data.isActive ? 'Y' : 'N'; 
     data.updatedBy = parseInt(localStorage.getItem('user_id'));
 
-  this._portalService.updateModule(data)
+    this._portalService.updateModule(data)
       .pipe(takeUntil(this._onDestroy$))
       .subscribe(data => {
         if (!data) {

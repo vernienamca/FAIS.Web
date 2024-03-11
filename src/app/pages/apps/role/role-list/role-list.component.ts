@@ -127,18 +127,6 @@ export class RoleListComponent implements OnInit, OnDestroy, AfterViewInit {
     column.visible = !column.visible;
   }
 
-  isAllSelected(): boolean {
-    const numSelected = this.selection.selected.length;
-    const numRows = this.dataSource.data.length;
-    return numSelected === numRows;
-  }
-
-  masterToggle(): void {
-    this.isAllSelected() ?
-      this.selection.clear() :
-      this.dataSource.data.forEach(row => this.selection.select(row));
-  }
-
   trackByProperty<T>(index: number, column: TableColumn<T>): string {
     return column.property;
   }

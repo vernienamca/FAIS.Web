@@ -4,8 +4,11 @@
     <mat-icon svgIcon="mat:more_vert"></mat-icon>
   </button>
 </vex-secondary-toolbar>
-
 <div class="container p-gutter grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4" [class.container]="false" [class.px-gutter]="true">
+  <div class="sm:col-span-full">
+    <h2 class="m-0 title flex-auto">{{ greetings }},</h2>
+    <p>Here's what's happening in your dashboard right now.</p>
+  </div>
   <vex-widget-assistant class="sm:col-span-2"></vex-widget-assistant>
   <vex-widget-quick-line-chart icon="mat:pageview" [series]="pageViewsSeries" iconClass="text-primary bg-primary/10"
     label="Cost Centers" value="54"></vex-widget-quick-line-chart>

@@ -1,5 +1,5 @@
 <vex-secondary-toolbar current="Edit String Interpolation">
-  <vex-breadcrumbs [crumbs]="['System Management', 'Interpolations', 'Edit Interpolation']" class="flex-auto"></vex-breadcrumbs>
+  <vex-breadcrumbs [crumbs]="['System Management', 'String Interpolations', pageLabel]" class="flex-auto"></vex-breadcrumbs>
   <button class="ml-2" color="primary" mat-icon-button type="button">
     <mat-icon svgIcon="mat:more_vert"></mat-icon>
   </button>
@@ -8,10 +8,11 @@
   <div class="flex flex-col sm:flex-row gap-4">
     <div class="card flex-auto">
       <div class="px-6 py-4 border-b flex items-center gap-2">
-        <button [ngClass]="['!bg-green', '!text-contrast-white']" mat-raised-button type="button" (click)="save()">
+        <button [ngClass]="[form.invalid ? '!bg-gray' : '!bg-green', '!text-contrast-white']" mat-raised-button type="button" 
+          [disabled]="form.invalid" (click)="save()">
           <mat-icon class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" svgIcon="mat:archive"></mat-icon> Save
         </button>
-        <button color="primary" mat-stroked-button type="button" [routerLink]="['/apps/modules']">
+        <button color="primary" mat-stroked-button type="button" [routerLink]="['/apps/interpolations']">
           <mat-icon class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" svgIcon="mat:close"></mat-icon> Close
         </button>
       </div>
@@ -24,7 +25,7 @@
                 <input matInput formControlName="transactionCode" required>
                 <mat-error *ngIf="formControls.transactionCode.touched && formControls.transactionCode.invalid">
                   <span *ngIf="formControls.transactionCode.getError('required')">
-                    Transaction Code name is required
+                    Transaction code name is required
                   </span>
                 </mat-error>
               </mat-form-field>
@@ -32,10 +33,14 @@
             <div class="flex flex-col sm:flex-row sm:gap-4">
               <mat-form-field appearance="fill" class="flex-auto">
                 <mat-label>Description</mat-label>
-                <input matInput formControlName="description">
+                <input matInput formControlName="description" required>
+                <mat-error *ngIf="formControls.description.touched && formControls.description.invalid">
+                  <span *ngIf="formControls.description.getError('required')">
+                    Description is required
+                  </span>
+                </mat-error>
               </mat-form-field>
             </div>
-            
             <div class="flex flex-col sm:flex-row sm:gap-4">
               <mat-form-field appearance="fill" class="flex-auto">
                 <mat-label>Notification Type</mat-label>
@@ -45,7 +50,7 @@
                 </mat-select>
                 <mat-error *ngIf="formControls.notificationType.touched && formControls.notificationType.invalid">
                   <span *ngIf="formControls.notificationType.getError('required')">
-                    Notification Type is required
+                    Notification type is required
                   </span>
                 </mat-error>
               </mat-form-field>
@@ -55,9 +60,9 @@
                 {{ statusLabel }}
               </mat-slide-toggle>
             </div>
-            <blockquote fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px" [style.marginTop.px]="30">
+            <blockquote *ngIf="this.userId" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px" [style.marginTop.px]="30">
               <span fxFlex>
-                <strong>Created By</strong>: {{ createdByDisplay }}
+                <strong>Created By</strong>: {{ createdBy }}
               </span>
               <span fxFlex>
                 <strong>Date Created</strong>: {{ createdAt | date: 'MM/dd/yyyy hh:mm a' }}

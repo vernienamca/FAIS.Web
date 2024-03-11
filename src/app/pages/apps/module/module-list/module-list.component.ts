@@ -5,7 +5,6 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { TableColumn } from '../../../../../@vex/interfaces/table-column.interface';
-import { aioTableLabels } from '../../../../../static-data/aio-table-data';
 import { SelectionModel } from '@angular/cdk/collections';
 import { fadeInUp400ms } from '../../../../../@vex/animations/fade-in-up.animation';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS, MatFormFieldDefaultOptions } from '@angular/material/form-field';
@@ -54,7 +53,6 @@ export class ModuleListComponent implements OnInit, OnDestroy, AfterViewInit {
   dataSource: MatTableDataSource<IModule> | null;
   selection = new SelectionModel<IModule>(true, []);
   searchCtrl = new UntypedFormControl();
-  labels = aioTableLabels;
   isListLoading = true;
 
   get visibleColumns() {

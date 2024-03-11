@@ -3,7 +3,7 @@ import { BaseApi } from "./base-api.service";
 import { Observable } from "rxjs";
 import { IModule } from "../models/module";
 import { IRole } from "../models/role";
-import { IUser } from "../models/user";
+import { IUser, IUserRole } from "../models/user";
 import { IAuditLogs } from "../models/audit-logs";
 import { IStringInterpolation } from "../models/string-interpolation";
 import { ITemplates } from "../models/templates";
@@ -17,6 +17,10 @@ import { ILibraryTypes } from "../models/library-types";
 
 export class PortalApi extends BaseApi {
     private _apiUrl = `${environment.apiGatewayBaseUrl}`;
+
+    getGreetings(id: number): Observable<string> {
+        return this.get<string>(`${this._apiUrl}/dashboard/greeting/${id}`);
+    }
 
     getModules(): Observable<IModule[]> {
         return this.get<IModule[]>(`${this._apiUrl}/module/get`);
@@ -44,6 +48,10 @@ export class PortalApi extends BaseApi {
 
     getUser(id: number) {
         return this.get<any>(`${this._apiUrl}/user/${id}`, {});
+    }
+
+    getUserRoles(userId: number): Observable<IUserRole[]> {
+        return this.get<IUserRole[]>(`${this._apiUrl}/user/roles/${userId}`);
     }
 
     getAuditLogs(): Observable<IAuditLogs[]> {
@@ -82,20 +90,28 @@ export class PortalApi extends BaseApi {
         return this.put<any>(`${this._apiUrl}/settings`, data);
     }
 
-    updateStringInterpolation(data: any): Observable<any> {
-        return this.put<any>(`${this._apiUrl}/notification/interpolation`, data);
+    createInterpolation(data: any): Observable<any> {
+        return this.post<any>(`${this._apiUrl}/notification/interpolation`, data);
+    }
+
+    updateInterpolation(id: number, data: any): Observable<any> {
+        return this.put<any>(`${this._apiUrl}/notification/interpolation/${id}`, data);
     }
 
     getAppVersions(): Observable<any[]> {
         return this.get<any>(`${this._apiUrl}/version/get`);
     }
 
-    addVersion(data: any): Observable<any> {
+    createVersion(data: any): Observable<any> {
         return this.post<any>(`${this._apiUrl}/version`, data);
     }
 
     getCostCenters(): Observable<ICostCenter[]> {
-        return this.get<ICostCenter>(`${this._apiUrl}/costcenter/get`);
+        return this.get<ICostCenter[]>(`${this._apiUrl}/costcenter/get`);
+    }
+
+    getCostCenter(id: number): Observable<ICostCenter> {
+        return this.get<ICostCenter>(`${this._apiUrl}/costcenter/${id}`);
     }
 
     getProFormaEntries(): Observable<IProFormaEntry[]> {

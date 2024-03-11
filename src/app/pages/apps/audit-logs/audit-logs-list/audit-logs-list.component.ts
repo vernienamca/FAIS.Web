@@ -54,18 +54,17 @@ export class AuditLogsListComponent implements OnInit, OnDestroy, AfterViewInit 
   layoutCtrl = new UntypedFormControl('fullwidth');
   subject$: ReplaySubject<IAuditLogs[]> = new ReplaySubject<IAuditLogs[]>(1);
   data$: Observable<IAuditLogs[]> = this.subject$.asObservable();
+  dataSource: MatTableDataSource<IAuditLogs> | null;
+  selection = new SelectionModel<IAuditLogs>(true, []);
+  searchCtrl = new UntypedFormControl();
   logs: IAuditLogs[];
   totalCount: number = 0;
   pageSize = 10;
   pageSizeOptions: number[] = [5, 10, 20, 50];
-  dataSource: MatTableDataSource<IAuditLogs> | null;
-  selection = new SelectionModel<IAuditLogs>(true, []);
-  searchCtrl = new UntypedFormControl();
   labels = aioTableLabels;      
   isListLoading = true;                                              
   users = [];
 
-  public filteredUsers: ReplaySubject<string[]> = new ReplaySubject<string[]>(1);
   private _onDestroy$ = new Subject<void>();
 
   get visibleColumns() {
@@ -126,31 +125,14 @@ export class AuditLogsListComponent implements OnInit, OnDestroy, AfterViewInit 
     this.dataSource.filter = value;
   }
 
-  toggleColumnVisibility(column, event): void {
+  toggleColumnVisibility(column: any, event: any): void {
     event.stopPropagation();
     event.stopImmediatePropagation();
     column.visible = !column.visible;
   }
 
-  isAllSelected(): boolean {
-    const numSelected = this.selection.selected.length;
-    const numRows = this.dataSource.data.length;
-    return numSelected === numRows;
-  }
-
-  masterToggle() {
-    this.isAllSelected() ?
-      this.selection.clear() :
-      this.dataSource.data.forEach(row => this.selection.select(row));
-  }
-
   trackByProperty<T>(index: number, column: TableColumn<T>) {
     return column.property;
-  }
-
-  onLabelChange(change: MatSelectChange, row: IAuditLogs) {
-    const index = this.logs.findIndex(c => c === row);
-    this.subject$.next(this.logs);
   }
 
   exportAuditLogs(): void {
@@ -165,8 +147,9 @@ export class AuditLogsListComponent implements OnInit, OnDestroy, AfterViewInit 
           return;
         }
         this._dialog.open(SharedLinkDialogComponent, {
-          data: data,
-          width: '700px'
+          data: data.auditLogsFilePath,
+          width: '700px',
+          disableClose: true
         });
       });
   }

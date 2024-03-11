@@ -48,7 +48,7 @@
         <ng-container matColumnDef="tafGs">
           <th *matHeaderCellDef class="uppercase" mat-header-cell mat-sort-header>TA-FG</th>
           <td *matCellDef="let row" mat-cell>
-            <div class="flex items-center gap-1">
+            <div *ngIf="row.tafGs" class="flex items-center gap-1">
               <div *ngFor="let tafg of row.tafGs" [ngClass]="['text-purple', 'bg-purple/10']" 
                 class="rounded px-2 py-1 font-medium text-xs flex-none">
                 {{ tafg }}
@@ -59,7 +59,7 @@
         <ng-container matColumnDef="oufg">
           <th *matHeaderCellDef class="uppercase" mat-header-cell mat-sort-header>OUP-FG</th>
           <td *matCellDef="let row" mat-cell>
-            <div class="flex items-center gap-1">
+            <div *ngIf="row['oufg']" class="flex items-center gap-1">
               <div [ngClass]="['text-purple', 'bg-purple/10']" class="rounded px-2 py-1 font-medium text-xs flex-none">
                 {{ row['oufg'] }}
               </div>
@@ -95,7 +95,7 @@
           </td>
         </ng-container>
         <tr *matHeaderRowDef="visibleColumns" mat-header-row></tr>
-        <tr @fadeInUp (click)="edit(row)" *matRowDef="let row; columns: visibleColumns;"
+        <tr @fadeInUp (click)="editUser(row)" *matRowDef="let row; columns: visibleColumns;"
           class="hover:bg-hover trans-ease-out cursor-pointer" mat-row></tr>
       </table>
       <mat-paginator [pageSizeOptions]="pageSizeOptions" [pageSize]="pageSize" class="sticky left-0"></mat-paginator>
@@ -112,9 +112,13 @@
 </mat-menu>
 <mat-menu #actionsMenu="matMenu" xPosition="before" yPosition="below">
   <ng-template let-user="user" matMenuContent>
-    <button (click)="edit(user)" mat-menu-item>
+    <button (click)="editUser(user)" mat-menu-item>
       <mat-icon svgIcon="mat:edit"></mat-icon>
-      <span>Edit</span>
+      <span>Edit User</span>
+    </button>
+    <button (click)="resetPassword(user)" mat-menu-item>
+      <mat-icon svgIcon="mat:lock_clock"></mat-icon>
+      <span>Reset Password</span>
     </button>
   </ng-template>
 </mat-menu>

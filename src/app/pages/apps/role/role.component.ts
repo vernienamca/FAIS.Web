@@ -29,9 +29,8 @@ import { IPermission } from 'src/app/core/models/permission';
   ]
 })
 export class RoleComponent implements OnInit {
+  form: FormGroup;
   layoutCtrl = new UntypedFormControl('fullwidth');
-
-  roleField: FormGroup;
   moduleGroup: FormGroup;
   user:any;
   userId:number;
@@ -46,8 +45,14 @@ export class RoleComponent implements OnInit {
   role: any;
   permissionList: IPermission[];
 
+  get formControls() {
+    return {
+      name: this.form.get('name')
+    };
+  }
+
   get permission(): FormArray {
-    return this.roleField.get('rolePermissionModel') as FormArray;
+    return this.form.get('rolePermissionModel') as FormArray;
   }
 
   private _roleId = this._route.snapshot.paramMap.get('id');
@@ -60,7 +65,7 @@ export class RoleComponent implements OnInit {
     private _portalService: PortalService,
     private _snackbar: MatSnackBar,
   ) {
-    this.roleField = this._fb.group({
+    this.form = this._fb.group({
       roleId: Number(this._roleId),
       name: ['', Validators.required],
       description: ['', Validators.required],
@@ -114,8 +119,8 @@ export class RoleComponent implements OnInit {
 
 
   removeNullOnLoad():void{
-    const permissionsControls = this.roleField.get('rolePermissionModel')['controls'];
-    const permissions = this.roleField.get('rolePermissionModel');
+    const permissionsControls = this.form.get('rolePermissionModel')['controls'];
+    const permissions = this.form.get('rolePermissionModel');
     
     permissions.value.forEach(e => {
       if (e === null) {
@@ -147,8 +152,8 @@ export class RoleComponent implements OnInit {
   }
 
   onSubmit(): void{   
-    this.user = this.roleField.get('updatedBy').patchValue(this.userId)
-    this._portalService.updaterolepermission(this.roleField.value).subscribe({
+    this.user = this.form.get('updatedBy').patchValue(this.userId)
+    this._portalService.updaterolepermission(this.form.value).subscribe({
       next: (data) => {
         console.log('Role updated successfully:', data);
         this._snackbar.open('Role updated successfully.', 'Close', {
@@ -173,7 +178,7 @@ export class RoleComponent implements OnInit {
       data:{
         userId: this.userId,
         title: 'Add Module',
-        modules: <FormArray>this.roleField.controls['rolePermissionModel'].value
+        modules: <FormArray>this.form.controls['rolePermissionModel'].value
       },
       disableClose: true
     });
@@ -183,7 +188,7 @@ export class RoleComponent implements OnInit {
   }
 
   removeModule(i: number):void{
-    const control = <FormArray>this.roleField.controls['rolePermissionModel'];
+    const control = <FormArray>this.form.controls['rolePermissionModel'];
     control.removeAt(i);
   }
 
@@ -192,7 +197,7 @@ export class RoleComponent implements OnInit {
       return; 
     }
     data.map((item) => {
-      (<FormArray>this.roleField.get('rolePermissionModel')).push(this.addNewModule(item));
+      (<FormArray>this.form.get('rolePermissionModel')).push(this.addNewModule(item));
     });
   }
 

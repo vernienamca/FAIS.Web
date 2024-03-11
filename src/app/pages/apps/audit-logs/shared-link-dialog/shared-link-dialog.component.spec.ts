@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { SharedLinkDialogComponent } from './shared-link-dialog.component';
 
-describe('ImportUsersDialogComponent', () => {
+describe('SharedLinkDialogComponent', () => {
   let component: SharedLinkDialogComponent;
   let fixture: ComponentFixture<SharedLinkDialogComponent>;
 
