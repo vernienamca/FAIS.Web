@@ -1,6 +1,6 @@
 export interface IProFormaEntry {
     id: number;
-    type: string;
+    tranTypeSeq: string;
     description: string;
     isActive: string;
     statusDate: Date;
@@ -10,40 +10,43 @@ export interface IProFormaEntry {
     updatedAt?: Date;
     proFormaEntryDetailsDTO: IProFormaEntryDetails[];
     proFormaEntryDetailModel: IProFormaEntryDetails[];
+    proformaEntryDetails: IProFormaEntryDetails[];
   } 
   
   export interface IProFormaEntryDetails {
     id: number;
     proFormaDetailsId: number;
-    faisrefno: string,
-    transactionseq: string,
-    costcenter: string,
-    glno: string,
-    rcagl: string,
-    prefix: string,
-    sl: string,
-    otherscode: string,
-    dce: string,
-    plantcode: string,
-    wo: string,
-    refbillno: string,
-    source: string,
-    nature: string,
-    ayyyy: string,
-    fg: string,
-    debit: string,
-    credit: string,
-    trandate: string,
-    yearmonthposted: string,
-    datecreated: string,
-    usercreated: string,
-    sortorderno: string,
-    udf1: string,
-    udf2: string,
+    faisRefNo: string;
+    tranTypeSeq: string;
+    costCenter: string;
+    glNo: string;
+    rcaGl: string;
+    prefix: string;
+    sl: string;
+    otherCode: string;
+    dce: string;
+    plantCode: string;
+    wo: string;
+    refBillNo: string;
+    source: string;
+    nature: string;
+    aYyyy: string;
+    fg: string;
+    debit: string;
+    credit: string;
+    tranDate: string;
+    ymPosted: string;
+    datecreated: string;
+    usercreated: string;
+    sort: string;
+    udf1: string;
+    udf2: string;
     dateRemoved: Date;
     createdBy: number;
     createdAt: Date;
     updatedBy: number;
     updatedAt: Date;
+    proformaEntryId: number;
+   
   }
   

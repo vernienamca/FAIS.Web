@@ -91,15 +91,6 @@ export class ProFormaEntriesListComponent implements OnInit, OnDestroy, AfterVie
         this.subject$.next(data);
       });
     this.isListLoading = false
-// var data: IProFormaEntry[]= [{
-//   id: 1,
-//   type: "Add",
-//   description: "to record asset movement report - addition",
-//   // status: 1,
-//   createdBy: null,
-//   createdAt: null
-// }];
-      // this.subject$.next(data);
 
     this.dataSource = new MatTableDataSource();
     this.data$

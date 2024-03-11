@@ -26,7 +26,7 @@
           <div class="flex flex-col sm:flex-row sm:gap-4">
             <mat-form-field appearance="fill">
               <mat-label>Transaction Type</mat-label>
-              <input matInput formControlName="type">
+              <input matInput formControlName="tranTypeSeq">
             </mat-form-field>
           </div>
    
@@ -50,30 +50,30 @@
         <mat-divider style="margin: 10px 0;"></mat-divider>
 
         <div class="wijmotable">
-          <wj-flex-grid class="main-grid px-4 py-4" #proformagrid [itemsSource]="proformaData" [selectionMode]="'Row'" [allowResizing]="false" style="width: 100%; border:none ; padding-right: 2%;" >
-            <wj-flex-grid-column binding="faisrefno" header="FAIS Ref No." width="30*" ></wj-flex-grid-column>
-            <wj-flex-grid-column binding="transactionseq" header="Transaction Seq." width="30*" ></wj-flex-grid-column>
-            <wj-flex-grid-column binding="costcenter" header="Cost Center" width="30*" ></wj-flex-grid-column>
-            <wj-flex-grid-column binding="glno" header="GL No." width="30*" ></wj-flex-grid-column>
-            <wj-flex-grid-column binding="rcagl" header="RCA GL" width="30*" ></wj-flex-grid-column>
+          <wj-flex-grid class="main-grid px-4 py-4" #proformaGrid [itemsSource]="proformaData" [selectionMode]="'Row'" [allowResizing]="false" style="width: 100%; border:none ; padding-right: 2%;" >
+            <wj-flex-grid-column binding="faisRefNo" header="FAIS Ref No." width="30*" ></wj-flex-grid-column>
+            <wj-flex-grid-column binding="tranTypeSeq" header="Transaction Seq." width="30*" ></wj-flex-grid-column>
+            <wj-flex-grid-column binding="costCenter" header="Cost Center" width="30*" ></wj-flex-grid-column>
+            <wj-flex-grid-column binding="glNo" header="GL No." width="30*" ></wj-flex-grid-column>
+            <wj-flex-grid-column binding="rcaGl" header="RCA GL" width="30*" ></wj-flex-grid-column>
             <wj-flex-grid-column binding="prefix" header="Prefix" width="30*" ></wj-flex-grid-column>
             <wj-flex-grid-column binding="sl" header="SL" width="30*" ></wj-flex-grid-column>
-            <wj-flex-grid-column binding="otherscode" header="Others Code" width="30*" ></wj-flex-grid-column>
+            <wj-flex-grid-column binding="otherCode" header="Others Code" width="30*" ></wj-flex-grid-column>
             <wj-flex-grid-column binding="dce" header="DCE" width="30*" ></wj-flex-grid-column>
-            <wj-flex-grid-column binding="plantcode" header="Plant Code" width="30*" ></wj-flex-grid-column>
+            <wj-flex-grid-column binding="plantCode" header="Plant Code" width="30*" ></wj-flex-grid-column>
             <wj-flex-grid-column binding="wo" header="WO" width="30*" ></wj-flex-grid-column>
-            <wj-flex-grid-column binding="refbillno" header="Rev./Bill No." width="30*" ></wj-flex-grid-column>
+            <wj-flex-grid-column binding="refBillNo" header="Rev./Bill No." width="30*" ></wj-flex-grid-column>
             <wj-flex-grid-column binding="source" header="Source" width="30*" ></wj-flex-grid-column>
             <wj-flex-grid-column binding="nature" header="Nature" width="30*" ></wj-flex-grid-column>
-            <wj-flex-grid-column binding="ayyyy" header="A_YYYY" width="30*" ></wj-flex-grid-column>
+            <wj-flex-grid-column binding="aYyyy" header="A_YYYY" width="30*" ></wj-flex-grid-column>
             <wj-flex-grid-column binding="fg" header="FG" width="30*" ></wj-flex-grid-column>
             <wj-flex-grid-column binding="debit" header="Debit" width="30*" ></wj-flex-grid-column>
             <wj-flex-grid-column binding="credit" header="Credit" width="30*" ></wj-flex-grid-column>
-            <wj-flex-grid-column binding="trandate" header="Tran Date" width="30*" ></wj-flex-grid-column>
-            <wj-flex-grid-column binding="yearmonthposted" header="Year Month Posted" width="30*" ></wj-flex-grid-column>
+            <wj-flex-grid-column binding="tranDate" header="Tran Date" width="30*" ></wj-flex-grid-column>
+            <wj-flex-grid-column binding="ymPosted" header="Year Month Posted" width="30*" ></wj-flex-grid-column>
             <wj-flex-grid-column binding="datecreated" header="Date Created" width="30*" ></wj-flex-grid-column>
             <wj-flex-grid-column binding="usercreated" header="User Created" width="30*" ></wj-flex-grid-column>
-            <wj-flex-grid-column binding="sortorderno" header="Sort Order No." width="30*" ></wj-flex-grid-column>
+            <wj-flex-grid-column binding="sort" header="Sort Order No." width="30*" ></wj-flex-grid-column>
             <wj-flex-grid-column binding="udf1" header="UDF 1" width="30*" ></wj-flex-grid-column>
             <wj-flex-grid-column binding="udf2" header="UDF 2" width="30*" ></wj-flex-grid-column>
 

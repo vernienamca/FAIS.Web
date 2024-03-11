@@ -11,6 +11,7 @@ import * as wjcCore from '@grapecity/wijmo';
 import { CollectionViewNavigator } from '@grapecity/wijmo.input';
 import { FlexGrid } from '@grapecity/wijmo.grid';
 import { ILibraryTypeOption } from 'src/app/core/models/library-type-option';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'vex-pro-forma-entry',
@@ -38,29 +39,30 @@ export class ProFormaEntryComponent implements OnInit, OnDestroy {
   statusDate: Date = new Date();
 
   addNewRow(): void {
-    const newItem = { faisrefno: '',
-      transactionseq: '',
-      costcenter: '',
-      glno: '',
-      rcagl: '',
+    const newItem = {
+      faisRefNo: '',
+      tranTypeSeq: '',
+      costCenter: '',
+      glNo: '',
+      rcaGl: '',
       prefix: '',
       sl: '',
-      otherscode: '',
+      otherCode: '',
       dce: '',
-      plantcode: '',
+      plantCode: '',
       wo: '',
-      refbillno: '',
+      refBillNo: '',
       source: '',
       nature: '',
-      ayyyy: '',
+      aYyyy: '',
       fg: '',
       debit: '',
       credit: '',
-      trandate: '',
-      yearmonthposted: '',
+      tranDate: '',
+      ymPosted: '',
       datecreated: '',
       usercreated: '',
-      sortorderno: '',
+      sort: '',
       udf1: '',
       udf2: '',
       action: '',
@@ -68,9 +70,8 @@ export class ProFormaEntryComponent implements OnInit, OnDestroy {
     this.proformaGrid.collectionView.sourceCollection.unshift(newItem);
     this.proformaGrid.collectionView.refresh();
   }
-  
+
   onDeleteRow(item: any): void {
-   
       const index = this.proformaGrid.collectionView.items.indexOf(item);
         this.proformaGrid.collectionView.sourceCollection.splice(index, 1);
         this.proformaGrid.collectionView.refresh();
@@ -83,29 +84,29 @@ export class ProFormaEntryComponent implements OnInit, OnDestroy {
     const data = [];
     for (let i = 0; i < count; i++) {
       data.push({
-        faisrefno: '',
-        transactionseq: '',
-        costcenter: '',
-        glno: '',
-        rcagl: '',
+        faisRefNo: '',
+        tranTypeSeq: '',
+        costCenter: '',
+        glNo: '',
+        rcaGl: '',
         prefix: '',
         sl: '',
-        otherscode: '',
+        otherCode: '',
         dce: '',
-        plantcode: '',
+        plantCode: '',
         wo: '',
-        refbillno: '',
+        refBillNo: '',
         source: '',
         nature: '',
-        ayyyy: '',
+        aYyyy: '',
         fg: '',
         debit: '',
         credit: '',
-        trandate: '',
-        yearmonthposted: '',
+        tranDate: '',
+        ymPosted: '',
         datecreated: '',
         usercreated: '',
-        sortorderno: '',
+        sort: '',
         udf1: '',
         udf2: '',
         action: '',
@@ -117,29 +118,30 @@ export class ProFormaEntryComponent implements OnInit, OnDestroy {
 
   get formControls() {
     return {
-      type: this.form.get('type'),
+      tranTypeSeq: this.form.get('tranTypeSeq'),
       description: this.form.get('description'),
       isActive: this.form.get('isActive')
     };
   }
-  
+
   private _onDestroy$ = new Subject<void>();
-  
+
   constructor(
     private _fb: FormBuilder,
     private _route: ActivatedRoute,
     private _portalService: PortalService,
-    private _snackBar: MatSnackBar
+    private _snackBar: MatSnackBar,
+    private _router: Router
   ) {
     this.form = this._fb.group({
-      type: ['', [Validators.required, Validators.pattern(/^[0-9]+$/)]],
-      description: ['', [Validators.required, Validators.pattern(/^[0-9]+$/)]], 
+      tranTypeSeq: ['', [Validators.required, Validators.pattern(/^[0-9]+$/)]],
+      description: ['', [Validators.required]],
       isActive: [true, []],
     });
   }
 
   ngOnInit(): void {
-    this.proformaData = this.getProFormaData(5);
+    this.proformaData = this.getProFormaData(0);
     this.id = parseInt(this._route.snapshot.paramMap.get('id'));
     this._portalService.getLibraryTypes()
     .pipe(takeUntil(this._onDestroy$))
@@ -159,34 +161,20 @@ export class ProFormaEntryComponent implements OnInit, OnDestroy {
           .pipe(takeUntil(this._onDestroy$))
           .subscribe(
             (data: IProFormaEntry) => {
-              this.proformaData = new wjcCore.CollectionView(data.proFormaEntryDetailModel, { pageSize: 5 });
+              this.proformaData = new wjcCore.CollectionView(data.proformaEntryDetails, { pageSize: 5 });
               new CollectionViewNavigator('#thePager', {
                 byPage: true,
                 headerFormat: 'Page {currentPage:n0} of {pageCount:n0}',
                 cv: this.proformaData
               });
-            //   const selectedLibraryType = this.filteredLibraryTypes.find(type => type.name === data.acountGroup);
-            //   this._portalService.getLibraryTypeOptions()
-            //     .pipe(takeUntil(this._onDestroy$))
-            //     .subscribe(libraryData => {
-            //       if (!libraryData) {
-            //         return;
-            //       }
-            //       const libraryOptions = libraryData;
-            //       this.filteredOptions = libraryOptions.filter(type => parseInt(type.libraryTypeId) === selectedLibraryType.id);
-            //       this.filteredLibraryOptions = this.filteredOptions.filter(type => type.description === data.subAcountGroup);
-            //       const selectedLibraryOption = this.filteredLibraryOptions[0];
-            // });
 
             this.form.setValue({
-              type: data.type,
+              tranTypeSeq: data.tranTypeSeq,
               description: data.description,
-              isActive: data.isActive,    
+              isActive: data.isActive,
             });
-            this.createdBy = data.createdBy
-            this.updatedBy = data.updatedBy || 'NA'
-            this.updatedAt = data.updatedAt 
-            this.createdAt = data.createdAt
+            this.updatedAt = data.updatedAt;
+            this.createdAt = data.createdAt;
           });
       }
     }
@@ -207,7 +195,7 @@ export class ProFormaEntryComponent implements OnInit, OnDestroy {
   onToggleStatus($event: any): void {
     this.statusLabel = !$event.checked ? 'Inactive' : 'Active';
   }
-  
+
   onLibraryTypeSelected(event: MatSelectChange): void {
     this.selectedLibraryTypeId = event.value;
     this._portalService.getLibraryTypeOptions()
@@ -220,10 +208,10 @@ export class ProFormaEntryComponent implements OnInit, OnDestroy {
         this.filteredLibraryOptions = libraryOptions.filter(type => parseInt(type.libraryTypeId) === this.selectedLibraryTypeId);
       });
   }
-  
+
   save(): void {
     const wijmoInvalid = this.proformaData.sourceCollection.some((item: any) => {
-      return item.gl === '' || /^[a-zA-Z]+$/.test(item.gl) || item.sl === '' || /^[a-zA-Z]+$/.test(item.sl) || item.ledgerTitle === '';
+      return item.gl === '' || /^[a-zA-Z]+$/.test(item.glNo) || item.sl === '' || /^[a-zA-Z]+$/.test(item.sl) || item.faisRefNo === '';
     });
       if (wijmoInvalid) {
         this._snackBar.open('Please fill in or delete the rows in the table.', 'Close', {
@@ -232,49 +220,50 @@ export class ProFormaEntryComponent implements OnInit, OnDestroy {
         return;
       }
 
-      const collectionView = this.proformaGrid.collectionView;  
+      const collectionView = this.proformaGrid.collectionView;
       const allItems = collectionView.sourceCollection as any[];
-    
+
        const proFormaDetailsDTOArray: IProFormaEntryDetails[] = allItems.map((item: any) => {
         return {
-          id: item.id || 0, 
+          id: item.id || 0,
           proFormaDetailsId: this.id || 0,
-          faisrefno: item.faisrefno,
-          transactionseq: item.transactionseq,
-          costcenter: item.costcenter,
-          glno: item.glno,
-          rcagl: item.rcagl,
+          faisRefNo: item.faisRefNo,
+          tranTypeSeq: item.tranTypeSeq,
+          costCenter: item.costCenter,
+          glNo: item.glNo,
+          rcaGl: item.rcaGl,
           prefix: item.prefix,
           sl: item.sl,
-          otherscode: item.otherscode,
+          otherCode: item.otherCode,
           dce: item.dce,
-          plantcode: item.plantcode,
+          plantCode: item.plantCode,
           wo: item.wo,
-          refbillno: item.refbillno,
+          refBillNo: item.refBillNo,
           source: item.source,
           nature: item.nature,
-          ayyyy: item.ayyyy,
+          aYyyy: item.aYyyy,
           fg: item.fg,
           debit: item.debit,
           credit: item.credit,
-          trandate: item.trandate,
-          yearmonthposted: item.yearmonthposted,
+          tranDate: item.tranDate,
+          ymPosted: item.ymPosted,
           datecreated: item.datecreated,
           usercreated: item.usercreated,
-          sortorderno: item.sortorderno,
+          sort: item.sort,
           udf1: item.udf1,
           udf2: item.udf2,
           dateRemoved: null,
           createdBy: parseInt(localStorage.getItem('user_id')),
           createdAt: this.createdAt = new Date(),
           updatedBy: parseInt(localStorage.getItem('user_id')),
-          updatedAt: null
+          updatedAt: null,
+          proformaEntryId: this.id || 0
         };
       });
 
       const proFormaDetails: IProFormaEntry = {
-        id: this.id || 0, 
-        type: this.formControls.type.value,
+        id: this.id || 0,
+        tranTypeSeq: this.formControls.tranTypeSeq.value,
         description: this.formControls.description.value,
         isActive: this.formControls.isActive.value ? 'Y' : 'N',
         statusDate: this.statusDate,
@@ -284,6 +273,7 @@ export class ProFormaEntryComponent implements OnInit, OnDestroy {
         updatedAt: this.updatedAt,
         proFormaEntryDetailsDTO: proFormaDetailsDTOArray,
         proFormaEntryDetailModel: [],
+        proformaEntryDetails: []
       };
 
       if (this.isEditMode) {
@@ -304,7 +294,7 @@ export class ProFormaEntryComponent implements OnInit, OnDestroy {
             }
           });
         } else {
-    
+
           this._portalService.addProFormaEntry(proFormaDetails)
           .pipe(takeUntil(this._onDestroy$))
           .subscribe(data => {
@@ -321,6 +311,7 @@ export class ProFormaEntryComponent implements OnInit, OnDestroy {
               });
               this.form.reset();
               this.proformaData.sourceCollection = [];
+              this._router.navigate([`apps/pro-forma-entries/edit/${data.id}`]);
             }
           });
         }
