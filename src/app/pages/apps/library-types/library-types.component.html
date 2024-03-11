@@ -1,5 +1,5 @@
-<vex-secondary-toolbar current="{{pageMode === 1 ? 'Edit Library Type Option':'Add Library Type Option'}}">
-  <vex-breadcrumbs [crumbs]="['System Management', 'Library Type Option', 'Edit Library Type Option']" class="flex-auto"></vex-breadcrumbs>
+<vex-secondary-toolbar current="{{pageLabel}}">
+  <vex-breadcrumbs [crumbs]="['System Management', 'Library Types', pageLabel]" class="flex-auto"></vex-breadcrumbs>
   <button class="ml-2" color="primary" mat-icon-button type="button">
     <mat-icon svgIcon="mat:more_vert"></mat-icon>
   </button>
@@ -11,7 +11,7 @@
         <button [ngClass]="form.touched && form.invalid ? '!bg-gray':'!bg-green'" class="!text-contrast-white" mat-raised-button type="button" (click)="save()" [disabled]="form.touched && form.invalid">
           <mat-icon class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" svgIcon="mat:archive"></mat-icon> Save
         </button>
-        <button color="primary" mat-raised-button type="button" [routerLink]="['/apps/library-options']">
+        <button color="primary" mat-raised-button type="button" [routerLink]="['/apps/library-types']">
           <mat-icon class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" svgIcon="mat:close"></mat-icon> Close
         </button>
       </div>
@@ -21,46 +21,37 @@
             <div class="flex flex-col sm:flex-row sm:gap-4">
               <mat-form-field appearance="fill" class="flex-auto">
                 <mat-label>Library Type</mat-label>
-                <mat-select placeholder="Select Library Type" formControlName="libraryTypeId" (selectionChange)="onFilterUser($event)"
+                <input *ngIf="pageMode === 1" matInput formControlName="name" required>
+                <mat-select *ngIf="pageMode === 2" placeholder="Select Library Type" formControlName="name" (selectionChange)="onFilterUser($event)"
                   class="border-0 outline-none w-full bg-transparent flex-auto"> 
                   <mat-option *ngFor="let libraryType of libraryTypes" [value]="libraryType[0]">{{libraryType[1]}}</mat-option>
                 </mat-select>
-                <mat-error *ngIf="formControls.libraryTypeId.touched && formControls.libraryTypeId.invalid">
-                  <span *ngIf="formControls.libraryTypeId.getError('required')">
+                <mat-error *ngIf="formControls.name.touched && formControls.name.invalid">
+                  <span *ngIf="formControls.name.getError('required')">
                     Library type is required
                   </span>
                 </mat-error>
               </mat-form-field>
             </div>
             <div class="flex flex-col sm:flex-row sm:gap-4">
-              <mat-form-field appearance="fill" class="flex-auto" [ngClass]="{'option-code': pageMode === 2}">
-                <mat-label>Option Code</mat-label>
+              <mat-form-field appearance="fill" class="flex-auto" [ngClass]="{'code': pageMode === 2}">
+                <mat-label>Code</mat-label>
                 <input matInput formControlName="code" required [readonly]="pageMode === 2">
                 <mat-error *ngIf="formControls.code.touched && formControls.code.invalid">
                   <span *ngIf="formControls.code.getError('required')">
-                    Option code is required
+                    Code is required
                   </span>
                 </mat-error>
               </mat-form-field>
             </div>
             <div class="flex flex-col sm:flex-row sm:gap-4">
               <mat-form-field appearance="fill" class="flex-auto">
-                <mat-label>Option Description</mat-label>
-                <input matInput formControlName="description" required>
+                <mat-label>Description</mat-label>
+                <textarea matInput formControlName="description" cdkTextareaAutosize #autosize="cdkTextareaAutosize"
+                cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5"></textarea>
                 <mat-error *ngIf="formControls.description.touched && formControls.description.invalid">
                   <span *ngIf="formControls.description.getError('required')">
-                    Option description is required
-                  </span>
-                </mat-error>
-              </mat-form-field>
-            </div>
-            <div class="flex flex-col sm:flex-row sm:gap-4">
-              <mat-form-field appearance="fill" class="flex-auto">
-                <mat-label>Remarks</mat-label>
-                <input matInput formControlName="remark" required>
-                <mat-error *ngIf="formControls.remark.touched && formControls.remark.invalid">
-                  <span *ngIf="formControls.remark.getError('required')">
-                    Remarks is required
+                    Description is required
                   </span>
                 </mat-error>
               </mat-form-field>

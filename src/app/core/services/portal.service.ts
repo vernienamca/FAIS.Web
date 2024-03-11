@@ -185,8 +185,16 @@ export class PortalService {
     return this._portalApi.createLibraryTypeOption(data);
   }
 
-  getLibraryType(): Observable<ILibraryTypes[]> {
-    return this._portalApi.getLibraryType();
+  getLibraryType(id: number): Observable<ILibraryTypes> {
+    return this._portalApi.getLibraryType(id);
+  }
+
+  createLibraryType(data: any): Observable<any> {
+    return this._portalApi.createLibraryType(data);
+  }
+
+  updateLibraryType(data: any): Observable<any> {
+    return this._portalApi.updateLibraryType(data);
   }
 
   getProFormaEntries(): Observable<IProFormaEntry[]> {

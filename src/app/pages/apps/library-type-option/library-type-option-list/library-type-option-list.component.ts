@@ -94,7 +94,7 @@ export class LibraryTypeOptionListComponent implements OnInit, OnDestroy, AfterV
       this.subject$.next(data);
     });
 
-    this._portalService.getLibraryType()
+    this._portalService.getLibraryTypes()
     .pipe(takeUntil(this._onDestroy$))
     .subscribe(libraryTypes => {
       if (!libraryTypes) {
