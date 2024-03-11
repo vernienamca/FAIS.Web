@@ -14,5 +14,5 @@ export interface IAssetProfile {
     dateCreated: Date,
     updatedAt?: Date;
     createdBy: string;
-    updatedBy?:string;
+    updatedBy? :string;
   }

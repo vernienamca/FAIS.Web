@@ -18,7 +18,7 @@ import { IAssetProfile } from 'src/app/core/models/asset-profile';
 
 @UntilDestroy()
 @Component({
-  selector: 'vex-aio-table',
+  selector: 'vex-asset-profile-table',
   templateUrl: './asset-profile-list.component.html',
   styleUrls: ['./asset-profile-list.component.scss'],
   animations: [
@@ -68,10 +68,11 @@ export class AssetProfileListComponent implements OnInit, OnDestroy, AfterViewIn
 
   private _onDestroy$ = new Subject<void>();
 
-  constructor(
+  constructor (
     private _router: Router,
     private _portalService: PortalService
-  ){}
+  ) { 
+  }
 
   ngOnInit(): void {
     this._portalService.getAssetProfile()

@@ -18,7 +18,7 @@ import { Router } from '@angular/router';
 
 @UntilDestroy()
 @Component({
-  selector: 'vex-aio-table',
+  selector: 'vex-chart-table',
   templateUrl: './chart-list.component.html',
   styleUrls: ['./chart-list.component.scss'],
   animations: [

@@ -14,7 +14,7 @@ import { ILibraryTypeOption } from 'src/app/core/models/library-type-option';
 import { isEqual} from 'lodash';
 
 @Component({
-  selector: 'vex-module',
+  selector: 'vex-chart',
   templateUrl: './chart-account.component.html',
   styleUrls: ['./chart-account.component.scss'],
 })

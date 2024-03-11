@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { AssetProfileListComponent } from './asset-profile-list.component';
 
-describe('AioTableComponent', () => {
+describe('AssetProfileListComponent', () => {
   let component: AssetProfileListComponent;
   let fixture: ComponentFixture<AssetProfileListComponent>;
 

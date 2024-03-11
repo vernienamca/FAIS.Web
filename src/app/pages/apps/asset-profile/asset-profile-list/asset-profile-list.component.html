@@ -21,18 +21,14 @@
           <input [formControl]="searchCtrl" class="px-4 py-2 border-0 outline-none w-full bg-transparent" 
             placeholder="Search library type option..." type="search">
         </div>
-        
         <span class="flex-1"></span>
-    
       <button [matMenuTriggerFor]="columnFilterMenu" class="ml-4 flex-none" mat-icon-button matTooltip="Filter Columns" type="button">
         <mat-icon svgIcon="mat:filter_list"></mat-icon>
       </button>
-
       <button class="ml-4 flex-none" color="primary" [routerLink]="['add']"
       mat-mini-fab matTooltip="Add asset profile" type="button">
       <mat-icon svgIcon="mat:add"></mat-icon>
     </button>
-
       </div>
       <mat-progress-bar *ngIf="isListLoading" mode="indeterminate" color="primary"></mat-progress-bar>
       <table @stagger [dataSource]="dataSource" class="w-full" mat-table matSort>
