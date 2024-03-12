@@ -107,6 +107,7 @@ export class SidenavComponent implements OnInit {
         }
         let groupNames: string[] = [];
         let childrens: NavigationLink[] = [];
+        let settings: NavigationLink;
         data.forEach(item => {
           if (!groupNames.includes(item.groupName)) {
             groupNames.push(item.groupName);
@@ -118,16 +119,28 @@ export class SidenavComponent implements OnInit {
             icon: `mat:${item.icon}`,
             groupName: item.groupName
           };
+          if (item.moduleName === 'System Settings') {
+            settings = children;
+            return;
+          }
+          if (childrens.some(t => t.label === item.moduleName)) {
+            return;
+          }
           childrens.push(children);
         });
+
+        childrens.push(settings);
 
         let navigationItems: NavigationItem[] = [];
         groupNames.forEach(groupName => {
           const item: NavigationItem = {
             type: 'subheading',
             label: groupName,
-            children: Array.from(childrens.filter(t => t.groupName == groupName))
+            children: Array.from(childrens.filter(t => t?.groupName == groupName))
           };
+          if (navigationItems.some(t => t.label === groupName)) {
+            return;
+          }
           navigationItems.push(item);
         });
         this.items = navigationItems;

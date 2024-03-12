@@ -16,6 +16,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { MatSelectChange } from '@angular/material/select';
 import { PortalService } from 'src/app/core/services/portal.service';
 import { ICostCenter } from 'src/app/core/models/cost-center';
+import { Router } from '@angular/router';
 
 @UntilDestroy()
 @Component({
@@ -68,7 +69,8 @@ export class CostCentersListComponent implements OnInit, OnDestroy, AfterViewIni
 
   constructor(
     private _dialog: MatDialog,
-    private _portalService: PortalService
+    private _portalService: PortalService,
+    private _router: Router
   ) {
   }
 
@@ -144,5 +146,4 @@ export class CostCentersListComponent implements OnInit, OnDestroy, AfterViewIni
     const index = this.costcenters.findIndex(c => c === row);
     this.subject$.next(this.costcenters);
   }
-
 }

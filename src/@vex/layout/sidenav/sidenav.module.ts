@@ -11,7 +11,6 @@ import { UserMenuModule } from '../../components/user-menu/user-menu.module';
 import { MatDialogModule } from '@angular/material/dialog';
 import { SearchModalComponent } from '../../components/search-modal/search-modal.component';
 
-
 @NgModule({
   declarations: [SidenavComponent],
   imports: [

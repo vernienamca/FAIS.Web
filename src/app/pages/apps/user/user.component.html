@@ -1,5 +1,5 @@
 <vex-secondary-toolbar current="Edit User">
-  <vex-breadcrumbs [crumbs]="['System Management', 'Users', 'Edit User']" class="flex-auto"></vex-breadcrumbs>
+  <vex-breadcrumbs [crumbs]="['System Management', 'Users', pageLabel]" class="flex-auto"></vex-breadcrumbs>
   <button class="ml-2" color="primary" mat-icon-button type="button">
     <mat-icon svgIcon="mat:more_vert"></mat-icon>
   </button>
@@ -8,10 +8,11 @@
   <div class="flex flex-col sm:flex-row gap-4">
     <div @fadeInUp class="card flex-auto">
       <div class="px-6 py-4 border-b flex items-center gap-2">
-        <button [ngClass]="[true ? '!bg-gray' : '!bg-green', '!text-contrast-white']" mat-raised-button type="button" [disabled]="true" (click)="save()">
+        <button [ngClass]="[form.invalid ? '!bg-gray' : '!bg-green', '!text-contrast-white']" mat-raised-button type="button" 
+          [disabled]="form.invalid" (click)="save()">
           <mat-icon class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" svgIcon="mat:archive"></mat-icon> Save
         </button>
-        <button color="primary" mat-stroked-button type="button" [routerLink]="['/apps/help-center/getting-started']">
+        <button color="primary" mat-stroked-button type="button" [routerLink]="['/apps/users']">
           <mat-icon class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" svgIcon="mat:close"></mat-icon> Close
         </button>
       </div>
@@ -19,120 +20,171 @@
         <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="30px">
           <div fxFlex="20" class="card overflow-hidden">
             <div class="p-4 text-center hover:bg-hover trans-ease-out cursor-pointer relative" matRipple>
-              <img [src]="'assets/img/avatars/default.png'" class="avatar h-24 w-24 mx-auto">
-              <button color="primary" mat-button type="button" class="my-2">
+              <img [src]="photo" class="avatar h-24 w-24 mx-auto">
+              <button color="primary" mat-button type="button" class="my-2" (click)="file.click()">
                 <span>Attach Photo</span>
                 <mat-icon class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" svgIcon="mat:upload"></mat-icon>
               </button>
-              <!-- <div class="body-2 text-secondary flex items-center justify-center">
-                <mat-icon class="ltr:mr-1 rtl:ml-1 icon-xs" svgIcon="mat:business"></mat-icon>
-                <span>MyBusyBee Inc.</span>
-              </div>
-              <div class="body-2 text-secondary flex items-center justify-center">
-                <mat-icon class="ltr:mr-1 rtl:ml-1 icon-xs" svgIcon="mat:phone"></mat-icon>
-                <span>09064925352</span>
-              </div> -->
-  
-              <!-- <button (click)="emitToggleStar($event, contact?.id)" class="absolute top-2 right-2" mat-icon-button type="button">
-                <mat-icon *ngIf="contact?.starred" class="text-amber" svgIcon="mat:star"></mat-icon>
-                <mat-icon *ngIf="!contact?.starred" svgIcon="mat:star_border"></mat-icon>
-              </button> -->
+              <input type="file" accept="image/*" #file (change)="selectFile($event)" [style.visibility]="'hidden'">
             </div>
           </div>
           <div fxFlex>
             <mat-tab-group>
               <mat-tab label="General">
-                <div class="p-6">
-                  <p>
-                    Material buttons trigger an ink reaction on press. They may display text, imagery, or both. Flat buttons and
-                    raised buttons are the most commonly used types.
-                    <br>
-                    <br><span class="semi-bold">Flat buttons:</span>
-                  </p>
-                  <ul>
-                    <li>Flat buttons are text-only buttons.</li>
-                    <li>They may be used in dialogs, toolbars, or inline.</li>
-                    <li>They do not lift, but fill with color on press.</li>
-                  </ul>
-                  <p>
-                    <span class="semi-bold">Raised buttons:</span>
-                  </p>
-                  <ul>
-                    <li>Raised buttons are rectangular-shaped buttons.</li>
-                    <li>They may be used inline.</li>
-                    <li>They lift and display ink reactions on press.</li>
-                  </ul>
+                <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
+                  <form [formGroup]="form" class="flex flex-col flex-auto form-container p-6">
+                    <div class="flex flex-col sm:flex-row sm:gap-4">
+                      <mat-form-field appearance="fill" class="flex-auto">
+                        <mat-label>Employee Number</mat-label>
+                        <input matInput formControlName="employeeNumber" maxlength="7">
+                      </mat-form-field>
+                    </div>
+                    <div class="flex flex-col sm:flex-row sm:gap-4">
+                      <mat-form-field appearance="fill" class="flex-auto">
+                        <mat-label>Username</mat-label>
+                        <input matInput formControlName="username" required>
+                        <mat-error *ngIf="formControls.username.touched && formControls.username.invalid">
+                          <span *ngIf="formControls.username.getError('required')">
+                            Username is required
+                          </span>
+                        </mat-error>
+                      </mat-form-field>
+                      <mat-form-field appearance="fill" class="flex-auto">
+                        <mat-label>Position</mat-label>
+                        <mat-select formControlName="position" required>
+                          <mat-option value="1">PAD Analyst</mat-option>
+                          <mat-option value="2">Administrator</mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="formControls.position.touched && formControls.position.invalid">
+                          <span *ngIf="formControls.position.getError('required')">
+                            Position is required
+                          </span>
+                        </mat-error>
+                      </mat-form-field>
+                    </div>
+                    <div class="flex flex-col sm:flex-row sm:gap-4">
+                      <mat-form-field appearance="fill" class="flex-auto">
+                        <mat-label>First Name</mat-label>
+                        <input matInput formControlName="firstName" required>
+                        <mat-error *ngIf="formControls.firstName.touched && formControls.firstName.invalid">
+                          <span *ngIf="formControls.firstName.getError('required')">
+                            First name is required
+                          </span>
+                        </mat-error>
+                      </mat-form-field>
+                      <mat-form-field appearance="fill" class="flex-auto">
+                        <mat-label>Last Name</mat-label>
+                        <input matInput formControlName="lastName" required>
+                        <mat-error *ngIf="formControls.lastName.touched && formControls.lastName.invalid">
+                          <span *ngIf="formControls.lastName.getError('required')">
+                            Last name is required
+                          </span>
+                        </mat-error>
+                      </mat-form-field>
+                    </div>
+                    <div class="flex flex-col sm:flex-row sm:gap-4">
+                      <mat-form-field appearance="fill" class="flex-auto">
+                        <mat-label>Email Address</mat-label>
+                        <input matInput formControlName="emailAddress" required>
+                        <mat-error *ngIf="formControls.emailAddress.touched && formControls.emailAddress.invalid">
+                          <span *ngIf="formControls.emailAddress.getError('required')">
+                            Email address is required
+                          </span>
+                        </mat-error>
+                      </mat-form-field>
+                      <mat-form-field appearance="fill" class="flex-auto">
+                        <mat-label>Mobile Number</mat-label>
+                        <input matInput formControlName="mobileNumber" required>
+                        <mat-error *ngIf="formControls.mobileNumber.touched && formControls.mobileNumber.invalid">
+                          <span *ngIf="formControls.mobileNumber.getError('required')">
+                            Mobile number is required
+                          </span>
+                        </mat-error>
+                      </mat-form-field>
+                    </div>
+                    <div class="flex flex-col sm:flex-row sm:gap-4">
+                      <mat-form-field appearance="fill" class="flex-auto">
+                        <mat-label>TA-FG</mat-label>
+                        <mat-select formControlName="taFG" multiple>
+                          <mat-option value="T1">T1</mat-option>
+                          <mat-option value="T2">T2</mat-option>
+                          <mat-option value="T4">T4</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                      <mat-form-field appearance="fill" class="flex-auto">
+                        <mat-label>OUP-FG</mat-label>
+                        <mat-select formControlName="oupFG">
+                          <mat-option value="7">HO</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                    <div class="flex flex-col sm:flex-row sm:gap-4">
+                      <mat-form-field appearance="fill" class="flex-auto">
+                        <mat-label>Division</mat-label>
+                        <mat-select formControlName="division">
+                          <mat-option value="3">PAD</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                    <div class="flex flex-col sm:flex-row sm:gap-4">
+                      <mat-form-field appearance="fill" class="flex-auto">
+                        <mat-label>Account Status</mat-label>
+                        <mat-select formControlName="accountStatus" required>
+                          <mat-option value="1">Active</mat-option>
+                          <mat-option value="2">Inactive</mat-option>
+                          <mat-option value="3">Locked</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                      <mat-form-field appearance="fill" class="flex-auto">
+                        <mat-label>Status Date</mat-label>
+                        <input matInput formControlName="statusDate">
+                      </mat-form-field>
+                    </div>
+                    <div class="flex flex-col sm:flex-row sm:gap-4">
+                      <mat-form-field appearance="fill" class="flex-auto">
+                        <mat-label>Account Expiration</mat-label>
+                        <input matInput [matDatepicker]="dateExpiredPicker" inputFormat="MM/dd/yyyy" autocomplete="off" 
+                          id="accountExpiration" formControlName="accountExpiration" type="text" required>
+                        <mat-datepicker-toggle matSuffix [for]="dateExpiredPicker"></mat-datepicker-toggle>
+                        <mat-datepicker #dateExpiredPicker></mat-datepicker>
+                        <mat-error *ngIf="formControls.accountExpiration.touched && formControls.accountExpiration.invalid">
+                          <span *ngIf="formControls.accountExpiration.getError('required')">
+                            Account expiration is required
+                          </span>
+                        </mat-error>
+                      </mat-form-field>
+                    </div>
+                  </form>
                 </div>
               </mat-tab>
-              <mat-tab label="User Roles (7)">
+              <mat-tab *ngIf="userId" [label]="userRoleTabLabel">
                 <div class="p-6">
-                  <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="5px">
-                    <span fxFlex="5">
-                      <mat-icon svgIcon="mat:info"></mat-icon>
-                    </span>
-                    <p fxFlex>Everyone can have a different role depending on what they need. Assign role(s) to give them access to the system.</p>
+                  <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
+                    <mat-icon svgIcon="mat:info"></mat-icon>
+                    <p fxFlex>Everyone can have a different role depending on what they need. Assign role(s) to give them access to modules.</p>
+                  </div>
+                  <div fxLayout="column" fxLayoutAlign="start stretch" [style.marginTop.px]="10">
+                    <app-user-role-list [data]="userRoles"></app-user-role-list>
                   </div>
                 </div>
               </mat-tab>
             </mat-tab-group>
-
-
-            <!-- <form [formGroup]="form">
-              <mat-form-field appearance="fill">
-                <mat-label>Old Password</mat-label>
-                <input matInput type="text" formControlName="oldPassword" autocomplete="false" required>
-              </mat-form-field>
-            </form> -->
-            
           </div>
-  
         </div>
-
-
-        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px" [style.marginTop.px]="30">
-          <!-- <form [formGroup]="form" class="flex flex-col form-container" fxFlex="60"> -->
-
-            <!-- <mat-form-field appearance="fill">
-              <mat-label>Old Password</mat-label>
-              <input matInput [type]="oldPasswordInputType" formControlName="oldPassword" autocomplete="false" required>
-              <button (click)="toggleOldPasswordVisibility()" mat-icon-button matSuffix matTooltip="Toggle Visibility" type="button">
-                <mat-icon *ngIf="isOldPasswordVisible" svgIcon="mat:visibility"></mat-icon>
-                <mat-icon *ngIf="!isOldPasswordVisible" svgIcon="mat:visibility_off"></mat-icon>
-              </button>
-              <mat-error *ngIf="formControls.oldPassword.touched && formControls.oldPassword.invalid">
-                <span *ngIf="formControls.oldPassword.getError('required')">
-                  Old password is required
-                </span>
-              </mat-error>
-            </mat-form-field>
-            <mat-form-field appearance="fill" >
-              <mat-label>New Password</mat-label>
-              <input matInput [type]="newPasswordInputType" formControlName="newPassword" autocomplete="false" (keyup)="onValidatePasswordCriteria($event)" required>
-              <button (click)="toggleNewPasswordVisibility()" mat-icon-button matSuffix matTooltip="Toggle Visibility" type="button">
-                <mat-icon *ngIf="isNewPasswordVisible" svgIcon="mat:visibility"></mat-icon>
-                <mat-icon *ngIf="!isNewPasswordVisible" svgIcon="mat:visibility_off"></mat-icon>
-              </button>
-              <mat-error *ngIf="formControls.newPassword.touched && formControls.newPassword.invalid">
-                <span *ngIf="formControls.newPassword.getError('required')">
-                  New password is required
-                </span>
-              </mat-error>
-            </mat-form-field>
-            <mat-form-field appearance="fill" >
-              <mat-label>Confirm Password</mat-label>
-              <input matInput [type]="confirmPasswordInputType" formControlName="confirmPassword" autocomplete="false" required>
-              <button (click)="toggleConfirmPasswordVisibility()" mat-icon-button matSuffix matTooltip="Toggle Visibility" type="button">
-                <mat-icon *ngIf="isConfirmPasswordVisible" svgIcon="mat:visibility"></mat-icon>
-                <mat-icon *ngIf="!isConfirmPasswordVisible" svgIcon="mat:visibility_off"></mat-icon>
-              </button>
-              <mat-error *ngIf="formControls.confirmPassword.touched && formControls.confirmPassword.invalid">
-                <span *ngIf="formControls.confirmPassword.getError('required')">
-                  Confirm password is required
-                </span>
-              </mat-error>
-            </mat-form-field> -->
-          <!-- </form> -->
-        </div>
+        <blockquote *ngIf="userId" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px" [style.marginTop.px]="30">
+          <span fxFlex>
+            <strong>Created By</strong>: {{ createdBy }}
+          </span>
+          <span fxFlex>
+            <strong>Date Created</strong>: {{ createdAt | date: 'MM/dd/yyyy hh:mm a' }}
+          </span>
+          <span fxFlex>
+            <strong>Modified By</strong>: {{ updatedBy }}
+          </span>
+          <span fxFlex>
+            <strong>Date Modified</strong>: {{ updatedAt ? (updatedAt | date: 'MM/dd/yyyy hh:mm a') : 'N/A' }}
+          </span>
+        </blockquote>
       </div>
     </div>
   </div>

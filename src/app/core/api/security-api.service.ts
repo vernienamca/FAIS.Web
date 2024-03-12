@@ -22,6 +22,10 @@ export class securityApi extends BaseApi {
     return this.get<ISettings>(`${this._apiUrl}/user/tempkey/${tempKey}`);
   }
 
+  getGeneratedPassword(): Observable<string> {
+    return this.get<string>(`${this._apiUrl}/user/generate`);
+  }
+
   forgotPassword(emailAddress: string): Observable<any> {
     return this.post<any>(`${this._apiUrl}/user/forgot-password/${emailAddress}`, {});
   }
@@ -32,5 +36,17 @@ export class securityApi extends BaseApi {
 
   changePassword(userId: number, oldPassword: string, newPassword: string): Observable<any> {
     return this.put<any>(`${this._apiUrl}/user/change-password/${userId}/${oldPassword}/${newPassword}`, {});
+  }
+
+  createUser(data: IUser): Observable<IUser> {
+    return this.post<IUser>(`${this._apiUrl}/user/`, data);
+  }
+
+  updateUser(id: number, isMyProfile: boolean, data: IUser): Observable<IUser> {
+    return this.put<IUser>(`${this._apiUrl}/user/${id}/${isMyProfile}`, data);
+  }
+
+  resetFromGeneratedPassword(userId: number, newPassword: string): Observable<IUser> {
+    return this.put<IUser>(`${this._apiUrl}/user/reset-password/${userId}/${newPassword}`, {});
   }
 }

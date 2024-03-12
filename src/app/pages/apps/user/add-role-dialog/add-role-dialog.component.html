@@ -1,0 +1,69 @@
+<div class="flex items-center" mat-dialog-title>
+  <h2 class="title m-0 flex-auto">Add Role ({{ totalCount }})</h2>
+  <button class="text-secondary" mat-dialog-close mat-icon-button type="button">
+    <mat-icon svgIcon="mat:close"></mat-icon>
+  </button>
+</div>
+<mat-divider class="text-border"></mat-divider>
+<mat-dialog-content class="flex flex-col">
+  <div class="card overflow-auto">
+    <div class="bg-app-bar px-6 h-16 border-b sticky left-0 flex items-center">
+      <div class="bg-foreground rounded-full border px-4 max-w-[300px] flex-auto flex items-center border border-gray-300">
+        <mat-icon class="icon-sm text-secondary" svgIcon="mat:search"></mat-icon>
+        <input [formControl]="searchCtrl" class="px-4 py-2 border-0 outline-none w-full bg-transparent" 
+          placeholder="Search roles here..." type="search">
+      </div>
+    </div>
+    <mat-progress-bar *ngIf="isListLoading" mode="indeterminate" color="primary"></mat-progress-bar>
+    <table @stagger [dataSource]="dataSource" class="w-full" mat-table matSort>
+      <!-- Text Columns -->
+      <ng-container *ngFor="let column of columns; trackBy: trackByProperty">
+        <ng-container *ngIf="column.type === 'text'" [matColumnDef]="column.property">
+          <th *matHeaderCellDef class="uppercase" mat-header-cell mat-sort-header>{{ column.label }}</th>
+          <td *matCellDef="let row" mat-cell>{{ row[column.property] }}</td>
+        </ng-container>
+      </ng-container>
+
+      <!-- Label Column -->
+      <ng-container matColumnDef="labels">
+        <th *matHeaderCellDef class="uppercase" mat-header-cell mat-sort-header>Labels</th>
+        <td *matCellDef="let row" mat-cell>
+          <div (click)="$event.stopPropagation()" class="flex items-center gap-1">
+            <div *ngFor="let label of row.labels"
+                 [ngClass]="[label.textClass, label.bgClass]"
+                 class="rounded px-2 py-1 font-medium text-xs flex-none">
+              {{ label.text }}
+            </div>
+            <div class="text-secondary bg-base text-hint cursor-pointer hover:bg-hover flex-none flex items-center justify-center">
+              <mat-icon class="icon-sm" svgIcon="mat:add"></mat-icon>
+            </div>
+          </div>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="actions">
+        <th *matHeaderCellDef mat-header-cell>
+          <div fxLayout="row" fxLayoutAlign="center center">ACTION</div>
+        </th>
+        <td *matCellDef="let row" class="w-10 text-secondary" mat-cell>
+          <div fxLayout="row" fxLayoutAlign="center center">
+            <button *ngIf="!row.isAdded; else added" [ngClass]="['!bg-green', '!text-contrast-white']" mat-raised-button type="button" (click)="addRole(row)">
+              <mat-icon class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" svgIcon="mat:add"></mat-icon> Add
+            </button>
+            <ng-template #added>
+              <div [ngClass]="['text-green', 'bg-green/10']" class="rounded px-2 py-1 font-medium text-xs flex-none">
+                <i>ADDED</i>
+              </div>
+            </ng-template>
+          </div>
+        </td>
+      </ng-container>
+      <tr *matHeaderRowDef="visibleColumns" mat-header-row></tr>
+      <tr *matRowDef="let row; columns: visibleColumns;" @fadeInUp 
+        class="hover:bg-hover trans-ease-out cursor-pointer" mat-row></tr>
+    </table>
+    <mat-paginator [pageSizeOptions]="pageSizeOptions" [pageSize]="pageSize" class="sticky left-0"></mat-paginator>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button cdkFocusInitial color="primary" mat-button mat-dialog-close type="button">Close</button>
+</mat-dialog-actions>

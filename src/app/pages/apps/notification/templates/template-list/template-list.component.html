@@ -36,39 +36,14 @@
       </div>
 
       <table @stagger [dataSource]="dataSource" class="w-full" mat-table matSort>
-        <!-- Checkbox Column -->
-        <ng-container matColumnDef="checkbox">
-          <th *matHeaderCellDef mat-header-cell>
-            <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()"
-              [indeterminate]="selection.hasValue() && !isAllSelected()" color="primary">
-            </mat-checkbox>
-          </th>
-          <td *matCellDef="let row" class="w-4" mat-cell>
-            <mat-checkbox (change)="$event ? selection.toggle(row) : null" (click)="$event.stopPropagation()"
-              [checked]="selection.isSelected(row)" color="primary">
-            </mat-checkbox>
-          </td>
-        </ng-container>
-
-        <!-- Image Column -->
-        <ng-container matColumnDef="image">
-          <th *matHeaderCellDef mat-header-cell></th>
-          <td *matCellDef="let row" class="w-8 min-w-8 pr-0" mat-cell>
-            <!-- <img [src]="row['imageSrc']" class="avatar h-8 w-8 align-middle"> -->
-          </td>
-        </ng-container>
-
         <!-- Text Columns -->
         <ng-container *ngFor="let column of columns; trackBy: trackByProperty">
           <ng-container *ngIf="column.type === 'text'" [matColumnDef]="column.property">
             <th *matHeaderCellDef class="uppercase" mat-header-cell mat-sort-header> {{ column.label }}</th>
-
             <ng-container *ngIf="column.property === 'createdAt'; else text">
-
               <td *matCellDef="let row" [ngClass]="column.cssClasses" mat-cell>
                 {{ row[column.property] | date: 'MM/dd/yyyy hh:mm a' }}
               </td>
-
             </ng-container>
             <ng-template #text>
               <ng-container *ngIf="column.property !== 'isActive'; else isActive">
@@ -77,17 +52,16 @@
                 </td>
               </ng-container>
             </ng-template>
-
-
             <ng-template #isActive>
               <td *matCellDef="let row" mat-cell>
-                <div *ngIf="column.property == 'isActive'">
-                  <div class="flex flex-wrap items-center gap-1">
-                    <div *ngIf="row[column.property] == 'Y'" class="bg-green text-green-contrast label flex-none">Active
-                    </div>
-                    <div *ngIf="row[column.property] == 'N'" class="bg-amber text-amber-contrast label flex-none">
-                      Inactive
-                    </div>
+                <div class="flex items-center gap-1">
+                  <div *ngIf="row[column.property] == 'Y'" [ngClass]="['text-green', 'bg-green/10']" 
+                    class="rounded px-2 py-1 font-medium text-xs flex-none">
+                    ACTIVE
+                  </div>
+                  <div *ngIf="row[column.property] == 'N'" [ngClass]="['text-amber', 'bg-amber/10']" 
+                    class="rounded px-2 py-1 font-medium text-xs flex-none">
+                    INACTIVE
                   </div>
                 </div>
               </td>

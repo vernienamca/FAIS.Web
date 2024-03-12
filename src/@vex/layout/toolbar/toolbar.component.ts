@@ -76,11 +76,11 @@ export class ToolbarComponent implements OnInit, OnDestroy  {
   }
 
   showProfile(): void {
-    this._router.navigate(['apps/profile']);
+    this._router.navigate(['apps/users/my-profile']);
   }
 
   changePassword(): void{
-    this._router.navigate(['/apps/profile/change-password']);
+    this._router.navigate(['/apps/my-profile/change-password']);
   }
 
   logout(): void {

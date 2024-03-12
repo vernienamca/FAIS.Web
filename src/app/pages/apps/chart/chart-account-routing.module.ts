@@ -3,6 +3,7 @@ import { RouterModule } from '@angular/router';
 import { QuicklinkModule } from 'ngx-quicklink';
 import { VexRoutes } from '../../../../@vex/interfaces/vex-route.interface';
 import { ChartListComponent } from '../chart/chart-list/chart-list.component';
+import { ChartAccountComponent } from './chart-account.component';
 
 const routes: VexRoutes = [
   {
@@ -12,6 +13,21 @@ const routes: VexRoutes = [
       toolbarShadowEnabled: false
     }
   },
+
+  {
+    path: 'edit/:id',
+    component: ChartAccountComponent,
+    data: {
+      toolbarShadowEnabled: false
+    }
+  },
+  {
+    path: 'add',
+    component: ChartAccountComponent,
+    data: {
+      toolbarShadowEnabled: false
+    }
+  }
 ];
 
 @NgModule({

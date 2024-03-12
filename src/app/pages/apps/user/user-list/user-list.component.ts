@@ -18,6 +18,7 @@ import { PortalService } from 'src/app/core/services/portal.service';
 import { IUser } from 'src/app/core/models/user';
 import { UserStatusEnum } from 'src/app/core/enums/user-status.enum';
 import { Router } from '@angular/router';
+import { ResetPasswordDialogComponent } from '../reset-password-dialog/reset-password-dialog.component';
 
 @UntilDestroy()
 @Component({
@@ -71,7 +72,8 @@ export class UserListComponent implements OnInit, OnDestroy, AfterViewInit {
 
   constructor(
     private _portalService: PortalService,
-    private _router: Router
+    private _router: Router,
+    private _dialog: MatDialog
   ) {
   }
 
@@ -83,7 +85,6 @@ export class UserListComponent implements OnInit, OnDestroy, AfterViewInit {
     this._portalService.getUsers()
       .pipe(takeUntil(this._onDestroy$))
       .subscribe(data => {
-        console.log(data);
         if (!data) {
           return;
         }
@@ -115,10 +116,18 @@ export class UserListComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   add() {
-    this._router.navigate(['user/add']);
+    this._router.navigate(['apps/users/add']);
+  }
+
+  resetPassword(user: IUser): void {
+    this._dialog.open(ResetPasswordDialogComponent, {
+      data: user,
+      width: '700px',
+      disableClose: true
+    });
   }
   
-  edit(user: any): void {
+  editUser(user: any): void {
     this._router.navigate([`apps/users/edit/${user.id}`]);
   }
 
@@ -157,7 +166,6 @@ export class UserListComponent implements OnInit, OnDestroy, AfterViewInit {
 
   onLabelChange(change: MatSelectChange, row: IUser) {
     const index = this.customers.findIndex(c => c === row);
-    //this.customers[index].labels = change.value;
     this.subject$.next(this.customers);
   }
 }

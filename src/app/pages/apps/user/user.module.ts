@@ -22,9 +22,25 @@ import { SecondaryToolbarModule } from 'src/@vex/components/secondary-toolbar/se
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatInputModule } from '@angular/material/input';
+import { UserRoleListComponent } from './user-role-list/user-role-list.component';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatDialogModule } from '@angular/material/dialog';
+import { AddRoleDialogComponent } from './add-role-dialog/add-role-dialog.component';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { ResetPasswordDialogComponent } from './reset-password-dialog/reset-password-dialog.component';
+import { MyProfileComponent } from './my-profile/my-profile.component';
 
 @NgModule({
-  declarations: [UserListComponent, UserComponent],
+  declarations: [
+    UserListComponent, 
+    UserComponent, 
+    UserRoleListComponent, 
+    AddRoleDialogComponent, 
+    ResetPasswordDialogComponent,
+    MyProfileComponent
+  ],
   imports: [
     CommonModule,
     UserRoutingModule,
@@ -47,7 +63,12 @@ import { MatInputModule } from '@angular/material/input';
     MatTabsModule,
     SecondaryToolbarModule,
     FlexLayoutModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatProgressBarModule,
+    MatDialogModule,
+    MatDividerModule,
+    MatDatepickerModule,
+    MatNativeDateModule
   ]
 })
 export class UserModule {

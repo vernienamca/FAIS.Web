@@ -45,24 +45,6 @@
       <input type="file" id="fileInput" style="display: none;">
       <mat-progress-bar *ngIf="isListLoading" mode="indeterminate" color="primary"></mat-progress-bar>
       <table @stagger [dataSource]="dataSource" class="w-full" mat-table matSort>
-        <!-- Checkbox Column -->
-        <ng-container matColumnDef="checkbox">
-          <th *matHeaderCellDef mat-header-cell>
-            <mat-checkbox (change)="$event ? masterToggle() : null"
-                          [checked]="selection.hasValue() && isAllSelected()"
-                          [indeterminate]="selection.hasValue() && !isAllSelected()"
-                          color="primary">
-            </mat-checkbox>
-          </th>
-          <td *matCellDef="let row" class="w-4" mat-cell>
-            <mat-checkbox (change)="$event ? selection.toggle(row) : null"
-                          (click)="$event.stopPropagation()"
-                          [checked]="selection.isSelected(row)"
-                          color="primary">
-            </mat-checkbox>
-          </td>
-        </ng-container>
-
          <!-- Text Columns -->
         <ng-container *ngFor="let column of columns; trackBy: trackByProperty">
           <ng-container *ngIf="column.type === 'text'" [matColumnDef]="column.property">
@@ -79,39 +61,7 @@
             </ng-template>
           </ng-container>
         </ng-container>
-  
-        <!-- Image Column -->
-        <ng-container matColumnDef="image">
-          <th *matHeaderCellDef mat-header-cell></th>
-          <td *matCellDef="let row" class="w-8 min-w-8 pr-0" mat-cell>
-            <!-- <img [src]="row['imageSrc']" class="avatar h-8 w-8 align-middle"> -->
-          </td>
-        </ng-container>
-
-        <!-- Contact Column -->
-        <ng-container matColumnDef="contact">
-          <th *matHeaderCellDef mat-header-cell mat-sort-header></th>
-          <td *matCellDef="let row" mat-cell>
-            <div class="flex">
-              <a (click)="$event.stopPropagation()"
-                 class="w-8 h-8 p-0 leading-none flex items-center justify-center hover:bg-hover text-primary bg-primary/10"
-                 mat-icon-button>
-                <mat-icon class="icon-sm" svgIcon="mat:phone"></mat-icon>
-              </a>
-              <a (click)="$event.stopPropagation()"
-                 class="w-8 h-8 p-0 leading-none flex items-center justify-center ml-1 hover:bg-hover text-teal bg-teal/10"
-                 mat-icon-button>
-                <mat-icon class="icon-sm" svgIcon="mat:mail"></mat-icon>
-              </a>
-              <a (click)="$event.stopPropagation()"
-                 class="w-8 h-8 p-0 leading-none flex items-center justify-center ml-1 hover:bg-hover text-green bg-green/10"
-                 mat-icon-button>
-                <mat-icon class="icon-sm" svgIcon="mat:map"></mat-icon>
-              </a>
-            </div>
-          </td>
-        </ng-container>
-
+        
         <!-- Label Column -->
         <ng-container matColumnDef="labels">
           <th *matHeaderCellDef class="uppercase" mat-header-cell mat-sort-header>Labels</th>
