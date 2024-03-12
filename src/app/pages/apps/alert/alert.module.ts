@@ -59,7 +59,7 @@ import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
     SecondaryToolbarModule,
     MatSnackBarModule,
     NgxDatatableModule,
-    CKEditorModule
+    CKEditorModule,
   ]
 })
 export class AlertModule {

@@ -34,7 +34,7 @@ import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
     VexModule,
     CustomLayoutModule,
     NgxMatSelectSearchModule,
-    CKEditorModule
+    CKEditorModule,
   ],
   providers: [
     {
