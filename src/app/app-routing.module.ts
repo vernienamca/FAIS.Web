@@ -113,7 +113,11 @@ const routes: VexRoutes = [
           {
             path: 'library-options',
             loadChildren: () => import('./pages/apps/library-type-option/library-type-option.module').then(m => m.LibraryTypeOptionModule)
-          }
+          },
+          {
+            path: 'transmission-profile',
+            loadChildren: () => import('./pages/apps/transmission-line/tranmission-line.module').then(m => m.TransmissionLineModule),
+          },
         ]
       },
       {

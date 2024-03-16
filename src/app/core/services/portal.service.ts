@@ -14,6 +14,7 @@ import { ILibraryTypeOption } from '../models/library-type-option';
 import { IProFormaEntry } from '../models/pro-forma-entry';
 import { IChart } from '../models/chart';
 import { ILibraryTypes } from '../models/library-types';
+import { ITransmissionLine } from '../models/transmission-line';
 
 @Injectable({
   providedIn: 'root'
@@ -231,5 +232,21 @@ export class PortalService {
   
   updateChartOfAccounts(id: number, data: any): Observable<any> {
     return this._portalApi.updateChartOfAccounts(id,data);
-}
+  }
+
+  getTransmissionLines(): Observable<ITransmissionLine[]> {
+    return this._portalApi.getTransmissionLines();
+  }
+
+  getTransmissionLine(id: number): Observable<ITransmissionLine> {
+    return this._portalApi.getTransmissionLine(id);
+  }
+
+  updateTransmissionLine(data: any): Observable<any> {
+    return this._portalApi.updateTransmissionLine(data);
+  }
+
+  addTransmissionLine(transmissionLine: any): Observable<any> {
+    return this._portalApi.addTransmissionLine(transmissionLine);
+  }
 }

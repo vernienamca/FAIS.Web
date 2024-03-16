@@ -14,6 +14,7 @@ import { ILibraryTypeOption } from "../models/library-type-option";
 import { IProFormaEntry } from "../models/pro-forma-entry";
 import { IChart } from "../models/chart";
 import { ILibraryTypes } from "../models/library-types";
+import { ITransmissionLine } from "../models/transmission-line";
 
 export class PortalApi extends BaseApi {
     private _apiUrl = `${environment.apiGatewayBaseUrl}`;
@@ -189,5 +190,21 @@ export class PortalApi extends BaseApi {
     
     updateChartOfAccounts(id: number, data: any): Observable<any> {
         return this.put<any>(`${this._apiUrl}/chartofaccounts/${id}`, data);
+    }
+
+    getTransmissionLines(): Observable<ITransmissionLine[]> {
+        return this.get<ITransmissionLine[]>(`${this._apiUrl}/translineprofile/get`);
+    }
+
+    getTransmissionLine(id: number): Observable<ITransmissionLine> {
+        return this.get<ITransmissionLine>(`${this._apiUrl}/translineprofile/${id}`);
+    }
+
+    updateTransmissionLine(data: any): Observable<any> {
+        return this.put<any>(`${this._apiUrl}/translineprofile`, data);
+    }
+
+    addTransmissionLine(transmissionLine: any): Observable<any> {
+        return this.post<any>(`${this._apiUrl}/translineprofile`, transmissionLine);
     }
 }
