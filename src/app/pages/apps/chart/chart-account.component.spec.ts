@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ChartAccountComponent } from './chart-account.component';
 
-describe('ModuleComponent', () => {
+describe('ChartAccountComponent', () => {
   let component: ChartAccountComponent;
   let fixture: ComponentFixture<ChartAccountComponent>;
 
