@@ -100,7 +100,7 @@ export class LibraryTypesComponent implements OnInit, OnDestroy{
     this._onDestroy$.complete();
   }
 
-  triggerResize() {
+  triggerResize(): void {
     this._ngZone.onStable.pipe(take(1)).subscribe(() => this.autosize.resizeToFitContent(true));
   }
 

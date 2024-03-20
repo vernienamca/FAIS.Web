@@ -120,7 +120,7 @@ export class LibraryTypesListComponent implements OnInit, OnDestroy {
     return numSelected === numRows;
   }
 
-  add() {
+  add(): void {
     this._router.navigate(['apps/library-types/add']);
   }
 
