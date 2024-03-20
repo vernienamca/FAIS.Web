@@ -3,8 +3,8 @@
     <div [class.container]="layoutCtrl.value === 'boxed'" [class.px-gutter]="layoutCtrl.value === 'fullwidth'" 
       class="w-full flex flex-col sm:flex-row justify-between">
       <div>
-        <h1 class="title mt-0 mb-1">Library Type Options ({{ totalCount }})</h1>
-        <vex-breadcrumbs [crumbs]="['System Libraries', 'Library Type Options']"></vex-breadcrumbs>
+        <h1 class="title mt-0 mb-1">Library Types ({{ totalCount }})</h1>
+        <vex-breadcrumbs [crumbs]="['System Libraries', 'Library Types']"></vex-breadcrumbs>
       </div>
       <div class="hidden sm:block">
         <mat-button-toggle-group [formControl]="layoutCtrl" class="mt-4 sm:mt-0">
@@ -18,12 +18,6 @@
     <div class="card overflow-auto -mt-16">
       <div class="bg-app-bar px-6 h-16 border-b sticky left-0 flex items-center">
         <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
-          <div class="bg-foreground rounded-full border px-4 flex-auto flex items-center border border-gray-300">
-            <mat-select placeholder="Select Library Type" (selectionChange)="onFilterUser($event)" [style.width.px]="327"
-              class="py-2 border-0 outline-none w-full bg-transparent flex-auto"> 
-              <mat-option *ngFor="let libraryType of libraryTypes" [value]="libraryType">{{libraryType}}</mat-option>
-            </mat-select>
-          </div>
           <div class="bg-foreground rounded-full border px-4 max-w-[300px] flex-auto flex items-center border border-gray-300">
             <mat-icon class="icon-sm text-secondary" svgIcon="mat:search"></mat-icon>
             <input [formControl]="searchCtrl" class="px-4 py-2 border-0 outline-none w-full bg-transparent" 
@@ -32,11 +26,7 @@
         </div>
         <span class="flex-1"></span>
         <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
-          <button color="primary" mat-raised-button type="button" (click)="exportLibraryTypeOptions()">
-            <mat-icon svgIcon="mat:download"></mat-icon>
-            <span>Export all</span>
-          </button>
-          <button (click)="add()" class="ml-4 flex-none" color="primary" mat-mini-fab matTooltip="Add Library Type Option" type="button">
+          <button (click)="add()" class="ml-4 flex-none" color="primary" mat-mini-fab matTooltip="Add Library Type" type="button">
             <mat-icon svgIcon="mat:add"></mat-icon>
           </button>
         </div>
@@ -80,8 +70,6 @@
             </ng-template>
           </ng-container>
         </ng-container>
-  
-        
         <ng-container matColumnDef="isActive">
           <th *matHeaderCellDef class="uppercase" mat-header-cell mat-sort-header>Status</th>
           <td *matCellDef="let row" mat-cell>
