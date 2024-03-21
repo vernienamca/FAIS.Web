@@ -15,6 +15,7 @@ import { IProFormaEntry } from '../models/pro-forma-entry';
 import { IChart } from '../models/chart';
 import { ILibraryTypes } from '../models/library-types';
 import { IAlert } from '../models/alert';
+import { IAssetProfile } from '../models/asset-profile';
 
 @Injectable({
   providedIn: 'root'
@@ -186,8 +187,16 @@ export class PortalService {
     return this._portalApi.createLibraryTypeOption(data);
   }
 
-  getLibraryType(): Observable<ILibraryTypes[]> {
-    return this._portalApi.getLibraryType();
+  getLibraryType(id: number): Observable<ILibraryTypes> {
+    return this._portalApi.getLibraryType(id);
+  }
+
+  createLibraryType(data: any): Observable<any> {
+    return this._portalApi.createLibraryType(data);
+  }
+
+  updateLibraryType(data: any): Observable<any> {
+    return this._portalApi.updateLibraryType(data);
   }
 
   getProFormaEntries(): Observable<IProFormaEntry[]> {
@@ -198,12 +207,12 @@ export class PortalService {
   getProFormaEntry(id: number): Observable<IProFormaEntry> {
     return this._portalApi.getProFormaEntry(id);
   }
-
-  
-  updateProFormaEntry(data: any): Observable<any> {
-    return this._portalApi.updateProFormaEntry(data);
+  addProFormaEntry(proFormaEntry: any): Observable<any> {
+    return this._portalApi.addProFormaEntry(proFormaEntry);
   }
-
+  updateProFormaEntry(id: number, data: any): Observable<any> {
+    return this._portalApi.updateProFormaEntry(id,data);
+}
 
   exportProFormaEntries(): void {
     this._portalApi.exportProFormaEntries().subscribe(response => {
@@ -258,5 +267,8 @@ exportAlerts(): void {
       link.download = filename;
       link.click();
     });
+  }
+  getAssetProfile(): Observable<IAssetProfile[]> {
+    return this._portalApi.getAssetProfile();
   }
 }

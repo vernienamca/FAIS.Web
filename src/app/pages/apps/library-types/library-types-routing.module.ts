@@ -1,37 +1,38 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { QuicklinkModule } from 'ngx-quicklink';
 import { VexRoutes } from '../../../../@vex/interfaces/vex-route.interface';
-import { ProFormaEntriesListComponent } from './pro-forma-entries-list/pro-forma-entries-list.component';
-import { ProFormaEntryComponent } from './pro-forma-entry.component';
+import { LibraryTypesListComponent } from './library-types-list/library-types-list.component';
+import { LibraryTypesComponent } from './library-types.component';
+import { PageMode } from 'src/app/core/enums/page-mode.enum';
 
 const routes: VexRoutes = [
   {
     path: '',
-    component: ProFormaEntriesListComponent,
+    component: LibraryTypesListComponent,
     data: {
       toolbarShadowEnabled: false
     }
   },
   {
     path: 'edit/:id',
-    component: ProFormaEntryComponent,
+    component: LibraryTypesComponent,
     data: {
+      pageMode: PageMode.Edit,
       toolbarShadowEnabled: false
     }
   },
   {
     path: 'add',
-    component: ProFormaEntryComponent,
+    component: LibraryTypesComponent,
     data: {
+      pageMode: PageMode.Add,
       toolbarShadowEnabled: false
     }
   }
-];
+]
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule, QuicklinkModule]
+  exports: [RouterModule]
 })
-export class ProFormaEntriesRoutingModule {
-}
+export class LibraryTypesRoutingModule { }

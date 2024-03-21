@@ -5,6 +5,7 @@ export interface ILibraryTypes {
   description: string;
   isActive: string;
   createdAt: Date;
+  createdBy: string;
   updatedAt: Date;
   updatedBy: string;
 }

@@ -15,6 +15,7 @@ import { IProFormaEntry } from "../models/pro-forma-entry";
 import { IChart } from "../models/chart";
 import { IAlert } from "../models/alert";
 import { ILibraryTypes } from "../models/library-types";
+import { IAssetProfile } from "../models/asset-profile";
 
 export class PortalApi extends BaseApi {
     private _apiUrl = `${environment.apiGatewayBaseUrl}`;
@@ -116,15 +117,19 @@ export class PortalApi extends BaseApi {
     }
 
     getProFormaEntries(): Observable<IProFormaEntry[]> {
-        return this.get<IProFormaEntry>(`${this._apiUrl}/proformaentry/get`);
+        return this.get<IProFormaEntry>(`${this._apiUrl}/proformaentries/get`);
     }
 
     getProFormaEntry(id: number): Observable<IProFormaEntry> {
-        return this.get<IProFormaEntry>(`${this._apiUrl}/proformaentry/${id}`);
+        return this.get<IProFormaEntry>(`${this._apiUrl}/proformaentries/${id}`);
+    }
+    addProFormaEntry(proformaentry: any): Observable<any> {
+        return this.post<any>(`${this._apiUrl}/proformaentries`, proformaentry);
     }
 
-    updateProFormaEntry(data: any): Observable<any> {
-        return this.put<any>(`${this._apiUrl}/proformaentry`, data);
+    
+    updateProFormaEntry(id: number, data: any): Observable<any> {
+        return this.put<any>(`${this._apiUrl}/proformaentries`, data);
     }
 
     exportProFormaEntries(): Observable<HttpResponse<Blob>>  {
@@ -143,8 +148,16 @@ export class PortalApi extends BaseApi {
         return this.get<ILibraryTypeOption>(`${this._apiUrl}/librarytypeoption/${id}`);
     }
 
-    getLibraryType(): Observable<ILibraryTypes[]> {
-        return this.get<ILibraryTypes>(`${this._apiUrl}/librarytype/get`);
+    getLibraryType(id: number): Observable<ILibraryTypes> {
+        return this.get<ILibraryTypes>(`${this._apiUrl}/librarytype/${id}`);
+    }
+
+    createLibraryType(data: any): Observable<any> {
+        return this.post<any>(`${this._apiUrl}/librarytype`, data);
+    }
+
+    updateLibraryType(data: any): Observable<any> {
+        return this.put<any>(`${this._apiUrl}/librarytype`, data);
     }
 
     exportLibraryTypeOptions(): Observable<HttpResponse<Blob>>  {
@@ -192,6 +205,9 @@ export class PortalApi extends BaseApi {
         return this.put<any>(`${this._apiUrl}/chartofaccounts/${id}`, data);
     }
 
+    getAssetProfile(): Observable<IAssetProfile[]> {
+        return this.get<IAssetProfile[]>(`${this._apiUrl}/assetprofile/get`);
+    }
 
     getAlerts(): Observable<IAlert[]> {
         return this.get<IAlert>(`${this._apiUrl}/alert/get`);
@@ -203,7 +219,7 @@ export class PortalApi extends BaseApi {
 
     updateAlert(data: any): Observable<any> {
         return this.put<any>(`${this._apiUrl}/proformaentry`, data);
-    }alert
+    }
     exportAlerts(): Observable<HttpResponse<Blob>>  {
         return this.get(`${this._apiUrl}/alert/export`,  
         {

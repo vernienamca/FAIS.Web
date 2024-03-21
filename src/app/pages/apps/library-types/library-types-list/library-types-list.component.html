@@ -3,8 +3,8 @@
     <div [class.container]="layoutCtrl.value === 'boxed'" [class.px-gutter]="layoutCtrl.value === 'fullwidth'" 
       class="w-full flex flex-col sm:flex-row justify-between">
       <div>
-        <h1 class="title mt-0 mb-1">Pro-Forma Entries ({{ totalCount }})</h1>
-        <vex-breadcrumbs [crumbs]="['System Libraries', 'Pro-Forma Entries']"></vex-breadcrumbs>
+        <h1 class="title mt-0 mb-1">Library Types ({{ totalCount }})</h1>
+        <vex-breadcrumbs [crumbs]="['System Libraries', 'Library Types']"></vex-breadcrumbs>
       </div>
       <div class="hidden sm:block">
         <mat-button-toggle-group [formControl]="layoutCtrl" class="mt-4 sm:mt-0">
@@ -21,16 +21,12 @@
           <div class="bg-foreground rounded-full border px-4 max-w-[300px] flex-auto flex items-center border border-gray-300">
             <mat-icon class="icon-sm text-secondary" svgIcon="mat:search"></mat-icon>
             <input [formControl]="searchCtrl" class="px-4 py-2 border-0 outline-none w-full bg-transparent" 
-              placeholder="Search pro-forma entries here..." type="search">
+              placeholder="Search library type option here..." type="search">
           </div>
         </div>
         <span class="flex-1"></span>
         <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
-          <button color="primary" mat-raised-button type="button" (click)="exportProFormaEntries()">
-            <mat-icon svgIcon="mat:download"></mat-icon>
-            <span>Export all</span>
-          </button>
-          <button (click)="add()" class="ml-4 flex-none" color="primary" mat-mini-fab matTooltip="Add User" type="button">
+          <button (click)="add()" class="ml-4 flex-none" color="primary" mat-mini-fab matTooltip="Add Library Type" type="button">
             <mat-icon svgIcon="mat:add"></mat-icon>
           </button>
         </div>
@@ -59,6 +55,9 @@
         <ng-container *ngFor="let column of columns; trackBy: trackByProperty">
           <ng-container *ngIf="column.type === 'text'" [matColumnDef]="column.property">
             <th *matHeaderCellDef class="uppercase" mat-header-cell mat-sort-header> {{ column.label }}</th>
+            <ng-container *ngIf="column.property === 'no'">
+              <td mat-cell *matCellDef="let row; let i = index"> {{ i + 1 }} </td>
+            </ng-container>
             <ng-container *ngIf="column.property === 'createdAt'; else text">
               <td *matCellDef="let row" [ngClass]="column.cssClasses" mat-cell>
                 {{ row[column.property] | date: 'MM/dd/yyyy hh:mm a' }}
@@ -71,28 +70,25 @@
             </ng-template>
           </ng-container>
         </ng-container>
-
         <ng-container matColumnDef="isActive">
           <th *matHeaderCellDef class="uppercase" mat-header-cell mat-sort-header>Status</th>
           <td *matCellDef="let row" mat-cell>
             <div class="flex items-center gap-1">
-              <div *ngIf="row.isActive; else inactive" [ngClass]="['text-green', 'bg-green/10']" 
+              <div *ngIf="row['isActive'] == 'Y'" [ngClass]="['text-green', 'bg-green/10']" 
                 class="rounded px-2 py-1 font-medium text-xs flex-none">
                 ACTIVE
               </div>
-              <ng-template #inactive>
-                <div [ngClass]="['text-amber', 'bg-amber/10']" 
-                  class="rounded px-2 py-1 font-medium text-xs flex-none">
-                  INACTIVE
-                </div>
-              </ng-template>
+              <div *ngIf="row['isActive'] == 'N'" [ngClass]="['text-amber', 'bg-amber/10']" 
+                class="rounded px-2 py-1 font-medium text-xs flex-none">
+                INACTIVE
+              </div>
             </div>
           </td>
         </ng-container>
         <ng-container matColumnDef="actions">
           <th *matHeaderCellDef mat-header-cell mat-sort-header>ACTIONS</th>
           <td *matCellDef="let row" class="w-10 text-secondary" mat-cell>
-            <button (click)="$event.stopPropagation()" [matMenuTriggerData]="{ proformaentry: row }" [matMenuTriggerFor]="actionsMenu"
+            <button (click)="$event.stopPropagation()" [matMenuTriggerData]="{ librarytypeoption: row }" [matMenuTriggerFor]="actionsMenu"
               mat-icon-button type="button">
               <mat-icon svgIcon="mat:more_horiz"></mat-icon>
             </button>
@@ -114,8 +110,8 @@
   </button>
 </mat-menu>
 <mat-menu #actionsMenu="matMenu" xPosition="before" yPosition="below">
-  <ng-template let-proformaentry="proformaentry" matMenuContent>
-    <button (click)="edit(proformaentry)" mat-menu-item>
+  <ng-template let-librarytypeoption="librarytypeoption" matMenuContent>
+    <button (click)="edit(librarytypeoption)" mat-menu-item>
       <mat-icon svgIcon="mat:edit"></mat-icon>
       <span>Edit</span>
     </button>

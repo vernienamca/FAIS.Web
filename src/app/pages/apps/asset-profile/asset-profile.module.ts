@@ -13,28 +13,23 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
-import { ProFormaEntriesListComponent } from './pro-forma-entries-list/pro-forma-entries-list.component';
-import { ProFormaEntriesRoutingModule } from './pro-forma-entries-routing.module';
 import { RelativeDateTimeModule } from 'src/@vex/pipes/relative-date-time/relative-date-time.module';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatDialogModule } from '@angular/material/dialog';
-import { MatDividerModule } from '@angular/material/divider';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { MatInputModule } from '@angular/material/input';
-import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { MatTabsModule } from '@angular/material/tabs';
 import { SecondaryToolbarModule } from 'src/@vex/components/secondary-toolbar/secondary-toolbar.module';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { ProFormaEntryComponent } from './pro-forma-entry.component';
-import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import {WjGridModule} from '@grapecity/wijmo.angular2.grid';
+import { MatInputModule } from '@angular/material/input';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { AssetProfileListComponent } from './asset-profile-list/asset-profile-list.component';
+import { AssetProfileRoutingModule } from './asset-profile-routing.module';
 
 @NgModule({
-  declarations: [ProFormaEntriesListComponent, ProFormaEntryComponent],
+  declarations: [AssetProfileListComponent],
   imports: [
     CommonModule,
-    ProFormaEntriesRoutingModule,
+    AssetProfileRoutingModule,
     PageLayoutModule,
     BreadcrumbsModule,
     MatPaginatorModule,
@@ -52,17 +47,13 @@ import {WjGridModule} from '@grapecity/wijmo.angular2.grid';
     RelativeDateTimeModule,
     MatProgressBarModule,
     MatDialogModule,
-    MatDividerModule,
     FlexLayoutModule,
-    MatInputModule,
-    MatSlideToggleModule,
-    MatTabsModule,
     SecondaryToolbarModule,
     MatSnackBarModule,
-    NgxDatatableModule,
     MatFormFieldModule,
-    WjGridModule
+    MatInputModule,
+    MatSlideToggleModule
   ]
 })
-export class ProFormaEntriesModule {
+export class AssetProfileModule {
 }
