@@ -121,7 +121,11 @@ const routes: VexRoutes = [
           {
             path: 'library-types',
             loadChildren: () => import('./pages/apps/library-types/library-types.module').then(m => m.LibraryTypesModule)
-          }
+          },
+          {
+            path: 'alerts',
+            loadChildren: () => import('./pages/apps/alert/alert.module').then(m => m.AlertModule)
+          },
         ]
       },
       {

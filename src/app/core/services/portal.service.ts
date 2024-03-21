@@ -14,6 +14,7 @@ import { ILibraryTypeOption } from '../models/library-type-option';
 import { IProFormaEntry } from '../models/pro-forma-entry';
 import { IChart } from '../models/chart';
 import { ILibraryTypes } from '../models/library-types';
+import { IAlert } from '../models/alert';
 import { IAssetProfile } from '../models/asset-profile';
 
 @Injectable({
@@ -202,6 +203,7 @@ export class PortalService {
     return this._portalApi.getProFormaEntries();
   }
 
+
   getProFormaEntry(id: number): Observable<IProFormaEntry> {
     return this._portalApi.getProFormaEntry(id);
   }
@@ -243,6 +245,29 @@ export class PortalService {
   updateChartOfAccounts(id: number, data: any): Observable<any> {
     return this._portalApi.updateChartOfAccounts(id,data);
 }
+getAlert(id: number): Observable<IAlert> {
+  return this._portalApi.getAlert(id);
+}
+
+updateAlert(data: any): Observable<any> {
+  return this._portalApi.updateAlert(data);
+}
+
+exportAlerts(): void {
+  this._portalApi.exportAlerts().subscribe(response => {
+    const contentDisposition = response.headers.get('Content-Disposition');
+    const filename = contentDisposition 
+      ? contentDisposition.split(';')[1].trim().split('=')[1] 
+      : 'Alerts_' + this._datePipe.transform(new Date(), 'medium') + '.xlsx';
+
+      const blob = new Blob([response.body], { type: 'application/actet-stream' });
+
+      const link = document.createElement('a');
+      link.href = window.URL.createObjectURL(blob);
+      link.download = filename;
+      link.click();
+    });
+  }
   getAssetProfile(): Observable<IAssetProfile[]> {
     return this._portalApi.getAssetProfile();
   }

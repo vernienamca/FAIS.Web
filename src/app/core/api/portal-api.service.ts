@@ -13,6 +13,7 @@ import { ICostCenter } from "../models/cost-center";
 import { ILibraryTypeOption } from "../models/library-type-option";
 import { IProFormaEntry } from "../models/pro-forma-entry";
 import { IChart } from "../models/chart";
+import { IAlert } from "../models/alert";
 import { ILibraryTypes } from "../models/library-types";
 import { IAssetProfile } from "../models/asset-profile";
 
@@ -206,5 +207,24 @@ export class PortalApi extends BaseApi {
 
     getAssetProfile(): Observable<IAssetProfile[]> {
         return this.get<IAssetProfile[]>(`${this._apiUrl}/assetprofile/get`);
+    }
+
+    getAlerts(): Observable<IAlert[]> {
+        return this.get<IAlert>(`${this._apiUrl}/alert/get`);
+    }
+
+    getAlert(id: number): Observable<IAlert> {
+        return this.get<IAlert>(`${this._apiUrl}/alert/${id}`);
+    }
+
+    updateAlert(data: any): Observable<any> {
+        return this.put<any>(`${this._apiUrl}/proformaentry`, data);
+    }
+    exportAlerts(): Observable<HttpResponse<Blob>>  {
+        return this.get(`${this._apiUrl}/alert/export`,  
+        {
+            observe: 'response',
+            responseType: 'blob' as 'json'
+        });
     }
 }
