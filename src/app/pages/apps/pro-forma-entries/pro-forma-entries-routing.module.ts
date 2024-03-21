@@ -19,6 +19,13 @@ const routes: VexRoutes = [
     data: {
       toolbarShadowEnabled: false
     }
+  },
+  {
+    path: 'add',
+    component: ProFormaEntryComponent,
+    data: {
+      toolbarShadowEnabled: false
+    }
   }
 ];
 
