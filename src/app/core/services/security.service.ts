@@ -55,5 +55,8 @@ export class SecurityService {
   resetFromGeneratedPassword(userId: number, newPassword: string): Observable<IUser> {
     return this._securityApi.resetFromGeneratedPassword(userId, newPassword);
   }
-}
 
+  postNotifRole(roleId: number, id?: number, assetName?: string, editMode?:boolean): Observable<any> {
+    return this._securityApi.postNotifRole(roleId,id,assetName,editMode);
+  }
+}

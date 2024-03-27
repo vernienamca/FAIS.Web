@@ -243,7 +243,19 @@ export class PortalService {
   updateChartOfAccounts(id: number, data: any): Observable<any> {
     return this._portalApi.updateChartOfAccounts(id,data);
 }
-  getAssetProfile(): Observable<IAssetProfile[]> {
-    return this._portalApi.getAssetProfile();
+  getAssetProfiles(): Observable<IAssetProfile[]> {
+    return this._portalApi.getAssetProfiles();
   }
+
+  addAssetProfile(assetProfile: any): Observable<any> {
+    return this._portalApi.addAssetProfile(assetProfile);
+}
+
+  updateAssetProfile(id: number , data:any): Observable<any> {
+    return this._portalApi.updateAssetProfile(id,data);
+}
+
+getAssetProfile(id: number): Observable<IAssetProfile> {
+  return this._portalApi.getAssetProfile(id);
+}
 }

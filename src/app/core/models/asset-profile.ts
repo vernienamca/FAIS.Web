@@ -1,14 +1,14 @@
 export interface IAssetProfile {
     id: number,
     name: string,
-    category: string,
-    assetClass: number,
+    assetCategoryId: string,
+    assetClassId: number,
     description: string,
     rcaGLId: number,
-    rcaslId: number,
-    costCenter: number,
-    economicLife: string,
-    residualLife: string,
+    rcaSLId: number,
+    costCenter?: number,
+    economicLife?: string,
+    residualLife?: string,
     isActive: string;
     statusDate: Date;
     dateCreated: Date,

@@ -24,9 +24,10 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { AssetProfileListComponent } from './asset-profile-list/asset-profile-list.component';
 import { AssetProfileRoutingModule } from './asset-profile-routing.module';
+import { AssetProfileComponent } from './asset-profile.component';
 
 @NgModule({
-  declarations: [AssetProfileListComponent],
+  declarations: [AssetProfileListComponent, AssetProfileComponent],
   imports: [
     CommonModule,
     AssetProfileRoutingModule,
