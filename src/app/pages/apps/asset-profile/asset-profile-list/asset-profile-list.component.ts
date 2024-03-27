@@ -75,7 +75,7 @@ export class AssetProfileListComponent implements OnInit, OnDestroy, AfterViewIn
   }
 
   ngOnInit(): void {
-    this._portalService.getAssetProfile()
+    this._portalService.getAssetProfiles()
     .pipe(
       takeUntil(this._onDestroy$),
       finalize(() => this.isListLoading = false)
