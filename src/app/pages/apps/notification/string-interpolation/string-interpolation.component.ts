@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { IStringInterpolation } from 'src/app/core/models/string-interpolation';
 import { PortalService } from 'src/app/core/services/portal.service';
+import { PageMode } from 'src/app/core/enums/page-mode.enum';
 
 @Component({
   selector: 'vex-string-interpolation',
@@ -15,12 +16,15 @@ export class StringInterpolationComponent implements OnInit, OnDestroy {
   form: FormGroup; 
   layoutCtrl = new UntypedFormControl('fullwidth');
   statusLabel = 'Active';
-  pageLabel: string = 'Edit String Interpolation';
-  userId: number;
+  pageLabel: string;
   createdBy: string;
   createdAt: Date;
   updatedBy: string;
   updatedAt: Date;
+  pageMode: PageMode;
+  stringInterpolations: IStringInterpolation[];
+  interpolations: [];
+  id: number;
 
   get formControls() {
     return {
@@ -40,7 +44,6 @@ export class StringInterpolationComponent implements OnInit, OnDestroy {
     private _portalService: PortalService,
     private _snackBar: MatSnackBar
   ) {
-    this.userId = parseInt(this._route.snapshot.paramMap.get('id'));
     this.form = this._fb.group({
       transactionCode: ['', [Validators.required]],
       description: ['', [Validators.required]],
@@ -48,18 +51,25 @@ export class StringInterpolationComponent implements OnInit, OnDestroy {
       isActive: [true, []],
     });
 
-    if (this.userId) {
-      this._portalService.getStringInterpolation(this.userId)
-        .pipe(takeUntil(this._onDestroy$))
-        .subscribe(data => {
-          if (!data) {
-            return;
-          }
-          this._initializeData(data);
-        });
-      return;
+    this.id = parseInt(this._route.snapshot.paramMap.get('id'));
+    // const id = parseInt(this._route.snapshot.paramMap.get('id'));
+    this.pageMode = this._route.snapshot.data.pageMode;
+
+    this.pageLabel =  this.pageMode == 1 ? 'Add String Interpolation' : 'Edit String Interpolation';
+
+    if (this.pageMode === 2) {
+      if (this.id) {
+        this._portalService.getStringInterpolation(this.id)
+          .pipe(takeUntil(this._onDestroy$))
+          .subscribe(data => {
+            if (!data) {
+              return;
+            }
+            this._initializeData(data);
+          });
+        return;
+      }
     }
-    this.pageLabel = 'Add String Interpolation';
   }
 
   ngOnInit(): void {
@@ -75,35 +85,45 @@ export class StringInterpolationComponent implements OnInit, OnDestroy {
   }
 
   save(): void {
-    const data = Object.assign({}, this.form.value);
-    data.isActive = data.isActive ? 'Y' : 'N'; 
-
-    if (this.userId) {
-      data.updatedBy = parseInt(localStorage.getItem('user_id'));
-      this._updateInterpolation(data);
+    if (!this.formControls.transactionCode.value) {
+      this.formControls.transactionCode.markAsTouched();
+      this.formControls.transactionCode.updateValueAndValidity();
+      return;
+    }
+    if (!this.formControls.description.value) {
+      this.formControls.description.markAsTouched();
+      this.formControls.description.updateValueAndValidity();
+      return;
+    }
+    if (!this.formControls.notificationType.value) {
+      this.formControls.notificationType.markAsTouched();
+      this.formControls.notificationType.updateValueAndValidity();
       return;
     }
 
-    data.createdBy = parseInt(localStorage.getItem('user_id'));
-    this._createInterpolation(data);
-  }
+    const data = Object.assign({}, this.form.value);
+    data.isActive = data.isActive ? 'Y' : 'N'; 
 
-  private _createInterpolation(data: IStringInterpolation): void {
-    this._portalService.createInterpolation(data)
+    if (this.pageMode === 1) {
+      data.createdBy = parseInt(localStorage.getItem('user_id'));
+            
+      this._portalService.createInterpolation(data)
       .pipe(takeUntil(this._onDestroy$))
       .subscribe(data => {
         if (!data) {
           return;
         }
-        let snackBarRef = this._snackBar.open('String interpolation has been successfully saved.', 'Close');
+        let snackBarRef = this._snackBar.open('String interpolation has been successfully added.', 'Close');
         snackBarRef.afterDismissed().subscribe(() => {
-          this._router.navigate([`apps/interpolations/edit/${data.id}`]);
+          this._router.navigateByUrl('apps/interpolations');
         });
       });
-  }
-
-  private _updateInterpolation(data: IStringInterpolation): void {
-    this._portalService.updateInterpolation(this.userId, data)
+    }
+    else if (this.pageMode === 2) {
+      data.updatedBy = parseInt(localStorage.getItem('user_id'));
+      data.id = this.id;
+      
+      this._portalService.updateInterpolation(this.id, data)
       .pipe(takeUntil(this._onDestroy$))
       .subscribe(data => {
         if (!data) {
@@ -114,6 +134,7 @@ export class StringInterpolationComponent implements OnInit, OnDestroy {
           window.location.reload();
         });
       });
+    }
   }
 
   private _initializeData(data: any): void {
