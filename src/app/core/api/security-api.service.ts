@@ -50,7 +50,7 @@ export class securityApi extends BaseApi {
     return this.put<IUser>(`${this._apiUrl}/user/reset-password/${userId}/${newPassword}`, {});
   }
   
-  postNotifRole(roleId: number, id?: number, assetName?: string, editMode?: boolean ): Observable<any> {
-    return this.post<any>(`${this._apiUrl}/user/asset-profile-notif/${roleId}/${id}/${assetName}/${editMode}`,{});
-  }
+  postNotifRole(data: {roleIds: number[], id?: number, assetName?: string, editMode?: boolean }): Observable<any> {
+    return this.post<any>(`${this._apiUrl}/user/asset-profile-notif`, data);
+}
 }

@@ -1,8 +1,8 @@
-import { Component, OnDestroy, OnInit,ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, Validators, FormBuilder, UntypedFormControl  } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute,Router } from '@angular/router';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, takeUntil, tap , Observable, switchMap } from 'rxjs';
 import { IChart } from 'src/app/core/models/chart';
 import { ICostCenter } from 'src/app/core/models/cost-center';
 import { ILibraryTypes } from 'src/app/core/models/library-types';
@@ -10,6 +10,7 @@ import { PortalService } from 'src/app/core/services/portal.service';
 import { IAssetProfile } from 'src/app/core/models/asset-profile';
 import { SecurityService } from 'src/app/core/services/security.service';
 import {IRole} from 'src/app/core/models/role'
+import { RoleNames } from 'src/app/core/enums/role.enums';
 
 @Component({
   selector: 'vex-module',
@@ -32,8 +33,9 @@ export class AssetProfileComponent implements OnInit, OnDestroy {
  createdAt: Date;
  updatedBy: string;
  updatedAt: Date;
- roleId: number;
+ roleIds: number[] = [];
  roles: IRole[] = [];
+ isAdmin: boolean = false;
 
  get formControls() {
   return {
@@ -53,7 +55,7 @@ export class AssetProfileComponent implements OnInit, OnDestroy {
   private _onDestroy$ = new Subject<void>();
 
   constructor(
-    private _fb: FormBuilder,
+   private _fb: FormBuilder,
    private _route:ActivatedRoute,
    private _portalService: PortalService,
    private _securityService: SecurityService,
@@ -77,16 +79,14 @@ export class AssetProfileComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
   this.userId = parseInt(localStorage.getItem('user_id'));
   this.id = parseInt(this._route.snapshot.paramMap.get('id'));
-  this._getRoles();
-  this._checkFormFields();
-    this._portalService.getChartAccounts()
-    .pipe(takeUntil(this._onDestroy$))
-    .subscribe(data => {
-      if (!data) {
-        return;
-      }
-      this.chartofAccounts = data;
-    })
+
+  this._getRoles().pipe(
+    tap(() => this._checkFormFields()),  
+    switchMap(() => this._portalService.getChartAccounts()),
+    takeUntil(this._onDestroy$)
+  ).subscribe(chartAccounts => {
+    this.chartofAccounts = chartAccounts;
+  })
 
     this._portalService.getLibraryTypes()
     .pipe(takeUntil(this._onDestroy$))
@@ -134,7 +134,7 @@ export class AssetProfileComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this._onDestroy$.next();
-    this._onDestroy$.complete();
+    this._onDestroy$.complete();  
   }
 
   private _checkFormFields(): void {
@@ -145,35 +145,54 @@ export class AssetProfileComponent implements OnInit, OnDestroy {
         return;
       }
       const roleAuthorized = this._getRoleAuthorization(data)
+
       if (roleAuthorized.name === 'ARMD Librarian') {
         const padLibrarianRole = this.roles.find(role => role.name === 'PAD Librarian');
         if (padLibrarianRole) {
-          this.roleId = padLibrarianRole.id;
+          this.roleIds.push(padLibrarianRole.id); 
           this._disableFormFields(roleAuthorized);
         }
       }
       else if (roleAuthorized.name === 'PAD Librarian') {
         const armdLibrarianRole = this.roles.find(role => role.name === 'ARMD Librarian');
         if (armdLibrarianRole) {
-          this.roleId = armdLibrarianRole.id;
+          this.roleIds.push(armdLibrarianRole.id);
           this._disableFormFields(roleAuthorized);
         }
+      }
+
+      else if (roleAuthorized.name === 'Administrator') {
+        this.isAdmin = true;
+        const armdLibrarianRole = this.roles.find(role => role.name === 'ARMD Librarian');
+        const padLibrarianRole = this.roles.find(role => role.name === 'PAD Librarian');
+        this.roleIds.push(armdLibrarianRole.id, padLibrarianRole.id)
+      }
+      else {
+        this._disableFormFields(roleAuthorized);
       }
     });
 }
   
   private _addAsset(data: IAssetProfile): void {
+    data.statusDate = new Date();
     this._portalService.addAssetProfile(data)
     .pipe(takeUntil(this._onDestroy$))
     .subscribe(data => {
       if(!data){
         return;
       }
+      
       this.id = data.id;
-      this._securityService.postNotifRole(this.roleId,this.id,data.name, this.isEditMode)
+      const notifData = {
+        roleIds: this.roleIds, 
+        id: this.id,
+        assetName: data.name,
+        editMode: this.isEditMode,
+        isAdmin: this.isAdmin
+      };
+      this._securityService.postNotifRole(notifData)
       .pipe(takeUntil(this._onDestroy$))
       .subscribe(data => {
-
         if(!data){
           return;
         }
@@ -193,9 +212,15 @@ export class AssetProfileComponent implements OnInit, OnDestroy {
       if(!data){
         return;
       }
-   
       this.id = data.result.id;
-      this._securityService.postNotifRole(this.roleId,this.id,data.result.name,this.isEditMode)
+      const notifData = {
+        roleIds: this.roleIds, 
+        id: this.id,
+        assetName: data.result.name,
+        editMode: this.isEditMode,
+        isAdmin: this.isAdmin
+      };
+      this._securityService.postNotifRole(notifData)
       .pipe(takeUntil(this._onDestroy$))
       .subscribe(data => {
         if(!data){
@@ -241,47 +266,52 @@ export class AssetProfileComponent implements OnInit, OnDestroy {
     this.statusDate = assetData.statusDate
    }
           
-   
    private _getRoleAuthorization(roles: any[]): any {
-    const relevantRoles = roles.filter(role => role.name === 'ARMD Librarian' || role.name === 'PAD Librarian');
+  const relevantRoles = roles.filter(role => this.roles.some(r => r.name === role.name));
     if (relevantRoles.length > 0) {
       const firstRole = relevantRoles.reduce((minRole, currentRole) => minRole.id < currentRole.id ? minRole : currentRole);
       return firstRole;
     }
-
-    else {
+    else { 
       this._router.navigate(['/pages/error-401']); 
     }
   }
- 
-  private _disableFormFields(role: any): any{
-    if(role.name == 'ARMD Librarian'){
-      const fieldsToDisable = ['rcaglId', 'rcaSLId', 'costcenter', 'economiclife', 'residuallife'];
-      fieldsToDisable.forEach(field => {
-        const control = this.form.get(field);
-        if (control) {
-          control.disable();
-        }
-  });
-    } else if(role.name == 'PAD Librarian'){
-      const fieldsToDisable =['name', 'assetCategoryId', 'assetClassId', 'description'];
-      fieldsToDisable.forEach(field => {
-        const control = this.form.get(field);
-        if (control) {
-          control.disable();
-        }
-      })
-    }
-}
 
-private  _getRoles () :void{
-  this._portalService.getRoles()
-  .pipe(takeUntil(this._onDestroy$))
-  .subscribe(data => {
-    if(!data) {
-      return;
+  private _disableFormFields(role: IRole): void {
+    let fieldsToDisable: string[] = [];
+    switch (role.name) {
+      case RoleNames.ARMDLibrarian:
+        fieldsToDisable = ['rcaglId', 'rcaSLId', 'costcenter', 'economiclife', 'residuallife'];
+        break;
+      case RoleNames.PADLibrarian:
+        fieldsToDisable = ['name', 'assetCategoryId', 'assetClassId', 'description'];
+        break;
+      case RoleNames.Administrator:
+        fieldsToDisable = [''];
+        break;
+      default: 
+        fieldsToDisable = ['rcaglId', 'rcaSLId', 'costcenter', 'economiclife', 'residuallife','name', 'assetCategoryId', 'assetClassId', 'description', 'isActive'];
+        break;
     }
-    this.roles = data;
-  });
-}
+
+    fieldsToDisable.forEach(field => {
+      const control = this.form.get(field);
+      if (control)
+      {
+        control.disable();
+      }
+    });
+  }
+
+  private _getRoles(): Observable<IRole[]> {
+    return this._portalService.getRoles().pipe(
+      tap(roles => {
+        if (!roles) {
+          throw new Error('No roles found');
+        }
+        this.roles = roles;
+      }),
+      takeUntil(this._onDestroy$)
+    );
+  }
 }
