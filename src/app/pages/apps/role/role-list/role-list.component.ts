@@ -113,7 +113,7 @@ export class RoleListComponent implements OnInit, OnDestroy, AfterViewInit {
     this._router.navigate([`apps/roles/${data.id}`]);
   }
 
-  add() {
+  add(): void {
     this._router.navigate(['apps/roles/add']);
   }
 

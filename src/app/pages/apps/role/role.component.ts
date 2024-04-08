@@ -75,7 +75,7 @@ export class RoleComponent implements OnInit {
       name: ['', Validators.required],
       description: ['', Validators.required],
       isActive:  [this.isActive],
-      updatedBy: [this.user],
+      updatedBy: [this.userId],
       rolePermissionModel: this._fb.array([
         this.moduleGroup
       ])
@@ -153,7 +153,7 @@ export class RoleComponent implements OnInit {
       isUpdate: [list?.isUpdate || false],
       createdAt: [list?.createdAt],
       createdBy: [list?.createdBy],
-      updatedBy: [list.updatedBy],
+      updatedBy: [list?.updatedBy || this.userId],
       isAdded: [true]
     })
         
@@ -162,14 +162,14 @@ export class RoleComponent implements OnInit {
 
   onSubmit(): void{   
     this.form.value.isActive = this.isActive ? 'Y' : 'N'; 
-    this.form.value.createdBy = this.user.id;
+    this.form.value.createdBy = this.userId;
     if (!this.isEditMode) {
       const data = Object.assign({}, this.form.value);
       this._addRole(data)
     } else {
-      this.user = this.form.get('updatedBy').patchValue(this.userId)
+      this.form.get('updatedBy').patchValue(this.userId);
       const data = Object.assign({}, this.form.value);
-      this._updateRole(data)
+      this._updateRole(data);
     }
 }
 
@@ -226,20 +226,7 @@ export class RoleComponent implements OnInit {
       complete: () => {
         this.form.value.rolePermissionModel.forEach(rolePermission => {
           rolePermission.roleId = this.responseData.id;
-          this._portalService.addPermission(rolePermission).subscribe({
-            next: (data) => {
-              // console.log('Permission/s added successfully:');
-              // this._snackbar.open('Permission added successfully.', 'Close', {
-              //   duration: 5000,
-              // });
-            },
-            error: (error) => {
-              // console.error('Error adding role permission:');
-              // this._snackbar.open('Error adding role permission.', 'Close', {
-              //   duration: 5000,
-              // });
-            }
-          })
+          this._portalService.addPermission(rolePermission).subscribe()
         });
       }
       }
