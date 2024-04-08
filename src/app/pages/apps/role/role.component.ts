@@ -44,10 +44,15 @@ export class RoleComponent implements OnInit {
   isActive:boolean;
   role: any;
   permissionList: IPermission[];
+  isEditMode: boolean = false;
+  id: number;
+  responseData: any
 
   get formControls() {
     return {
-      name: this.form.get('name')
+      name: this.form.get('name'),
+      description: this.form.get('description'),
+      isActive: this.form.get('isActive')
     };
   }
 
@@ -69,7 +74,7 @@ export class RoleComponent implements OnInit {
       roleId: Number(this._roleId),
       name: ['', Validators.required],
       description: ['', Validators.required],
-      isActive:  [this.isActiveModel],
+      isActive:  [this.isActive],
       updatedBy: [this.user],
       rolePermissionModel: this._fb.array([
         this.moduleGroup
@@ -92,6 +97,10 @@ export class RoleComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.id = parseInt(this._route.snapshot.paramMap.get('id'));
+    if (this.id) {
+      this.isEditMode = true;
+    }
     this._portalService.getRoleId(Number(this._roleId))
     .pipe(takeUntil(this._onDestroy$))
     .subscribe((data: any) => {
@@ -139,8 +148,8 @@ export class RoleComponent implements OnInit {
       roleId: [list.roleId ?? Number(this._roleId)],
       moduleId: [list.moduleId ?? list.id],
       name: [list?.moduleName || list?.name],
-      isCreate: [list?.isCreate || true],
-      isRead: [list?.isRead || true],
+      isCreate: [list?.isCreate || false],
+      isRead: [list?.isRead || false],
       isUpdate: [list?.isUpdate || false],
       createdAt: [list?.createdAt],
       createdBy: [list?.createdBy],
@@ -152,25 +161,17 @@ export class RoleComponent implements OnInit {
   }
 
   onSubmit(): void{   
-    this.user = this.form.get('updatedBy').patchValue(this.userId)
-    this._portalService.updaterolepermission(this.form.value).subscribe({
-      next: (data) => {
-        console.log('Role updated successfully:', data);
-        this._snackbar.open('Role updated successfully.', 'Close', {
-          duration: 5000,
-        });
-      },
-      error: (error) => {
-        console.error('Error updating role:', error);
-        this._snackbar.open('Error updating role.', 'Close', {
-          duration: 5000,
-        });
-      }
-      }
-    );
-
-  }
-  
+    this.form.value.isActive = this.isActive ? 'Y' : 'N'; 
+    this.form.value.createdBy = this.user.id;
+    if (!this.isEditMode) {
+      const data = Object.assign({}, this.form.value);
+      this._addRole(data)
+    } else {
+      this.user = this.form.get('updatedBy').patchValue(this.userId)
+      const data = Object.assign({}, this.form.value);
+      this._updateRole(data)
+    }
+}
 
   addModuleBtn() : void{
     let dlg = this._dialog.open(AddModuleComponent, {
@@ -203,5 +204,63 @@ export class RoleComponent implements OnInit {
 
   close(): void{
     this._router.navigateByUrl('apps/roles');
+  }
+
+  private _addRole(data: IRole): void {
+    this._portalService.addRole(data).subscribe({
+      next: (data) => {
+        let snackBarRef = this._snackbar.open('Role added successfully.', 'Close', {
+          duration: 5000,
+        });
+        snackBarRef.afterDismissed().subscribe(() => {
+          this._router.navigate([`apps/roles/`]);
+        });
+        this.responseData = data.result;
+      },
+      error: (error) => {
+        console.error('Error adding role:', error);
+        this._snackbar.open('Error adding role.', 'Close', {
+          duration: 5000,
+        });
+      },
+      complete: () => {
+        this.form.value.rolePermissionModel.forEach(rolePermission => {
+          rolePermission.roleId = this.responseData.id;
+          this._portalService.addPermission(rolePermission).subscribe({
+            next: (data) => {
+              // console.log('Permission/s added successfully:');
+              // this._snackbar.open('Permission added successfully.', 'Close', {
+              //   duration: 5000,
+              // });
+            },
+            error: (error) => {
+              // console.error('Error adding role permission:');
+              // this._snackbar.open('Error adding role permission.', 'Close', {
+              //   duration: 5000,
+              // });
+            }
+          })
+        });
+      }
+      }
+    );
+  }
+  private _updateRole(data: IRole): void {
+    this._portalService.updaterolepermission(data).subscribe({
+      next: (data) => {
+        // console.log(data)
+        let snackBarRef = this._snackbar.open('Role updated successfully.', 'Close');
+        snackBarRef.afterDismissed().subscribe(() => {
+          this._router.navigate([`apps/roles/`]);
+        });
+      },
+      error: (error) => {
+        console.error('Error updating role:', error);
+        this._snackbar.open('Error updating role.', 'Close', {
+          duration: 5000,
+        });
+      }
+      }
+    );
   }
 }

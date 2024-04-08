@@ -58,6 +58,7 @@ export class RoleListComponent implements OnInit, OnDestroy, AfterViewInit {
   searchCtrl = new UntypedFormControl();
   labels = aioTableLabels;
   isListLoading = true;
+  isEditMode: boolean = false;
 
   private _onDestroy$ = new Subject<void>();
 
@@ -110,6 +111,10 @@ export class RoleListComponent implements OnInit, OnDestroy, AfterViewInit {
 
   view(data: any): void {
     this._router.navigate([`apps/roles/${data.id}`]);
+  }
+
+  add() {
+    this._router.navigate(['apps/roles/add']);
   }
 
   onFilterChange(value: string): void {
