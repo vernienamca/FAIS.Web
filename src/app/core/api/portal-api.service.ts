@@ -39,6 +39,14 @@ export class PortalApi extends BaseApi {
         return this.get<IRole>(`${this._apiUrl}/permission/role/${id}`);
     }
 
+    addRole(role: any): Observable<any> {
+        return this.post<any>(`${this._apiUrl}/role`, role);
+    }
+
+    addPermission(data: any): Observable<any> {
+        return this.post<any>(`${this._apiUrl}/permission`, data);
+    }
+
     updaterolepermission(data: any): Observable<any> {
         return this.put<any>(`${this._apiUrl}/permission/role`, data);
     }

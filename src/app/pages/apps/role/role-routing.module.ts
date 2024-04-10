@@ -21,6 +21,13 @@ const routes: VexRoutes = [
       pageMode: PageMode.Edit,
       toolbarShadowEnabled: false
     }
+  },
+  {
+    path: 'add',
+    component: RoleComponent,
+    data: {
+      toolbarShadowEnabled: false
+    }
   }
 ];
 
