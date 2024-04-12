@@ -210,15 +210,15 @@ export class PortalApi extends BaseApi {
     }
 
     getAlerts(): Observable<IAlert[]> {
-        return this.get<IAlert>(`${this._apiUrl}/alert/get`);
+        return this.get<IAlert>(`${this._apiUrl}/notification/templates`);
     }
 
     getAlert(id: number): Observable<IAlert> {
-        return this.get<IAlert>(`${this._apiUrl}/alert/${id}`);
+        return this.get<IAlert>(`${this._apiUrl}/notification//templates/${id}`);
     }
 
     updateAlert(data: any): Observable<any> {
-        return this.put<any>(`${this._apiUrl}/proformaentry`, data);
+        return this.put<any>(`${this._apiUrl}/notification`, data);
     }
     exportAlerts(): Observable<HttpResponse<Blob>>  {
         return this.get(`${this._apiUrl}/alert/export`,  
