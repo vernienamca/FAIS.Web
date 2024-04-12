@@ -1,6 +1,6 @@
 <vex-page-layout @stagger>
-  <vex-secondary-toolbar>
-    <vex-breadcrumbs [crumbs]="['System Management', 'Roles', 'Edit Role']"></vex-breadcrumbs>
+  <vex-secondary-toolbar [current]="isEditMode ? 'Edit Role' : 'Add Role'">
+    <vex-breadcrumbs [crumbs]="['System Management', 'Roles', isEditMode ? 'Edit Role' : 'Add Role' ]"></vex-breadcrumbs>
   </vex-secondary-toolbar>
   <vex-page-layout-content class="container" [class.container]="layoutCtrl.value === 'boxed'" [class.px-gutter]="layoutCtrl.value === 'fullwidth'">
     <form id="roleField" [formGroup]="form" (ngSubmit)="onSubmit()">
@@ -11,7 +11,7 @@
             <mat-icon class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" svgIcon="mat:save_as"></mat-icon>
             <span>Save</span>
           </button>
-          <button color="primary" mat-stroked-button type="button" [routerLink]="['/apps/users']">
+          <button color="primary" mat-stroked-button type="button" [routerLink]="['/apps/roles']">
             <mat-icon class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" svgIcon="mat:close"></mat-icon> Close
           </button>
         </div>

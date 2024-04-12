@@ -22,6 +22,7 @@ export interface IUser {
 
 export interface IUserRole {
   id: number;
+  userRoleId: number;
   name: string;
   description: string;
   isActive: boolean;

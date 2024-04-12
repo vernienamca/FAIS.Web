@@ -122,7 +122,7 @@ export class AddRoleDialogComponent implements OnInit, OnDestroy, AfterViewInit 
 
   addRole(role: IUserRole): void {
     role.isNew = true;
-    role.isActive = false;
+    role.isActive = true;
     role.statusDate = null;
     role.createdBy = this.userId;
     this._portalService.addedUserRole$.next(role);

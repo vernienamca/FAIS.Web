@@ -15,6 +15,7 @@ import { IProFormaEntry } from '../models/pro-forma-entry';
 import { IChart } from '../models/chart';
 import { ILibraryTypes } from '../models/library-types';
 import { IAssetProfile } from '../models/asset-profile';
+import { IPermission } from '../models/permission';
 
 @Injectable({
   providedIn: 'root'
@@ -48,6 +49,14 @@ export class PortalService {
 
   getRoleId(id: number): Observable<IRole[]> {
     return this._portalApi.getRoleId(id);
+  }
+
+  addRole(role: any): Observable<any> {
+    return this._portalApi.addRole(role);
+  }
+
+  addPermission(data: any): Observable<IPermission[]> {
+    return this._portalApi.addPermission(data);
   }
 
   updaterolepermission(data: any): Observable<IRole[]> {
@@ -129,9 +138,6 @@ export class PortalService {
 
   getCostCenters(): Observable<ICostCenter[]> {
     return this._portalApi.getCostCenters();
-  }
-  getCostCenter(id: number): Observable<ICostCenter> {
-    return this._portalApi.getCostCenter(id);
   }
 
   getChartAccounts(): Observable<IChart[]> {
