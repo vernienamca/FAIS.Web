@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { Observable, of, ReplaySubject, Subject } from 'rxjs';
+import { Observable, ReplaySubject, Subject } from 'rxjs';
 import { filter, finalize, takeUntil } from 'rxjs/operators';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
@@ -42,15 +42,15 @@ export class CostCentersListComponent implements OnInit, OnDestroy, AfterViewIni
   @Input()
   columns: TableColumn<ICostCenter>[] = [
     { label: 'FG Code', property: 'fgCode', type: 'text', visible: true },
-    { label: 'Cost Center No.', property: 'number', type: 'text', visible: true },
-    { label: 'Cost Center Name', property: 'name', type: 'text', visible: true },
+    { label: 'MC Number', property: 'mcNumber', type: 'text', visible: true },
+    { label: 'Long Name', property: 'longName', type: 'text', visible: true },
     { label: 'Short Name', property: 'shortName', type: 'text', visible: true }
   ];
 
   layoutCtrl = new UntypedFormControl('fullwidth');
   subject$: ReplaySubject<ICostCenter[]> = new ReplaySubject<ICostCenter[]>(1);
   data$: Observable<ICostCenter[]> = this.subject$.asObservable();
-  costcenters: ICostCenter[];
+  costCenters: ICostCenter[];
   totalCount: number = 0;
   pageSize = 10;
   pageSizeOptions: number[] = [5, 10, 20, 50];
@@ -60,19 +60,13 @@ export class CostCentersListComponent implements OnInit, OnDestroy, AfterViewIni
   labels = aioTableLabels;      
   isListLoading = true;  
 
-  public filteredUsers: ReplaySubject<string[]> = new ReplaySubject<string[]>(1);
   private _onDestroy$ = new Subject<void>();
 
   get visibleColumns() {
     return this.columns.filter(column => column.visible).map(column => column.property);
   }
 
-  constructor(
-    private _dialog: MatDialog,
-    private _portalService: PortalService,
-    private _router: Router
-  ) {
-  }
+  constructor(private _portalService: PortalService) {}
 
   ngOnInit(): void {
     this._portalService.getCostCenters()
@@ -90,10 +84,10 @@ export class CostCentersListComponent implements OnInit, OnDestroy, AfterViewIni
     this.dataSource = new MatTableDataSource();
     this.data$
       .pipe(filter<ICostCenter[]>(Boolean))
-      .subscribe(costcenters => {
-        this.totalCount = costcenters.length;
-        this.costcenters = costcenters;
-        this.dataSource.data = costcenters;
+      .subscribe(data => {
+        this.totalCount = data.length;
+        this.costCenters = data;
+        this.dataSource.data = data;
       });
 
     this.searchCtrl.valueChanges.pipe(
@@ -143,7 +137,7 @@ export class CostCentersListComponent implements OnInit, OnDestroy, AfterViewIni
   }
 
   onLabelChange(change: MatSelectChange, row: ICostCenter): void {
-    const index = this.costcenters.findIndex(c => c === row);
-    this.subject$.next(this.costcenters);
+    const index = this.costCenters.findIndex(c => c === row);
+    this.subject$.next(this.costCenters);
   }
 }

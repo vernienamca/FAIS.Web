@@ -1,12 +1,6 @@
 export interface ICostCenter {
-    id: number;
     fgCode: string;
-    number: string;
-    name: string;
+    mcNumber: string;
+    longName: string;
     shortName: string;
-    createdBy: string;
-    createdAt: Date;
-    updatedBy?: string;
-    updatedAt?: Date;
 }
-  

@@ -96,7 +96,6 @@ export class AppVersionComponent implements OnInit, OnDestroy {
     this.data$
       .pipe(filter<any[]>(Boolean))
       .subscribe(data => {
-        console.log(data);
         this.totalCount = data.length;
         this.dataSource.data = data;        
       });
