@@ -1,10 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormGroup, Validators, FormBuilder, UntypedFormControl  } from '@angular/forms';
+import { FormGroup, Validators, FormBuilder, UntypedFormControl} from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute,Router } from '@angular/router';
 import { Subject, takeUntil, tap , Observable, switchMap } from 'rxjs';
 import { IChart } from 'src/app/core/models/chart';
-import { ICostCenter } from 'src/app/core/models/cost-center';
+import { MatSelect } from '@angular/material/select';
 import { ILibraryTypes } from 'src/app/core/models/library-types';
 import { PortalService } from 'src/app/core/services/portal.service';
 import { IAssetProfile } from 'src/app/core/models/asset-profile';
@@ -27,7 +27,7 @@ export class AssetProfileComponent implements OnInit, OnDestroy {
  statusDate: Date | null = null;
  statusLabel = 'Active';
  chartofAccounts: IChart[] = [];
- costCenters: ICostCenter[] = [];
+ costCenterType: any [] = [];
  filteredlibraryTypes: ILibraryTypes[] = [];
  createdBy: string;
  createdAt: Date;
@@ -48,7 +48,10 @@ export class AssetProfileComponent implements OnInit, OnDestroy {
     description: this.form.get('description'),
     economicLife: this.form.get('economiclife'),
     residualLife: this.form.get('residuallife'),
-    isActive: this.form.get('isActive')
+    isActive: this.form.get('isActive'),
+    udf1: this.form.get('udf1'), 
+    udf2: this.form.get('udf2'),
+    udf3: this.form.get('udf3')
   };
 }
 
@@ -62,21 +65,24 @@ export class AssetProfileComponent implements OnInit, OnDestroy {
    private _snackBar: MatSnackBar,
    private _router: Router
   ) {
-    this.form = this._fb.group({
-  name: ['', Validators.required], 
-  rcaglId: ['', Validators.required],
-  assetCategoryId: [''],
-  rcaSLId: ['',Validators.required],
-  assetClassId: ['', [Validators.required, Validators.pattern('^[0-9]*$')]],
-  costcenter: ['',Validators.required],
-  description: [''],
-  economiclife: ['',Validators.required],
-  residuallife: ['',Validators.required],
-  isActive: ['Y', []]
+  this.form = this._fb.group({
+    name: ['', Validators.required], 
+    rcaglId: ['', Validators.required],
+    assetCategoryId: [''],
+    rcaSLId: ['',Validators.required],
+    assetClassId: ['', [Validators.required, Validators.pattern('^[0-9]*$')]],
+    costcenter: ['',Validators.required],
+    description: [''],
+    economiclife: ['',Validators.required], 
+    residuallife: ['',Validators.required],
+    isActive: ['Y', []],
+    udf1: [''], 
+    udf2: [''],
+    udf3: [''] 
     });
   }
 
-  ngOnInit(): void {
+  ngOnInit(): void { 
   this.userId = parseInt(localStorage.getItem('user_id'));
   this.id = parseInt(this._route.snapshot.paramMap.get('id'));
 
@@ -97,14 +103,14 @@ export class AssetProfileComponent implements OnInit, OnDestroy {
       const libraryTypesData: ILibraryTypes[] = data;
       this.filteredlibraryTypes = libraryTypesData.filter(type => type.code === 'AST');
     })
-    
-    this._portalService.getCostCenters()
+  
+    this._portalService.getLibraryTypes()
     .pipe(takeUntil(this._onDestroy$))
     .subscribe(data => {
       if(!data) {
         return;
       }
-      this.costCenters = data;
+      this.costCenterType = data.filter(type => type.code =='CCT');
     })
 
     if(this.id){
@@ -256,19 +262,22 @@ export class AssetProfileComponent implements OnInit, OnDestroy {
       rcaglId: assetData.rcaGLId,
       rcaSLId: assetData.rcaslId,
       costcenter: assetData.costCenter,
-      isActive: assetData.isActive === 'Y' ? true : false
+      isActive: assetData.isActive === 'Y' ? true : false,
+      udf1: assetData.udF1,
+      udf2: assetData.udF2,
+      udf3: assetData.udF3
     })
-    this.createdBy = assetData.createdByName
-    this.createdAt = assetData.createdAt
-    this.updatedBy = assetData.updatedByName || 'NA';
-    this.updatedAt = assetData.updatedAt
-    this.statusDate = assetData.statusDate
+      this.createdBy = assetData.createdByName
+      this.createdAt = assetData.createdAt
+      this.updatedBy = assetData.updatedByName || 'NA';
+      this.updatedAt = assetData.updatedAt
+      this.statusDate = assetData.statusDate
    }
 
-   private _getRoleAuthorization(roles: any[]): any {
-  const relevantRoles = roles.filter(role => this.roles.some(r => r.name === role.name));
+  private _getRoleAuthorization(roles: any[]): any {
+    const relevantRoles = roles.filter(role => this.roles.some(r => r.name === role.name));
     if (relevantRoles.length > 0) {
-      const firstRole = relevantRoles.reduce((minRole, currentRole) => minRole.userId < currentRole.userId ? minRole : currentRole);
+      const firstRole = relevantRoles.reduce((minRole, currentRole) => minRole.userRoleId < currentRole.userRoleId ? minRole : currentRole);
       return firstRole;
     }
     else { 
@@ -289,7 +298,7 @@ export class AssetProfileComponent implements OnInit, OnDestroy {
         fieldsToDisable = [''];
         break;
       default: 
-        fieldsToDisable = ['rcaglId', 'rcaSLId', 'costcenter', 'economiclife', 'residuallife','name', 'assetCategoryId', 'assetClassId', 'description', 'isActive'];
+        fieldsToDisable = ['rcaglId', 'rcaSLId', 'costcenter', 'economiclife', 'residuallife','name', 'assetCategoryId', 'assetClassId', 'description', 'isActive','udf1','udf2','udf3'];
         break;
     }
 

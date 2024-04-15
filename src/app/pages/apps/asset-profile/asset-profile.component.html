@@ -67,9 +67,9 @@
   
               <mat-form-field appearance="fill">
                 <mat-label>Cost Center Type</mat-label>
-                <mat-select formControlName="costcenter">
-                  <mat-option *ngFor="let cost of costCenters" [value]="cost.id">
-                    {{ cost.shortName}}
+                <mat-select formControlName="costcenter" >
+                  <mat-option *ngFor="let cost of costCenterType" [value]="cost.id">
+                    {{ cost.description}}
                   </mat-option>
                 </mat-select>
               </mat-form-field>
@@ -91,8 +91,29 @@
                   <mat-label>Residual Life</mat-label>
                   <input matInput formControlName="residuallife">
                 </mat-form-field>
+                
               </div>
             </div>
+
+            <div class="flex flex-col sm:flex-row sm:gap-4">
+              <mat-form-field appearance="fill">
+                <mat-label>UDF1</mat-label>
+                <input matInput formControlName="udf1">
+              </mat-form-field>
+  
+              <mat-form-field appearance="fill">
+                <mat-label>UDF2</mat-label>
+                <input matInput formControlName="udf2">
+              </mat-form-field>
+            </div>
+
+            
+            <div class="flex flex-col sm:flex-row sm:gap-4">
+              <mat-form-field appearance="fill">
+                <mat-label>UDF3</mat-label>
+                <input matInput formControlName="udf3">
+              </mat-form-field>
+              </div>
   
             <div class="flex flex-col sm:flex-row sm:gap-4" [style.margin-left.px]="10" [style.margin-top.px]="50" [style.margin-bottom.px]="30">
               <div [formGroup]="form">

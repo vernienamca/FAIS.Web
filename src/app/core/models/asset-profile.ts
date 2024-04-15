@@ -15,4 +15,7 @@ export interface IAssetProfile {
     updatedAt?: Date;
     createdBy: string;
     updatedBy? :string;
+    udf1?: string;
+    udf2?: string;
+    udf3?: string;
   }

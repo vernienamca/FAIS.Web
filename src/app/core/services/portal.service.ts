@@ -261,7 +261,7 @@ export class PortalService {
     return this._portalApi.updateAssetProfile(id,data);
 }
 
-getAssetProfile(id: number): Observable<IAssetProfile> {
-  return this._portalApi.getAssetProfile(id);
+  getAssetProfile(id: number): Observable<IAssetProfile> {
+    return this._portalApi.getAssetProfile(id);
 }
 }
