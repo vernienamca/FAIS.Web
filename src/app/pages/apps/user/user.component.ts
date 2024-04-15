@@ -77,7 +77,7 @@ export class UserComponent implements OnInit, OnDestroy {
       taFG: ['', []],
       oupFG: ['', []],
       division: ['', []],
-      accountStatus: ['1', [Validators.required]],
+      accountStatus: ['', [Validators.required]],
       statusDate: ['', []],
       accountExpiration: ['', []]
     });
