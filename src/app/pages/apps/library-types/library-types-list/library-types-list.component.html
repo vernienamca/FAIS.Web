@@ -33,24 +33,6 @@
       </div>
       <mat-progress-bar *ngIf="isListLoading" mode="indeterminate" color="primary"></mat-progress-bar>
       <table @stagger [dataSource]="dataSource" class="w-full" mat-table matSort>
-        <!-- Checkbox Column -->
-        <ng-container matColumnDef="checkbox">
-          <th *matHeaderCellDef mat-header-cell>
-            <mat-checkbox (change)="$event ? masterToggle() : null"
-                          [checked]="selection.hasValue() && isAllSelected()"
-                          [indeterminate]="selection.hasValue() && !isAllSelected()"
-                          color="primary">
-            </mat-checkbox>
-          </th>
-          <td *matCellDef="let row" class="w-4" mat-cell>
-            <mat-checkbox (change)="$event ? selection.toggle(row) : null"
-                          (click)="$event.stopPropagation()"
-                          [checked]="selection.isSelected(row)"
-                          color="primary">
-            </mat-checkbox>
-          </td>
-        </ng-container>
-
          <!-- Text Columns -->
         <ng-container *ngFor="let column of columns; trackBy: trackByProperty">
           <ng-container *ngIf="column.type === 'text'" [matColumnDef]="column.property">
@@ -86,7 +68,7 @@
           </td>
         </ng-container>
         <ng-container matColumnDef="actions">
-          <th *matHeaderCellDef mat-header-cell mat-sort-header>ACTIONS</th>
+          <th *matHeaderCellDef mat-header-cell mat-sort-header>ACTION</th>
           <td *matCellDef="let row" class="w-10 text-secondary" mat-cell>
             <button (click)="$event.stopPropagation()" [matMenuTriggerData]="{ librarytypeoption: row }" [matMenuTriggerFor]="actionsMenu"
               mat-icon-button type="button">
