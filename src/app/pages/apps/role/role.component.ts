@@ -41,10 +41,10 @@ export class RoleComponent implements OnInit {
   modifiedByName:string;
   dateModified:Date;
   isActiveModel:boolean;
-  isActive:boolean;
+  isActive:boolean = true;
   role: any;
   permissionList: IPermission[];
-  isEditMode: boolean = false;
+  isEditMode:boolean = false;
   id: number;
   responseData: any
 

@@ -124,12 +124,8 @@
                                     </mat-form-field>
                                     <mat-form-field appearance="fill" class="flex-auto">
                                         <mat-label>Enforce Password History</mat-label>
-                                        <mat-select formControlName="enforcePasswordHistory" required>
-                                            <mat-option value="3">3 Password Remembered</mat-option>
-                                            <mat-option value="5">5 Password Remembered</mat-option>
-                                            <mat-option value="10">10 Password Remembered</mat-option>
-                                        </mat-select>
-                                        <mat-hint>The policy setting determines the number of unique new passwords can be re-used.</mat-hint>
+                                            <input matInput type="number" formControlName="enforcePasswordHistory" required>
+                                            <mat-hint>The policy setting determines the number of unique new passwords that can be re-used.</mat-hint>
                                         <mat-error *ngIf="formControls.enforcePasswordHistory.touched && formControls.enforcePasswordHistory.invalid">
                                             <span *ngIf="formControls.enforcePasswordHistory.getError('required')">
                                                 Enforce password history is required

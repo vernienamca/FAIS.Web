@@ -14,6 +14,7 @@ import { UntypedFormControl } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { PortalService } from 'src/app/core/services/portal.service';
 import { IRole } from 'src/app/core/models/role';
+import { RoleStatusEnum } from 'src/app/core/enums/role-status.enum';
 import { Router } from '@angular/router';
 
 @UntilDestroy()
@@ -41,8 +42,8 @@ export class RoleListComponent implements OnInit, OnDestroy, AfterViewInit {
   columns: TableColumn<IRole>[] = [
     { label: 'Role Name', property: 'name', type: 'text', visible: true, cssClasses: ['font-medium'] },
     { label: 'Description', property: 'description', type: 'text', visible: true },
-    { label: 'Modified By', property: 'updatedByName', type: 'text', visible: true },
-    { label: 'Date Modified', property: 'updatedAt', type: 'text', visible: true },
+    { label: 'Status', property: 'isActive', type: 'text', visible: true },
+    { label: 'Status Date', property: 'statusDate', type: 'text', visible: true },
     { label: 'Actions', property: 'actions', type: 'button', visible: true }
   ];
 
@@ -59,6 +60,8 @@ export class RoleListComponent implements OnInit, OnDestroy, AfterViewInit {
   labels = aioTableLabels;
   isListLoading = true;
   isEditMode: boolean = false;
+  roleStatusEnum = RoleStatusEnum;
+
 
   private _onDestroy$ = new Subject<void>();
 
