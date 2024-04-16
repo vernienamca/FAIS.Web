@@ -24,9 +24,11 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { AssetProfileListComponent } from './asset-profile-list/asset-profile-list.component';
 import { AssetProfileRoutingModule } from './asset-profile-routing.module';
+import { AssetProfileComponent } from './asset-profile.component';
+import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 
 @NgModule({
-  declarations: [AssetProfileListComponent],
+  declarations: [AssetProfileListComponent, AssetProfileComponent],
   imports: [
     CommonModule,
     AssetProfileRoutingModule,
@@ -52,7 +54,8 @@ import { AssetProfileRoutingModule } from './asset-profile-routing.module';
     MatSnackBarModule,
     MatFormFieldModule,
     MatInputModule,
-    MatSlideToggleModule
+    MatSlideToggleModule,
+    NgxMatSelectSearchModule
   ]
 })
 export class AssetProfileModule {

@@ -211,7 +211,6 @@ export class UserComponent implements OnInit, OnDestroy {
       if (!data) {
         return;
       }
-      console.log(data);
       this.userRoles = data;
       this.userRoleTabLabel = `User Roles (${data?.length})`;
       this._securityService.userRoles$.next(data);

@@ -44,7 +44,7 @@ export class AssetProfileListComponent implements OnInit, OnDestroy, AfterViewIn
     { label: 'Asset Category', property: 'category', type: 'text', visible: true },
     { label: 'Rca Gl', property: 'rcaGLId', type: 'text', visible: true },
     { label: 'Sl No.', property: 'rcaslId', type: 'text', visible: true },
-    { label: 'Economic Life', property: 'costCenter', type: 'text', visible: true },
+    { label: 'Economic Life', property: 'economicLife', type: 'text', visible: true },
     { label: 'Residual Life', property: 'residualLife', type: 'text', visible: true},
     { label: 'Status', property: 'isActive', type: 'badge', visible: true },
     { label: 'Actions', property: 'actions', type: 'button', visible: true }
@@ -75,7 +75,7 @@ export class AssetProfileListComponent implements OnInit, OnDestroy, AfterViewIn
   }
 
   ngOnInit(): void {
-    this._portalService.getAssetProfile()
+    this._portalService.getAssetProfiles()
     .pipe(
       takeUntil(this._onDestroy$),
       finalize(() => this.isListLoading = false)
