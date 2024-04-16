@@ -3,7 +3,7 @@
     <div [class.container]="layoutCtrl.value === 'boxed'" [class.px-gutter]="layoutCtrl.value === 'fullwidth'" 
       class="w-full flex flex-col sm:flex-row justify-between">
       <div>
-        <h1 class="title mt-0 mb-1">Cost Center ({{ totalCount }})</h1>
+        <h1 class="title mt-0 mb-1">Cost Centers ({{ totalCount }})</h1>
         <vex-breadcrumbs [crumbs]="['System Libraries', 'Cost Centers']"></vex-breadcrumbs>
       </div>
       <div class="hidden sm:block">
@@ -31,24 +31,6 @@
       </div>
       <mat-progress-bar *ngIf="isListLoading" mode="indeterminate" color="primary"></mat-progress-bar>
       <table @stagger [dataSource]="dataSource" class="w-full" mat-table matSort>
-        <!-- Checkbox Column -->
-        <ng-container matColumnDef="checkbox">
-          <th *matHeaderCellDef mat-header-cell>
-            <mat-checkbox (change)="$event ? masterToggle() : null"
-                          [checked]="selection.hasValue() && isAllSelected()"
-                          [indeterminate]="selection.hasValue() && !isAllSelected()"
-                          color="primary">
-            </mat-checkbox>
-          </th>
-          <td *matCellDef="let row" class="w-4" mat-cell>
-            <mat-checkbox (change)="$event ? selection.toggle(row) : null"
-                          (click)="$event.stopPropagation()"
-                          [checked]="selection.isSelected(row)"
-                          color="primary">
-            </mat-checkbox>
-          </td>
-        </ng-container>
-
          <!-- Text Columns -->
         <ng-container *ngFor="let column of columns; trackBy: trackByProperty">
           <ng-container *ngIf="column.type === 'text'" [matColumnDef]="column.property">
@@ -65,8 +47,7 @@
             </ng-template>
           </ng-container>
         </ng-container>
-  
-        
+
         <tr *matHeaderRowDef="visibleColumns" mat-header-row></tr>
         <tr
             *matRowDef="let row; columns: visibleColumns;"

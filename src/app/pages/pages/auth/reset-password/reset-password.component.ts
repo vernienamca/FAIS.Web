@@ -117,7 +117,7 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
     this.hasAtLeastOneNumber = /[0-9]/.test(event.target.value);
     this.hasAtLeastOneLowercaseChar = /[a-z]/.test(event.target.value);
     this.hasAtLeastOneUppercaseChar = /[A-Z\s]+/.test(event.target.value);
-    this.hasMinSpecialCharacters = (event.target.value.match(/[@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/g) || []).length >= this.minSpecialCharacters;
+    this.hasMinSpecialCharacters = (event.target.value.match(/[@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/]/g) || []).length >= this.minSpecialCharacters;
   }
   
   submit(): void {

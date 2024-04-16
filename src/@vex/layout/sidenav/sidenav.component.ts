@@ -119,7 +119,7 @@ export class SidenavComponent implements OnInit {
             icon: `mat:${item.icon}`,
             groupName: item.groupName
           };
-          if (item.moduleName === 'System Settings') {
+          if (item.url === '/apps/settings') {
             settings = children;
             return;
           }

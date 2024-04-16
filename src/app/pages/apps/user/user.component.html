@@ -134,6 +134,11 @@
                           <mat-option value="2">Inactive</mat-option>
                           <mat-option value="3">Locked</mat-option>
                         </mat-select>
+                        <mat-error *ngIf="formControls.accountStatus.touched && formControls.accountStatus.invalid">
+                          <span *ngIf="formControls.accountStatus.getError('required')">
+                            Account status is required
+                          </span>
+                        </mat-error>
                       </mat-form-field>
                       <mat-form-field appearance="fill" class="flex-auto">
                         <mat-label>Status Date</mat-label>

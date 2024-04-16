@@ -1,8 +1,8 @@
 export const environment = {
   production: false,
-  apiGatewayBaseUrl: 'https://192.168.195.85:443',
+  apiGatewayBaseUrl: 'http://192.168.195.85:3041',
   clientSecretKey: '7D0uTJWdm3+jDfgjbGcC4w==',
   reCaptcha: {
-    siteKey: '6Le2KH4pAAAAAKHJ5woW4auRZCsnA98xL3XBWBU9'
+    siteKey: '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI'
   }
 };

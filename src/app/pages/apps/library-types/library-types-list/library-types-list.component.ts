@@ -43,7 +43,7 @@ export class LibraryTypesListComponent implements OnInit, OnDestroy {
     { label: 'Code', property: 'code', type: 'text', visible: true },
     { label: 'Description', property: 'description', type: 'text', visible: true },
     { label: 'Status', property: 'isActive', type: 'badge', visible: true },
-    { label: 'Actions', property: 'actions', type: 'button', visible: true }
+    { label: 'Action', property: 'actions', type: 'button', visible: true }
   ];
 
   layoutCtrl = new UntypedFormControl('fullwidth');

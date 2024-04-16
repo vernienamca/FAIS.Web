@@ -131,10 +131,6 @@ export class PortalApi extends BaseApi {
         return this.get<ICostCenter[]>(`${this._apiUrl}/costcenter/get`);
     }
 
-    getCostCenter(id: number): Observable<ICostCenter> {
-        return this.get<ICostCenter>(`${this._apiUrl}/costcenter/${id}`);
-    }
-
     getProFormaEntries(): Observable<IProFormaEntry[]> {
         return this.get<IProFormaEntry>(`${this._apiUrl}/proformaentries/get`);
     }
@@ -142,11 +138,11 @@ export class PortalApi extends BaseApi {
     getProFormaEntry(id: number): Observable<IProFormaEntry> {
         return this.get<IProFormaEntry>(`${this._apiUrl}/proformaentries/${id}`);
     }
+
     addProFormaEntry(proformaentry: any): Observable<any> {
         return this.post<any>(`${this._apiUrl}/proformaentries`, proformaentry);
     }
 
-    
     updateProFormaEntry(id: number, data: any): Observable<any> {
         return this.put<any>(`${this._apiUrl}/proformaentries`, data);
     }
@@ -224,7 +220,18 @@ export class PortalApi extends BaseApi {
         return this.put<any>(`${this._apiUrl}/chartofaccounts/${id}`, data);
     }
 
-    getAssetProfile(): Observable<IAssetProfile[]> {
+    getAssetProfiles(): Observable<IAssetProfile[]> {
         return this.get<IAssetProfile[]>(`${this._apiUrl}/assetprofile/get`);
     }
-}
+
+    addAssetProfile(data: any): Observable<any> {
+        return this.post<any>(`${this._apiUrl}/assetprofile/asset-profile`, data);
+    }
+
+    updateAssetProfile(id: number , data:any): Observable<any> {
+        return this.put<any>(`${this._apiUrl}/assetprofile/${id}`,data);
+    }
+
+    getAssetProfile(id: number): Observable<IAssetProfile> {
+  return this.get<IAssetProfile>(`${this._apiUrl}/assetprofile/getbyid?id=${id}`);}
+} 

@@ -3,6 +3,7 @@ import { RouterModule } from '@angular/router';
 import { QuicklinkModule } from 'ngx-quicklink';
 import { VexRoutes } from '../../../../@vex/interfaces/vex-route.interface';
 import { AssetProfileListComponent } from './asset-profile-list/asset-profile-list.component';
+import { AssetProfileComponent } from './asset-profile.component';
 
 const routes: VexRoutes = [
   {
@@ -12,6 +13,21 @@ const routes: VexRoutes = [
       toolbarShadowEnabled: false
     }
   },
+
+  {
+    path: 'edit/:id',
+    component: AssetProfileComponent,
+    data: {
+      toolbarShadowEnabled: false
+    }
+  },
+  {
+    path: 'add',
+    component: AssetProfileComponent,
+    data: {
+      toolbarShadowEnabled: false
+    }
+  }
 ];
 
 @NgModule({
