@@ -47,11 +47,6 @@ mat-form-field {
   --mdc-switch-selected-focus-handle-color: #008000;
 }
 
-.economic-life-field,
-.residual-life-field {
-    width: 100%;
-}
-
 @media (max-width: 600px) {
   .economic-life-field,
   .residual-life-field {

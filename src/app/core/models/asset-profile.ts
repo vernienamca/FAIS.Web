@@ -7,6 +7,7 @@ export interface IAssetProfile {
     rcaGLId: number,
     rcaSLId: number,
     costCenter?: number,
+    assetType: number,
     economicLife?: string,
     residualLife?: string,
     isActive: string;
