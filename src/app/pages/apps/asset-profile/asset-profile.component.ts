@@ -28,6 +28,7 @@ export class AssetProfileComponent implements OnInit, OnDestroy {
  statusLabel = 'Active';
  chartofAccounts: IChart[] = [];
  costCenterType: any [] = [];
+ assetType: any [] = [];
  filteredlibraryTypes: ILibraryTypes[] = [];
  createdBy: string;
  createdAt: Date;
@@ -44,6 +45,7 @@ export class AssetProfileComponent implements OnInit, OnDestroy {
     assetCategory: this.form.get('assetCategoryId'),
     slNo: this.form.get('slno'),
     assetClass: this.form.get('assetClassId'),
+    assetType: this.form.get('assettype'),
     costCenter: this.form.get('costcenter'),
     description: this.form.get('description'),
     economicLife: this.form.get('economiclife'),
@@ -72,6 +74,7 @@ export class AssetProfileComponent implements OnInit, OnDestroy {
     rcaSLId: ['',Validators.required],
     assetClassId: ['', [Validators.required, Validators.pattern('^[0-9]*$')]],
     costcenter: ['',Validators.required],
+    assetType: ['',Validators.required],
     description: [''],
     economiclife: ['',Validators.required], 
     residuallife: ['',Validators.required],
@@ -97,20 +100,12 @@ export class AssetProfileComponent implements OnInit, OnDestroy {
     this._portalService.getLibraryTypes()
     .pipe(takeUntil(this._onDestroy$))
     .subscribe(data => {
-      if (!data){
-        return;
-      }
-      const libraryTypesData: ILibraryTypes[] = data;
-      this.filteredlibraryTypes = libraryTypesData.filter(type => type.code === 'AST');
-    })
-  
-    this._portalService.getLibraryTypes()
-    .pipe(takeUntil(this._onDestroy$))
-    .subscribe(data => {
       if(!data) {
         return;
       }
       this.costCenterType = data.filter(type => type.code =='CCT');
+      this.assetType = data.filter(type => type.code =='AT');
+      this.filteredlibraryTypes = data.filter(type => type.code === 'AST');
     })
 
     if(this.id){
@@ -211,6 +206,7 @@ export class AssetProfileComponent implements OnInit, OnDestroy {
 }
 
   private _updateAsset(data: IAssetProfile): void{
+    data.statusDate = new Date();
     this._portalService.updateAssetProfile(this.id,data)
     .pipe(takeUntil(this._onDestroy$))
     .subscribe(data => {
@@ -252,6 +248,7 @@ export class AssetProfileComponent implements OnInit, OnDestroy {
 
   private _initializeData(data: any): void {
     const assetData = data.result
+    console.log('asssetData initialize', assetData)
     this.form.patchValue({
       name: assetData.name,
       assetCategoryId: assetData.categoryId,
@@ -262,6 +259,7 @@ export class AssetProfileComponent implements OnInit, OnDestroy {
       rcaglId: assetData.rcaGLId,
       rcaSLId: assetData.rcaslId,
       costcenter: assetData.costCenter,
+      assetType: assetData.assetType,
       isActive: assetData.isActive === 'Y' ? true : false,
       udf1: assetData.udF1,
       udf2: assetData.udF2,
