@@ -82,7 +82,7 @@ export class LibraryTypesComponent implements OnInit, OnDestroy{
           description: data.description || '',
           isActive: data.isActive === 'Y',
         });
-        this.form.get('name').setValue(data.id, data.name)
+        this.form.get('name').setValue(data.name, data.name)
         this.statusLabel = data.isActive === 'Y' ? 'Active' : 'Inactive'; 
         this.createdBy = data.createdBy;
         this.createdAt = data.createdAt;
