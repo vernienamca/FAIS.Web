@@ -1,10 +1,10 @@
 <vex-page-layout>
   <vex-page-layout-header class="pb-16 flex flex-col items-start justify-center">
     <div [class.container]="layoutCtrl.value === 'boxed'" [class.px-gutter]="layoutCtrl.value === 'fullwidth'" 
-    class="w-full flex flex-col sm:flex-row justify-between">
+      class="w-full flex flex-col sm:flex-row justify-between">
       <div>
-        <h1 class="title mt-0 mb-1">Templates ({{ totalCount }})</h1>
-        <vex-breadcrumbs [crumbs]="['System Management', 'Templates']"></vex-breadcrumbs>
+        <h1 class="title mt-0 mb-1">Alerts ({{ totalCount }})</h1>
+        <vex-breadcrumbs [crumbs]="['System Management', 'Alerts']"></vex-breadcrumbs>
       </div>
       <div class="hidden sm:block">
         <mat-button-toggle-group [formControl]="layoutCtrl" class="mt-4 sm:mt-0">
@@ -15,22 +15,19 @@
     </div>
   </vex-page-layout-header>
   <vex-page-layout-content [class.container]="layoutCtrl.value === 'boxed'" [class.px-gutter]="layoutCtrl.value === 'fullwidth'" class="-mt-6">
-    [class.px-gutter]="layoutCtrl.value === 'fullwidth'" class="-mt-6">
     <div class="card overflow-auto -mt-16">
       <div class="bg-app-bar px-6 h-16 border-b sticky left-0 flex items-center">
-        <div
-          class="bg-foreground rounded-full border px-4 max-w-[300px] flex-auto flex items-center border border-gray-300">
+        <div class="bg-foreground rounded-full border px-4 max-w-[300px] flex-auto flex items-center border border-gray-300">
           <mat-icon class="icon-sm text-secondary" svgIcon="mat:search"></mat-icon>
-          <input [formControl]="searchCtrl" class="px-4 py-2 border-0 outline-none w-full bg-transparent"
-            placeholder="Search templates here..." type="search">
+          <input [formControl]="searchCtrl" class="px-4 py-2 border-0 outline-none w-full bg-transparent" 
+            placeholder="Search alerts here..." type="search">
         </div>
         <span class="flex-1"></span>
-        <button [matMenuTriggerFor]="columnFilterMenu" class="ml-4 flex-none" mat-icon-button
-          matTooltip="Filter Columns" type="button">
+        <button [matMenuTriggerFor]="columnFilterMenu" class="ml-4 flex-none" mat-icon-button matTooltip="Filter Columns" type="button">
           <mat-icon svgIcon="mat:filter_list"></mat-icon>
         </button>
-        <button (click)="createTemplate()" class="ml-4 flex-none" color="primary" mat-mini-fab
-          matTooltip="Add string interpolation" type="button">
+        <button (click)="createAlert()" class="ml-4 flex-none" color="primary"
+          mat-mini-fab matTooltip="Add Alert" type="button">
           <mat-icon svgIcon="mat:add"></mat-icon>
         </button>
       </div>
@@ -116,7 +113,7 @@
         <ng-container matColumnDef="actions">
           <th *matHeaderCellDef mat-header-cell mat-sort-header>ACTION</th>
           <td *matCellDef="let row" class="w-10 text-secondary" mat-cell>
-            <button (click)="$event.stopPropagation()" [matMenuTriggerData]="{ customer: row }"
+            <button (click)="$event.stopPropagation()" [matMenuTriggerData]="{ template: row }"
               [matMenuTriggerFor]="actionsMenu" mat-icon-button type="button">
               <mat-icon svgIcon="mat:more_horiz"></mat-icon>
             </button>
@@ -124,7 +121,7 @@
         </ng-container>
 
         <tr *matHeaderRowDef="visibleColumns" mat-header-row></tr>
-        <tr *matRowDef="let row; columns: visibleColumns;" @fadeInUp
+        <tr (click)="edit(row)" *matRowDef="let row; columns: visibleColumns;" @fadeInUp
           class="hover:bg-hover trans-ease-out cursor-pointer" mat-row></tr>
       </table>
       <mat-paginator [pageSizeOptions]="pageSizeOptions" [pageSize]="pageSize" class="sticky left-0"></mat-paginator>
@@ -140,8 +137,8 @@
   </button>
 </mat-menu>
 <mat-menu #actionsMenu="matMenu" xPosition="before" yPosition="below">
-  <ng-template let-customer="customer" matMenuContent>
-    <button mat-menu-item>
+  <ng-template let-template="template" matMenuContent>
+    <button (click)="edit(template)" mat-menu-item>
       <mat-icon svgIcon="mat:edit"></mat-icon>
       <span>Edit</span>
     </button>

@@ -83,7 +83,7 @@ const routes: VexRoutes = [
           },
           {
             path: 'templates',
-            loadChildren: () => import('./pages/apps/notification/templates/template-list/template.module').then(m =>m.TemplateModule)
+            loadChildren: () => import('./pages/apps/notification/templates/template.module').then(m =>m.TemplateModule)
           },
           {
             path: 'editor',
