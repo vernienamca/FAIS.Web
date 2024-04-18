@@ -4,12 +4,13 @@
     <mat-icon svgIcon="mat:more_vert"></mat-icon>
   </button>
 </vex-secondary-toolbar>
+<mat-progress-bar *ngIf="isSaving" mode="indeterminate" color="primary"></mat-progress-bar>
 <div [@stagger]="true" class="p-gutter container" [class.container]="layoutCtrl.value === 'boxed'" [class.px-gutter]="layoutCtrl.value === 'fullwidth'">
   <div class="flex flex-col sm:flex-row gap-4">
     <div @fadeInUp class="card flex-auto">
       <div class="px-6 py-4 border-b flex items-center gap-2">
-        <button [ngClass]="[form.invalid ? '!bg-gray' : '!bg-green', '!text-contrast-white']" mat-raised-button type="button" 
-          [disabled]="form.invalid" (click)="save()">
+        <button [ngClass]="[form.invalid || isSaving ? '!bg-gray' : '!bg-green', '!text-contrast-white']" mat-raised-button type="button" 
+          [disabled]="form.invalid || isSaving" (click)="save()">
           <mat-icon class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" svgIcon="mat:archive"></mat-icon> Save
         </button>
         <button color="primary" mat-stroked-button type="button" [routerLink]="['/apps/users']">

@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, UntypedFormControl, Validators } from '@angular
 import { FormControl } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, finalize, takeUntil } from 'rxjs';
 import { fadeInUp400ms } from 'src/@vex/animations/fade-in-up.animation';
 import { stagger60ms } from 'src/@vex/animations/stagger.animation';
 import { IUser, IUserRole } from 'src/app/core/models/user';
@@ -35,6 +35,7 @@ export class UserComponent implements OnInit, OnDestroy {
   createdAt: Date;
   updatedBy: string;
   updatedAt: Date;
+  isSaving: boolean;
 
   get formControls() {
     return {
@@ -115,6 +116,7 @@ export class UserComponent implements OnInit, OnDestroy {
   }
 
   save(): void {
+    this.isSaving = true;
     const data = Object.assign({}, this.form.value);
     if (!this.photo.includes('assets/img/')) {
       data.photo = this.photo.split(',')[1];
@@ -178,7 +180,10 @@ export class UserComponent implements OnInit, OnDestroy {
 
   private _createUser(data: IUser): void {
     this._securityService.createUser(data)
-      .pipe(takeUntil(this._onDestroy$))
+      .pipe(
+        takeUntil(this._onDestroy$),
+        finalize(() => this.isSaving = false)
+      )
       .subscribe(data => {
         if (!data) {
           return;
@@ -192,7 +197,10 @@ export class UserComponent implements OnInit, OnDestroy {
 
   private _updateUser(data: IUser): void {
     this._securityService.updateUser(this.userId, false, data)
-      .pipe(takeUntil(this._onDestroy$))
+      .pipe(
+        takeUntil(this._onDestroy$),
+        finalize(() => this.isSaving = false)
+      )
       .subscribe(data => {
         if (!data) {
           return;
@@ -211,7 +219,6 @@ export class UserComponent implements OnInit, OnDestroy {
       if (!data) {
         return;
       }
-      console.log(data);
       this.userRoles = data;
       this.userRoleTabLabel = `User Roles (${data?.length})`;
       this._securityService.userRoles$.next(data);

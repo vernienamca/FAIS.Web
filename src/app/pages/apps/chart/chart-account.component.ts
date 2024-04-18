@@ -253,12 +253,12 @@ export class ChartAccountComponent implements OnInit, OnDestroy {
                 duration: 3000,
               });
             } else {
-             let snackBarRef = this._snackBar.open('Chart of Accounts updated successfully.', 'Close', {
+              let snackBarRef = this._snackBar.open('Chart of Accounts updated successfully.', 'Close', {
                 duration: 3000,
               });
               snackBarRef.afterDismissed().subscribe(() => {
                 window.location.reload();
-            });
+              });
           }
           });
         } else {
