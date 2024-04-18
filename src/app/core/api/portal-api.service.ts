@@ -6,7 +6,7 @@ import { IRole } from "../models/role";
 import { IUser, IUserRole } from "../models/user";
 import { IAuditLogs } from "../models/audit-logs";
 import { IStringInterpolation } from "../models/string-interpolation";
-import { ITemplates } from "../models/templates";
+import { ITemplate } from "../models/template";
 import { HttpResponse } from '@angular/common/http';
 import { ISettings } from "../models/settings";
 import { ICostCenter } from "../models/cost-center";
@@ -75,8 +75,12 @@ export class PortalApi extends BaseApi {
         return this.get<IStringInterpolation>(`${this._apiUrl}/notification/interpolation/${id}`);
     }
 
-    getTemplates(): Observable<ITemplates[]> {
-        return this.get<ITemplates>(`${this._apiUrl}/notification/templates`);
+    getTemplates(): Observable<ITemplate[]> {
+        return this.get<ITemplate>(`${this._apiUrl}/notification/templates`);
+    }
+
+    getTemplate(id: number): Observable<ITemplate> {
+        return this.get<ITemplate>(`${this._apiUrl}/notification/template/${id}`);
     }
 
     exportAuditLogs(): Observable<HttpResponse<Blob>> {
@@ -105,6 +109,14 @@ export class PortalApi extends BaseApi {
 
     updateInterpolation(id: number, data: any): Observable<any> {
         return this.put<any>(`${this._apiUrl}/notification/interpolation/${id}`, data);
+    }
+
+    createAlert(data: any): Observable<any> {
+        return this.post<any>(`${this._apiUrl}/notification/template`, data);
+    }
+
+    updateAlert(id: number, data: any): Observable<any> {
+        return this.put<any>(`${this._apiUrl}/notification/template/${id}`, data);
     }
 
     getAppVersions(): Observable<any[]> {
