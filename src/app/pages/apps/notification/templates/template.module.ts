@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { PageLayoutModule } from '../../../../@vex/components/page-layout/page-layout.module';
-import { BreadcrumbsModule } from '../../../../@vex/components/breadcrumbs/breadcrumbs.module';
+import { PageLayoutModule } from '../../../../../@vex/components/page-layout/page-layout.module';
+import { BreadcrumbsModule } from '../../../../../@vex/components/breadcrumbs/breadcrumbs.module';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
@@ -13,25 +13,25 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
-import { RelativeDateTimeModule } from 'src/@vex/pipes/relative-date-time/relative-date-time.module';
-import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { MatDialogModule } from '@angular/material/dialog';
-import { FlexLayoutModule } from '@angular/flex-layout';
-import { SecondaryToolbarModule } from 'src/@vex/components/secondary-toolbar/secondary-toolbar.module';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { AssetProfileListComponent } from './asset-profile-list/asset-profile-list.component';
-import { AssetProfileRoutingModule } from './asset-profile-routing.module';
-import { AssetProfileComponent } from './asset-profile.component';
-import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { SecondaryToolbarModule } from 'src/@vex/components/secondary-toolbar/secondary-toolbar.module';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { TemplateListComponent } from './template-list/template-list.component';
+import { TemplateComponent } from './template.component';
+import { TemplateRoutingModule } from './template-routing.module';
+import { CKEditorModule } from "@ckeditor/ckeditor5-angular";
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
 
 @NgModule({
-  declarations: [AssetProfileListComponent, AssetProfileComponent],
+  declarations: [TemplateListComponent, TemplateComponent],
   imports: [
     CommonModule,
-    AssetProfileRoutingModule,
+    TemplateRoutingModule,
     PageLayoutModule,
     BreadcrumbsModule,
     MatPaginatorModule,
@@ -46,17 +46,18 @@ import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
     ReactiveFormsModule,
     MatSelectModule,
     MatButtonToggleModule,
-    RelativeDateTimeModule,
-    MatProgressBarModule,
-    MatDialogModule,
-    FlexLayoutModule,
-    SecondaryToolbarModule,
-    MatSnackBarModule,
     MatFormFieldModule,
-    MatInputModule,
     MatSlideToggleModule,
-    NgxMatSelectSearchModule
+    MatInputModule,
+    FlexLayoutModule,
+    MatProgressBarModule,
+    SecondaryToolbarModule,
+    BreadcrumbsModule,
+    MatSnackBarModule,
+    CKEditorModule,
+    MatDatepickerModule,
+    MatNativeDateModule
   ]
 })
-export class AssetProfileModule {
+export class TemplateModule {
 }
