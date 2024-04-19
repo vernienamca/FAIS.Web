@@ -11,7 +11,6 @@ import * as wjcCore from '@grapecity/wijmo';
 import { CollectionViewNavigator } from '@grapecity/wijmo.input';
 import { FlexGrid } from '@grapecity/wijmo.grid';
 import { ILibraryTypeOption } from 'src/app/core/models/library-type-option';
-import { isEqual} from 'lodash';
 
 @Component({
   selector: 'vex-chart',
@@ -38,6 +37,7 @@ export class ChartAccountComponent implements OnInit, OnDestroy {
   salesData = this.getSalesData(5);
   statusDate: Date | null = null;
   initialFormValues: any;
+  chartData: IChart | null = null;
 
   addNewRow(): void {
     const newItem = {
@@ -124,27 +124,26 @@ export class ChartAccountComponent implements OnInit, OnDestroy {
           .pipe(takeUntil(this._onDestroy$))
           .subscribe(
             (data: IChart) => {
+              this.chartData = data;
               this.salesData = new wjcCore.CollectionView(data.chartOfAccountDetailModel, { pageSize: 5 });
               new CollectionViewNavigator('#thePager', {
                 byPage: true,
                 headerFormat: 'Page {currentPage:n0} of {pageCount:n0}',
                 cv: this.salesData
               });
-              const selectedLibraryType = this.filteredLibraryTypes.find(type => type.name === data.acountGroup);
+            
               this._portalService.getLibraryTypeOptions()
                 .pipe(takeUntil(this._onDestroy$))
                 .subscribe(libraryData => {
                   if (!libraryData) {
                     return;
                   }
-                  const libraryOptions = libraryData;
-                  this.filteredOptions = libraryOptions.filter(type => parseInt(type.libraryTypeId) === selectedLibraryType.id);
-                  this.filteredLibraryOptions = this.filteredOptions.filter(type => type.description === data.subAcountGroup);
-                  const selectedLibraryOption = this.filteredLibraryOptions[0];
 
-              this.form.setValue({
-                accountgroup: selectedLibraryType.id,
-                subaccount:  selectedLibraryOption.id,
+                this.filteredOptions = libraryData.filter(type => parseInt(type.libraryTypeId) === data.accountGroupId);
+                this.filteredLibraryOptions = this.filteredOptions.filter(type => type.description === data.subAcountGroup);
+                this.form.setValue({
+                accountgroup: data.accountGroupId,
+                subaccount: this.chartData.subAccountGroupId, 
                 rcagl: data.rcaGL,
                 rcasl: data.rcaSL,
                 title: data.rcaLedgerTitle,
@@ -161,6 +160,7 @@ export class ChartAccountComponent implements OnInit, OnDestroy {
           });
       }
     }
+  
     else {
       new CollectionViewNavigator('#thePager', {
         byPage: true,
@@ -253,12 +253,12 @@ export class ChartAccountComponent implements OnInit, OnDestroy {
                 duration: 3000,
               });
             } else {
-             let snackBarRef = this._snackBar.open('Chart of Accounts updated successfully.', 'Close', {
+              let snackBarRef = this._snackBar.open('Chart of Accounts updated successfully.', 'Close', {
                 duration: 3000,
               });
               snackBarRef.afterDismissed().subscribe(() => {
                 window.location.reload();
-            });
+              });
           }
           });
         } else {

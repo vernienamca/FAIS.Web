@@ -61,8 +61,12 @@
   
             <div class="flex flex-col sm:flex-row sm:gap-4">
               <mat-form-field appearance="fill">
-                <mat-label>Asset Class</mat-label>
-                <input matInput formControlName="assetClassId">
+                <mat-label>Asset Type</mat-label>
+                <mat-select formControlName="assetType" >
+                  <mat-option *ngFor="let asset of assetType" [value]="asset.id">
+                    {{ asset.description}}
+                  </mat-option>
+                </mat-select>
               </mat-form-field>
   
               <mat-form-field appearance="fill">
@@ -77,23 +81,27 @@
    
             <div class="flex flex-col sm:flex-row sm:gap-4">
               <mat-form-field appearance="fill">
-                <mat-label>Description</mat-label>
-                <textarea matInput formControlName="description" style="resize: none;"></textarea>
+                <mat-label>Asset Class</mat-label>
+                <input matInput formControlName="assetClassId">
               </mat-form-field>
-  
-              <div class="flex flex-col flex-auto">
+
                 <mat-form-field appearance="fill" class="economic-life-field">
                   <mat-label>Economic Life</mat-label>
                   <input matInput formControlName="economiclife">
                 </mat-form-field>
-  
-                <mat-form-field appearance="fill" class="residual-life-field">
-                  <mat-label>Residual Life</mat-label>
-                  <input matInput formControlName="residuallife">
-                </mat-form-field>
-                
-              </div>
             </div>
+
+            <div class="flex flex-col sm:flex-row sm:gap-4">
+            <mat-form-field appearance="fill">
+              <mat-label>Description</mat-label>
+              <textarea matInput formControlName="description" style="resize: none;"></textarea>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" class="residual-life-field">
+              <mat-label>Residual Life</mat-label>
+              <input matInput formControlName="residuallife">
+            </mat-form-field>
+          </div>
 
             <div class="flex flex-col sm:flex-row sm:gap-4">
               <mat-form-field appearance="fill">
