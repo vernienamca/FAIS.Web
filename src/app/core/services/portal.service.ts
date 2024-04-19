@@ -16,6 +16,7 @@ import { IChart } from '../models/chart';
 import { ILibraryTypes } from '../models/library-types';
 import { IAssetProfile } from '../models/asset-profile';
 import { IPermission } from '../models/permission';
+import { IPlantInformation } from '../models/plant-information';
 
 @Injectable({
   providedIn: 'root'
@@ -251,5 +252,37 @@ export class PortalService {
 }
   getAssetProfile(): Observable<IAssetProfile[]> {
     return this._portalApi.getAssetProfile();
+  }
+
+  getPlantInformations(): Observable<IPlantInformation[]> {
+    return this._portalApi.getPlantInformations();
+  }
+
+  getPlantInformation(id: number): Observable<IPlantInformation> {
+    return this._portalApi.getPlantInformation(id);
+  }
+
+  updatePlantInformation(data: any): Observable<any> {
+    return this._portalApi.updatePlantInformation(data);
+  }
+
+  exportPlantInformations(): void {
+    this._portalApi.exportPlantInformations().subscribe(response => {
+      const contentDisposition = response.headers.get('Content-Disposition');
+      const filename = contentDisposition 
+        ? contentDisposition.split(';')[1].trim().split('=')[1] 
+        : 'Library_Type_Options_' + this._datePipe.transform(new Date(), 'medium') + '.xlsx';
+
+        const blob = new Blob([response.body], { type: 'application/actet-stream' });
+  
+        const link = document.createElement('a');
+        link.href = window.URL.createObjectURL(blob);
+        link.download = filename;
+        link.click();
+      });
+    }
+
+  createPlantInformation(data: any): Observable<any> {
+    return this._portalApi.createPlantInformation(data);
   }
 }

@@ -15,6 +15,7 @@ import { IProFormaEntry } from "../models/pro-forma-entry";
 import { IChart } from "../models/chart";
 import { ILibraryTypes } from "../models/library-types";
 import { IAssetProfile } from "../models/asset-profile";
+import { IPlantInformation } from "../models/plant-information";
 
 export class PortalApi extends BaseApi {
     private _apiUrl = `${environment.apiGatewayBaseUrl}`;
@@ -211,4 +212,29 @@ export class PortalApi extends BaseApi {
     getAssetProfile(): Observable<IAssetProfile[]> {
         return this.get<IAssetProfile[]>(`${this._apiUrl}/assetprofile/get`);
     }
+
+    getPlantInformations(): Observable<IPlantInformation[]> {
+        return this.get<IPlantInformation>(`${this._apiUrl}/plantinformation`);
+    }
+
+    getPlantInformation(id: number): Observable<IPlantInformation> {
+        return this.get<IPlantInformation>(`${this._apiUrl}/plantinformation/${id}`);
+    }
+
+    updatePlantInformation(data: any): Observable<any> {
+        return this.put<any>(`${this._apiUrl}/plantinformation`, data);
+    }
+
+    createPlantInformation(data: any): Observable<any> {
+        return this.post<any>(`${this._apiUrl}/plantinformation`, data);
+    }
+
+    exportPlantInformations(): Observable<HttpResponse<Blob>>  {
+        return this.get(`${this._apiUrl}/plantinformation/export`,   
+        {
+            observe: 'response',
+            responseType: 'blob' as 'json'
+        });
+    }
+
 }

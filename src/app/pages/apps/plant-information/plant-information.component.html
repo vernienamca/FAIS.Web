@@ -1,0 +1,92 @@
+<vex-secondary-toolbar current="{{pageMode === 1 ? 'Edit Library Type Option':'Add Library Type Option'}}">
+  <vex-breadcrumbs [crumbs]="['System Management', 'Library Type Option', 'Edit Library Type Option']" class="flex-auto"></vex-breadcrumbs>
+  <button class="ml-2" color="primary" mat-icon-button type="button">
+    <mat-icon svgIcon="mat:more_vert"></mat-icon>
+  </button>
+</vex-secondary-toolbar>
+<div class="p-gutter container" [class.container]="layoutCtrl.value === 'boxed'" [class.px-gutter]="layoutCtrl.value === 'fullwidth'">
+  <div class="flex flex-col sm:flex-row gap-4">
+    <div class="card flex-auto">
+      <div class="px-6 py-4 border-b flex items-center gap-2">
+        <button [ngClass]="form.touched && form.invalid ? '!bg-gray':'!bg-green'" class="!text-contrast-white" mat-raised-button type="button" (click)="save()" [disabled]="form.touched && form.invalid">
+          <mat-icon class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" svgIcon="mat:archive"></mat-icon> Save
+        </button>
+        <button color="primary" mat-raised-button type="button" [routerLink]="['/apps/library-options']">
+          <mat-icon class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" svgIcon="mat:close"></mat-icon> Close
+        </button>
+      </div>
+      <div class="px-6 py-4 flex flex-col">
+        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
+          <form [formGroup]="form" class="flex flex-col flex-auto form-container">
+            <div class="flex flex-col sm:flex-row sm:gap-4">
+              <mat-form-field appearance="fill" class="flex-auto">
+                <mat-label>Library Type</mat-label>
+                <mat-select placeholder="Select Library Type" formControlName="libraryTypeId" (selectionChange)="onFilterUser($event)"
+                  class="border-0 outline-none w-full bg-transparent flex-auto"> 
+                  <mat-option *ngFor="let libraryType of libraryTypes" [value]="libraryType[0]">{{libraryType[1]}}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="formControls.libraryTypeId.touched && formControls.libraryTypeId.invalid">
+                  <span *ngIf="formControls.libraryTypeId.getError('required')">
+                    Library type is required
+                  </span>
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="flex flex-col sm:flex-row sm:gap-4">
+              <mat-form-field appearance="fill" class="flex-auto" [ngClass]="{'option-code': pageMode === 2}">
+                <mat-label>Option Code</mat-label>
+                <input matInput formControlName="code" required [readonly]="pageMode === 2">
+                <mat-error *ngIf="formControls.code.touched && formControls.code.invalid">
+                  <span *ngIf="formControls.code.getError('required')">
+                    Option code is required
+                  </span>
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="flex flex-col sm:flex-row sm:gap-4">
+              <mat-form-field appearance="fill" class="flex-auto">
+                <mat-label>Option Description</mat-label>
+                <input matInput formControlName="description" required>
+                <mat-error *ngIf="formControls.description.touched && formControls.description.invalid">
+                  <span *ngIf="formControls.description.getError('required')">
+                    Option description is required
+                  </span>
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="flex flex-col sm:flex-row sm:gap-4">
+              <mat-form-field appearance="fill" class="flex-auto">
+                <mat-label>Remarks</mat-label>
+                <input matInput formControlName="remark" required>
+                <mat-error *ngIf="formControls.remark.touched && formControls.remark.invalid">
+                  <span *ngIf="formControls.remark.getError('required')">
+                    Remarks is required
+                  </span>
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="flex flex-col sm:flex-row sm:gap-4">
+              <mat-slide-toggle color="accent" labelPosition="before" formControlName="isActive" (change)="onToggleStatus($event)">
+                {{ statusLabel }}
+              </mat-slide-toggle>
+            </div>
+            <blockquote *ngIf="pageMode === 2" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px" [style.marginTop.px]="30">
+              <span fxFlex>
+                <strong>Created By</strong>: {{ createdBy }}
+              </span>
+              <span fxFlex>
+                <strong>Date Created</strong>: {{ createdAt | date: 'MM/dd/yyyy hh:mm a' }}
+              </span>
+              <span fxFlex>
+                <strong>Modified By</strong>: {{ updatedBy }}
+              </span>
+              <span fxFlex>
+                <strong>Date Modified</strong>: {{ updatedAt ? (updatedAt | date: 'MM/dd/yyyy hh:mm a') : 'N/A' }}
+              </span>
+            </blockquote>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
