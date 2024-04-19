@@ -72,6 +72,16 @@
           </ng-container>
         </ng-container>
 
+        <ng-container matColumnDef="type">
+          <th *matHeaderCellDef class="uppercase" mat-header-cell mat-sort-header>Transaction Type</th>
+          <td *matCellDef="let row" mat-cell>
+            <div class="flex items-center gap-1">
+              <div>
+                " "
+              </div>
+            </div>
+          </td>
+        </ng-container>
         <ng-container matColumnDef="isActive">
           <th *matHeaderCellDef class="uppercase" mat-header-cell mat-sort-header>Status</th>
           <td *matCellDef="let row" mat-cell>

@@ -43,7 +43,7 @@ export class ProFormaEntriesListComponent implements OnInit, OnDestroy, AfterVie
   @Input()
   columns: TableColumn<IProFormaEntry>[] = [
     { label: 'Transaction ID', property: 'id', type: 'text', visible: true },
-    { label: 'Transaction Type', property: 'type', type: 'text', visible: true },
+    { label: 'Transaction Type', property: 'type', type: 'badge', visible: true },
     { label: 'Transaction Description', property: 'description', type: 'text', visible: true },
     { label: 'Status', property: 'isActive', type: 'badge', visible: true },
     { label: 'Actions', property: 'actions', type: 'button', visible: true }
