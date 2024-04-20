@@ -76,7 +76,7 @@
           <th *matHeaderCellDef class="uppercase" mat-header-cell mat-sort-header>Status</th>
           <td *matCellDef="let row" mat-cell>
             <div class="flex items-center gap-1">
-              <div *ngIf="row.isActive; else inactive" [ngClass]="['text-green', 'bg-green/10']" 
+              <div *ngIf="row.isActive === 'Y'; else inactive" [ngClass]="['text-green', 'bg-green/10']" 
                 class="rounded px-2 py-1 font-medium text-xs flex-none">
                 ACTIVE
               </div>
