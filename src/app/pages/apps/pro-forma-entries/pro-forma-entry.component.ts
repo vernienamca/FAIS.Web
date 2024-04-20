@@ -171,7 +171,7 @@ export class ProFormaEntryComponent implements OnInit, OnDestroy {
             this.form.setValue({
               tranTypeSeq: data.tranTypeSeq,
               description: data.description,
-              isActive: data.isActive,
+              isActive: data.isActive === 'Y' ? true : false,
             });
             this.updatedAt = data.updatedAt;
             this.createdAt = data.createdAt;
@@ -277,6 +277,7 @@ export class ProFormaEntryComponent implements OnInit, OnDestroy {
       };
 
       if (this.isEditMode) {
+        console.log(proFormaDetails)
         this._portalService.updateProFormaEntry(this.id, proFormaDetails)
           .pipe(takeUntil(this._onDestroy$))
           .subscribe(data => {
