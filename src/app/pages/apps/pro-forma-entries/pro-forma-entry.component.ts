@@ -277,7 +277,6 @@ export class ProFormaEntryComponent implements OnInit, OnDestroy {
       };
 
       if (this.isEditMode) {
-        console.log(proFormaDetails)
         this._portalService.updateProFormaEntry(this.id, proFormaDetails)
           .pipe(takeUntil(this._onDestroy$))
           .subscribe(data => {
