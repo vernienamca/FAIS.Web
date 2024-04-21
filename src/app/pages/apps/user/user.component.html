@@ -9,7 +9,7 @@
   <div class="flex flex-col sm:flex-row gap-4">
     <div @fadeInUp class="card flex-auto">
       <div class="px-6 py-4 border-b flex items-center gap-2">
-        <button [ngClass]="[form.invalid || isSaving ? '!bg-gray' : '!bg-green', '!text-contrast-white']" mat-raised-button type="button" 
+        <button *ngIf="hasAccess" [ngClass]="[form.invalid || isSaving ? '!bg-gray' : '!bg-green', '!text-contrast-white']" mat-raised-button type="button" 
           [disabled]="form.invalid || isSaving" (click)="save()">
           <mat-icon class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" svgIcon="mat:archive"></mat-icon> Save
         </button>
@@ -22,7 +22,7 @@
           <div fxFlex="20" class="card overflow-hidden">
             <div class="p-4 text-center hover:bg-hover trans-ease-out cursor-pointer relative" matRipple>
               <img [src]="photo" class="avatar h-24 w-24 mx-auto">
-              <button color="primary" mat-button type="button" class="my-2" (click)="file.click()">
+              <button color="primary" mat-button type="button" class="my-2" (click)="file.click()" [disabled]="!hasAccess">
                 <span>Attach Photo</span>
                 <mat-icon class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" svgIcon="mat:upload"></mat-icon>
               </button>
@@ -170,7 +170,7 @@
                     <p fxFlex>Everyone can have a different role depending on what they need. Assign role(s) to give them access to modules.</p>
                   </div>
                   <div fxLayout="column" fxLayoutAlign="start stretch" [style.marginTop.px]="10">
-                    <app-user-role-list [data]="userRoles"></app-user-role-list>
+                    <app-user-role-list [data]="userRoles" [hasAccess]="hasAccess"></app-user-role-list>
                   </div>
                 </div>
               </mat-tab>

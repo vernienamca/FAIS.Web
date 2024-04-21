@@ -18,6 +18,7 @@ import { PortalService } from 'src/app/core/services/portal.service';
 import { IAuditLogs } from 'src/app/core/models/audit-logs';
 import { SharedLinkDialogComponent } from '../shared-link-dialog/shared-link-dialog.component';
 import { SecurityService } from 'src/app/core/services/security.service';
+import { Router } from '@angular/router';
 
 @UntilDestroy()
 @Component({
@@ -74,8 +75,19 @@ export class AuditLogsListComponent implements OnInit, OnDestroy, AfterViewInit 
   constructor(
     private _dialog: MatDialog,
     private _portalService: PortalService,
-    private _securityService: SecurityService
+    private _securityService: SecurityService,
+    private _router: Router
   ) {
+    const userId = parseFloat(localStorage.getItem('user_id'));
+    this._securityService.getPermissions(userId)
+      .pipe(takeUntil(this._onDestroy$))
+      .subscribe(data => {
+        const permission = data.filter(a => a.moduleId === 8);
+        console.log(permission);
+        if (permission.some(s => s.isRead) === false) {
+          this._router.navigate([`pages/error-401`]);
+        }
+      });
   }
 
   ngOnInit(): void {

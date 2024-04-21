@@ -59,4 +59,4 @@ export class SecurityService {
   postNotifRole(data: any): Observable<any> {
     return this._securityApi.postNotifRole(data);
   }
-  }
+}

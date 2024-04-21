@@ -142,7 +142,7 @@
 </mat-menu>
 <mat-menu #actionsMenu="matMenu" xPosition="before" yPosition="below">
   <ng-template let-module="module" matMenuContent>
-    <button (click)="edit(module)" mat-menu-item>
+    <button (click)="edit(module)" mat-menu-item [disabled]="!hasUpdateAccess">
       <mat-icon svgIcon="mat:edit"></mat-icon>
       <span>Edit</span>
     </button>

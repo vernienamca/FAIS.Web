@@ -1,17 +1,19 @@
 import { DatePipe } from '@angular/common';
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS, MatFormFieldDefaultOptions } from '@angular/material/form-field';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { Router } from '@angular/router';
 import { IPVersion } from 'net';
 import { Observable, ReplaySubject, Subject, filter, finalize, takeUntil } from 'rxjs';
 import { fadeInUp400ms } from 'src/@vex/animations/fade-in-up.animation';
 import { stagger40ms } from 'src/@vex/animations/stagger.animation';
 import { TableColumn } from 'src/@vex/interfaces/table-column.interface';
 import { PortalService } from 'src/app/core/services/portal.service';
+import { SecurityService } from 'src/app/core/services/security.service';
 
 @Component({
   selector: 'vex-app-version',
@@ -49,6 +51,7 @@ export class AppVersionComponent implements OnInit, OnDestroy {
   versionDate: string;
   totalCount: number = 0;
   isListLoading = true;
+  hasUpdateAccess = false;
 
   get formControls() {
     return {
@@ -66,9 +69,11 @@ export class AppVersionComponent implements OnInit, OnDestroy {
 
   constructor(
     private _fb: FormBuilder,
+    private _router: Router,
     private _portalService: PortalService,
     private _datePipe: DatePipe,
-    private _snackBar: MatSnackBar
+    private _snackBar: MatSnackBar,
+    private _securityService: SecurityService
   ) {
     this.versionDate = this._datePipe.transform(this.currentDate, 'MM/dd/yyyy h:mm a');
     this.form = this._fb.group({
@@ -77,6 +82,19 @@ export class AppVersionComponent implements OnInit, OnDestroy {
       amendment: ['', Validators.required],
       createdBy: [localStorage.getItem("user_id"), []]
     });
+    
+    const userId = parseFloat(localStorage.getItem('user_id'));
+    this._securityService.getPermissions(userId)
+      .pipe(takeUntil(this._onDestroy$))
+      .subscribe(data => {
+        const permission = data.filter(a => a.moduleId === 5);
+        if (permission.some(s => s.isUpdate) === false) {
+          this.form.controls['versionNo'].disable();
+          this.form.controls['versionDate'].disable();
+          this.form.controls['amendment'].disable();
+        }
+        this.hasUpdateAccess = permission.some(s => s.isUpdate);
+      });
   }
 
   ngOnInit(): void {

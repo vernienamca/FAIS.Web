@@ -15,6 +15,7 @@ import { IProFormaEntry } from "../models/pro-forma-entry";
 import { IChart } from "../models/chart";
 import { ILibraryTypes } from "../models/library-types";
 import { IAssetProfile } from "../models/asset-profile";
+import { IPermission } from "../models/permission";
 
 export class PortalApi extends BaseApi {
     private _apiUrl = `${environment.apiGatewayBaseUrl}`;
@@ -233,5 +234,6 @@ export class PortalApi extends BaseApi {
     }
 
     getAssetProfile(id: number): Observable<IAssetProfile> {
-  return this.get<IAssetProfile>(`${this._apiUrl}/assetprofile/getbyid?id=${id}`);}
-} 
+        return this.get<IAssetProfile>(`${this._apiUrl}/assetprofile/getbyid?id=${id}`);
+    }
+}

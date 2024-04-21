@@ -46,3 +46,7 @@ table tr:nth-child(even) {
 .module-footer{
   background: #E9ECEF;
 }
+
+.disabled-checkbox {
+  pointer-events: none;
+}

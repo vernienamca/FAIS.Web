@@ -1,9 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, Validators, FormBuilder, UntypedFormControl  } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { PortalService } from 'src/app/core/services/portal.service';
+import { SecurityService } from 'src/app/core/services/security.service';
 
 @Component({
   selector: 'vex-module',
@@ -18,6 +19,7 @@ export class ModuleComponent implements OnInit, OnDestroy {
   createdAt: Date;
   updatedBy: string;
   updatedAt: Date;
+  hasAccess = false;
 
   get formControls() {
     return {
@@ -34,10 +36,13 @@ export class ModuleComponent implements OnInit, OnDestroy {
  
   constructor(
     private _fb: FormBuilder,
+    private _router: Router,
     private _route: ActivatedRoute,
     private _portalService: PortalService,
+    private _securityService: SecurityService,
     private _snackBar: MatSnackBar
   ) {
+    const userId = parseInt(localStorage.getItem('user_id'));
     this.form = this._fb.group({
       name: ['', [Validators.required]],
       description: ['', []],
@@ -47,8 +52,27 @@ export class ModuleComponent implements OnInit, OnDestroy {
       isActive: [true, []],
     });
 
-    const id = parseInt(this._route.snapshot.paramMap.get('id'));
-    this._portalService.getModule(id)
+    this._securityService.getPermissions(userId)
+      .pipe(takeUntil(this._onDestroy$))
+      .subscribe(data => {
+        const permission = data.filter(a => a.moduleId === 19);
+        if (!permission || permission.some(s => s.isRead) === false) {
+          this._router.navigate([`pages/error-401`]);
+        }
+        if (permission.some(s => s.isUpdate) === false) {
+          this.form.controls['name'].disable();
+          this.form.controls['description'].disable();
+          this.form.controls['groupName'].disable();
+          this.form.controls['icon'].disable();
+          this.form.controls['isActive'].disable();
+        }
+        this.hasAccess = permission.some(s => s.isUpdate);
+      });
+  }
+
+  ngOnInit(): void {
+    const moduleId = parseInt(this._route.snapshot.paramMap.get('id'));
+    this._portalService.getModule(moduleId)
       .pipe(takeUntil(this._onDestroy$))
       .subscribe(data => {
         if (!data) {
@@ -69,9 +93,6 @@ export class ModuleComponent implements OnInit, OnDestroy {
 
         this.form.controls['url'].disable();
       });
-  }
-
-  ngOnInit(): void {
   }
 
   ngOnDestroy(): void {
