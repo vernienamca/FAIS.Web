@@ -96,6 +96,10 @@ export class PortalApi extends BaseApi {
         return this.get<ISettings>(`${this._apiUrl}/settings/${id}`);
     }
 
+    getUserActivities(userId: number): Observable<IAuditLogs[]> {
+        return this.get<IAuditLogs[]>(`${this._apiUrl}/user/activities/${userId}`);
+    }
+
     updateModule(data: any): Observable<any> {
         return this.put<any>(`${this._apiUrl}/module`, data);
     }

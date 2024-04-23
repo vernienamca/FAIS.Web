@@ -180,6 +180,7 @@
             </mat-tab-group>
           </div>
         </div>
+        <app-user-activity-list [userId]="userId" fxFlex></app-user-activity-list>
         <blockquote *ngIf="userId" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px" [style.marginTop.px]="30">
           <span fxFlex>
             <strong>Created By</strong>: {{ createdBy }}

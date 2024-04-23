@@ -95,6 +95,10 @@ export class PortalService {
     return this._portalApi.getTemplate(id);
   }
 
+  getUserActivities(userId: number): Observable<IAuditLogs[]> {
+    return this._portalApi.getUserActivities(userId);
+  }
+
   exportAuditLogs(): void {
     this._portalApi.exportAuditLogs().subscribe(response => {
       const contentDisposition = response.headers.get('Content-Disposition');
