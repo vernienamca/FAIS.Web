@@ -1,15 +1,17 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { QuicklinkModule } from 'ngx-quicklink';
-import { VexRoutes } from '../../../../../../@vex/interfaces/vex-route.interface';
-import { TemplateListComponent } from './template-list.component';
+import { Error401Component } from './error-401.component';
+import { VexRoutes } from '../../../../../@vex/interfaces/vex-route.interface';
+
 
 const routes: VexRoutes = [
   {
     path: '',
-    component: TemplateListComponent,
+    component: Error401Component,
     data: {
-      toolbarShadowEnabled: false
+      containerEnabled: true,
+      toolbarShadowEnabled: true
     }
   }
 ];
@@ -18,5 +20,5 @@ const routes: VexRoutes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule, QuicklinkModule]
 })
-export class TemplateRoutingModule {
+export class Error401RoutingModule {
 }

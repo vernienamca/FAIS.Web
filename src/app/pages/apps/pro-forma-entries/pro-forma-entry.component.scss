@@ -21,7 +21,7 @@
 }
 
 mat-form-field {
-  width: 60%;
+  width: 100%;
 }
 
 .is-active {
@@ -57,3 +57,31 @@ mat-form-field {
 .mat-form-field.fill-container textarea {
   height: calc(100% - 25px);
 }
+
+.wjcGrid .wj-colheaders   .wj-header {
+  text-overflow: initial;
+}
+.wijmotable {
+  max-width: calc(100vw - 280px);
+}
+.delete.mat-mdc-button {
+  width: 100%;
+  >.mat-icon {
+    margin-right: 0;
+  }
+}
+
+@media (max-width: 1279px) {
+  .wijmotable {
+    max-width: calc(100vw);
+  }
+  .delete.mat-mdc-button {
+    padding: 0;
+  }
+}
+@media (max-width: 2888px) {
+  .delete {
+    min-width: unset;
+  }
+}
+

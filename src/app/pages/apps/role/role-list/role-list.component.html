@@ -26,7 +26,7 @@
         <button [matMenuTriggerFor]="columnFilterMenu" class="ml-4 flex-none" mat-icon-button matTooltip="Filter Columns" type="button">
           <mat-icon svgIcon="mat:filter_list"></mat-icon>
         </button>
-        <button (click)="add()" class="ml-4 flex-none" color="primary"
+        <button (click)="add()" class="ml-4 flex-none" color="primary" [disabled]="!hasCreateAccess"
           mat-mini-fab matTooltip="Add Role" type="button">
           <mat-icon svgIcon="mat:add"></mat-icon>
         </button>
@@ -44,14 +44,30 @@
         <ng-container *ngFor="let column of columns; trackBy: trackByProperty">
           <ng-container *ngIf="column.type === 'text'" [matColumnDef]="column.property">
             <th *matHeaderCellDef class="uppercase" mat-header-cell mat-sort-header> {{ column.label }}</th>
-            <ng-container *ngIf="column.property === 'updatedAt'; else text">
+            <ng-container *ngIf="column.property === 'statusDate'; else text">
               <td *matCellDef="let row" [ngClass]="column.cssClasses" mat-cell>
                 {{ row[column.property] | date: 'MM/dd/yyyy hh:mm a' }}
               </td>
             </ng-container>
             <ng-template #text>
+              <ng-container *ngIf="column.property !== 'isActive'; else isActive">
+                <td *matCellDef="let row" mat-cell>
+                  {{ row[column.property] }}
+                </td>
+              </ng-container>
+            </ng-template>
+            <ng-template #isActive>
               <td *matCellDef="let row" mat-cell>
-                {{ row[column.property] }}
+                <div class="flex items-center gap-1">
+                  <div *ngIf="row[column.property] == 'Y'" [ngClass]="['text-white', 'bg-green/100']" 
+                    class="rounded px-2 py-1 font-medium text-xs flex-none">
+                    ACTIVE
+                  </div>
+                  <div *ngIf="row[column.property] == 'N'" [ngClass]="['text-white', 'bg-gray/100']" 
+                    class="rounded px-2 py-1 font-medium text-xs flex-none">
+                    INACTIVE
+                  </div>
+                </div>
               </td>
             </ng-template>
           </ng-container>
@@ -107,7 +123,7 @@
           </td>
         </ng-container>
         <tr *matHeaderRowDef="visibleColumns" mat-header-row></tr>
-        <tr (click)="view(row)" *matRowDef="let row; columns: visibleColumns;" @fadeInUp 
+        <tr (click)="edit(row)" *matRowDef="let row; columns: visibleColumns;" @fadeInUp 
           class="hover:bg-hover trans-ease-out cursor-pointer" mat-row></tr>
       </table>
       <mat-paginator [pageSizeOptions]="pageSizeOptions" [pageSize]="pageSize" class="sticky left-0"></mat-paginator>
@@ -124,7 +140,7 @@
 </mat-menu>
 <mat-menu #actionsMenu="matMenu" xPosition="before" yPosition="below">
   <ng-template let-data="data" matMenuContent>
-    <button (click)="view(data)" mat-menu-item>
+    <button (click)="edit(data)" mat-menu-item [disabled]="!hasUpdateAccess">
       <mat-icon svgIcon="mat:edit"></mat-icon>
       <span>Edit</span>
     </button>

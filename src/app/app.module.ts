@@ -20,7 +20,7 @@ import { RoleService } from './core/services/role.service';
 import { RoleApi } from './core/api/role-api.service';
 import { UserApi } from './core/api/user-api.service';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
-
+import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 
 @NgModule({
   declarations: [AppComponent, ForgotPasswordComponent],
@@ -32,7 +32,8 @@ import { NgxDatatableModule } from '@swimlane/ngx-datatable';
     HttpClientModule,
     VexModule,
     CustomLayoutModule,
-    NgxMatSelectSearchModule
+    NgxMatSelectSearchModule,
+    CKEditorModule
   ],
   providers: [
     {

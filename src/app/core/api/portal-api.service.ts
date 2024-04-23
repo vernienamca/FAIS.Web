@@ -6,7 +6,7 @@ import { IRole } from "../models/role";
 import { IUser, IUserRole } from "../models/user";
 import { IAuditLogs } from "../models/audit-logs";
 import { IStringInterpolation } from "../models/string-interpolation";
-import { ITemplates } from "../models/templates";
+import { ITemplate } from "../models/template";
 import { HttpResponse } from '@angular/common/http';
 import { ISettings } from "../models/settings";
 import { ICostCenter } from "../models/cost-center";
@@ -16,6 +16,7 @@ import { IChart } from "../models/chart";
 import { ILibraryTypes } from "../models/library-types";
 import { IAssetProfile } from "../models/asset-profile";
 import { IPlantInformation } from "../models/plant-information";
+import { IPermission } from "../models/permission";
 
 export class PortalApi extends BaseApi {
     private _apiUrl = `${environment.apiGatewayBaseUrl}`;
@@ -76,8 +77,12 @@ export class PortalApi extends BaseApi {
         return this.get<IStringInterpolation>(`${this._apiUrl}/notification/interpolation/${id}`);
     }
 
-    getTemplates(): Observable<ITemplates[]> {
-        return this.get<ITemplates>(`${this._apiUrl}/notification/templates`);
+    getTemplates(): Observable<ITemplate[]> {
+        return this.get<ITemplate>(`${this._apiUrl}/notification/templates`);
+    }
+
+    getTemplate(id: number): Observable<ITemplate> {
+        return this.get<ITemplate>(`${this._apiUrl}/notification/template/${id}`);
     }
 
     exportAuditLogs(): Observable<HttpResponse<Blob>> {
@@ -108,6 +113,14 @@ export class PortalApi extends BaseApi {
         return this.put<any>(`${this._apiUrl}/notification/interpolation/${id}`, data);
     }
 
+    createAlert(data: any): Observable<any> {
+        return this.post<any>(`${this._apiUrl}/notification/template`, data);
+    }
+
+    updateAlert(id: number, data: any): Observable<any> {
+        return this.put<any>(`${this._apiUrl}/notification/template/${id}`, data);
+    }
+
     getAppVersions(): Observable<any[]> {
         return this.get<any>(`${this._apiUrl}/version/get`);
     }
@@ -127,11 +140,11 @@ export class PortalApi extends BaseApi {
     getProFormaEntry(id: number): Observable<IProFormaEntry> {
         return this.get<IProFormaEntry>(`${this._apiUrl}/proformaentries/${id}`);
     }
+
     addProFormaEntry(proformaentry: any): Observable<any> {
         return this.post<any>(`${this._apiUrl}/proformaentries`, proformaentry);
     }
 
-    
     updateProFormaEntry(id: number, data: any): Observable<any> {
         return this.put<any>(`${this._apiUrl}/proformaentries`, data);
     }
@@ -209,7 +222,7 @@ export class PortalApi extends BaseApi {
         return this.put<any>(`${this._apiUrl}/chartofaccounts/${id}`, data);
     }
 
-    getAssetProfile(): Observable<IAssetProfile[]> {
+    getAssetProfiles(): Observable<IAssetProfile[]> {
         return this.get<IAssetProfile[]>(`${this._apiUrl}/assetprofile/get`);
     }
 
@@ -237,4 +250,16 @@ export class PortalApi extends BaseApi {
         });
     }
 
+
+    addAssetProfile(data: any): Observable<any> {
+        return this.post<any>(`${this._apiUrl}/assetprofile/asset-profile`, data);
+    }
+
+    updateAssetProfile(id: number , data:any): Observable<any> {
+        return this.put<any>(`${this._apiUrl}/assetprofile/${id}`,data);
+    }
+
+    getAssetProfile(id: number): Observable<IAssetProfile> {
+        return this.get<IAssetProfile>(`${this._apiUrl}/assetprofile/getbyid?id=${id}`);
+    }
 }

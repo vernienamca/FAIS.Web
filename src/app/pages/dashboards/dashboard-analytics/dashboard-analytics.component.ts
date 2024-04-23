@@ -4,6 +4,8 @@ import { Order, tableSalesData } from '../../../../static-data/table-sales-data'
 import { TableColumn } from '../../../../@vex/interfaces/table-column.interface';
 import { PortalService } from 'src/app/core/services/portal.service';
 import { Subject, takeUntil } from 'rxjs';
+import { SecurityService } from 'src/app/core/services/security.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'vex-dashboard-analytics',
@@ -74,18 +76,26 @@ export class DashboardAnalyticsComponent implements OnInit, OnDestroy {
   private _onDestroy$ = new Subject<void>();
 
   constructor(
-    private _portalService: PortalService
+    private _router: Router,
+    private _portalService: PortalService,
+    private _securityService: SecurityService
   ) {
     const userId = parseInt(localStorage.getItem('user_id'));
-    if (!userId) {
-      return;
-    }
     this._portalService.getGreetings(userId)
       .pipe(takeUntil(this._onDestroy$))
       .subscribe(data => {
         this.greetings = data;
         if (!data) {
           return;
+        }
+      });
+
+    this._securityService.getPermissions(userId)
+      .pipe(takeUntil(this._onDestroy$))
+      .subscribe(data => {
+        const permission = data.filter(a => a.moduleId === 1);
+        if (!permission || permission.some(s => s.isRead) === false) {
+          this._router.navigate([`pages/error-401`]);
         }
       });
   }

@@ -51,6 +51,7 @@ export class UserRoleListComponent implements OnInit, OnDestroy, AfterViewInit {
     { label: 'Date Added', property: 'createdAt', type: 'text', visible: true },
     { label: 'Action', property: 'actions', type: 'button', visible: true }
   ];
+  @Input() hasAccess: boolean;
   form: FormGroup; 
   layoutCtrl = new UntypedFormControl('fullwidth');
   subject$: ReplaySubject<IUserRole[]> = new ReplaySubject<IUserRole[]>(1);

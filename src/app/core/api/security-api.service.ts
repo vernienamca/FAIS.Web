@@ -13,7 +13,7 @@ export class securityApi extends BaseApi {
   getPermissions(userId: number): Observable<IPermission[]> {
     return this.get<IPermission[]>(`${this._apiUrl}/user/permissions/${userId}`);
   }
-
+  
   getSettings(id: number): Observable<ISettings> {
     return this.get<ISettings>(`${this._apiUrl}/user/settings/${id}`);
   }
@@ -48,5 +48,9 @@ export class securityApi extends BaseApi {
 
   resetFromGeneratedPassword(userId: number, newPassword: string): Observable<IUser> {
     return this.put<IUser>(`${this._apiUrl}/user/reset-password/${userId}/${newPassword}`, {});
+  }
+  
+  postNotifRole(data: {roleIds: number[], id?: number, assetName?: string, editMode?: boolean }): Observable<any> {
+    return this.post<any>(`${this._apiUrl}/user/asset-profile-notif`, data);
   }
 }

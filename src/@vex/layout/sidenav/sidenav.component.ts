@@ -40,7 +40,7 @@ export class SidenavComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    const userId = parseFloat(localStorage.getItem('user_id'));
+    const userId = parseInt(localStorage.getItem('user_id'));
     if (!userId) {
       return;
     }
@@ -108,7 +108,7 @@ export class SidenavComponent implements OnInit {
         let groupNames: string[] = [];
         let childrens: NavigationLink[] = [];
         let settings: NavigationLink;
-        data.forEach(item => {
+        data.filter(t => !t.moduleName.toLocaleLowerCase().includes('add/edit')).forEach(item => {
           if (!groupNames.includes(item.groupName)) {
             groupNames.push(item.groupName);
           }

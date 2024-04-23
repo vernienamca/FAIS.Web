@@ -6,7 +6,6 @@ import { IRole } from '../models/role';
 import { IUser, IUserRole } from '../models/user';
 import { IAuditLogs } from '../models/audit-logs';
 import { IStringInterpolation } from '../models/string-interpolation';
-import { ITemplates } from '../models/templates';
 import { DatePipe } from '@angular/common';
 import { ISettings } from '../models/settings';
 import { ICostCenter } from '../models/cost-center';
@@ -17,6 +16,7 @@ import { ILibraryTypes } from '../models/library-types';
 import { IAssetProfile } from '../models/asset-profile';
 import { IPermission } from '../models/permission';
 import { IPlantInformation } from '../models/plant-information';
+import { ITemplate } from '../models/template';
 
 @Injectable({
   providedIn: 'root'
@@ -88,8 +88,12 @@ export class PortalService {
     return this._portalApi.getStringInterpolation(id);
   }
 
-  getAlerts(): Observable<ITemplates[]> {
+  getAlerts(): Observable<ITemplate[]> {
     return this._portalApi.getTemplates();
+  }
+
+  getAlert(id: number): Observable<ITemplate> {
+    return this._portalApi.getTemplate(id);
   }
 
   exportAuditLogs(): void {
@@ -127,6 +131,14 @@ export class PortalService {
 
   updateInterpolation(id: number, data: any): Observable<any> {
     return this._portalApi.updateInterpolation(id, data);
+  }
+
+  createAlert(data: ITemplate): Observable<ITemplate> {
+    return this._portalApi.createAlert(data);
+  }
+
+  updateAlert(id: number, data: any): Observable<any> {
+    return this._portalApi.updateAlert(id, data);
   }
 
   getAppVersions(): Observable<any[]> {
@@ -250,9 +262,21 @@ export class PortalService {
   updateChartOfAccounts(id: number, data: any): Observable<any> {
     return this._portalApi.updateChartOfAccounts(id,data);
 }
-  getAssetProfile(): Observable<IAssetProfile[]> {
-    return this._portalApi.getAssetProfile();
+  getAssetProfiles(): Observable<IAssetProfile[]> {
+    return this._portalApi.getAssetProfiles();
   }
+
+  addAssetProfile(assetProfile: any): Observable<any> {
+    return this._portalApi.addAssetProfile(assetProfile);
+}
+
+  updateAssetProfile(id: number , data:any): Observable<any> {
+    return this._portalApi.updateAssetProfile(id,data);
+}
+
+  getAssetProfile(id: number): Observable<IAssetProfile> {
+    return this._portalApi.getAssetProfile(id);
+}
 
   getPlantInformations(): Observable<IPlantInformation[]> {
     return this._portalApi.getPlantInformations();
