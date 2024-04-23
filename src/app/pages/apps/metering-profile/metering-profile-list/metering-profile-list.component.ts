@@ -118,11 +118,11 @@ export class MeteringProfileListComponent implements OnInit, OnDestroy, AfterVie
   }
 
   view(data: any): void {
-    this._router.navigate([`apps/roles/${data.id}`]);
+    this._router.navigate([`apps/metering-profiles/${data.id}`]);
   }
 
   add(): void {
-    this._router.navigate(['apps/roles/add']);
+    this._router.navigate(['apps/metering-profiles/add']);
   }
 
   onFilterChange(value: string): void {
