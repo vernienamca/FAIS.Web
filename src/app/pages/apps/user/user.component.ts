@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, UntypedFormControl, Validators } from '@angular/forms';
 import { FormControl } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -21,6 +21,8 @@ import { SecurityService } from 'src/app/core/services/security.service';
 })
 
 export class UserComponent implements OnInit, OnDestroy {
+  @Input() min: any;
+  yesterday = new Date();
   form: FormGroup; 
   layoutCtrl = new UntypedFormControl('fullwidth');
   dataSource = [];
@@ -66,6 +68,8 @@ export class UserComponent implements OnInit, OnDestroy {
     private _snackBar: MatSnackBar,
     private _datePipe: DatePipe
   ) {
+    this.yesterday.setDate(this.yesterday.getDate() - 0);
+
     this.userId = parseInt(this._route.snapshot.paramMap.get('id'));
     this.form = this._fb.group({
       employeeNumber: ['', []],
@@ -74,7 +78,7 @@ export class UserComponent implements OnInit, OnDestroy {
       firstName: ['', [Validators.required]],
       lastName: ['', [Validators.required]],
       emailAddress: ['', [Validators.required]],
-      mobileNumber: ['', [Validators.required]],
+      mobileNumber: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
       taFG: ['', []],
       oupFG: ['', []],
       division: ['', []],
