@@ -117,28 +117,9 @@
   </mat-form-field>
 </div>
 
-            
-            <div class="flex flex-col sm:flex-row sm:gap-4">
-              <mat-slide-toggle color="accent" labelPosition="before" formControlName="isActive" (change)="onToggleStatus($event)">
-                {{ statusLabel }}
-              </mat-slide-toggle>
-            </div>
-            <blockquote *ngIf="pageMode === 2" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px" [style.marginTop.px]="30">
-              <span fxFlex>
-                <strong>Created By</strong>: {{ createdBy }}
-              </span>
-              <span fxFlex>
-                <strong>Date Created</strong>: {{ createdAt | date: 'MM/dd/yyyy hh:mm a' }}
-              </span>
-              <span fxFlex>
-                <strong>Modified By</strong>: {{ updatedBy }}
-              </span>
-              <span fxFlex>
-                <strong>Date Modified</strong>: {{ updatedAt ? (updatedAt | date: 'MM/dd/yyyy hh:mm a') : 'N/A' }}
-              </span>
-            </blockquote>
-          </form>
-        </div>
+        
+<hr class="w-full my-8">
+<h2 class="m-0 title flex-auto">Address</h2>
         <div class="table-container" [style.margin-top.px]="50" >
           <div class="flex flex-row" fxLayoutAlign="end" [style.margin-bottom.px]="10" [style.margin-right.px]="30">
             <button class="rounded-full !bg-green !text-white" mat-raised-button type="button" (click)="addNewRow()">
@@ -164,6 +145,27 @@
           <div class="flex flex-row" fxLayoutAlign="end" [style.margin-top.px]="10" [style.margin-right.px]="40">
             <div id="thePager"></div>
           </div>
+        </div>
+            <div class="flex flex-col sm:flex-row sm:gap-4">
+              <mat-slide-toggle color="accent" labelPosition="before" formControlName="isActive" (change)="onToggleStatus($event)">
+                {{ statusLabel }}
+              </mat-slide-toggle>
+            </div>
+            <blockquote *ngIf="pageMode === 2" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px" [style.marginTop.px]="30">
+              <span fxFlex>
+                <strong>Created By</strong>: {{ createdBy }}
+              </span>
+              <span fxFlex>
+                <strong>Date Created</strong>: {{ createdAt | date: 'MM/dd/yyyy hh:mm a' }}
+              </span>
+              <span fxFlex>
+                <strong>Modified By</strong>: {{ updatedBy }}
+              </span>
+              <span fxFlex>
+                <strong>Date Modified</strong>: {{ updatedAt ? (updatedAt | date: 'MM/dd/yyyy hh:mm a') : 'N/A' }}
+              </span>
+            </blockquote>
+          </form>
         </div>
       </div>
     </div>
