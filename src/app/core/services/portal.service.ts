@@ -14,6 +14,7 @@ import { IProFormaEntry } from '../models/pro-forma-entry';
 import { IChart } from '../models/chart';
 import { ILibraryTypes } from '../models/library-types';
 import { IAssetProfile } from '../models/asset-profile';
+import { IProjectProfile } from '../models/project-profile';
 import { IPermission } from '../models/permission';
 import { ITemplate } from '../models/template';
 
@@ -275,5 +276,8 @@ export class PortalService {
 
   getAssetProfile(id: number): Observable<IAssetProfile> {
     return this._portalApi.getAssetProfile(id);
+}
+  getProjectProfiles(): Observable<IProjectProfile[]> {
+    return this._portalApi.getProjectProfiles();
 }
 }

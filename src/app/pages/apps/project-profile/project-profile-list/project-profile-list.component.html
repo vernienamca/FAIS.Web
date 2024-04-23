@@ -1,0 +1,115 @@
+<vex-page-layout>
+  <vex-page-layout-header class="pb-16 flex flex-col items-start justify-center">
+    <div [class.container]="layoutCtrl.value === 'boxed'" [class.px-gutter]="layoutCtrl.value === 'fullwidth'" 
+      class="w-full flex flex-col sm:flex-row justify-between">
+      <div>
+        <h1 class="title mt-0 mb-1">Project Profile({{ totalCount }})</h1>
+        <vex-breadcrumbs [crumbs]="['Profile Management', 'Project Profile']"></vex-breadcrumbs>      </div>
+      <div class="hidden sm:block">
+        <mat-button-toggle-group [formControl]="layoutCtrl" class="mt-4 sm:mt-0">
+          <mat-button-toggle value="boxed">Boxed</mat-button-toggle>
+          <mat-button-toggle value="fullwidth">Full-Width</mat-button-toggle>
+        </mat-button-toggle-group>
+      </div>
+    </div>
+  </vex-page-layout-header>
+  <vex-page-layout-content [class.container]="layoutCtrl.value === 'boxed'" [class.px-gutter]="layoutCtrl.value === 'fullwidth'" class="-mt-6">
+    <div class="card overflow-auto -mt-16">
+      <div class="bg-app-bar px-6 h-16 border-b sticky left-0 flex items-center" fxLayout="row" fxLayoutGap="10px">
+        <div class="bg-foreground rounded-full border px-4 max-w-[300px] flex-auto flex items-center border border-gray-300">
+          <mat-icon class="icon-sm text-secondary" svgIcon="mat:search"></mat-icon>
+          <input [formControl]="searchCtrl" class="px-4 py-2 border-0 outline-none w-full bg-transparent" 
+            placeholder="Search library type option..." type="search">
+        </div>
+        <span class="flex-1"></span>
+      <button [matMenuTriggerFor]="columnFilterMenu" class="ml-4 flex-none" mat-icon-button matTooltip="Filter Columns" type="button">
+        <mat-icon svgIcon="mat:filter_list"></mat-icon>
+      </button>
+      <button class="ml-4 flex-none" color="primary" [routerLink]="['add']"
+      mat-mini-fab matTooltip="Add project profile" type="button">
+      <mat-icon svgIcon="mat:add"></mat-icon>
+    </button>
+      </div>
+      <mat-progress-bar *ngIf="isListLoading" mode="indeterminate" color="primary"></mat-progress-bar>
+      <table @stagger [dataSource]="dataSource" class="w-full" mat-table matSort>
+        
+        <ng-container *ngFor="let column of columns; trackBy: trackByProperty">
+          <ng-container *ngIf="column.type === 'text'" [matColumnDef]="column.property">
+            <th *matHeaderCellDef class="uppercase" mat-header-cell mat-sort-header> {{ column.label }}</th>
+            <ng-container *ngIf="column.property === 'updatedAt'; else text">
+              <td *matCellDef="let row" [ngClass]="column.cssClasses" mat-cell>
+                {{ row[column.property] | date: 'MM/dd/yyyy hh:mm a' }}
+              </td>
+            </ng-container>
+            <ng-template #text>
+              <td *matCellDef="let row" mat-cell>
+                {{ row[column.property] }}
+              </td>
+            </ng-template>
+          </ng-container>
+        </ng-container>
+
+        <ng-container matColumnDef="labels">
+          <th *matHeaderCellDef class="uppercase" mat-header-cell mat-sort-header>Labels</th>
+          <td *matCellDef="let row" mat-cell>
+            <div (click)="$event.stopPropagation()" class="flex items-center gap-1">
+              <div *ngFor="let label of row.labels"
+                   [ngClass]="[label.textClass, label.bgClass]"
+                   class="rounded px-2 py-1 font-medium text-xs flex-none">
+                {{ label.text }}
+              </div>
+              <div class="text-secondary bg-base text-hint cursor-pointer hover:bg-hover flex-none flex items-center justify-center">
+                <mat-icon class="icon-sm" svgIcon="mat:add"></mat-icon>
+              </div>
+            </div>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="isActive">
+          <th *matHeaderCellDef class="uppercase" mat-header-cell mat-sort-header>Status</th>
+          <td *matCellDef="let row" mat-cell>
+            <div class="flex items-center gap-1">
+              <div [ngClass]="row.isActive == 'y' ? ['text-green', 'bg-green/10'] : ['text-amber', 'bg-amber/10']" 
+                   class="rounded px-2 py-1 font-medium text-xs flex-none">
+                {{ row.isActive === 'y' ? 'ACTIVE' : 'INACTIVE' }}
+              </div>
+            </div>
+        
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="actions">
+          <th *matHeaderCellDef mat-header-cell mat-sort-header>ACTION</th>
+          <td *matCellDef="let row" class="w-10 text-secondary" mat-cell>
+            <button (click)="$event.stopPropagation()"
+                    [matMenuTriggerData]="{ chart: row }"
+                    [matMenuTriggerFor]="actionsMenu"
+                    mat-icon-button
+                    type="button">
+              <mat-icon svgIcon="mat:more_horiz"></mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr *matHeaderRowDef="visibleColumns" mat-header-row></tr>
+        <tr (click)="edit(row)" *matRowDef="let row; columns: visibleColumns;" @fadeInUp 
+          class="hover:bg-hover trans-ease-out cursor-pointer" mat-row></tr>
+      </table>
+      <mat-paginator [pageSizeOptions]="pageSizeOptions" [pageSize]="pageSize" class="sticky left-0"></mat-paginator>
+    </div>
+  </vex-page-layout-content>
+</vex-page-layout>
+<mat-menu #columnFilterMenu="matMenu" xPosition="before" yPosition="below">
+  <button (click)="toggleColumnVisibility(column, $event)" *ngFor="let column of columns" class="mat-menu-item block">
+    <mat-checkbox (click)="$event.stopPropagation()" [(ngModel)]="column.visible" color="primary">
+      {{ column.label }}
+    </mat-checkbox>
+  </button>
+</mat-menu>
+<mat-menu #actionsMenu="matMenu" xPosition="before" yPosition="below">
+  <ng-template let-chart="chart" matMenuContent>
+    <button (click)="edit(chart)" mat-menu-item>
+      <mat-icon svgIcon="mat:edit"></mat-icon>
+      <span>Edit</span>
+    </button>
+  </ng-template>
+</mat-menu>
