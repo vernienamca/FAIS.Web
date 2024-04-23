@@ -30,8 +30,11 @@
             <mat-icon svgIcon="mat:download"></mat-icon>
             <span>Export all</span>
           </button>
-          <button (click)="add()" class="ml-4 flex-none" color="primary" mat-mini-fab matTooltip="Add Library Type Option" type="button">
+          <button (click)="add()" class="ml-4 flex-none" color="primary" mat-mini-fab matTooltip="Add Plant Information" type="button">
             <mat-icon svgIcon="mat:add"></mat-icon>
+          </button>
+          <button [matMenuTriggerFor]="columnFilterMenu" class="ml-4 flex-none" mat-icon-button matTooltip="Filter Columns" type="button">
+            <mat-icon svgIcon="mat:filter_list"></mat-icon>
           </button>
         </div>
       </div>
@@ -120,6 +123,10 @@
     <button (click)="edit(librarytypeoption)" mat-menu-item>
       <mat-icon svgIcon="mat:edit"></mat-icon>
       <span>Edit</span>
+    </button>
+    <button (click)="googleMap(librarytypeoption)" mat-menu-item>
+      <mat-icon svgIcon="mat:edit"></mat-icon>
+      <span>Google Map</span>
     </button>
   </ng-template>
 </mat-menu>

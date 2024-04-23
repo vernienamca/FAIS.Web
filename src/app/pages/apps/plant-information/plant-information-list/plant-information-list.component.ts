@@ -181,7 +181,7 @@ export class PlantInformationListComponent implements OnInit, OnDestroy, AfterVi
       this.dataSource.data = this.librarytypeoptions;
       return;
     }
-    this.dataSource.data = this.librarytypeoptions.filter(t => t.libraryTypeName === event.value);
+    this.dataSource.data = this.librarytypeoptions.filter(t => t.plantCode === event.value);
   }
 
   add() {
@@ -190,5 +190,9 @@ export class PlantInformationListComponent implements OnInit, OnDestroy, AfterVi
   
   edit(plantInformation: any): void {
     this._router.navigate([`apps/plant-information/edit/${plantInformation.id}`]);
+  }
+  
+  googleMap(plantInformation: any): void {
+    console.log("show google map")
   }
 }

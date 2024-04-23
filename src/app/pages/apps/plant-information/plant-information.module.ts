@@ -26,6 +26,7 @@ import { SecondaryToolbarModule } from 'src/@vex/components/secondary-toolbar/se
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatInputModule } from '@angular/material/input';
+import {WjGridModule} from '@grapecity/wijmo.angular2.grid';
 
 @NgModule({
   declarations: [PlantInformationListComponent, PlantInformationComponent],
@@ -55,7 +56,8 @@ import { MatInputModule } from '@angular/material/input';
     MatSlideToggleModule,
     MatTabsModule,
     SecondaryToolbarModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    WjGridModule
   ]
 })
 export class PlantInformationModule {

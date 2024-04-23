@@ -1,11 +1,15 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, Validators, FormBuilder, UntypedFormControl  } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { PageMode } from 'src/app/core/enums/page-mode.enum';
 import { ILibraryTypes } from 'src/app/core/models/library-types';
+import { CollectionViewNavigator } from '@grapecity/wijmo.input';
+import { FlexGrid } from '@grapecity/wijmo.grid';
 import { PortalService } from 'src/app/core/services/portal.service';
+import * as wjcCore from '@grapecity/wijmo';
+import { IPlantInformationCostCenter } from 'src/app/core/models/plant-information';
 
 @Component({
   selector: 'vex-plant-information',
@@ -13,6 +17,7 @@ import { PortalService } from 'src/app/core/services/portal.service';
   styleUrls: ['./plant-information.component.scss']
 })
 export class PlantInformationComponent implements OnInit, OnDestroy {
+  @ViewChild('costCenterGrid') costCenterGrid: FlexGrid;
   pageMode: PageMode;
   form: FormGroup; 
   layoutCtrl = new UntypedFormControl('fullwidth');
@@ -23,14 +28,63 @@ export class PlantInformationComponent implements OnInit, OnDestroy {
   updatedAt: Date;
   types: ILibraryTypes[];
   libraryTypes = [];
+  id: number;
+  plantInformationCostCenterData = this.getPlantInformationCostCenterData(5);
+
+  addNewRow(): void {
+    const newItem = {
+      costCenterType: '',
+      costCenterNo: '',
+      action: '',
+    };
+    this.costCenterGrid.collectionView.sourceCollection.unshift(newItem);
+    this.costCenterGrid.collectionView.refresh();
+  }
+
+  onDeleteRow(item: any): void {
+      const index = this.costCenterGrid.collectionView.items.indexOf(item);
+        this.costCenterGrid.collectionView.sourceCollection.splice(index, 1);
+        this.costCenterGrid.collectionView.refresh();
+  }  
+  
+  
+  getPlantInformationCostCenterData(count: number) {
+    const maxRowsToShow = 5;
+    const pageSize = Math.min(count, maxRowsToShow);
+
+    const data = [];
+    for (let i = 0; i < count; i++) {
+      data.push({
+        plantCode: '',
+        substationName: '',
+        action: '',
+      });
+    }
+    const collectionView = new wjcCore.CollectionView(data, { pageSize });
+    return collectionView;
+  }
+
 
   get formControls() {
     return {
-      libraryTypeId: this.form.get('libraryTypeId'),
-      code: this.form.get('code'),
-      description: this.form.get('description'),
-      status: this.form.get('isActive'),
-      remark: this.form.get('remark')
+      plantCode: this.form.get('plantCode'),
+      substationName: this.form.get('substationName'),
+      class: this.form.get('class'),
+      substationNameOld: this.form.get('substationNameOld'),
+      transmissionGrid: this.form.get('transmissionGrid'),
+      districtOffice: this.form.get('districtOffice'),
+      mtd: this.form.get('mtd'),
+      commisioningDate: this.form.get('commisioningDate'),
+      googleMapCoordinates: this.form.get('googleMapCoordinates'),
+      udf1: this.form.get('udf1'),
+      udf2: this.form.get('udf2'),
+      udf3: this.form.get('udf3'),
+      region: this.form.get('region'),
+      municipalityCity: this.form.get('municipalityCity'),
+      province: this.form.get('province'),
+      barangay: this.form.get('barangay'),
+      isActive: this.form.get('isActive'),
+      statusDate: this.form.get('statusDate'),
     };
   }
 
@@ -44,25 +98,29 @@ export class PlantInformationComponent implements OnInit, OnDestroy {
     private _router: Router
   ) {
     this.form = this._fb.group({
-      libraryTypeId: ['', [Validators.required]],
-      code: ['', [Validators.required]],
-      description: ['', [Validators.required]],
+      plantCode: ['', [Validators.required]],
+      substationName: ['', [Validators.required]],
+      class: [''],
+      substationNameOld: [''],
+      transmissionGrid: [''],
+      districtOffice: [''],
+      mtd: [''],
+      commisioningDate: [''],
+      googleMapCoordinates: [''],
+      udf1: [''],
+      udf2: [''],
+      udf3: [''],
+      region: [''],
+      municipalityCity: [''],
+      province: [''],
+      barangay: [''],
       isActive: [true],
-      remark: ['']
+      status: [''],
+      statusDate: ['']
     });
 
     const id = parseInt(this._route.snapshot.paramMap.get('id'));
     this.pageMode = this._route.snapshot.data.pageMode;
-    
-    this._portalService.getLibraryTypes()
-    .pipe(takeUntil(this._onDestroy$))
-    .subscribe(libraryTypes => {
-      if (!libraryTypes) {
-        return;
-      }
-      this.types = libraryTypes;
-      this.libraryTypes = libraryTypes.map(function(a) {return [a.id, a.name];}).filter((value, index, self) => self.indexOf(value) === index);
-    });
 
     if (this.pageMode === 2) {
       this._portalService.getPlantInformation(id)
@@ -73,12 +131,26 @@ export class PlantInformationComponent implements OnInit, OnDestroy {
         }
 
         this.form.patchValue({
-          code: data.code || '',
-          description: data.description || '',
-          isActive: data.isActive === 'Y',
-          remark: data.remark
+          plantCode: data.plantCode || '',
+          substationName: data.substationName || '',
+          class: data.class || '',
+          substationNameOld: data.substationNameOld || '',
+          transmissionGrid: data.transmissionGrid || '',
+          districtOffice: data.districtOffice || '',
+          mtd: data.mtd || '',
+          commisioningDate: data.commisioningDate || '',
+          googleMapCoordinates: data.googleMapCoordinates || '',
+          udf1: data.udf1 || '',
+          udf2: data.udf2 || '',
+          udf3: data.udf3 || '',
+          region: data.region || '',
+          municipalityCity: data.municipalityCity || '',
+          province: data.province || '',
+          barangay: data.barangay || '',
+          isActive: data.isActive || 'Y',
+          status: data.status || '',
+          statusDate: data.statusDate || ''
         });
-        this.form.get('libraryTypeId').setValue(data.libraryTypeId, data.libraryTypeName)
         this.statusLabel = data.isActive === 'Y' ? 'Active' : 'Inactive'; 
         this.createdBy = data.createdByName;
         this.createdAt = data.createdAt;
@@ -90,6 +162,8 @@ export class PlantInformationComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.id = parseInt(this._route.snapshot.paramMap.get('id'));
+    this.plantInformationCostCenterData = this.getPlantInformationCostCenterData(this.id);
   }
 
   ngOnDestroy(): void {
@@ -102,21 +176,43 @@ export class PlantInformationComponent implements OnInit, OnDestroy {
   }
 
   save(): void {
-    if (!this.formControls.libraryTypeId.value) {
-      this.formControls.libraryTypeId.markAsTouched();
-      this.formControls.libraryTypeId.updateValueAndValidity();
+    if (!this.formControls.plantCode.value) {
+      this.formControls.plantCode.markAsTouched();
+      this.formControls.plantCode.updateValueAndValidity();
       return;
     }
-    if (!this.formControls.description.value) {
-      this.formControls.description.markAsTouched();
-      this.formControls.description.updateValueAndValidity();
+    if (!this.formControls.substationName.value) {
+      this.formControls.substationName.markAsTouched();
+      this.formControls.substationName.updateValueAndValidity();
       return;
     }
-    if (!this.formControls.code.value) {
-      this.formControls.code.markAsTouched();
-      this.formControls.code.updateValueAndValidity();
-      return;
-    }
+
+    const wijmoInvalid = this.plantInformationCostCenterData.sourceCollection.some((item: any) => {
+      return item.gl === '' || /^[a-zA-Z]+$/.test(item.glNo) || item.sl === '' || /^[a-zA-Z]+$/.test(item.sl) || item.faisRefNo === '';
+    });
+      if (wijmoInvalid) {
+        this._snackBar.open('Please fill in or delete the rows in the table.', 'Close', {
+          duration: 5000,
+        });
+        return;
+      }
+
+      const collectionView = this.costCenterGrid.collectionView;
+      const allItems = collectionView.sourceCollection as any[];
+      const plantInformationCostCenterDTOArray: IPlantInformationCostCenter[] = allItems.map((item: any) => {
+        return {
+          id: item.id || 0,
+          plantInformationId: this.id || 0,
+          costCenterType: item.costCenterType,
+          costCenterNo: item.costCenterNo,
+          costCenter: item.costCenter,
+          dateRemoved: null,
+          createdBy: parseInt(localStorage.getItem('user_id')),
+          createdAt: this.createdAt = new Date(),
+          updatedBy: parseInt(localStorage.getItem('user_id')),
+          updatedAt: null
+        };
+      });
     
     const data = Object.assign({}, this.form.value);
     data.id = parseInt(this._route.snapshot.paramMap.get('id'));
@@ -124,6 +220,7 @@ export class PlantInformationComponent implements OnInit, OnDestroy {
 
     if (this.pageMode === 1) {
       data.createdBy = parseInt(localStorage.getItem('user_id'));
+      data.plantInformationCostCenterDTO = plantInformationCostCenterDTOArray;
 
       this._portalService.createPlantInformation(data)
       .pipe(takeUntil(this._onDestroy$))
@@ -131,9 +228,9 @@ export class PlantInformationComponent implements OnInit, OnDestroy {
         if (!data) {
           return;
         }
-        let snackBarRef = this._snackBar.open('Library type option has been successfully added.', 'Close');
+        let snackBarRef = this._snackBar.open('Plant Infomration has been successfully added.', 'Close');
         snackBarRef.afterDismissed().subscribe(() => {
-          this._router.navigateByUrl('apps/library-options');
+          this._router.navigateByUrl('apps/plant-information');
         });
       });
     }
@@ -146,7 +243,7 @@ export class PlantInformationComponent implements OnInit, OnDestroy {
         if (!data) {
           return;
         }
-        let snackBarRef = this._snackBar.open('Library type option has been successfully updated.', 'Close');
+        let snackBarRef = this._snackBar.open('Plant information has been successfully updated.', 'Close');
         snackBarRef.afterDismissed().subscribe(() => {
           window.location.reload();
         });
