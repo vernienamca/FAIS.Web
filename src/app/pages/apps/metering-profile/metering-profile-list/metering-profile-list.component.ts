@@ -43,11 +43,11 @@ export class MeteringProfileListComponent implements OnInit, OnDestroy, AfterVie
     { label: 'Metering Point Name', property: 'meteringPointName', type: 'text', visible: true, cssClasses: ['font-medium'] },
     { label: 'Customer', property: 'customer', type: 'text', visible: true },
     { label: 'Type of Installation', property: 'installationTypeSeq', type: 'text', visible: true },
-    // { label: 'Metering Class', property: 'remarks', type: 'text', visible: true },
+    { label: 'Metering Class', property: 'meteringClass', type: 'text', visible: true },
     { label: 'Transmission Grid', property: 'transGrid', type: 'text', visible: true },
     { label: 'District Office', property: 'adRegionSeq', type: 'text', visible: true },
     { label: 'Facility Location', property: 'facilityLocationSeq', type: 'text', visible: true },
-    { label: 'Line Segment', property: 'remarks', type: 'text', visible: true },
+    { label: 'Line Segment', property: 'lineSegment', type: 'text', visible: true },
     { label: 'Status', property: 'isActive', type: 'text', visible: true },
     { label: 'Action', property: 'actions', type: 'button', visible: true }
   ];

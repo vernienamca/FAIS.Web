@@ -4,6 +4,7 @@ export interface IMeteringProfile {
     districtSeq: number;
     customer: string;
     meteringPointName: string;
+    meteringClass?: string;
     installationTypeSeq: number;
     facilityLocationSeq: number;
     remarks: string;
@@ -11,6 +12,7 @@ export interface IMeteringProfile {
     adProdSeq?: number;
     adMunSeq?: number;
     adBrgySeq?: number;
+    lineSegment?: string;
     isActive: boolean;
     createdBy: string,
     createdAt: Date,
