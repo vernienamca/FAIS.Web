@@ -16,6 +16,7 @@ import { ILibraryTypes } from '../models/library-types';
 import { IAssetProfile } from '../models/asset-profile';
 import { IPermission } from '../models/permission';
 import { ITemplate } from '../models/template';
+import { IMeteringProfile } from '../models/metering-profile';
 
 @Injectable({
   providedIn: 'root'
@@ -273,7 +274,11 @@ export class PortalService {
     return this._portalApi.updateAssetProfile(id,data);
 }
 
-  getAssetProfile(id: number): Observable<IAssetProfile> {
-    return this._portalApi.getAssetProfile(id);
+getAssetProfile(id: number): Observable<IAssetProfile> {
+  return this._portalApi.getAssetProfile(id);
+}
+
+getMeteringProfiles(): Observable<IMeteringProfile[]> {
+  return this._portalApi.getMeteringProfiles();
 }
 }
