@@ -6,13 +6,14 @@
       <mat-icon svgIcon="mat:more_vert"></mat-icon>
     </button>
   </vex-secondary-toolbar>
-  
+  <mat-progress-bar *ngIf="isSaving" mode="indeterminate" color="primary"></mat-progress-bar>
+
   <div class="p-gutter container" [class.container]="layoutCtrl.value === 'boxed'" [class.px-gutter]="layoutCtrl.value === 'fullwidth'">
     <div class="flex flex-col sm:flex-row gap-4">
       <div class="card flex-auto">
         <div class="px-6 py-4 border-b flex items-center gap-2">
-          <button [ngClass]="[form.invalid ?'!bg-gray' : '!bg-green', '!text-contrast-white']" mat-raised-button
-            type="button" (click)="save()" [disabled]="form.invalid">
+          <button [ngClass]="[form.invalid || isSaving ? '!bg-gray' : '!bg-green', '!text-contrast-white']" mat-raised-button
+            type="button" (click)="save()" [disabled]="form.invalid || isSaving">
             <mat-icon class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" svgIcon="mat:archive"></mat-icon> Save
           </button>
           <button color="primary" mat-stroked-button type="button" [routerLink]="['']">
@@ -30,7 +31,7 @@
   
               <mat-form-field appearance="fill" class=" flex-auto">
                 <mat-label>RCA GL</mat-label>
-              <mat-select formControlName="rcaglId"> 
+              <mat-select formControlName="rcaglId" multiple> 
                 <mat-option *ngFor="let chart of chartofAccounts" [value]="chart.id">
                   {{ chart.rcaGL }}
                 </mat-option>
@@ -82,7 +83,11 @@
             <div class="flex flex-col sm:flex-row sm:gap-4">
               <mat-form-field appearance="fill">
                 <mat-label>Asset Class</mat-label>
-                <input matInput formControlName="assetClassId">
+                <mat-select formControlName="assetClassId">
+                  <mat-option *ngFor ="let class of assetClass" [value] = "class.id">
+                    {{ class.description}}
+                  </mat-option>
+                </mat-select>
               </mat-form-field>
 
                 <mat-form-field appearance="fill" class="economic-life-field">
