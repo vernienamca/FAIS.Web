@@ -4,7 +4,7 @@ export interface IAssetProfile {
     assetCategoryId: string,
     assetClassId: number,
     description: string,
-    rcaGLId: number,
+    rcaglId: any,
     rcaSLId: number,
     costCenter?: number,
     assetType: number,
