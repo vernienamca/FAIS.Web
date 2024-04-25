@@ -1,19 +1,47 @@
-<vex-secondary-toolbar current="{{pageLabel}}">
-  <vex-breadcrumbs [crumbs]="['System Management', 'Alerts', pageLabel]" class="flex-auto"></vex-breadcrumbs>
+<vex-secondary-toolbar current="{{ pageLabel }}">
+  <vex-breadcrumbs
+    [crumbs]="['System Management', 'Alerts', pageLabel]"
+    class="flex-auto"
+  ></vex-breadcrumbs>
   <button class="ml-2" color="primary" mat-icon-button type="button">
     <mat-icon svgIcon="mat:more_vert"></mat-icon>
   </button>
 </vex-secondary-toolbar>
-<div class="p-gutter container" [class.container]="layoutCtrl.value === 'boxed'" [class.px-gutter]="layoutCtrl.value === 'fullwidth'">
+<div
+  class="p-gutter container"
+  [class.container]="layoutCtrl.value === 'boxed'"
+  [class.px-gutter]="layoutCtrl.value === 'fullwidth'"
+>
   <div class="flex flex-col sm:flex-row gap-4">
     <div class="card flex-auto">
       <div class="px-6 py-4 border-b flex items-center gap-2">
-        <button [ngClass]="[form.invalid ? '!bg-gray' : '!bg-green', '!text-contrast-white']" mat-raised-button type="button" 
-          [disabled]="form.invalid" (click)="save()">
-          <mat-icon class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" svgIcon="mat:archive"></mat-icon> Save
+        <button
+          [ngClass]="[
+            form.invalid ? '!bg-gray' : '!bg-green',
+            '!text-contrast-white'
+          ]"
+          mat-raised-button
+          type="button"
+          [disabled]="form.invalid"
+          (click)="save()"
+        >
+          <mat-icon
+            class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2"
+            svgIcon="mat:archive"
+          ></mat-icon>
+          Save
         </button>
-        <button color="primary" mat-stroked-button type="button" [routerLink]="['/apps/templates']">
-          <mat-icon class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" svgIcon="mat:close"></mat-icon> Close
+        <button
+          color="primary"
+          mat-stroked-button
+          type="button"
+          [routerLink]="['/apps/templates']"
+        >
+          <mat-icon
+            class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2"
+            svgIcon="mat:close"
+          ></mat-icon>
+          Close
         </button>
       </div>
       <div class="px-6 py-4 flex flex-col">
@@ -22,19 +50,19 @@
             [formGroup]="form"
             class="flex flex-col flex-auto form-container"
           >
-            <div class="grid md:gap-x-8 mt-8">
+            <div class="grid md:gap-x-8">
               <div class="mb-6">
-                <label
+                <!-- <label
                   for="subject-input"
                   class="block mb-2 text-sm font-medium font-bold"
                   >Subject *</label
-                >
+                > -->
                 <mat-form-field appearance="fill" class="w-full">
+                  <mat-label>Subject</mat-label>
                   <input
                     matInput
                     id="subject-input"
                     type="text"
-                    placeholder="Subject"
                     class="block w-full"
                     formControlName="subject"
                   />
@@ -50,30 +78,29 @@
                 </mat-error>
               </div>
             </div>
-            <div class="grid md:grid-cols-2 md:gap-x-8 mt-8">
+            <div class="grid md:grid-cols-2 md:gap-x-8">
               <div class="mb-6">
-                <label
-                  for="startdate-input"
-                  class="block mb-2 text-sm font-medium font-bold"
-                  >Start Date *</label>
-                  <input placeholder="MM/dd/yyyy" matInput [matDatepicker]="startDatePicker" inputFormat="MM/dd/yyyy" autocomplete="off" 
-                          id="startDate" formControlName="startDate" type="text" required>
-                        
+                <mat-form-field appearance="fill" class="w-full">
+                  <mat-label>Start Date</mat-label>
+                  <input matInput [matDatepicker]="startDatePicker" inputFormat="MM/dd/yyyy" autocomplete="off" 
+                    id="startDate" formControlName="startDate" type="text" required>
                   <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
-                        <mat-datepicker #startDatePicker></mat-datepicker>
-                        <mat-error *ngIf="formControls.startDate.touched && formControls.startDate.invalid">
-                          <span *ngIf="formControls.startDate.getError('required')">
-                            Start date is required
-                          </span>
+                  <mat-datepicker #startDatePicker></mat-datepicker>
+                  <mat-error
+                    *ngIf="
+                      formControls.startDate.touched &&
+                      formControls.startDate.invalid
+                    "
+                  >
+                    <span *ngIf="formControls.startDate.getError('required')">
+                      Start date is required
+                    </span>
                   </mat-error>
+                </mat-form-field>
               </div>
               <div class="mb-6">
-                <label
-                  for="starttime-input"
-                  class="block mb-2 text-sm font-medium font-bold"
-                  >Time *</label
-                >
                 <mat-form-field appearance="fill" class="w-full">
+                  <mat-label>Start Time</mat-label>
                   <input
                     matInput
                     id="starttime-input"
@@ -85,7 +112,8 @@
                 </mat-form-field>
                 <mat-error
                   *ngIf="
-                    formControls.startTime.touched && formControls.startTime.invalid
+                    formControls.startTime.touched &&
+                    formControls.startTime.invalid
                   "
                 >
                   <span *ngIf="formControls.startTime.getError('required')">
@@ -94,31 +122,29 @@
                 </mat-error>
               </div>
             </div>
-            <div class="grid md:grid-cols-2 md:gap-x-8 mt-8">
+            <div class="grid md:grid-cols-2 md:gap-x-8">
               <div class="mb-6">
-                <label
-                  for="enddate-input"
-                  class="block mb-2 text-sm font-medium font-bold"
-                  >End Date *</label
-                >
-                <input placeholder="MM/dd/yyyy" matInput [matDatepicker]="endDatePicker" inputFormat="MM/dd/yyyy" autocomplete="off" 
-                          id="endDate" formControlName="endDate" type="text" required>
-                        
+                <mat-form-field appearance="fill" class="w-full">
+                  <mat-label>End Date</mat-label>
+                  <input matInput [matDatepicker]="endDatePicker" inputFormat="MM/dd/yyyy" autocomplete="off" 
+                    id="endDate" formControlName="endDate" type="text" required>
                   <mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
-                        <mat-datepicker #endDatePicker></mat-datepicker>
-                        <mat-error *ngIf="formControls.endDate.touched && formControls.endDate.invalid">
-                          <span *ngIf="formControls.endDate.getError('required')">
-                            End date is required
-                          </span>
+                  <mat-datepicker #endDatePicker></mat-datepicker>
+                  <mat-error
+                    *ngIf="
+                      formControls.endDate.touched &&
+                      formControls.endDate.invalid
+                    "
+                  >
+                    <span *ngIf="formControls.endDate.getError('required')">
+                      End date is required
+                    </span>
                   </mat-error>
+                </mat-form-field>
               </div>
               <div class="mb-6">
-                <label
-                  for="endtime-input"
-                  class="block mb-2 text-sm font-medium font-bold"
-                  >Time *</label
-                >
                 <mat-form-field appearance="fill" class="w-full">
+                  <mat-label>End Time</mat-label>
                   <input
                     matInput
                     id="endtime-input"
@@ -139,15 +165,18 @@
                 </mat-error>
               </div>
             </div>
-            
-            <div class="grid md:gap-x-8 mt-8">
+
+            <div class="grid md:gap-x-8">
               <div class="mb-6">
                 <label
                   for="content-input"
                   class="block mb-2 text-sm font-medium font-bold"
                   >Content *</label
                 >
-                <ckeditor [editor]="Editor" formControlName="content"></ckeditor>
+                <ckeditor
+                  [editor]="Editor"
+                  formControlName="content"
+                ></ckeditor>
                 <!-- <mat-form-field appearance="fill" class="w-full">
                   <input
                     matInput
@@ -170,134 +199,145 @@
                 </mat-error> -->
               </div>
             </div>
-            
-            <div class="grid md:grid-cols-2 md:gap-x-8 mt-8">
+
+            <div class="grid md:grid-cols-2 md:gap-x-8">
               <div class="mb-6">
-              <label
-                for="comp-input"
-                class="block mb-2 text-sm font-medium font-bold"
-                >Target *</label
-              >
-              <mat-form-field appearance="fill" class="flex-auto">
-                <mat-select formControlName="target" required>
-                  <mat-option value="{{i.text}}" *ngFor="let i of targetList"><mat-icon>{{i.icon}}</mat-icon> {{i.text}}</mat-option>
-                </mat-select>
-                <mat-error
-                  *ngIf="
-                    formControls.target.touched && formControls.target.invalid
-                  "
-                >
-                  <span *ngIf="formControls.target.getError('required')">
-                    Target is required
-                  </span>
-                </mat-error>
-              </mat-form-field>
+                <mat-form-field appearance="fill" class="w-full">
+                  <mat-label>Target</mat-label>
+                  <mat-select formControlName="target" required>
+                    <mat-option
+                      value="{{ i.text }}"
+                      *ngFor="let i of targetList"
+                      ><mat-icon>{{ i.icon }}</mat-icon>
+                      {{ i.text }}</mat-option
+                    >
+                  </mat-select>
+                  <mat-error
+                    *ngIf="
+                      formControls.target.touched && formControls.target.invalid
+                    "
+                  >
+                    <span *ngIf="formControls.target.getError('required')">
+                      Target is required
+                    </span>
+                  </mat-error>
+                </mat-form-field>
+              </div>
+              <div class="mb-6" *ngIf="formControls.target.value == 'Role'">
+                <mat-form-field appearance="fill" class="w-full">
+                  <mat-label>Roles</mat-label>
+                  <mat-select formControlName="roles" required>
+                    <mat-option
+                      value="{{ i.name }}"
+                      *ngFor="let i of rolesList"
+                      >{{ i.name }}</mat-option
+                    >
+                    <!-- <mat-icon>{{i.icon}}</mat-icon>  -->
+                  </mat-select>
+                  <mat-error
+                    *ngIf="
+                      formControls.roles.touched && formControls.roles.invalid
+                    "
+                  >
+                    <span *ngIf="formControls.roles.getError('required')">
+                      Roles is required
+                    </span>
+                  </mat-error>
+                </mat-form-field>
+              </div>
+              <div class="mb-6" *ngIf="formControls.target.value == 'User'">
+                <mat-form-field appearance="fill" class="w-full">
+                  <mat-label>Users</mat-label>
+                  <mat-select formControlName="users" required>
+                    <mat-option value="{{ i.id }}" *ngFor="let i of usersList"
+                      ><label>{{ i.firstName }} {{ i.lastName }}</label> |
+                      <label>{{ i.position }}</label></mat-option
+                    >
+                  </mat-select>
+                  <mat-error
+                    *ngIf="
+                      formControls.users.touched && formControls.users.invalid
+                    "
+                  >
+                    <span *ngIf="formControls.users.getError('required')">
+                      Users is required
+                    </span>
+                  </mat-error>
+                </mat-form-field>
+              </div>
             </div>
-            <div class="mb-6" *ngIf="formControls.target.value == 'Role'">
-              <label
-                for="comp-input"
-                class="block mb-2 text-sm font-medium font-bold"
-                >Roles *</label
-              >
-              <mat-form-field appearance="fill" class="flex-auto">
-                <mat-select formControlName="roles">
-                  <mat-option value="{{i.name}}" *ngFor="let i of rolesList">{{i.name}}</mat-option>
-                  <!-- <mat-icon>{{i.icon}}</mat-icon>  -->
-                </mat-select>
-                <mat-error
-                  *ngIf="
-                    formControls.roles.touched && formControls.roles.invalid
-                  "
-                >
-                  <span *ngIf="formControls.roles.getError('required')">
-                    Roles is required
-                  </span>
-                </mat-error>
-              </mat-form-field>
+            <div class="grid md:grid-cols-2 md:gap-x-8">
+              <div class="mb-6">
+                <mat-form-field appearance="fill" class="w-full">
+                  <mat-label>Type</mat-label>
+                  <mat-select formControlName="notificationType" required>
+                    <mat-option value="{{ i.value }}" *ngFor="let i of typeList"
+                      ><mat-icon>{{ i.icon }}</mat-icon>
+                      {{ i.text }}</mat-option
+                    >
+                  </mat-select>
+                  <mat-error
+                    *ngIf="
+                      formControls.notificationType.touched &&
+                      formControls.notificationType.invalid
+                    "
+                  >
+                    <span
+                      *ngIf="formControls.notificationType.getError('required')"
+                    >
+                      Type is required
+                    </span>
+                  </mat-error>
+                </mat-form-field>
+              </div>
+              <div class="mb-6">
+                <mat-form-field appearance="fill" class="w-full">
+                  <mat-label>Icon Color</mat-label>
+                  <mat-select formControlName="iconColor" required>
+                    <mat-option
+                      value="{{ i.text }}"
+                      *ngFor="let i of iconColorList"
+                      ><span style.color="{{ i.color }}"
+                        ><mat-icon></mat-icon
+                      ></span>
+                      {{ i.text }}</mat-option
+                    >
+                  </mat-select>
+                  <mat-error
+                    *ngIf="
+                      formControls.iconColor.touched &&
+                      formControls.iconColor.invalid
+                    "
+                  >
+                    <span *ngIf="formControls.iconColor.getError('required')">
+                      Icon color is required
+                    </span>
+                  </mat-error>
+                </mat-form-field>
+              </div>
             </div>
-            <div class="mb-6" *ngIf="formControls.target.value == 'User'">
-              <label
-                for="comp-input"
-                class="block mb-2 text-sm font-medium font-bold"
-                >Users *</label
-              >
-              <mat-form-field appearance="fill" class="flex-auto">
-                <mat-select formControlName="users">
-                  <mat-option value="{{i.id}}" *ngFor="let i of usersList"><label>{{i.firstName}} {{i.lastName}}</label> | <label>{{i.position}}</label></mat-option>
-                </mat-select>
-                <mat-error
-                  *ngIf="
-                    formControls.users.touched && formControls.users.invalid
-                  "
-                >
-                  <span *ngIf="formControls.users.getError('required')">
-                    Users is required
-                  </span>
-                </mat-error>
-              </mat-form-field>
+            <div class="grid md:grid-cols-2 md:gap-x-8">
+              <div class="mb-6">
+                <mat-form-field appearance="fill" class="w-full">
+                  <mat-label>Icon</mat-label>
+                  <mat-select formControlName="icon" required>
+                    <mat-option value="{{ i.text }}" *ngFor="let i of iconList"
+                      ><mat-icon>{{ i.icon }}</mat-icon>
+                      {{ i.text }}</mat-option
+                    >
+                  </mat-select>
+                  <mat-error
+                    *ngIf="
+                      formControls.icon.touched && formControls.icon.invalid
+                    "
+                  >
+                    <span *ngIf="formControls.icon.getError('required')">
+                      Icon is required
+                    </span>
+                  </mat-error>
+                </mat-form-field>
+              </div>
             </div>
-            </div>
-            <div class="grid md:grid-cols-2 md:gap-x-8 mt-8">
-            <div class="mb-6">
-              <label
-                for="comp-input"
-                class="block mb-2 text-sm font-medium font-bold">Type *</label
-              >
-              <mat-form-field appearance="fill" class="flex-auto">
-                <mat-select formControlName="notificationType" required>
-                  <mat-option value="{{i.value}}" *ngFor="let i of typeList"><mat-icon>{{i.icon}}</mat-icon> {{i.text}}</mat-option>
-                </mat-select>
-                <mat-error
-                  *ngIf="formControls.notificationType.touched && formControls.notificationType.invalid">
-                  <span *ngIf="formControls.notificationType.getError('required')">
-                    Type is required
-                  </span>
-                </mat-error>
-              </mat-form-field>
-            </div>
-            <div class="mb-6">
-              <label
-                for="comp-input"
-                class="block mb-2 text-sm font-medium font-bold"
-                >Icon Color *</label
-              >
-              <mat-form-field appearance="fill" class="flex-auto">
-                <mat-select formControlName="iconColor" required>
-                  <mat-option value="{{i.text}}" *ngFor="let i of iconColorList"><span style.color="{{i.color}}"><mat-icon></mat-icon></span> {{i.text}}</mat-option>
-                </mat-select>
-                <mat-error
-                  *ngIf="
-                    formControls.iconColor.touched &&
-                    formControls.iconColor.invalid
-                  ">
-                  <span *ngIf="formControls.iconColor.getError('required')">
-                    Icon color is required
-                  </span>
-                </mat-error>
-              </mat-form-field>
-            </div>
-          </div>
-          <div class="grid md:grid-cols-2 md:gap-x-8 mt-8">
-            <div class="mb-6">
-              <label
-                for="comp-input"
-                class="block mb-2 text-sm font-medium font-bold"
-                >Icon *</label
-              >     
-              <mat-form-field appearance="fill" class="flex-auto">
-                <mat-select formControlName="icon" required>
-                  <mat-option value="{{i.text}}" *ngFor="let i of iconList"><mat-icon>{{i.icon}}</mat-icon> {{i.text}}</mat-option>
-                </mat-select>
-                <mat-error
-                  *ngIf="formControls.icon.touched && formControls.icon.invalid"
-                >
-                  <span *ngIf="formControls.icon.getError('required')">
-                    Icon is required
-                  </span>
-                </mat-error>
-              </mat-form-field>
-            </div>
-          </div>
             <div class="flex flex-col sm:flex-row sm:gap-4">
               <mat-slide-toggle
                 color="accent"
@@ -331,6 +371,7 @@
             </blockquote>
           </form>
         </div>
+      </div>
     </div>
   </div>
 </div>
