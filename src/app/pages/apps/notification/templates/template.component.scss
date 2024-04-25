@@ -79,3 +79,11 @@ mat-form-field {
   --mdc-switch-selected-focus-track-color: #008000;
   --mdc-switch-selected-focus-handle-color: #008000;
 }
+
+.mat-input-element {
+  background: transparent !important;
+}
+
+.mat-input-element:focus {
+  outline: none;
+}

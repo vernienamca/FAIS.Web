@@ -1,16 +1,17 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormGroup, Validators, FormBuilder, UntypedFormControl} from '@angular/forms';
+import { FormGroup, Validators, FormBuilder, UntypedFormControl } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute,Router } from '@angular/router';
 import { Subject, takeUntil, tap , Observable, switchMap } from 'rxjs';
 import { IChart } from 'src/app/core/models/chart';
-import { MatSelect } from '@angular/material/select';
 import { ILibraryTypes } from 'src/app/core/models/library-types';
 import { PortalService } from 'src/app/core/services/portal.service';
 import { IAssetProfile } from 'src/app/core/models/asset-profile';
 import { SecurityService } from 'src/app/core/services/security.service';
 import {IRole} from 'src/app/core/models/role'
 import { RoleNames } from 'src/app/core/enums/role.enums';
+import { MatDialog } from '@angular/material/dialog';
+import { AssetConfirmationDialogComponent } from './asset-confirmation-dialog/asset-confirmation-dialog.component';
 
 @Component({
   selector: 'vex-module',
@@ -28,6 +29,7 @@ export class AssetProfileComponent implements OnInit, OnDestroy {
  statusLabel = 'Active';
  chartofAccounts: IChart[] = [];
  costCenterType: any [] = [];
+ assetClass: any [] = [];
  assetType: any [] = [];
  filteredlibraryTypes: ILibraryTypes[] = [];
  createdBy: string;
@@ -37,6 +39,7 @@ export class AssetProfileComponent implements OnInit, OnDestroy {
  roleIds: number[] = [];
  roles: IRole[] = [];
  isAdmin: boolean = false;
+ isSaving: boolean;
 
  get formControls() {
   return {
@@ -65,14 +68,15 @@ export class AssetProfileComponent implements OnInit, OnDestroy {
    private _portalService: PortalService,
    private _securityService: SecurityService,
    private _snackBar: MatSnackBar,
-   private _router: Router
+   private _router: Router,
+   private _dialog: MatDialog
   ) {
   this.form = this._fb.group({
     name: ['', Validators.required], 
     rcaglId: ['', Validators.required],
-    assetCategoryId: [''],
+    assetCategoryId: ['',Validators.required],
     rcaSLId: ['',Validators.required],
-    assetClassId: ['', [Validators.required, Validators.pattern('^[0-9]*$')]],
+    assetClassId: ['',],
     costcenter: ['',Validators.required],
     assetType: ['',Validators.required],
     description: [''],
@@ -106,6 +110,7 @@ export class AssetProfileComponent implements OnInit, OnDestroy {
       this.costCenterType = data.filter(type => type.code =='CCT');
       this.assetType = data.filter(type => type.code =='AT');
       this.filteredlibraryTypes = data.filter(type => type.code === 'AST');
+      this.assetClass = data.filter(type => type.code === 'AC' );
     })
 
     if(this.id){
@@ -115,22 +120,34 @@ export class AssetProfileComponent implements OnInit, OnDestroy {
     };
 
    save(): void{
+    this.isSaving = true;
+
+    this._dialog.open(AssetConfirmationDialogComponent,{
+    width: '500px',
+    disableClose: true
+    })
+    .afterClosed().subscribe((result: boolean) => {
+      if (result)
+        if(this.isEditMode)
+          {
+           editdata.id = parseInt(this._route.snapshot.paramMap.get('id'));
+           editdata.createdBy = data.createdBy;
+           this._updateAsset(editdata)
+          }
+          else {
+            this._addAsset(data);
+          }
+          else {
+            this._snackBar.open('User Cancelled saving.', 'Close');
+            this.isSaving = false;
+          }
+    })
     const data = Object.assign({},this.form.value)
     const editdata = Object.assign({}, this.form.getRawValue())
     data.createdBy = parseInt(localStorage.getItem('user_id'));
     data.isActive = data.isActive ? 'Y' : 'N';
     editdata.isActive = editdata.isActive ? 'Y' : 'N';
     editdata.updatedBy = this.userId;
-
-    if(this.isEditMode)
-    {
-     editdata.id = parseInt(this._route.snapshot.paramMap.get('id'));
-     editdata.createdBy = data.createdBy;
-     this._updateAsset(editdata)
-    }
-    else {
-      this._addAsset(data);
-    }
    }
 
   ngOnDestroy(): void {
@@ -162,10 +179,9 @@ export class AssetProfileComponent implements OnInit, OnDestroy {
       }
 
       else if (roleAuthorized.name === 'Administrator') {
-        this.isAdmin = true;
+       this.isAdmin = true;
        const administratorRole = this.roles.find(role => role.name === 'Administrator');
        this.roleIds.push(administratorRole.id)
-        this.roleIds.push()
       }
       else {
         this._disableFormFields(roleAuthorized);
@@ -174,6 +190,9 @@ export class AssetProfileComponent implements OnInit, OnDestroy {
 }
   
   private _addAsset(data: IAssetProfile): void {
+    if (Array.isArray(data.rcaglId)) {
+      data.rcaglId = data.rcaglId.join(',');
+    } 
     data.statusDate = new Date();
     this._portalService.addAssetProfile(data)
     .pipe(takeUntil(this._onDestroy$))
@@ -181,7 +200,6 @@ export class AssetProfileComponent implements OnInit, OnDestroy {
       if(!data){
         return;
       }
-      
       this.id = data.id;
       const notifData = {
         roleIds: this.roleIds, 
@@ -198,39 +216,42 @@ export class AssetProfileComponent implements OnInit, OnDestroy {
         }
       })
 
-      let snackBarRef = this._snackBar.open('Asset has been successfully saved.', 'Close');
-      snackBarRef.afterDismissed().subscribe(() => {
-        this._router.navigate([`apps/asset-profile/edit/${data.id}`]);
-    });
+      this._snackBar.open('Asset has been successfully saved.', 'Close');
+      setTimeout(() => {
+        this._router.navigate([`apps/asset-profile/edit/${data.id}`]); 
+      }, 2000);
   });
 }
 
   private _updateAsset(data: IAssetProfile): void{
     data.statusDate = new Date();
+    if (Array.isArray(data.rcaglId)) {
+      data.rcaglId = data.rcaglId.join(',');
+    } 
     this._portalService.updateAssetProfile(this.id,data)
-    .pipe(takeUntil(this._onDestroy$))
-    .subscribe(data => {
-      if(!data){
-        return;
+      .pipe(takeUntil(this._onDestroy$))
+      .subscribe(data => {
+        if(!data){
+          return;
       }
-      this.id = data.result.id;
-      const notifData = {
+        this.id = data.result.id;
+        const notifData = {
         roleIds: this.roleIds, 
         id: this.id,
         assetName: data.result.name,
         editMode: this.isEditMode,
         isAdmin: this.isAdmin
       };
-      this._securityService.postNotifRole(notifData)
+    this._securityService.postNotifRole(notifData)
       .pipe(takeUntil(this._onDestroy$))
       .subscribe(data => {
         if(!data){
           return;
         }
       })
-      let snackBarRef = this._snackBar.open('Asset has been successfully updated.', 'Close');
+        let snackBarRef = this._snackBar.open('Asset has been successfully updated.', 'Close');
         snackBarRef.afterDismissed().subscribe(() => {
-          window.location.reload();
+        window.location.reload();
     });
     })
   }
@@ -248,7 +269,7 @@ export class AssetProfileComponent implements OnInit, OnDestroy {
 
   private _initializeData(data: any): void {
     const assetData = data.result
-    console.log('asssetData initialize', assetData)
+    const rcaglIdArray = assetData.rcaGLId ? assetData.rcaGLId.split(',').map(Number) : [];
     this.form.patchValue({
       name: assetData.name,
       assetCategoryId: assetData.categoryId,
@@ -256,13 +277,13 @@ export class AssetProfileComponent implements OnInit, OnDestroy {
       description : assetData.description,
       economiclife: assetData.economicLife,
       residuallife: assetData.residualLife,
-      rcaglId: assetData.rcaGLId,
+      rcaglId: rcaglIdArray,
       rcaSLId: assetData.rcaslId,
       costcenter: assetData.costCenter,
       assetType: assetData.assetType,
       isActive: assetData.isActive === 'Y' ? true : false,
       udf1: assetData.udF1,
-      udf2: assetData.udF2,
+      udf2: assetData.udF2, 
       udf3: assetData.udF3
     })
       this.createdBy = assetData.createdByName
@@ -273,7 +294,7 @@ export class AssetProfileComponent implements OnInit, OnDestroy {
    }
 
   private _getRoleAuthorization(roles: any[]): any {
-    const relevantRoles = roles.filter(role => this.roles.some(r => r.name === role.name));
+    const relevantRoles = roles.filter(role => this.roles.some(r => r.name === role.name && role.isActive === true));
     if (relevantRoles.length > 0) {
       const firstRole = relevantRoles.reduce((minRole, currentRole) => minRole.userRoleId < currentRole.userRoleId ? minRole : currentRole);
       return firstRole;
@@ -281,6 +302,7 @@ export class AssetProfileComponent implements OnInit, OnDestroy {
     else { 
       this._router.navigate(['/pages/error-401']); 
     }
+   
   }
 
   private _disableFormFields(role: IRole): void {
@@ -296,7 +318,7 @@ export class AssetProfileComponent implements OnInit, OnDestroy {
         fieldsToDisable = [''];
         break;
       default: 
-        fieldsToDisable = ['rcaglId', 'rcaSLId', 'costcenter', 'economiclife', 'residuallife','name', 'assetCategoryId', 'assetClassId', 'description', 'isActive','udf1','udf2','udf3'];
+        fieldsToDisable = ['rcaglId', 'rcaSLId', 'costcenter', 'economiclife', 'residuallife','name', 'assetCategoryId', 'assetClassId', 'description', 'isActive','udf1','udf2','udf3','assetType'];
         break;
     }
 

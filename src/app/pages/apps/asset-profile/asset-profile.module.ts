@@ -26,9 +26,11 @@ import { AssetProfileListComponent } from './asset-profile-list/asset-profile-li
 import { AssetProfileRoutingModule } from './asset-profile-routing.module';
 import { AssetProfileComponent } from './asset-profile.component';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
+import { AssetConfirmationDialogComponent} from './asset-confirmation-dialog/asset-confirmation-dialog.component'
+import { MatDividerModule } from '@angular/material/divider';
 
 @NgModule({
-  declarations: [AssetProfileListComponent, AssetProfileComponent],
+  declarations: [AssetProfileListComponent, AssetProfileComponent, AssetConfirmationDialogComponent],
   imports: [
     CommonModule,
     AssetProfileRoutingModule,
@@ -55,7 +57,8 @@ import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
     MatFormFieldModule,
     MatInputModule,
     MatSlideToggleModule,
-    NgxMatSelectSearchModule
+    NgxMatSelectSearchModule,
+    MatDividerModule
   ]
 })
 export class AssetProfileModule {
