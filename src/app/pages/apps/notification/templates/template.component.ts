@@ -62,6 +62,7 @@ export class TemplateComponent implements OnInit, OnDestroy {
   get formControls() {
     return {
       subject: this.form.get("subject"),
+      url: this.form.get("url"),
       startDate: this.form.get("startDate"),
       startTime: this.form.get("startTime"),
       endDate: this.form.get("endDate"),
@@ -93,6 +94,7 @@ export class TemplateComponent implements OnInit, OnDestroy {
   ) {
     this.form = this._fb.group({
       subject: ["", [Validators.required]],
+      url: ["", [Validators.required]],
       startDate: ["", [Validators.required]],
       startTime: ["", [Validators.required]],
       endDate: ["", [Validators.required]],
@@ -157,6 +159,11 @@ export class TemplateComponent implements OnInit, OnDestroy {
     if (!this.formControls.subject.value) {
       this.formControls.subject.markAsTouched();
       this.formControls.subject.updateValueAndValidity();
+      isValid = false;
+    }
+    if (!this.formControls.url.value) {
+      this.formControls.url.markAsTouched();
+      this.formControls.url.updateValueAndValidity();
       isValid = false;
     }
     if (!this.formControls.startDate.value) {
@@ -325,6 +332,7 @@ console.log("update data", data);
     data = data.result;
     this.form.setValue({
       subject: data.subject,
+      url: data.url,
       startDate: data.startDate,
       startTime: data.startTime,
       endDate: data.endDate,
