@@ -14,6 +14,7 @@ import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
 import { PortalService } from "src/app/core/services/portal.service";
 import { IStringInterpolation } from "src/app/core/models/string-interpolation";
 import { Router } from "@angular/router";
+import { SecurityService } from "src/app/core/services/security.service";
 
 @UntilDestroy()
 @Component({
@@ -51,6 +52,8 @@ export class StringInterpolationListComponent implements OnInit, OnDestroy, Afte
   selection = new SelectionModel<IStringInterpolation>(true, []);
   searchCtrl = new UntypedFormControl();
   isListLoading = true;
+  hasCreateAccess = false;
+  hasUpdateAccess = false;
 
   get visibleColumns() {
     return this.columns.filter((column) => column.visible).map((column) => column.property);
@@ -60,8 +63,22 @@ export class StringInterpolationListComponent implements OnInit, OnDestroy, Afte
 
   constructor(
     private _portalService: PortalService,
-    private _router: Router
-  ) {}
+    private _router: Router,
+    private _securityService: SecurityService
+  ) {
+    const userId = parseInt(localStorage.getItem('user_id'));
+    this._securityService.getPermissions(userId)
+      .pipe(takeUntil(this._onDestroy$))
+      .subscribe(data => {
+        const listPermission = data.filter(a => a.moduleId === 7);
+        const rolePermission = data.filter(a => a.moduleId === 22);
+        if (listPermission.some(s => s.isRead) === false) {
+          this._router.navigate([`pages/error-401`]);
+        }
+        this.hasCreateAccess = rolePermission.some(s => s.isCreate);
+        this.hasUpdateAccess = rolePermission.some(s => s.isUpdate);
+      });
+  }
 
   ngOnInit(): void {
     this._portalService.getStringInterpolations()

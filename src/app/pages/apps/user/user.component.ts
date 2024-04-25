@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, UntypedFormControl, Validators } from '@angular/forms';
 import { FormControl } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -10,7 +10,6 @@ import { stagger60ms } from 'src/@vex/animations/stagger.animation';
 import { IUser, IUserRole } from 'src/app/core/models/user';
 import { PortalService } from 'src/app/core/services/portal.service';
 import { SecurityService } from 'src/app/core/services/security.service';
-
 @Component({
   selector: 'app-user',
   templateUrl: './user.component.html',
@@ -22,6 +21,8 @@ import { SecurityService } from 'src/app/core/services/security.service';
 })
 
 export class UserComponent implements OnInit, OnDestroy {
+  @Input() min: any;
+  yesterday = new Date();
   form: FormGroup; 
   layoutCtrl = new UntypedFormControl('fullwidth');
   dataSource = [];
@@ -36,7 +37,8 @@ export class UserComponent implements OnInit, OnDestroy {
   updatedBy: string;
   updatedAt: Date;
   isSaving: boolean;
-
+  hasAccess = false;
+  
   get formControls() {
     return {
       employeeNumber: this.form.get('employeeNumber'),
@@ -66,6 +68,8 @@ export class UserComponent implements OnInit, OnDestroy {
     private _snackBar: MatSnackBar,
     private _datePipe: DatePipe
   ) {
+    this.yesterday.setDate(this.yesterday.getDate() - 0);
+
     this.userId = parseInt(this._route.snapshot.paramMap.get('id'));
     this.form = this._fb.group({
       employeeNumber: ['', []],
@@ -74,7 +78,7 @@ export class UserComponent implements OnInit, OnDestroy {
       firstName: ['', [Validators.required]],
       lastName: ['', [Validators.required]],
       emailAddress: ['', [Validators.required]],
-      mobileNumber: ['', [Validators.required]],
+      mobileNumber: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
       taFG: ['', []],
       oupFG: ['', []],
       division: ['', []],
@@ -86,6 +90,28 @@ export class UserComponent implements OnInit, OnDestroy {
     this._securityService.userRoles$.subscribe(item => {
       this.userRoles = item;
     });
+
+    this._securityService.getPermissions(parseInt(localStorage.getItem('user_id')))
+      .pipe(takeUntil(this._onDestroy$))
+      .subscribe(data => {
+        const permission = data.filter(a => a.moduleId === 21);
+        if (!permission || permission.some(s => s.isRead) === false) {
+          this._router.navigate([`pages/error-401`]);
+        }
+        if (permission.some(s => s.isUpdate) === false) {
+          this.form.controls['position'].disable();
+          this.form.controls['firstName'].disable();
+          this.form.controls['lastName'].disable();
+          this.form.controls['emailAddress'].disable();
+          this.form.controls['mobileNumber'].disable();
+          this.form.controls['taFG'].disable();
+          this.form.controls['oupFG'].disable();
+          this.form.controls['division'].disable();
+          this.form.controls['accountStatus'].disable();
+          this.form.controls['accountExpiration'].disable();
+        }
+        this.hasAccess = permission.some(s => s.isUpdate);
+      });
 
     if (this.userId) {
       this._portalService.getUser(this.userId)
@@ -103,7 +129,6 @@ export class UserComponent implements OnInit, OnDestroy {
     this.pageLabel = 'Add User';
     this.photo = `assets/img/avatars/default.png`
     this.formControls.statusDate.setValue(this._datePipe.transform(new Date(), 'longDate'))
-
     this.form.controls['statusDate'].disable();
   }
 
@@ -180,10 +205,7 @@ export class UserComponent implements OnInit, OnDestroy {
 
   private _createUser(data: IUser): void {
     this._securityService.createUser(data)
-      .pipe(
-        takeUntil(this._onDestroy$),
-        finalize(() => this.isSaving = false)
-      )
+      .pipe(takeUntil(this._onDestroy$))
       .subscribe(data => {
         if (!data) {
           return;
@@ -197,10 +219,7 @@ export class UserComponent implements OnInit, OnDestroy {
 
   private _updateUser(data: IUser): void {
     this._securityService.updateUser(this.userId, false, data)
-      .pipe(
-        takeUntil(this._onDestroy$),
-        finalize(() => this.isSaving = false)
-      )
+      .pipe(takeUntil(this._onDestroy$))
       .subscribe(data => {
         if (!data) {
           return;

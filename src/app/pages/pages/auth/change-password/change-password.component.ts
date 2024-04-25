@@ -141,7 +141,7 @@ export class ChangePasswordComponent implements OnInit, OnDestroy {
     this.hasAtLeastOneNumber = /[0-9]/.test(event.target.value);
     this.hasAtLeastOneLowercaseChar = /[a-z]/.test(event.target.value);
     this.hasAtLeastOneUppercaseChar = /[A-Z\s]+/.test(event.target.value);
-    this.hasMinSpecialCharacters = (event.target.value.match(/[@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/g) || []).length >= this.minSpecialCharacters;
+    this.hasMinSpecialCharacters = (event.target.value.match(/[@$%^&*()_+\-=\[\]{};':"\\|,.<>\/]/g) || []).length >= this.minSpecialCharacters;
     this.isValidPasswordCriteria = !this.hasMinPasswordLength || !this.hasAtLeastOneNumber || !this.hasAtLeastOneLowercaseChar 
       || !this.hasAtLeastOneUppercaseChar || !this.hasMinSpecialCharacters
   }
@@ -163,6 +163,10 @@ export class ChangePasswordComponent implements OnInit, OnDestroy {
       });
       return;
     }
+    console.log(this.user.id);
+    console.log(this.formControls.oldPassword.value);
+    console.log(this.formControls.newPassword.value);
+
     this._securityService.changePassword(this.user.id, this.formControls.oldPassword.value, this.formControls.newPassword.value)
       .pipe(takeUntil(this._onDestroy$))
       .subscribe(data => {

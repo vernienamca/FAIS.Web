@@ -26,8 +26,8 @@
           <button [matMenuTriggerFor]="columnFilterMenu" class="ml-4 flex-none" mat-icon-button matTooltip="Filter Columns" type="button">
             <mat-icon svgIcon="mat:filter_list"></mat-icon>
           </button>
-          <button (click)="createStringInterpolation()" class="ml-4 flex-none" color="primary"
-            mat-mini-fab matTooltip="Add string interpolation" type="button">
+          <button (click)="createStringInterpolation()" class="ml-4 flex-none" color="primary" mat-mini-fab matTooltip="Add string interpolation" 
+            type="button" [disabled]="!hasCreateAccess">
             <mat-icon svgIcon="mat:add"></mat-icon>
           </button>
         </div>
@@ -141,7 +141,7 @@
   </mat-menu>
   <mat-menu #actionsMenu="matMenu" xPosition="before" yPosition="below">
     <ng-template let-interpolation="interpolation" matMenuContent>
-      <button (click)="edit(interpolation)" mat-menu-item>
+      <button (click)="edit(interpolation)" mat-menu-item [disabled]="!hasUpdateAccess">
         <mat-icon svgIcon="mat:edit"></mat-icon>
         <span>Edit</span>
       </button>

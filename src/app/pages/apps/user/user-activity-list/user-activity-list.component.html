@@ -1,0 +1,37 @@
+
+<div class="sm:col-span-full py-4">
+  <h2 class="m-0 title flex-auto">Activity</h2>
+  <p>Latest user activities in the system.</p>
+</div>
+<div class="card overflow-auto">
+  <mat-progress-bar *ngIf="isListLoading" mode="indeterminate" color="primary"></mat-progress-bar>
+  <table @stagger [dataSource]="dataSource" class="w-full" mat-table matSort>
+    <!-- Text Columns -->
+    <ng-container *ngFor="let column of columns; trackBy: trackByProperty">
+      {{ columns | json}}
+      <ng-container *ngIf="column.type === 'text'" [matColumnDef]="column.property">
+        <th *matHeaderCellDef class="uppercase" mat-header-cell mat-sort-header> {{ column.label }}</th>
+        <ng-container *ngIf="column.property === 'createdAt'; else text">
+          <td *matCellDef="let row" [ngClass]="column.cssClasses" mat-cell>
+            {{ row[column.property] | date: 'MM/dd/yyyy hh:mm a' }}
+          </td>
+        </ng-container>
+        <ng-template #text>
+          <td *matCellDef="let row" mat-cell>
+            {{ row[column.property] }}
+          </td>
+        </ng-template>
+      </ng-container>
+    </ng-container>
+    <tr *matHeaderRowDef="visibleColumns" mat-header-row></tr>
+    <tr *matRowDef="let row; columns: visibleColumns;" @fadeInUp 
+      class="hover:bg-hover trans-ease-out cursor-pointer" mat-row></tr>
+  </table>
+  <div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="5px">
+    <div *ngIf="totalCount === 0" fxLayout="row" fxLayoutAlign="center center" 
+      fxLayoutGap="5px" class="mt-2">
+      <mat-icon svgIcon="mat:info"></mat-icon>
+      <i fxFlex>No activity yet for this user.</i>
+    </div>
+  </div>
+</div>

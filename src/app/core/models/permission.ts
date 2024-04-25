@@ -9,5 +9,6 @@ export interface IPermission {
     isCreate: boolean;
     isRead: boolean,
     isUpdate: boolean;
+    sequence: number;
   }
   

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from "@angular/core";
+import { Component, OnDestroy, OnInit, ViewChild } from "@angular/core";
 import {
   FormGroup,
   Validators,
@@ -12,6 +12,9 @@ import { Subject, finalize, takeUntil } from "rxjs";
 import { PortalService } from "src/app/core/services/portal.service";
 import { ITemplate } from 'src/app/core/models/template'
 import { PageMode } from 'src/app/core/enums/page-mode.enum';
+import { MatDialog } from '@angular/material/dialog';
+import { ViewInterpolationDialogComponent } from "./view-interpolation-dialog/view-interpolation-dialog.component";
+import { IStringInterpolation } from "src/app/core/models/string-interpolation";
 
 @Component({
   selector: 'vex-template',
@@ -25,8 +28,10 @@ export class TemplateComponent implements OnInit, OnDestroy {
   createdAt: Date;
   updatedBy: string;
   updatedAt: Date;
+  todayDate: Date;
   pageMode: PageMode;
   id: number;
+  @ViewChild("contentEditor", { static: true }) contentEditor: any;
 
   targetList: any[] = [
     { text: "Role", icon: "" },
@@ -55,6 +60,7 @@ export class TemplateComponent implements OnInit, OnDestroy {
   form: FormGroup;
   layoutCtrl = new UntypedFormControl("fullwidth");
   statusLabel = "Active";
+  stringInterpolations: IStringInterpolation[] = [];
 
 
   public Editor = ClassicEditor;
@@ -62,6 +68,7 @@ export class TemplateComponent implements OnInit, OnDestroy {
   get formControls() {
     return {
       subject: this.form.get("subject"),
+      url: this.form.get("url"),
       startDate: this.form.get("startDate"),
       startTime: this.form.get("startTime"),
       endDate: this.form.get("endDate"),
@@ -74,6 +81,7 @@ export class TemplateComponent implements OnInit, OnDestroy {
       iconColor: this.form.get("iconColor"),
       icon: this.form.get("icon"),
       isActive: this.form.get("isActive"),
+      statusDate: this.form.get("statusDate")
     };
   }
 
@@ -89,10 +97,12 @@ export class TemplateComponent implements OnInit, OnDestroy {
     private _router: Router,
     private _route: ActivatedRoute,
     private _portalService: PortalService,
-    private _snackBar: MatSnackBar
+    private _snackBar: MatSnackBar,
+    private _dialog: MatDialog
   ) {
     this.form = this._fb.group({
       subject: ["", [Validators.required]],
+      url: ["", [Validators.required]],
       startDate: ["", [Validators.required]],
       startTime: ["", [Validators.required]],
       endDate: ["", [Validators.required]],
@@ -105,7 +115,8 @@ export class TemplateComponent implements OnInit, OnDestroy {
       iconColor: ["", [Validators.required]],
       icon: ["", [Validators.required]],
       //status: [true, []],
-      isActive: [true, []]
+      isActive: [true, []],
+      statusDate: [""]
     });
 
     this.id = parseInt(this._route.snapshot.paramMap.get('id'));
@@ -140,7 +151,11 @@ export class TemplateComponent implements OnInit, OnDestroy {
     }
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this._getStringInterpolations();
+    this.todayDate = new Date();
+    console.log(this.todayDate);
+  }
 
   ngOnDestroy(): void {
     this._onDestroy$.next();
@@ -157,6 +172,11 @@ export class TemplateComponent implements OnInit, OnDestroy {
     if (!this.formControls.subject.value) {
       this.formControls.subject.markAsTouched();
       this.formControls.subject.updateValueAndValidity();
+      isValid = false;
+    }
+    if (!this.formControls.url.value) {
+      this.formControls.url.markAsTouched();
+      this.formControls.url.updateValueAndValidity();
       isValid = false;
     }
     if (!this.formControls.startDate.value) {
@@ -177,6 +197,12 @@ export class TemplateComponent implements OnInit, OnDestroy {
     if (!this.formControls.endTime.value) {
       this.formControls.endTime.markAsTouched();
       this.formControls.endTime.updateValueAndValidity();
+      isValid = false;
+    }
+    if (this.formControls.startDate.value > this.formControls.endDate.value) {
+      this.formControls.endDate.markAsTouched();
+      this.formControls.endDate.updateValueAndValidity();
+      this.formControls.endDate.setErrors({"lessthanstartdate": true});
       isValid = false;
     }
     if (!this.formControls.content.value) {
@@ -212,11 +238,6 @@ export class TemplateComponent implements OnInit, OnDestroy {
     if (!this.formControls.icon.value) {
       this.formControls.icon.markAsTouched();
       this.formControls.icon.updateValueAndValidity();
-      isValid = false;
-    }
-    if (!this.formControls.isActive.value) {
-      this.formControls.isActive.markAsTouched();
-      this.formControls.isActive.updateValueAndValidity();
       isValid = false;
     }
     if (!isValid) {
@@ -325,6 +346,7 @@ console.log("update data", data);
     data = data.result;
     this.form.setValue({
       subject: data.subject,
+      url: data.url,
       startDate: data.startDate,
       startTime: data.startTime,
       endDate: data.endDate,
@@ -337,10 +359,36 @@ console.log("update data", data);
       iconColor: data.iconColor,
       icon: data.icon,
       isActive: data.isActive === 'Y',
+      statusDate: data.statusDate
     });
     this.createdBy = data.createdBy;
     this.createdAt = data.createdAt;
     this.updatedBy = data.updatedBy || 'N/A';
     this.updatedAt = data.updatedAt;
+  }
+
+  viewInterpolation(): void {
+    const dialogRef = this._dialog.open(ViewInterpolationDialogComponent, {
+      data: {
+        stringInterpolations: this.stringInterpolations
+      },
+      width: '700px'
+    });
+
+    
+    dialogRef.afterClosed().subscribe(result => {
+      if(result && result.data && result.data.transactionCode) {
+        console.log("this.formControls.content.value");
+        console.log(this.formControls.content.value);
+        this.form.patchValue({content: this.formControls.content.value + " " + result.data.transactionCode});
+      }
+    });
+  }
+  private _getStringInterpolations(): void {
+    this._portalService.getStringInterpolations()
+      .pipe(takeUntil(this._onDestroy$))
+      .subscribe(data => {
+        this.stringInterpolations = data;
+      });
   }
 }
