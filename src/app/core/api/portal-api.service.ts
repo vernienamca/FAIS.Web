@@ -121,10 +121,6 @@ export class PortalApi extends BaseApi {
         return this.post<any>(`${this._apiUrl}/notification/template`, data);
     }
 
-    updateAlert(id: number, data: any): Observable<any> {
-        return this.put<any>(`${this._apiUrl}/notification/template/${id}`, data);
-    }
-
     getAppVersions(): Observable<any[]> {
         return this.get<any>(`${this._apiUrl}/version/get`);
     }
@@ -238,9 +234,11 @@ export class PortalApi extends BaseApi {
         return this.get<IAlert>(`${this._apiUrl}/notification//templates/${id}`);
     }
 
-    updateAlert(data: any): Observable<any> {
-        return this.put<any>(`${this._apiUrl}/notification`, data);
+
+    updateAlert(id: number, data: any): Observable<any> {
+        return this.put<any>(`${this._apiUrl}/notification/template/${id}`, data);
     }
+    
     exportAlerts(): Observable<HttpResponse<Blob>>  {
         return this.get(`${this._apiUrl}/alert/export`,  
         {

@@ -265,8 +265,8 @@ getAlert(id: number): Observable<ITemplate> {
   return this._portalApi.getTemplate(id);
 }
 
-updateAlert(data: any): Observable<any> {
-  return this._portalApi.updateAlert(data);
+updateAlert(id: number, data: any): Observable<any> {
+  return this._portalApi.updateAlert(id, data);
 }
 
 exportAlerts(): void {

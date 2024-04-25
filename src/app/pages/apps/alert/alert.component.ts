@@ -148,11 +148,11 @@ export class AlertComponent implements OnInit, OnDestroy {
           target: data.target,
           roles: data.roles,
           users: data.users,
-          type: data.type,
+          type: data.notificationType,
           iconColor: data.iconColor,
           icon: data.icon,
-          status: data.status,
-          // ,isActive: data.isActive === 'Y'
+          // status: data.sta,
+          isActive: data.isActive === 'Y'
         });
         this.createdBy = data.createdBy;
         this.createdAt = data.createdAt;
@@ -249,11 +249,8 @@ export class AlertComponent implements OnInit, OnDestroy {
     data.id = parseInt(this._route.snapshot.paramMap.get("id"));
     data.isActive = data.isActive ? "Y" : "N";
     data.updatedBy = parseInt(localStorage.getItem("user_id"));
-    console.log("data");
-    console.log(data);
-    return;
     this._portalService
-      .updateAlert(data)
+      .updateAlert(data.id, data)
       .pipe(takeUntil(this._onDestroy$))
       .subscribe((data) => {
         if (!data) {
