@@ -24,7 +24,7 @@ import { UntypedFormControl } from "@angular/forms";
 import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
 import { MatSelectChange } from "@angular/material/select";
 import { PortalService } from "src/app/core/services/portal.service";
-import { ITemplates } from "src/app/core/models/templates";
+import { ITemplate } from "src/app/core/models/template";
 import { Router } from "@angular/router";
 
 @UntilDestroy()
@@ -46,25 +46,25 @@ export class TemplateListComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @Input()
-  columns: TableColumn<ITemplates>[] = [
+  columns: TableColumn<ITemplate>[] = [
     { label: "Subject", property: "subject", type: "text", visible: true, cssClasses: ["font-medium"] },
-    { label: "Receiver", property: "receiver", type: "text", visible: true },
-    { label: "Notification Type", property: "notificationType", type: "text", visible: true },
-    { label: "Created By", property: "createdBy", type: "text", visible: true },
+    { label: "Receiver", property: "target", type: "text", visible: true },
+    { label: "Notification Type", property: "notificationTypeName", type: "text", visible: true },
+    { label: "Created By", property: "createdByName", type: "text", visible: true },
     { label: "Date Created", property: "createdAt", type: "text", visible: true },
     { label: "Status", property: "isActive", type: "text", visible: true },
     { label: "Actions", property: "actions", type: "button", visible: true },
   ];
 
   layoutCtrl = new UntypedFormControl("fullwidth");
-  subject$: ReplaySubject<ITemplates[]> = new ReplaySubject<ITemplates[]>(1);
-  data$: Observable<ITemplates[]> = this.subject$.asObservable();
-  templates: ITemplates[];
+  subject$: ReplaySubject<ITemplate[]> = new ReplaySubject<ITemplate[]>(1);
+  data$: Observable<ITemplate[]> = this.subject$.asObservable();
+  templates: ITemplate[];
   totalCount: number = 0;
   pageSize = 10;
   pageSizeOptions: number[] = [5, 10, 20, 50];
-  dataSource: MatTableDataSource<ITemplates> | null;
-  selection = new SelectionModel<ITemplates>(true, []);
+  dataSource: MatTableDataSource<ITemplate> | null;
+  selection = new SelectionModel<ITemplate>(true, []);
   searchCtrl = new UntypedFormControl();
 
   private _onDestroy$ = new Subject<void>();
@@ -92,7 +92,7 @@ export class TemplateListComponent implements OnInit, OnDestroy, AfterViewInit {
       });
 
     this.dataSource = new MatTableDataSource();
-    this.data$.pipe(filter<ITemplates[]>(Boolean)).subscribe((templates) => {
+    this.data$.pipe(filter<ITemplate[]>(Boolean)).subscribe((templates) => {
       this.totalCount = templates.length;
       this.templates = templates;
       this.dataSource.data = templates;
@@ -111,6 +111,11 @@ export class TemplateListComponent implements OnInit, OnDestroy, AfterViewInit {
   ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
+  }
+
+  edit(template: any): void {
+    console.log(template);
+    this._router.navigate([`apps/templates/edit/${template.id}`]);
   }
 
   onFilterChange(value: string): void {
@@ -142,12 +147,12 @@ export class TemplateListComponent implements OnInit, OnDestroy, AfterViewInit {
     return column.property;
   }
 
-  onLabelChange(change: MatSelectChange, row: ITemplates): void {
+  onLabelChange(change: MatSelectChange, row: ITemplate): void {
     const index = this.templates.findIndex((c) => c === row);
     this.subject$.next(this.templates);
   }
 
-  createTemplate(): void {
-    this._router.navigate(["apps/template-add"]);
+  createAlert(): void {
+    this._router.navigate(["apps/templates/add"]);
   }
 }

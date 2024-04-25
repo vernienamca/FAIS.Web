@@ -1,17 +1,17 @@
 <vex-page-layout @stagger>
-  <vex-secondary-toolbar>
-    <vex-breadcrumbs [crumbs]="['System Management', 'Roles', 'Edit Role']"></vex-breadcrumbs>
+  <vex-secondary-toolbar [current]="isEditMode ? 'Edit Role' : 'Add Role'">
+    <vex-breadcrumbs [crumbs]="['System Management', 'Roles', isEditMode ? 'Edit Role' : 'Add Role' ]"></vex-breadcrumbs>
   </vex-secondary-toolbar>
   <vex-page-layout-content class="container" [class.container]="layoutCtrl.value === 'boxed'" [class.px-gutter]="layoutCtrl.value === 'fullwidth'">
-    <form id="roleField" [formGroup]="form" (ngSubmit)="onSubmit()">
+    <form id="roleField" [formGroup]="form" (ngSubmit)="save()">
     <div class="card flex flex-col sm:flex-row">
       <div class="border-l flex-auto">
         <div class="bg-base border-l-3 p-4 mt-3 flex flex-col sm:flex-row gap-3 items-center">
-          <button class="rounded-full !text-white" [ngClass]="form.touched && form.invalid ? '!bg-gray':'!bg-green'" mat-raised-button type="submit" form="roleField" [disabled]="form.touched && form.invalid">
+          <button *ngIf="hasAccess" class="rounded-full !text-white" [ngClass]="form.touched && form.invalid ? '!bg-gray':'!bg-green'" mat-raised-button type="submit" form="roleField" [disabled]="form.touched && form.invalid">
             <mat-icon class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" svgIcon="mat:save_as"></mat-icon>
             <span>Save</span>
           </button>
-          <button color="primary" mat-stroked-button type="button" [routerLink]="['/apps/users']">
+          <button color="primary" mat-stroked-button type="button" [routerLink]="['/apps/roles']">
             <mat-icon class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" svgIcon="mat:close"></mat-icon> Close
           </button>
         </div>
@@ -38,7 +38,7 @@
             <div class="flex flex-col">
               <div class="flex flex-row justify-between">
                 <h1 class="text-lg">Manage Permissions ({{form.get('rolePermissionModel')['controls'].length}})</h1>
-                <button class="add-version-btn flex items-center !bg-green !text-white rounded-full" (click)="addModuleBtn()" mat-raised-button type="button">
+                <button *ngIf="hasAccess" class="add-version-btn flex items-center !bg-green !text-white rounded-full" (click)="addModuleBtn()" mat-raised-button type="button">
                   <mat-icon svgIcon="mat:add"></mat-icon>
                   <span>Add Module</span>
                 </button>
@@ -48,7 +48,7 @@
               </div>
             </div>
             <div class="module-table py-4">
-              <table *ngIf="form.get('rolePermissionModel')['controls'].length>0" class="w-full text-sm text-left rtl:text-right">
+              <table *ngIf="form.get('rolePermissionModel')['controls'].length > 0" class="w-full text-sm text-left rtl:text-right">
                 <thead class="text-gray-700 font-medium">
                     <tr>
                         <th class="px-6 py-3">Module Name</th>
@@ -61,12 +61,20 @@
                 <tbody>
                   <ng-template ngFor let-module let-i="index" [ngForOf]="form.get('rolePermissionModel')['controls']">
                     <tr>
-                      <th class="px-6 py-3 font-medium"><input type="text" class="bg-transparent" onfocus="this.blur()" readonly="readonly" [formControl]="module.get('name')"></th>
-                      <td class="px-6 py-3"><mat-checkbox color="accent" [formControl]="module.get('isCreate')"></mat-checkbox></td>
-                      <td class="px-6 py-3"><mat-checkbox color="accent" [formControl]="module.get('isRead')"></mat-checkbox></td>
-                      <td class="px-6 py-3"><mat-checkbox color="accent" [formControl]="module.get('isUpdate')"></mat-checkbox></td>
+                      <th class="px-6 py-3 font-medium">
+                        <input type="text" class="bg-transparent" onfocus="this.blur()" readonly="readonly" [formControl]="module.get('name')">
+                      </th>
                       <td class="px-6 py-3">
-                          <button type="button" class="ml-2" (click)="removeModule(i)">
+                        <mat-checkbox color="accent" [formControl]="module.get('isCreate')" [ngClass]="{'disabled-checkbox': !hasAccess}"></mat-checkbox>
+                      </td>
+                      <td class="px-6 py-3">
+                        <mat-checkbox color="accent" [formControl]="module.get('isRead')" [ngClass]="{'disabled-checkbox': !hasAccess}"></mat-checkbox>
+                      </td>
+                      <td class="px-6 py-3">
+                        <mat-checkbox color="accent" [formControl]="module.get('isUpdate')" [ngClass]="{'disabled-checkbox': !hasAccess}"></mat-checkbox>
+                    </td>
+                      <td class="px-6 py-3">
+                          <button type="button" class="ml-2" (click)="removeModule(i)" [disabled]="!hasAccess">
                             <mat-icon svgIcon="mat:delete"></mat-icon>
                           </button>
                       </td>

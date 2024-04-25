@@ -19,6 +19,7 @@ import { IUser } from 'src/app/core/models/user';
 import { UserStatusEnum } from 'src/app/core/enums/user-status.enum';
 import { Router } from '@angular/router';
 import { ResetPasswordDialogComponent } from '../reset-password-dialog/reset-password-dialog.component';
+import { SecurityService } from 'src/app/core/services/security.service';
 
 @UntilDestroy()
 @Component({
@@ -67,14 +68,29 @@ export class UserListComponent implements OnInit, OnDestroy, AfterViewInit {
   searchCtrl = new UntypedFormControl();
   labels = aioTableLabels;
   userStatusEnum = UserStatusEnum;
+  hasCreateAccess = false;
+  hasUpdateAccess = false;
 
   private _onDestroy$ = new Subject<void>();
 
   constructor(
     private _portalService: PortalService,
     private _router: Router,
-    private _dialog: MatDialog
+    private _dialog: MatDialog,
+    private _securityService: SecurityService
   ) {
+    const userId = parseInt(localStorage.getItem('user_id'));
+    this._securityService.getPermissions(userId)
+      .pipe(takeUntil(this._onDestroy$))
+      .subscribe(data => {
+        const listPermission = data.filter(a => a.moduleId === 4);
+        const rolePermission = data.filter(a => a.moduleId === 21);
+        if (listPermission.some(s => s.isRead) === false) {
+          this._router.navigate([`pages/error-401`]);
+        }
+        this.hasCreateAccess = rolePermission.some(s => s.isCreate);
+        this.hasUpdateAccess = rolePermission.some(s => s.isUpdate);
+      });
   }
 
   get visibleColumns() {

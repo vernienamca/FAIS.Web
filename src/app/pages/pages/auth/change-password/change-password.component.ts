@@ -8,6 +8,7 @@ import { SecurityService } from 'src/app/core/services/security.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Subject } from 'rxjs';
 import { PortalService } from 'src/app/core/services/portal.service';
+import { Router } from '@angular/router';
 
 export interface CountryState {
   name: string;
@@ -174,10 +175,11 @@ export class ChangePasswordComponent implements OnInit, OnDestroy {
           });
           return;
         }
-        let snackBarRef = this._snackBar.open('Your password has been successfully changed.', 'Close');
-        snackBarRef.afterDismissed().subscribe(() => {
-          window.location.reload();
-        });
+        this._snackBar.open('Your password has been successfully changed. You will beredirected after 5 seconds.', 'Okay');
+        window.setTimeout(function() {
+          localStorage.clear();
+          location.href = '/login'
+        }, 5000);
       });
   }
 }

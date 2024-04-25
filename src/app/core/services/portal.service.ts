@@ -6,7 +6,6 @@ import { IRole } from '../models/role';
 import { IUser, IUserRole } from '../models/user';
 import { IAuditLogs } from '../models/audit-logs';
 import { IStringInterpolation } from '../models/string-interpolation';
-import { ITemplates } from '../models/templates';
 import { DatePipe } from '@angular/common';
 import { ISettings } from '../models/settings';
 import { ICostCenter } from '../models/cost-center';
@@ -16,6 +15,8 @@ import { IChart } from '../models/chart';
 import { ILibraryTypes } from '../models/library-types';
 import { IAlert } from '../models/alert';
 import { IAssetProfile } from '../models/asset-profile';
+import { IPermission } from '../models/permission';
+import { ITemplate } from '../models/template';
 
 @Injectable({
   providedIn: 'root'
@@ -51,6 +52,14 @@ export class PortalService {
     return this._portalApi.getRoleId(id);
   }
 
+  addRole(role: any): Observable<any> {
+    return this._portalApi.addRole(role);
+  }
+
+  addPermission(data: any): Observable<IPermission[]> {
+    return this._portalApi.addPermission(data);
+  }
+
   updaterolepermission(data: any): Observable<IRole[]> {
     return this._portalApi.updaterolepermission(data);
   }
@@ -79,8 +88,12 @@ export class PortalService {
     return this._portalApi.getStringInterpolation(id);
   }
 
-  getAlerts(): Observable<ITemplates[]> {
+  getAlerts(): Observable<ITemplate[]> {
     return this._portalApi.getTemplates();
+  }
+
+  getUserActivities(userId: number): Observable<IAuditLogs[]> {
+    return this._portalApi.getUserActivities(userId);
   }
 
   exportAuditLogs(): void {
@@ -120,6 +133,10 @@ export class PortalService {
     return this._portalApi.updateInterpolation(id, data);
   }
 
+  createAlert(data: ITemplate): Observable<ITemplate> {
+    return this._portalApi.createAlert(data);
+  }
+
   getAppVersions(): Observable<any[]> {
     return this._portalApi.getAppVersions();
   }
@@ -130,9 +147,6 @@ export class PortalService {
 
   getCostCenters(): Observable<ICostCenter[]> {
     return this._portalApi.getCostCenters();
-  }
-  getCostCenter(id: number): Observable<ICostCenter> {
-    return this._portalApi.getCostCenter(id);
   }
 
   getChartAccounts(): Observable<IChart[]> {
@@ -245,8 +259,10 @@ export class PortalService {
   updateChartOfAccounts(id: number, data: any): Observable<any> {
     return this._portalApi.updateChartOfAccounts(id,data);
 }
-getAlert(id: number): Observable<IAlert> {
-  return this._portalApi.getAlert(id);
+
+
+getAlert(id: number): Observable<ITemplate> {
+  return this._portalApi.getTemplate(id);
 }
 
 updateAlert(data: any): Observable<any> {
@@ -268,7 +284,19 @@ exportAlerts(): void {
       link.click();
     });
   }
-  getAssetProfile(): Observable<IAssetProfile[]> {
-    return this._portalApi.getAssetProfile();
+  getAssetProfiles(): Observable<IAssetProfile[]> {
+    return this._portalApi.getAssetProfiles();
   }
+
+  addAssetProfile(assetProfile: any): Observable<any> {
+    return this._portalApi.addAssetProfile(assetProfile);
+}
+
+  updateAssetProfile(id: number , data:any): Observable<any> {
+    return this._portalApi.updateAssetProfile(id,data);
+}
+
+  getAssetProfile(id: number): Observable<IAssetProfile> {
+    return this._portalApi.getAssetProfile(id);
+}
 }

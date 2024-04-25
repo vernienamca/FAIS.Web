@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { fadeInUp400ms } from '../../../../../@vex/animations/fade-in-up.animation';
 import { AuthService } from 'src/app/core/services/auth.service';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, finalize, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'vex-login',
@@ -20,6 +20,7 @@ export class LoginComponent implements OnInit {
   form: UntypedFormGroup;
   inputType = 'password';
   visible = false;
+  isLoading = false;
 
   private _onDestroy$ = new Subject<void>();
 
@@ -44,8 +45,12 @@ export class LoginComponent implements OnInit {
   }
 
   login(): void {
+    this.isLoading = true;
     this._authService.authenticate(this.form.value.username, this.form.value.password)
-      .pipe(takeUntil(this._onDestroy$))
+      .pipe(
+        takeUntil(this._onDestroy$),
+        finalize(() => this.isLoading = false)
+      )
       .subscribe(data => {
         if (!data) {
           return;
@@ -58,7 +63,11 @@ export class LoginComponent implements OnInit {
         }
         localStorage.setItem('user_id', data.userId);
         localStorage.setItem('access_token', data.accessToken);
-        this._router.navigate(['/apps/help-center/getting-started']);
+
+        if (data.isForcePasswordChange === 'Y')
+          this._router.navigate(['/apps/my-profile/change-password']);
+        else
+          this._router.navigate(['/apps/help-center/getting-started']);
       });
   }
 

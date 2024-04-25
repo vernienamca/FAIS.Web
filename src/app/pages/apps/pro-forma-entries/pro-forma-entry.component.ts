@@ -171,7 +171,7 @@ export class ProFormaEntryComponent implements OnInit, OnDestroy {
             this.form.setValue({
               tranTypeSeq: data.tranTypeSeq,
               description: data.description,
-              isActive: data.isActive,
+              isActive: data.isActive === 'Y' ? true : false,
             });
             this.updatedAt = data.updatedAt;
             this.createdAt = data.createdAt;

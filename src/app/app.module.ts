@@ -22,7 +22,6 @@ import { UserApi } from './core/api/user-api.service';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 
-
 @NgModule({
   declarations: [AppComponent, ForgotPasswordComponent],
   imports: [
@@ -34,7 +33,7 @@ import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
     VexModule,
     CustomLayoutModule,
     NgxMatSelectSearchModule,
-    CKEditorModule,
+    CKEditorModule
   ],
   providers: [
     {

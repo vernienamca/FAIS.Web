@@ -31,6 +31,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { ResetPasswordDialogComponent } from './reset-password-dialog/reset-password-dialog.component';
 import { MyProfileComponent } from './my-profile/my-profile.component';
+import { UserActivityListComponent } from './user-activity-list/user-activity-list.component';
 
 @NgModule({
   declarations: [
@@ -39,7 +40,8 @@ import { MyProfileComponent } from './my-profile/my-profile.component';
     UserRoleListComponent, 
     AddRoleDialogComponent, 
     ResetPasswordDialogComponent,
-    MyProfileComponent
+    MyProfileComponent,
+    UserActivityListComponent
   ],
   imports: [
     CommonModule,

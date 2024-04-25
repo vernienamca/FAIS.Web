@@ -14,6 +14,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { PortalService } from 'src/app/core/services/portal.service';
 import { IModule } from 'src/app/core/models/module';
 import { Router } from '@angular/router';
+import { SecurityService } from 'src/app/core/services/security.service';
 
 @UntilDestroy()
 @Component({
@@ -54,6 +55,7 @@ export class ModuleListComponent implements OnInit, OnDestroy, AfterViewInit {
   selection = new SelectionModel<IModule>(true, []);
   searchCtrl = new UntypedFormControl();
   isListLoading = true;
+  hasUpdateAccess = false;
 
   get visibleColumns() {
     return this.columns.filter(column => column.visible).map(column => column.property);
@@ -63,8 +65,19 @@ export class ModuleListComponent implements OnInit, OnDestroy, AfterViewInit {
 
   constructor(
     private _router: Router,
-    private _portalService: PortalService
+    private _portalService: PortalService,
+    private _securityService: SecurityService
   ) {
+    const userId = parseFloat(localStorage.getItem('user_id'));
+    this._securityService.getPermissions(userId)
+      .pipe(takeUntil(this._onDestroy$))
+      .subscribe(data => {
+        const permission = data.find(a => a.moduleId === 2);
+        if (!permission?.isRead) {
+          this._router.navigate([`pages/error-401`]);
+        }
+        this.hasUpdateAccess = permission.isUpdate;
+      });
   }
 
   ngOnInit(): void {

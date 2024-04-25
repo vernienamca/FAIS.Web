@@ -6,6 +6,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { IStringInterpolation } from 'src/app/core/models/string-interpolation';
 import { PortalService } from 'src/app/core/services/portal.service';
 import { PageMode } from 'src/app/core/enums/page-mode.enum';
+import { SecurityService } from 'src/app/core/services/security.service';
 
 @Component({
   selector: 'vex-string-interpolation',
@@ -25,6 +26,7 @@ export class StringInterpolationComponent implements OnInit, OnDestroy {
   stringInterpolations: IStringInterpolation[];
   interpolations: [];
   id: number;
+  hasAccess = true;
 
   get formControls() {
     return {
@@ -42,20 +44,35 @@ export class StringInterpolationComponent implements OnInit, OnDestroy {
     private _router: Router,
     private _route: ActivatedRoute,
     private _portalService: PortalService,
-    private _snackBar: MatSnackBar
+    private _snackBar: MatSnackBar,
+    private _securityService: SecurityService
   ) {
+    const userId = parseInt(localStorage.getItem('user_id'));
     this.form = this._fb.group({
       transactionCode: ['', [Validators.required]],
       description: ['', [Validators.required]],
       notificationType: ['', [Validators.required]],
       isActive: [true, []],
     });
-
     this.id = parseInt(this._route.snapshot.paramMap.get('id'));
-    // const id = parseInt(this._route.snapshot.paramMap.get('id'));
     this.pageMode = this._route.snapshot.data.pageMode;
-
     this.pageLabel =  this.pageMode == 1 ? 'Add String Interpolation' : 'Edit String Interpolation';
+
+    this._securityService.getPermissions(userId)
+      .pipe(takeUntil(this._onDestroy$))
+      .subscribe(data => {
+        const permission = data.filter(a => a.moduleId === 22);
+        if (!permission || permission.some(s => s.isRead) === false) {
+          this._router.navigate([`pages/error-401`]);
+        }
+        if (permission.some(s => s.isUpdate) === false) {
+          this.form.controls['transactionCode'].disable();
+          this.form.controls['description'].disable();
+          this.form.controls['notificationType'].disable();
+          this.form.controls['isActive'].disable();
+        }
+        this.hasAccess = permission.some(s => s.isUpdate);
+      });
 
     if (this.pageMode === 2) {
       if (this.id) {

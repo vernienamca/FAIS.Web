@@ -14,7 +14,9 @@ import { UntypedFormControl } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { PortalService } from 'src/app/core/services/portal.service';
 import { IRole } from 'src/app/core/models/role';
+import { RoleStatusEnum } from 'src/app/core/enums/role-status.enum';
 import { Router } from '@angular/router';
+import { SecurityService } from 'src/app/core/services/security.service';
 
 @UntilDestroy()
 @Component({
@@ -41,8 +43,8 @@ export class RoleListComponent implements OnInit, OnDestroy, AfterViewInit {
   columns: TableColumn<IRole>[] = [
     { label: 'Role Name', property: 'name', type: 'text', visible: true, cssClasses: ['font-medium'] },
     { label: 'Description', property: 'description', type: 'text', visible: true },
-    { label: 'Modified By', property: 'updatedByName', type: 'text', visible: true },
-    { label: 'Date Modified', property: 'updatedAt', type: 'text', visible: true },
+    { label: 'Status', property: 'isActive', type: 'text', visible: true },
+    { label: 'Status Date', property: 'statusDate', type: 'text', visible: true },
     { label: 'Actions', property: 'actions', type: 'button', visible: true }
   ];
 
@@ -58,13 +60,30 @@ export class RoleListComponent implements OnInit, OnDestroy, AfterViewInit {
   searchCtrl = new UntypedFormControl();
   labels = aioTableLabels;
   isListLoading = true;
+  isEditMode: boolean = false;
+  roleStatusEnum = RoleStatusEnum;
+  hasCreateAccess = false;
+  hasUpdateAccess = false;
 
   private _onDestroy$ = new Subject<void>();
 
   constructor(
     private _portalService: PortalService,
-    private _router: Router
+    private _router: Router,
+    private _securityService: SecurityService
   ) {
+    const userId = parseFloat(localStorage.getItem('user_id'));
+    this._securityService.getPermissions(userId)
+      .pipe(takeUntil(this._onDestroy$))
+      .subscribe(data => {
+        const listPermission = data.filter(a => a.moduleId === 3);
+        const rolePermission = data.filter(a => a.moduleId === 20);
+        if (listPermission.some(s => s.isRead) === false) {
+          this._router.navigate([`pages/error-401`]);
+        }
+        this.hasCreateAccess = rolePermission.some(s => s.isCreate);
+        this.hasUpdateAccess = rolePermission.some(s => s.isUpdate);
+      });
   }
 
   get visibleColumns() {
@@ -108,8 +127,12 @@ export class RoleListComponent implements OnInit, OnDestroy, AfterViewInit {
     this.dataSource.sort = this.sort;
   }
 
-  view(data: any): void {
+  edit(data: any): void {
     this._router.navigate([`apps/roles/${data.id}`]);
+  }
+
+  add(): void {
+    this._router.navigate(['apps/roles/add']);
   }
 
   onFilterChange(value: string): void {

@@ -12,7 +12,6 @@ import { MatTableDataSource } from '@angular/material/table';
   styleUrls: ['./add-module.component.scss']
 })
 export class AddModuleComponent implements OnInit, OnDestroy{
-
   displayedColumns: string[] = ['module-name', 'action'];
   dataSource: MatTableDataSource<IModule> | null;
   inputData: any;
@@ -48,7 +47,7 @@ export class AddModuleComponent implements OnInit, OnDestroy{
     this.dataSource = new MatTableDataSource();
     this.data$
       .pipe(filter<IModule[]>(Boolean))
-      .subscribe(modules => {        
+      .subscribe(modules => {   
         this.dataSource.data = modules;
       });
 

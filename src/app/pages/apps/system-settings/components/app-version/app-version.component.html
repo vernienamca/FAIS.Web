@@ -37,11 +37,11 @@
           </mat-error>
         </mat-form-field>
       </div>
-      <div class="flex flex-col sm:flex-row sm:gap-4">
-        <button [ngClass]="[false ? '!bg-gray' : '!bg-green', '!text-contrast-white']" mat-raised-button type="button" (click)="save()">
-          <mat-icon svgIcon="mat:add"></mat-icon>
-          <span>Add Version</span>
-      </button>
+      <div class="flex flex-col sm:flex-row sm:gap-4 mt-2">
+        <button *ngIf="hasUpdateAccess" [ngClass]="[form.invalid ? '!bg-gray' : '!bg-green', '!text-contrast-white']" mat-raised-button type="button" 
+          [disabled]="form.invalid" (click)="save()">
+          <mat-icon class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" svgIcon="mat:add"></mat-icon> Add Version
+        </button>
       </div>
     </form>
   </div>
@@ -86,7 +86,8 @@
         class="hover:bg-hover trans-ease-out cursor-pointer" mat-row></tr>
     </table>
     <div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="5px">
-      <div *ngIf="totalCount === 0" fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="5px">
+      <div *ngIf="totalCount === 0" fxLayout="row" fxLayoutAlign="center center" 
+        fxLayoutGap="5px" class="mt-2">
         <mat-icon svgIcon="mat:info"></mat-icon>
         <i fxFlex>No application versions yet added.</i>
       </div>
