@@ -126,8 +126,7 @@ export class AssetProfileComponent implements OnInit, OnDestroy {
     width: '500px',
     disableClose: true
     })
-    .afterClosed()
-    .subscribe((result: boolean) => {
+    .afterClosed().subscribe((result: boolean) => {
       if (result)
         if(this.isEditMode)
           {
@@ -180,10 +179,9 @@ export class AssetProfileComponent implements OnInit, OnDestroy {
       }
 
       else if (roleAuthorized.name === 'Administrator') {
-        this.isAdmin = true;
+       this.isAdmin = true;
        const administratorRole = this.roles.find(role => role.name === 'Administrator');
        this.roleIds.push(administratorRole.id)
-        this.roleIds.push()
       }
       else {
         this._disableFormFields(roleAuthorized);
@@ -231,20 +229,20 @@ export class AssetProfileComponent implements OnInit, OnDestroy {
       data.rcaglId = data.rcaglId.join(',');
     } 
     this._portalService.updateAssetProfile(this.id,data)
-    .pipe(takeUntil(this._onDestroy$))
-    .subscribe(data => {
-      if(!data){
-        return;
+      .pipe(takeUntil(this._onDestroy$))
+      .subscribe(data => {
+        if(!data){
+          return;
       }
-      this.id = data.result.id;
-      const notifData = {
+        this.id = data.result.id;
+        const notifData = {
         roleIds: this.roleIds, 
         id: this.id,
         assetName: data.result.name,
         editMode: this.isEditMode,
         isAdmin: this.isAdmin
       };
-      this._securityService.postNotifRole(notifData)
+    this._securityService.postNotifRole(notifData)
       .pipe(takeUntil(this._onDestroy$))
       .subscribe(data => {
         if(!data){
@@ -253,7 +251,7 @@ export class AssetProfileComponent implements OnInit, OnDestroy {
       })
         let snackBarRef = this._snackBar.open('Asset has been successfully updated.', 'Close');
         snackBarRef.afterDismissed().subscribe(() => {
-          window.location.reload();
+        window.location.reload();
     });
     })
   }
