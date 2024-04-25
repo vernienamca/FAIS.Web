@@ -82,9 +82,20 @@
               <div class="mb-6">
                 <mat-form-field appearance="fill" class="w-full">
                   <mat-label>Start Date</mat-label>
-                  <input matInput [matDatepicker]="startDatePicker" inputFormat="MM/dd/yyyy" autocomplete="off" 
-                    id="startDate" formControlName="startDate" type="text" required>
-                  <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
+                  <input
+                    matInput
+                    [matDatepicker]="startDatePicker"
+                    inputFormat="MM/dd/yyyy"
+                    autocomplete="off"
+                    id="startDate"
+                    formControlName="startDate"
+                    type="text"
+                    required
+                  />
+                  <mat-datepicker-toggle
+                    matSuffix
+                    [for]="startDatePicker"
+                  ></mat-datepicker-toggle>
                   <mat-datepicker #startDatePicker></mat-datepicker>
                   <mat-error
                     *ngIf="
@@ -100,6 +111,37 @@
               </div>
               <div class="mb-6">
                 <mat-form-field appearance="fill" class="w-full">
+                  <mat-label>Start Time</mat-label>
+
+                  <!-- The timepicker input -->
+                  <input
+                    matTimepicker
+                    #t="matTimepicker"
+                    #time="ngModel"
+                    [strict]="false"
+                    id="starttime-input"
+                    mode="24h"
+                    [ngModel]="formControls.startTime"
+                    name="startTime"
+                  />
+<!-- 
+                  [minDate]="minValue"
+                  [maxDate]="maxValue" 
+                    [errorStateMatcher]="customErrorStateMatcher"
+                    (timeChange)="timeChangeHandler($event)"
+                    (invalidInput)="invalidInputHandler()"-->
+                  <!-- An icon for the timepicker input that will open the timepicker dialog when clicked -->
+                  <mat-icon matSuffix (click)="t.showDialog()"
+                    >access_time</mat-icon
+                  >
+
+                  <!-- Error that will be shown when the input date is invalid -->
+                  <mat-error *ngIf="formControls.startTime.touched && formControls.startTime.invalid"
+                    >Start time is required</mat-error
+                  >
+                </mat-form-field>
+
+                <!-- <mat-form-field appearance="fill" class="w-full">
                   <mat-label>Start Time</mat-label>
                   <input
                     matInput
@@ -119,16 +161,27 @@
                   <span *ngIf="formControls.startTime.getError('required')">
                     Start time is required
                   </span>
-                </mat-error>
+                </mat-error> -->
               </div>
             </div>
             <div class="grid md:grid-cols-2 md:gap-x-8">
               <div class="mb-6">
                 <mat-form-field appearance="fill" class="w-full">
                   <mat-label>End Date</mat-label>
-                  <input matInput [matDatepicker]="endDatePicker" inputFormat="MM/dd/yyyy" autocomplete="off" 
-                    id="endDate" formControlName="endDate" type="text" required>
-                  <mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
+                  <input
+                    matInput
+                    [matDatepicker]="endDatePicker"
+                    inputFormat="MM/dd/yyyy"
+                    autocomplete="off"
+                    id="endDate"
+                    formControlName="endDate"
+                    type="text"
+                    required
+                  />
+                  <mat-datepicker-toggle
+                    matSuffix
+                    [for]="endDatePicker"
+                  ></mat-datepicker-toggle>
                   <mat-datepicker #endDatePicker></mat-datepicker>
                   <mat-error
                     *ngIf="
@@ -144,6 +197,36 @@
               </div>
               <div class="mb-6">
                 <mat-form-field appearance="fill" class="w-full">
+                  <mat-label>End Time</mat-label>
+
+                  <!-- The timepicker input -->
+                  <input
+                    matTimepicker
+                    #t="matTimepicker"
+                    #time="ngModel"
+                    [strict]="false"
+                    id="endtime-input"
+                    mode="24h"
+                    [ngModel]="formControls.endTime"
+                    name="endTime"
+                  />
+<!-- 
+                  [minDate]="minValue"
+                  [maxDate]="maxValue" 
+                    [errorStateMatcher]="customErrorStateMatcher"
+                    (timeChange)="timeChangeHandler($event)"
+                    (invalidInput)="invalidInputHandler()"-->
+                  <!-- An icon for the timepicker input that will open the timepicker dialog when clicked -->
+                  <mat-icon matSuffix (click)="t.showDialog()"
+                    >access_time</mat-icon
+                  >
+
+                  <!-- Error that will be shown when the input date is invalid -->
+                  <mat-error *ngIf="formControls.endTime.touched && formControls.endTime.invalid"
+                    >End time is required</mat-error
+                  >
+                </mat-form-field>
+                <!-- <mat-form-field appearance="fill" class="w-full">
                   <mat-label>End Time</mat-label>
                   <input
                     matInput
@@ -162,7 +245,7 @@
                   <span *ngIf="formControls.endTime.getError('required')">
                     End time is required
                   </span>
-                </mat-error>
+                </mat-error> -->
               </div>
             </div>
 

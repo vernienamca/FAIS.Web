@@ -21,6 +21,8 @@ import { RoleApi } from './core/api/role-api.service';
 import { UserApi } from './core/api/user-api.service';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
+import { MatTimepickerModule } from 'mat-timepicker';
+
 
 @NgModule({
   declarations: [AppComponent, ForgotPasswordComponent],
@@ -33,7 +35,8 @@ import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
     VexModule,
     CustomLayoutModule,
     NgxMatSelectSearchModule,
-    CKEditorModule
+    CKEditorModule,
+    MatTimepickerModule
   ],
   providers: [
     {

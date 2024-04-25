@@ -26,6 +26,7 @@ import { TemplateRoutingModule } from './template-routing.module';
 import { CKEditorModule } from "@ckeditor/ckeditor5-angular";
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
+import { MatTimepickerModule } from 'mat-timepicker';
 
 @NgModule({
   declarations: [TemplateListComponent, TemplateComponent],
@@ -56,7 +57,8 @@ import { MatNativeDateModule } from '@angular/material/core';
     MatSnackBarModule,
     CKEditorModule,
     MatDatepickerModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    MatTimepickerModule
   ]
 })
 export class TemplateModule {
