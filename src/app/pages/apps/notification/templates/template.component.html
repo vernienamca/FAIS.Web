@@ -51,7 +51,7 @@
             class="flex flex-col flex-auto form-container"
           >
             <div class="grid md:gap-x-8">
-              <div class="mb-6">
+              <div>
                 <mat-form-field appearance="fill" class="w-full">
                   <mat-label>Subject</mat-label>
                   <input
@@ -61,20 +61,20 @@
                     class="block w-full"
                     formControlName="subject"
                   />
+                  <mat-error
+                    *ngIf="
+                      formControls.subject.touched && formControls.subject.invalid
+                    "
+                  >
+                    <span *ngIf="formControls.subject.getError('required')">
+                      Subject is required
+                    </span>
+                  </mat-error>
                 </mat-form-field>
-                <mat-error
-                  *ngIf="
-                    formControls.subject.touched && formControls.subject.invalid
-                  "
-                >
-                  <span *ngIf="formControls.subject.getError('required')">
-                    Subject is required
-                  </span>
-                </mat-error>
               </div>
             </div>
             <div class="grid md:grid-cols-2 md:gap-x-8">
-              <div class="mb-6">
+              <div>
                 <mat-form-field appearance="fill" class="w-full">
                   <mat-label>Start Date</mat-label>
                   <input
@@ -86,6 +86,7 @@
                     formControlName="startDate"
                     type="text"
                     required
+                    [min]="todayDate"
                   />
                   <mat-datepicker-toggle
                     matSuffix
@@ -104,31 +105,34 @@
                   </mat-error>
                 </mat-form-field>
               </div>
-              <div class="mb-6">
-                <mat-form-field appearance="fill" class="w-full">
-                  <mat-label>Start Time</mat-label>
+              <div>
+                <div class="mat-input">
+                  <label
+                    for="content-input"
+                    class="block mb-2 text-sm font-medium font-bold"
+                    >Time *
+                  </label>
                   <input
-                    matInput
                     id="starttime-input"
                     type="time"
-                    class="block w-full"
+                    class="block w-full mat-time"
                     formControlName="startTime"
                   />
-                </mat-form-field>
+                </div>
                 <mat-error
                   *ngIf="
                     formControls.startTime.touched &&
                     formControls.startTime.invalid
                   "
                 >
-                  <span *ngIf="formControls.startTime.getError('required')">
+                  <span *ngIf="formControls.startTime.getError('required')" class="mat-error">
                     Start time is required
                   </span>
                 </mat-error>
               </div>
             </div>
             <div class="grid md:grid-cols-2 md:gap-x-8">
-              <div class="mb-6">
+              <div>
                 <mat-form-field appearance="fill" class="w-full">
                   <mat-label>End Date</mat-label>
                   <input
@@ -139,6 +143,7 @@
                     id="endDate"
                     formControlName="endDate"
                     type="text"
+                    [min]="todayDate"
                     required
                   />
                   <mat-datepicker-toggle
@@ -155,26 +160,33 @@
                     <span *ngIf="formControls.endDate.getError('required')">
                       End date is required
                     </span>
+                    <span *ngIf="formControls.endDate.getError('lessthanstartdate')">
+                      End date cannot earlier than start date
+                    </span>
                   </mat-error>
                 </mat-form-field>
               </div>
-              <div class="mb-6">
-                <mat-form-field appearance="fill" class="w-full">
-                  <mat-label>End Time</mat-label>
-                  <input
-                    matInput
-                    id="endtime-input"
-                    type="time"
-                    class="block w-full"
-                    formControlName="endTime"
-                  />
-                </mat-form-field>
+              <div>
+                <div class="mat-input">
+                <label
+                  for="content-input"
+                  class="block mb-2 text-sm font-medium font-bold"
+                  >Time *
+                </label>
+                <input
+                  matInput
+                  id="endtime-input"
+                  type="time"
+                  class="block w-full mat-time"
+                  formControlName="endTime"
+                />
+                </div>
                 <mat-error
                   *ngIf="
                     formControls.endTime.touched && formControls.endTime.invalid
                   "
                 >
-                  <span *ngIf="formControls.endTime.getError('required')">
+                  <span *ngIf="formControls.endTime.getError('required')" class="mat-error">
                     End time is required
                   </span>
                 </mat-error>
@@ -182,28 +194,42 @@
             </div>
 
             <div class="grid md:gap-x-8">
-              <div class="mb-6">
+              <div class="mt-6 mb-6">
                 <label
                   for="content-input"
                   class="block mb-2 text-sm font-medium font-bold"
-                  >Content *</label
-                >
+                  >Content *
+                  <button
+                    id="btn_view-interpolation"
+                    class="text-contrast-white float-right"
+                    mat-raised-button
+                    type="button"
+                    (click)="viewInterpolation()"
+                  >
+                    <mat-icon
+                      class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2"
+                      svgIcon="mat:open_in_full"
+                    ></mat-icon>
+                    View Interpolation
+                  </button>
+                </label>
                 <ckeditor
                   [editor]="Editor"
+                  height="500px"
+                  #contentEditor
                   formControlName="content"
                 ></ckeditor>
               </div>
             </div>
             <div class="grid md:grid-cols-2 md:gap-x-8">
-              <div class="mb-6">
+              <div>
                 <mat-form-field appearance="fill" class="w-full">
                   <mat-label>Target</mat-label>
                   <mat-select formControlName="target" required>
                     <mat-option
                       value="{{ i.text }}"
                       *ngFor="let i of targetList"
-                      ><mat-icon>{{ i.icon }}</mat-icon>
-                      {{ i.text }}</mat-option
+                      >{{ i.text }}</mat-option
                     >
                   </mat-select>
                   <mat-error
@@ -217,10 +243,10 @@
                   </mat-error>
                 </mat-form-field>
               </div>
-              <div class="mb-6" *ngIf="formControls.target.value != 'User'">
+              <div *ngIf="formControls.target.value != 'User'">
                 <mat-form-field appearance="fill" class="w-full">
                   <mat-label>Roles</mat-label>
-                  <mat-select formControlName="roles" required>
+                  <mat-select formControlName="roles" required readonly="formControls.target.value != 'Role'" multiple>
                     <mat-option
                       value="{{ i.name }}"
                       *ngFor="let i of rolesList"
@@ -239,10 +265,10 @@
                   </mat-error>
                 </mat-form-field>
               </div>
-              <div class="mb-6" *ngIf="formControls.target.value == 'User'">
+              <div *ngIf="formControls.target.value == 'User'">
                 <mat-form-field appearance="fill" class="w-full">
                   <mat-label>Users</mat-label>
-                  <mat-select formControlName="users" required>
+                  <mat-select formControlName="users" required multiple>
                     <mat-option value="{{ i.id }}" *ngFor="let i of usersList"
                       ><label>{{ i.firstName }} {{ i.lastName }}</label> |
                       <label>{{ i.position }}</label></mat-option
@@ -261,7 +287,7 @@
               </div>
             </div>
             <div class="grid md:grid-cols-2 md:gap-x-8">
-              <div class="mb-6">
+              <div>
                 <mat-form-field appearance="fill" class="w-full">
                   <mat-label>Url</mat-label>
                   <input
@@ -280,12 +306,12 @@
                   </span>
                 </mat-error>
               </div>
-              <div class="mb-6">
+              <div>
                 <mat-form-field appearance="fill" class="w-full">
                   <mat-label>Type</mat-label>
                   <mat-select formControlName="notificationType" required>
                     <mat-option value="{{ i.value }}" *ngFor="let i of typeList"
-                      ><mat-icon>{{ i.icon }}</mat-icon>
+                      >
                       {{ i.text }}</mat-option
                     >
                   </mat-select>
@@ -305,7 +331,7 @@
               </div>
             </div>
             <div class="grid md:grid-cols-2 md:gap-x-8">
-              <div class="mb-6">
+              <div>
                 <mat-form-field appearance="fill" class="w-full">
                   <mat-label>Icon</mat-label>
                   <mat-select formControlName="icon" required>
@@ -325,17 +351,14 @@
                   </mat-error>
                 </mat-form-field>
               </div>
-              <div class="mb-6">
+              <div>
                 <mat-form-field appearance="fill" class="w-full">
                   <mat-label>Icon Color</mat-label>
                   <mat-select formControlName="iconColor" required>
                     <mat-option
                       value="{{ i.text }}"
                       *ngFor="let i of iconColorList"
-                    >
-                      <span style.color="{{ i.color }}"
-                        ><mat-icon>brightness_1</mat-icon></span
-                      >
+                    ><mat-icon style.color="{{ i.color }}">palette</mat-icon>
                       {{ i.text }}</mat-option
                     >
                   </mat-select>
@@ -361,8 +384,9 @@
               >
                 {{ statusLabel }}
               </mat-slide-toggle>
+              <span>Status date: {{ formControls.statusDate.value | date : "MM/dd/yyyy hh:mm a"}}</span>
             </div>
-            <blockquote
+            <blockquote *ngIf="id"
               fxLayout="row"
               fxLayoutAlign="start center"
               fxLayoutGap="5px"

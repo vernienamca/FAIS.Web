@@ -27,9 +27,12 @@ import { CKEditorModule } from "@ckeditor/ckeditor5-angular";
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatTimepickerModule } from 'mat-timepicker';
+import { ViewInterpolationDialogComponent } from './view-interpolation-dialog/view-interpolation-dialog.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatDividerModule } from '@angular/material/divider';
 
 @NgModule({
-  declarations: [TemplateListComponent, TemplateComponent],
+  declarations: [TemplateListComponent, TemplateComponent, ViewInterpolationDialogComponent],
   imports: [
     CommonModule,
     TemplateRoutingModule,
@@ -58,7 +61,9 @@ import { MatTimepickerModule } from 'mat-timepicker';
     CKEditorModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatTimepickerModule
+    MatTimepickerModule,
+    MatDialogModule,
+    MatDividerModule,
   ]
 })
 export class TemplateModule {

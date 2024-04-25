@@ -24,6 +24,7 @@ export class PortalService {
   isMyProfile$ = new BehaviorSubject<boolean>(false);
   addedUserRole$ = new BehaviorSubject<IUserRole>(null);
   userRoleIds$ = new BehaviorSubject<number[]>(null);
+  stringInterpolations$ = new BehaviorSubject<IStringInterpolation[]>(null);
 
   constructor(
     private _portalApi: PortalApi, 
