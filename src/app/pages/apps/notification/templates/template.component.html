@@ -227,7 +227,7 @@
                   <mat-label>Target</mat-label>
                   <mat-select formControlName="target" required>
                     <mat-option
-                      value="{{ i.text }}"
+                      value="{{ i.value }}"
                       *ngFor="let i of targetList"
                       >{{ i.text }}</mat-option
                     >
@@ -335,7 +335,7 @@
                 <mat-form-field appearance="fill" class="w-full">
                   <mat-label>Icon</mat-label>
                   <mat-select formControlName="icon" required>
-                    <mat-option value="{{ i.text }}" *ngFor="let i of iconList"
+                    <mat-option value="{{ i.icon }}" *ngFor="let i of iconList"
                       ><mat-icon>{{ i.icon }}</mat-icon>
                       {{ i.text }}</mat-option
                     >
@@ -356,7 +356,7 @@
                   <mat-label>Icon Color</mat-label>
                   <mat-select formControlName="iconColor" required>
                     <mat-option
-                      value="{{ i.text }}"
+                      value="{{ i.value }}"
                       *ngFor="let i of iconColorList"
                     ><mat-icon style.color="{{ i.color }}">palette</mat-icon>
                       {{ i.text }}</mat-option
