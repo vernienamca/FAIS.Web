@@ -88,11 +88,11 @@ export class PortalService {
     return this._portalApi.getStringInterpolation(id);
   }
 
-  getAlerts(): Observable<ITemplate[]> {
+  getNotificationTemplates(): Observable<ITemplate[]> {
     return this._portalApi.getTemplates();
   }
 
-  getAlert(id: number): Observable<ITemplate> {
+  getNotificationTemplate(id: number): Observable<ITemplate> {
     return this._portalApi.getTemplate(id);
   }
 
