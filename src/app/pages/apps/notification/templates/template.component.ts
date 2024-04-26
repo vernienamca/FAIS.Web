@@ -254,8 +254,8 @@ export class TemplateComponent implements OnInit, OnDestroy {
     console.log(data);
 
     data.receiver = data.target == "Role" ? 1 : 2;
-    data.users = data.users.join(",");
-    data.roles = data.roles.join(",");
+    data.users = (data && data.users) ? data.users.join(",") : "";
+    data.roles = (data && data.roles) ? data.roles.join(",") : "";
     
     // this._portalService
     //   .updateAlert(data)

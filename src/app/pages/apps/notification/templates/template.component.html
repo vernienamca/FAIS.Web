@@ -248,7 +248,7 @@
                   <mat-label>Roles</mat-label>
                   <mat-select formControlName="roles" required readonly="formControls.target.value != 'Role'" multiple>
                     <mat-option
-                      value="{{ i.name }}"
+                      value="{{ i.id }}"
                       *ngFor="let i of rolesList"
                       >{{ i.name }}</mat-option
                     >
