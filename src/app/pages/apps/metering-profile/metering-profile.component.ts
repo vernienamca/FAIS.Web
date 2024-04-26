@@ -177,22 +177,7 @@ export class MeteringProfileComponent implements OnInit, OnDestroy {
         return;
       }
       const roleAuthorized = this._getRoleAuthorization(data)
-      if (roleAuthorized.name === 'ARMD Librarian') {
-        const armdLibrarianRole = this.roles.find(role => role.name === 'ARMD Librarian');
-        if (armdLibrarianRole) {
-          this.roleIds.push(armdLibrarianRole.id); 
-          this._disableFormFields(roleAuthorized);
-        }
-      }
-      else if (roleAuthorized.name === 'PAD Librarian') {
-        const padLibrarianRole = this.roles.find(role => role.name === 'PAD Librarian');
-        if (padLibrarianRole) {
-          this.roleIds.push(padLibrarianRole.id);
-          this._disableFormFields(roleAuthorized);
-        }
-      }
-
-      else if (roleAuthorized.name === 'Administrator') {
+      if (roleAuthorized.name === 'Administrator') {
        this.isAdmin = true;
        const administratorRole = this.roles.find(role => role.name === 'Administrator');
        this.roleIds.push(administratorRole.id)
@@ -324,7 +309,7 @@ export class MeteringProfileComponent implements OnInit, OnDestroy {
         break;
       default: 
         fieldsToDisable = [
-            'meteringPointName', 'customer', 'installationType', 
+            'meteringPointName', 'customer', 'installationTypeSeq', 
             'meteringClass', 'transGrid','districtSeq', 
             'facilityLocationSeq', 'lineSegment', 'remarks', 
             'isActive','udf1','udf2','udf3','adRegionSeq', 
