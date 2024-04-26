@@ -354,6 +354,10 @@ console.log("update data", data);
       return;
 
     data = data.result;
+
+    console.log("Setting data");
+    console.log(data);
+
     this.form.setValue({
       subject: data.subject,
       url: data.url ? data.url : "",
@@ -362,10 +366,10 @@ console.log("update data", data);
       endDate: data.endDate,
       endTime: data.endTime,
       content: data.content,
-      target: data.target == 'Role' ? 'Role' : 'User',
-      roles: data.roles ? data.roles : "",
-      users: data.users ? data.users : "",
-      notificationType: data.notificationType,
+      target: data.target == 'Role' || data.target == 1 ? "1" : "2",
+      roles: data.roles ? data.roles.split(",") : [],
+      users: data.users ? data.users.split(",") : [],
+      notificationType: data.notificationType.toString(),
       iconColor: data.iconColor,
       icon: data.icon,
       isActive: data.isActive === 'Y',

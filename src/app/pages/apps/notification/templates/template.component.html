@@ -243,10 +243,10 @@
                   </mat-error>
                 </mat-form-field>
               </div>
-              <div *ngIf="formControls.target.value != 'User'">
+              <div *ngIf="formControls.target.value != 2">
                 <mat-form-field appearance="fill" class="w-full">
                   <mat-label>Roles</mat-label>
-                  <mat-select formControlName="roles" required readonly="formControls.target.value != 'Role'" multiple>
+                  <mat-select formControlName="roles" required readonly="formControls.target.value != 1" multiple>
                     <mat-option
                       value="{{ i.id }}"
                       *ngFor="let i of rolesList"
@@ -265,7 +265,7 @@
                   </mat-error>
                 </mat-form-field>
               </div>
-              <div *ngIf="formControls.target.value == 'User'">
+              <div *ngIf="formControls.target.value == 2">
                 <mat-form-field appearance="fill" class="w-full">
                   <mat-label>Users</mat-label>
                   <mat-select formControlName="users" required multiple>
