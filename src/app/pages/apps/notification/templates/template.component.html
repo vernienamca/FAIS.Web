@@ -1,6 +1,6 @@
 <vex-secondary-toolbar current="{{ pageLabel }}">
   <vex-breadcrumbs
-    [crumbs]="['System Management', 'Alerts', pageLabel]"
+    [crumbs]="['System Management', 'Notification Templates', pageLabel]"
     class="flex-auto"
   ></vex-breadcrumbs>
   <button class="ml-2" color="primary" mat-icon-button type="button">
@@ -243,12 +243,12 @@
                   </mat-error>
                 </mat-form-field>
               </div>
-              <div *ngIf="formControls.target.value != 'User'">
+              <div *ngIf="formControls.target.value != 2">
                 <mat-form-field appearance="fill" class="w-full">
                   <mat-label>Roles</mat-label>
-                  <mat-select formControlName="roles" required readonly="formControls.target.value != 'Role'" multiple>
+                  <mat-select formControlName="roles" required readonly="formControls.target.value != 1" multiple>
                     <mat-option
-                      value="{{ i.name }}"
+                      value="{{ i.id }}"
                       *ngFor="let i of rolesList"
                       >{{ i.name }}</mat-option
                     >
@@ -265,7 +265,7 @@
                   </mat-error>
                 </mat-form-field>
               </div>
-              <div *ngIf="formControls.target.value == 'User'">
+              <div *ngIf="formControls.target.value == 2">
                 <mat-form-field appearance="fill" class="w-full">
                   <mat-label>Users</mat-label>
                   <mat-select formControlName="users" required multiple>
