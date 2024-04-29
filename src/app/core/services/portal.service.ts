@@ -16,6 +16,7 @@ import { ILibraryTypes } from '../models/library-types';
 import { IAssetProfile } from '../models/asset-profile';
 import { IPermission } from '../models/permission';
 import { ITemplate } from '../models/template';
+import { IMeteringProfile } from '../models/metering-profile';
 
 @Injectable({
   providedIn: 'root'
@@ -24,6 +25,7 @@ export class PortalService {
   isMyProfile$ = new BehaviorSubject<boolean>(false);
   addedUserRole$ = new BehaviorSubject<IUserRole>(null);
   userRoleIds$ = new BehaviorSubject<number[]>(null);
+  stringInterpolations$ = new BehaviorSubject<IStringInterpolation[]>(null);
 
   constructor(
     private _portalApi: PortalApi, 
@@ -280,4 +282,20 @@ export class PortalService {
   getAssetProfile(id: number): Observable<IAssetProfile> {
     return this._portalApi.getAssetProfile(id);
 }
+
+  getMeteringProfiles(): Observable<IMeteringProfile[]> {
+   return this._portalApi.getMeteringProfiles();
+}
+  getMeteringProfile(id: number): Observable<IMeteringProfile> {
+   return this._portalApi.getMeteringProfile(id);
+}
+
+  addMeteringProfile(data: any): Observable<any> {
+  return this._portalApi.addMeteringProfile(data);
+}
+
+  updateMeteringProfile(data: any): Observable<any> {
+  return this._portalApi.updateMeteringProfile(data);
+}
+
 }

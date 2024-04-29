@@ -1,6 +1,7 @@
 export interface ITemplate {
     id: number,
     subject: string,
+    url: string,
     startDate: Date,
     startTime: string,
     endDate: Date,

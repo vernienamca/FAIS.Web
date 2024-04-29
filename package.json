@@ -47,6 +47,7 @@
     "date-fns": "~2.29.3",
     "highlight.js": "~11.7.0",
     "luxon": "~3.2.1",
+    "mat-timepicker": "^5.1.8",
     "ngx-captcha": "^13.0.0",
     "ngx-mat-select-search": "^7.0.5",
     "ngx-quicklink": "~0.4.1",
