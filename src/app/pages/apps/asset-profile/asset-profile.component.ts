@@ -302,7 +302,6 @@ export class AssetProfileComponent implements OnInit, OnDestroy {
     else { 
       this._router.navigate(['/pages/error-401']); 
     }
-   
   }
 
   private _disableFormFields(role: IRole): void {
