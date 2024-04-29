@@ -4,7 +4,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute,Router } from '@angular/router';
 import { Subject, takeUntil, tap , Observable, switchMap } from 'rxjs';
 import { IChart } from 'src/app/core/models/chart';
-import { ILibraryTypes } from 'src/app/core/models/library-types';
 import { PortalService } from 'src/app/core/services/portal.service';
 import { IMeteringProfile } from 'src/app/core/models/metering-profile';
 import { SecurityService } from 'src/app/core/services/security.service';
@@ -12,6 +11,7 @@ import {IRole} from 'src/app/core/models/role'
 import { RoleNames } from 'src/app/core/enums/role.enums';
 import { MatDialog } from '@angular/material/dialog';
 import { MeteringConfirmationDialogComponent } from './metering-confirmation-dialog/metering-confirmation-dialog.component';
+import { ModuleEnum } from 'src/app/core/enums/module-enum';
 
 @Component({
   selector: 'vex-module',
@@ -28,10 +28,11 @@ export class MeteringProfileComponent implements OnInit, OnDestroy {
  statusDate: Date | null = null;
  statusLabel = 'Active';
  chartofAccounts: IChart[] = [];
- costCenterType: any [] = [];
- assetClass: any [] = [];
- assetType: any [] = [];
- filteredlibraryTypes: ILibraryTypes[] = [];
+ installationType: any [] = [];
+ districtOffice: any [] = [];
+ meteringClassification: any [] = [];
+ transmissionGrid: any[] = [];
+ facilityLocation: any[] = [];
  createdBy: string;
  createdAt: Date;
  updatedBy: string;
@@ -93,12 +94,26 @@ export class MeteringProfileComponent implements OnInit, OnDestroy {
     adProvSeq: [''], 
     adBrgySeq: [''] 
     });
+    // read user story to check the limitations of roles
+    // to refactor this you just need to add read on roles and disable fields...
+    // just don't forget to add your scripts...
+    //
+    //TODO :  ASK MA'AM NICOLE ABOUT THE DROPDOWN ON THE ADDRESS..
+    //ADD UDF1 UDF2 UDF3 on the metering profile.
+    this._securityService.getPermissions(parseInt(localStorage.getItem('user_id')))
+    .pipe(takeUntil(this._onDestroy$))
+    .subscribe(data => {
+      const permission = data.filter(a => a.moduleId === ModuleEnum.AddorEditMeteringProfile);
+      if (!permission || permission.some(s => s.isRead) === false) {
+        this._router.navigate([`pages/error-401`]);
+      }
+    });
   }
 
   ngOnInit(): void { 
   this.userId = parseInt(localStorage.getItem('user_id'));
   this.id = parseInt(this._route.snapshot.paramMap.get('id'));
-
+    
   this._getRoles().pipe(
     tap(() => this._checkFormFields()),  
     switchMap(() => this._portalService.getChartAccounts()),
@@ -113,22 +128,21 @@ export class MeteringProfileComponent implements OnInit, OnDestroy {
       if(!data) {
         return;
       }
-      this.costCenterType = data.filter(type => type.code =='CCT');
-      this.assetType = data.filter(type => type.code =='AT');
-      this.filteredlibraryTypes = data.filter(type => type.code === 'AST');
-      this.assetClass = data.filter(type => type.code === 'AC' );
+      this.installationType = data.filter(type => type.code =='INT');
+      this.meteringClassification = data.filter(type => type.code =='MTC');
+      this.transmissionGrid = data.filter(type => type.code === 'TRG');
+      this.districtOffice = data.filter(type => type.code === 'DTO');
+      this.facilityLocation = data.filter(type => type.code == 'FCL');
     })
 
     if(this.id){
       this.isEditMode = true;
-      console.log(this.id)
       this._getMeteringProfile(this.id);
     }
     };
 
    save(): void{
     this.isSaving = true;
-
     this._dialog.open(MeteringConfirmationDialogComponent,{
     width: '500px',
     disableClose: true
@@ -143,12 +157,11 @@ export class MeteringProfileComponent implements OnInit, OnDestroy {
            this._updateMetering(editdata)
           }
           else {
-            console.log(data)
             this._addMetering(data);
           }
           else {
             this._snackBar.open('User Cancelled saving.', 'Close');
-            this.isSaving = false;
+            this.isSaving = false;  
           }
     })
     const data = Object.assign({},this.form.value)
@@ -159,13 +172,12 @@ export class MeteringProfileComponent implements OnInit, OnDestroy {
     editdata.updatedBy = this.userId;
    }
 
-  ngOnDestroy(): void {
+  ngOnDestroy(): void {``
     this._onDestroy$.next();
     this._onDestroy$.complete();  
   }
 
   close(): void{
-    console.log("napress yung close")
     this._router.navigateByUrl('apps/metering-profile');
   }
 
@@ -288,17 +300,13 @@ export class MeteringProfileComponent implements OnInit, OnDestroy {
       this.updatedAt = meteringData.updatedAt
       this.statusDate = meteringData.statusDate
    }
-
+   // TODO: Refactor this part to insert the usage permission 
   private _getRoleAuthorization(roles: any[]): any {
     const relevantRoles = roles.filter(role => this.roles.some(r => r.name === role.name && role.isActive === true));
     if (relevantRoles.length > 0) {
       const firstRole = relevantRoles.reduce((minRole, currentRole) => minRole.userRoleId < currentRole.userRoleId ? minRole : currentRole);
       return firstRole;
     }
-    else { 
-      this._router.navigate(['/pages/error-401']); 
-    }
-   
   }
 
   private _disableFormFields(role: IRole): void {

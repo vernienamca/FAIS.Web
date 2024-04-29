@@ -7,6 +7,10 @@
     align-items: center;
   }
   
+  hr {
+    border-top: 5px dashed #D8D8D8;
+}
+
   .close {
     background-color: #043C79;
     padding: 3px 15px;
@@ -21,7 +25,7 @@
   }
   
   mat-form-field {
-    width: 50%;
+    width: 49%;
   }
   
   .is-active {

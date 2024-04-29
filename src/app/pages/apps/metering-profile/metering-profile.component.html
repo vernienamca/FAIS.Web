@@ -36,33 +36,53 @@
             </div>
   
             <div class="flex flex-col sm:flex-row sm:gap-4">
-              <mat-form-field appearance="fill">
-                <mat-label>Type of Installation</mat-label>
-                <input matInput formControlName="installationTypeSeq">
+             <mat-form-field appearance="fill">
+                <mat-label>Installation Type</mat-label>
+                <mat-select formControlName="installationTypeSeq" >
+                  <mat-option *ngFor="let type of installationType" [value]="type.id">
+                    {{ type.description}}
+                  </mat-option>
+                </mat-select>
               </mat-form-field>
   
               <mat-form-field appearance="fill">
                 <mat-label>Metering Classification</mat-label>
-                <input matInput formControlName="meteringClass">
+                <mat-select formControlName="meteringClass" >
+                  <mat-option *ngFor="let class of meteringClassification" [value]="class.id">
+                    {{ class.description}}
+                  </mat-option>
+                </mat-select>
               </mat-form-field>
             </div>
   
             <div class="flex flex-col sm:flex-row sm:gap-4">
               <mat-form-field appearance="fill">
                 <mat-label>Transmission Grid</mat-label>
-                <input matInput formControlName="transGrid">
+                <mat-select formControlName="transGrid" >
+                  <mat-option *ngFor="let grid of transmissionGrid" [value]="grid.id">
+                    {{ grid.description}}
+                  </mat-option>
+                </mat-select>
               </mat-form-field>
   
               <mat-form-field appearance="fill">
                 <mat-label>District Office</mat-label>
-                <input matInput formControlName="districtSeq">
+                <mat-select formControlName="districtSeq" >
+                  <mat-option *ngFor="let district of districtOffice" [value]="district.id">
+                    {{ district.description}}
+                  </mat-option>
+                </mat-select>
               </mat-form-field>
             </div>
    
             <div class="flex flex-col sm:flex-row sm:gap-4">
               <mat-form-field appearance="fill">
-                <mat-label>Facility Location</mat-label>
-                <input matInput formControlName="facilityLocationSeq">
+                <mat-label>FacilityLocation</mat-label>
+                <mat-select formControlName="facilityLocationSeq" >
+                  <mat-option *ngFor="let location of facilityLocation" [value]="location.id">
+                    {{ location.description}}
+                  </mat-option>
+                </mat-select>
               </mat-form-field>
 
                 <mat-form-field appearance="fill" class="economic-life-field">
@@ -98,10 +118,12 @@
                 <input matInput formControlName="udf3">
               </mat-form-field>
               </div>
-            
+
+              <hr class="w-full">
+              <h2 class="my-4 title flex-auto">Address</h2>
             <div class="flex flex-col sm:flex-row sm:gap-4">
             <mat-form-field appearance="fill">
-                <mat-label>Region</mat-label>
+                <mat-label>Region</mat-label>   
                 <input matInput formControlName="adRegionSeq">
             </mat-form-field>
 

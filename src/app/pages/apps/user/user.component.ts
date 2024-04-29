@@ -111,6 +111,7 @@ export class UserComponent implements OnInit, OnDestroy {
           this.form.controls['accountExpiration'].disable();
         }
         this.hasAccess = permission.some(s => s.isUpdate);
+        console.log('this.hasaccess',this.hasAccess)
       });
 
     if (this.userId) {
