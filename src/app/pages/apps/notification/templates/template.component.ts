@@ -34,8 +34,8 @@ export class TemplateComponent implements OnInit, OnDestroy {
   @ViewChild("contentEditor", { static: true }) contentEditor: any;
 
   targetList: any[] = [
-    { text: "Role", icon: "" },
-    { text: "User", icon: "" },
+    { text: "Role", icon: "", value: 1 },
+    { text: "User", icon: "", value: 2 },
   ];
   rolesList: any[] = [];
   usersList: any[] = [];
@@ -44,11 +44,11 @@ export class TemplateComponent implements OnInit, OnDestroy {
     { text: "Standard", icon: "", value: 9 },
   ];
   iconColorList: any[] = [
-    { text: "Light Green", color: "#9FCD63" },
-    { text: "Light Gray", color: "#BCC9BC" },
-    { text: "Amber", color: "#212121" },
-  { text: "Blue", color: "#0000FF" },
-    { text: "Brown", color: "#A5652A" },
+    { text: "Light Green", color: "#9FCD63", value: 'light green' },
+    { text: "Light Gray", color: "#BCC9BC", value: "light gray" },
+    { text: "Amber", color: "#212121", value: "amber" },
+    { text: "Blue", color: "#0000FF", value: "blue" },
+    { text: "Brown", color: "#A5652A", value: "Brown" },
   ];
   iconList: any[] = [
     { text: "Release Note", icon: "insert_drive_file" },
@@ -116,34 +116,37 @@ export class TemplateComponent implements OnInit, OnDestroy {
       icon: ["", [Validators.required]],
       //status: [true, []],
       isActive: [true, []],
-      statusDate: [""]
+      statusDate: [new Date()]
     });
 
     this.id = parseInt(this._route.snapshot.paramMap.get('id'));
-    // const id = parseInt(this._route.snapshot.paramMap.get('id'));
     this.pageMode = this._route.snapshot.data.pageMode;
 
-    this.pageLabel =  this.pageMode == 1 ? 'Add Alerts' : 'Edit Alerts';
+    this.pageLabel =  this.pageMode == 1 ? 'Add Notification Templates' : 'Edit Notification Templates';
 
     this._getRoles();
     this._getUsers();
 
-    const id = parseInt(this._route.snapshot.paramMap.get("id"));
-    this.id = parseInt(this._route.snapshot.paramMap.get('id'));
-      // const id = parseInt(this._route.snapshot.paramMap.get('id'));
       this.pageMode = this._route.snapshot.data.pageMode;
   
-      this.pageLabel =  this.pageMode == 1 ? 'Add Alert' : 'Edit Alert';
+      this.pageLabel =  this.pageMode == 1 ? 'Add Notification Templates' : 'Edit Notification Templates';
+
+      console.log("this.id");
+      console.log(this.id);
+      console.log("this.pageMode");
+      console.log(this.pageMode);
   
       if (this.pageMode === 2) {
         if (this.id) {
-          this._portalService.getAlert(this.id)
+          console.log("this.id");
+          console.log(this.id);
+          this._portalService.getNotificationTemplate(this.id)
             .pipe(takeUntil(this._onDestroy$))
             .subscribe(data => {
               if (!data) {
                 return;
               }
-              console.log("getalert", data);
+              console.log("getNotificationTemplate", data);
               this._initializeData(data);
             });
           return;
@@ -249,6 +252,10 @@ export class TemplateComponent implements OnInit, OnDestroy {
     data.updatedBy = parseInt(localStorage.getItem("user_id"));
     console.log("data");
     console.log(data);
+
+    data.receiver = data.target == "Role" ? 1 : 2;
+    data.users = (data && data.users) ? data.users.join(",") : "";
+    data.roles = (data && data.roles) ? data.roles.join(",") : "";
     
     // this._portalService
     //   .updateAlert(data)
@@ -314,6 +321,9 @@ console.log("update data", data);
           return;
         }
         this.rolesList = data;
+
+        console.log("this.rolesList");
+        console.log(this.rolesList);
       });
 
    
@@ -344,18 +354,22 @@ console.log("update data", data);
       return;
 
     data = data.result;
+
+    console.log("Setting data");
+    console.log(data);
+
     this.form.setValue({
       subject: data.subject,
-      url: data.url,
+      url: data.url ? data.url : "",
       startDate: data.startDate,
       startTime: data.startTime,
       endDate: data.endDate,
       endTime: data.endTime,
       content: data.content,
-      target: data.target == 'Role' ? 'Role' : 'User',
-      roles: data.roles,
-      users: data.users,
-      notificationType: data.notificationType,
+      target: data.target == 'Role' || data.target == 1 ? "1" : "2",
+      roles: data.roles ? data.roles.split(",") : [],
+      users: data.users ? data.users.split(",") : [],
+      notificationType: data.notificationType.toString(),
       iconColor: data.iconColor,
       icon: data.icon,
       isActive: data.isActive === 'Y',

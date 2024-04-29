@@ -67,7 +67,6 @@ export class ChangePasswordComponent implements OnInit, OnDestroy {
         newPassword: ['', [Validators.required]],
         confirmPassword: ['', [Validators.required]]
       });
-
       this._securityService.getSettings(1)
         .pipe(takeUntil(this._onDestroy$))
         .subscribe(data => {
@@ -163,10 +162,6 @@ export class ChangePasswordComponent implements OnInit, OnDestroy {
       });
       return;
     }
-    console.log(this.user.id);
-    console.log(this.formControls.oldPassword.value);
-    console.log(this.formControls.newPassword.value);
-
     this._securityService.changePassword(this.user.id, this.formControls.oldPassword.value, this.formControls.newPassword.value)
       .pipe(takeUntil(this._onDestroy$))
       .subscribe(data => {
@@ -185,5 +180,12 @@ export class ChangePasswordComponent implements OnInit, OnDestroy {
           location.href = '/login'
         }, 5000);
       });
+  }
+
+  onInput(value: string) {
+    if (value.includes('?') || value.includes('#') ) {
+      this._snackBar.open('Your password must not contain the following invalid characters ?, #.', 'Okay');
+      return;
+    }
   }
 }
