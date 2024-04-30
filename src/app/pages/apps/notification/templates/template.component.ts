@@ -44,11 +44,11 @@ export class TemplateComponent implements OnInit, OnDestroy {
     { text: "Standard", icon: "", value: 9 },
   ];
   iconColorList: any[] = [
-    { text: "Light Green", color: "#9FCD63", value: 'light green' },
-    { text: "Light Gray", color: "#BCC9BC", value: "light gray" },
-    { text: "Amber", color: "#212121", value: "amber" },
-    { text: "Blue", color: "#0000FF", value: "blue" },
-    { text: "Brown", color: "#A5652A", value: "Brown" },
+    { text: "Light Green", color: "#9FCD63", value: 0 },
+    { text: "Light Gray", color: "#BCC9BC", value: 1 },
+    { text: "Amber", color: "#212121", value: 2 },
+    { text: "Blue", color: "#0000FF", value: 3 },
+    { text: "Brown", color: "#A5652A", value: 4 },
   ];
   iconList: any[] = [
     { text: "Release Note", icon: "insert_drive_file" },
@@ -370,7 +370,7 @@ console.log("update data", data);
       roles: data.roles ? data.roles.split(",") : [],
       users: data.users ? data.users.split(",") : [],
       notificationType: data.notificationType.toString(),
-      iconColor: data.iconColor,
+      iconColor: data.iconColor.toString(),
       icon: data.icon,
       isActive: data.isActive === 'Y',
       statusDate: data.statusDate
