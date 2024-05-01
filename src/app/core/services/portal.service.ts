@@ -287,7 +287,7 @@ export class PortalService {
     
     let sDate: string = "";
 
-    sDate = d.getUTCFullYear() + "-" + (d.getUTCMonth() + 1) + "-" + (d.getUTCDate() + 1) + "T00:08:00";
+    sDate = d.getUTCFullYear() + "-" + (d.getUTCMonth() + 1) + "-" + (d.getUTCDate() + 1) + "T00:08:00.000Z";
     return sDate;
   }
 }
