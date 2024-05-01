@@ -281,4 +281,13 @@ export class PortalService {
   getAssetProfile(id: number): Observable<IAssetProfile> {
     return this._portalApi.getAssetProfile(id);
 }
+
+  getStringDate(d: Date | string): string {
+    if (typeof d == "string") return d; 
+    
+    let sDate: string = "";
+
+    sDate = d.getUTCFullYear() + "-" + (d.getUTCMonth() + 1) + "-" + (d.getUTCDate() + 1) + "T00:08:00.000Z";
+    return sDate;
+  }
 }
