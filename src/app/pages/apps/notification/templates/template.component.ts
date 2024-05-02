@@ -44,11 +44,11 @@ export class TemplateComponent implements OnInit, OnDestroy {
     { text: "Standard", icon: "", value: 9 },
   ];
   iconColorList: any[] = [
-    { text: "Light Green", color: "#9FCD63", value: 'light green' },
-    { text: "Light Gray", color: "#BCC9BC", value: "light gray" },
-    { text: "Amber", color: "#212121", value: "amber" },
-    { text: "Blue", color: "#0000FF", value: "blue" },
-    { text: "Brown", color: "#A5652A", value: "Brown" },
+    { text: "Light Green", color: "#9FCD63", value: 0 },
+    { text: "Light Gray", color: "#BCC9BC", value: 1 },
+    { text: "Amber", color: "#212121", value: 2 },
+    { text: "Blue", color: "#0000FF", value: 3 },
+    { text: "Brown", color: "#A5652A", value: 4 },
   ];
   iconList: any[] = [
     { text: "Release Note", icon: "insert_drive_file" },
@@ -130,23 +130,15 @@ export class TemplateComponent implements OnInit, OnDestroy {
       this.pageMode = this._route.snapshot.data.pageMode;
   
       this.pageLabel =  this.pageMode == 1 ? 'Add Notification Templates' : 'Edit Notification Templates';
-
-      console.log("this.id");
-      console.log(this.id);
-      console.log("this.pageMode");
-      console.log(this.pageMode);
   
       if (this.pageMode === 2) {
         if (this.id) {
-          console.log("this.id");
-          console.log(this.id);
           this._portalService.getNotificationTemplate(this.id)
             .pipe(takeUntil(this._onDestroy$))
             .subscribe(data => {
               if (!data) {
                 return;
               }
-              console.log("getNotificationTemplate", data);
               this._initializeData(data);
             });
           return;
@@ -157,7 +149,6 @@ export class TemplateComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this._getStringInterpolations();
     this.todayDate = new Date();
-    console.log(this.todayDate);
   }
 
   ngOnDestroy(): void {
@@ -170,7 +161,6 @@ export class TemplateComponent implements OnInit, OnDestroy {
   }
 
   save(): void {
-    console.log("save");
     var isValid = true;
     if (!this.formControls.subject.value) {
       this.formControls.subject.markAsTouched();
@@ -250,28 +240,13 @@ export class TemplateComponent implements OnInit, OnDestroy {
     data.id = parseInt(this._route.snapshot.paramMap.get("id"));
     data.isActive = data.isActive ? "Y" : "N";
     data.updatedBy = parseInt(localStorage.getItem("user_id"));
-    console.log("data");
-    console.log(data);
 
     data.receiver = data.target == "Role" ? 1 : 2;
     data.users = (data && data.users) ? data.users.join(",") : "";
     data.roles = (data && data.roles) ? data.roles.join(",") : "";
-    
-    // this._portalService
-    //   .updateAlert(data)
-    //   .pipe(takeUntil(this._onDestroy$))
-    //   .subscribe((data) => {
-    //     if (!data) {
-    //       return;
-    //     }
-    //     let snackBarRef = this._snackBar.open(
-    //       "Alert has been successfully updated.",
-    //       "Close"
-    //     );
-    //     snackBarRef.afterDismissed().subscribe(() => {
-    //       window.location.reload();
-    //     });
-    //   });
+
+    data.startDate = this._portalService.getStringDate(data.startDate);
+    data.endDate = this._portalService.getStringDate(data.endDate);
 
     if (this.pageMode === 1) {
       data.createdBy = parseInt(localStorage.getItem('user_id'));
@@ -291,7 +266,6 @@ export class TemplateComponent implements OnInit, OnDestroy {
     else if (this.pageMode === 2) {
       data.updatedBy = parseInt(localStorage.getItem('user_id'));
       data.id = this.id;
-console.log("update data", data);
 
       this._portalService.updateAlert(this.id, data)
       .pipe(takeUntil(this._onDestroy$))
@@ -321,9 +295,6 @@ console.log("update data", data);
           return;
         }
         this.rolesList = data;
-
-        console.log("this.rolesList");
-        console.log(this.rolesList);
       });
 
    
@@ -342,21 +313,15 @@ console.log("update data", data);
         if (!data) {
           return;
         }
-        console.log("data");
-        console.log(data);
         this.usersList = data;
       });
   }
 
   private _initializeData(data: any): void {
-    console.log("test",data);
     if (data == null || data.result == null)
       return;
 
     data = data.result;
-
-    console.log("Setting data");
-    console.log(data);
 
     this.form.setValue({
       subject: data.subject,
@@ -370,7 +335,7 @@ console.log("update data", data);
       roles: data.roles ? data.roles.split(",") : [],
       users: data.users ? data.users.split(",") : [],
       notificationType: data.notificationType.toString(),
-      iconColor: data.iconColor,
+      iconColor: data.iconColor.toString(),
       icon: data.icon,
       isActive: data.isActive === 'Y',
       statusDate: data.statusDate
@@ -392,8 +357,6 @@ console.log("update data", data);
     
     dialogRef.afterClosed().subscribe(result => {
       if(result && result.data && result.data.transactionCode) {
-        console.log("this.formControls.content.value");
-        console.log(this.formControls.content.value);
         this.form.patchValue({content: this.formControls.content.value + " " + result.data.transactionCode});
       }
     });
@@ -404,5 +367,9 @@ console.log("update data", data);
       .subscribe(data => {
         this.stringInterpolations = data;
       });
+  }
+
+  private _getDate(d: Date): void {
+    return 
   }
 }

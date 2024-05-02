@@ -283,34 +283,43 @@ export class PortalService {
     return this._portalApi.getAssetProfile(id);
 }
 
-  getMeteringProfiles(): Observable<IMeteringProfile[]> {
-    return this._portalApi.getMeteringProfiles();
+getMeteringProfiles(): Observable<IMeteringProfile[]> {
+  return this._portalApi.getMeteringProfiles();
 }
-  getMeteringProfile(id: number): Observable<IMeteringProfile> {
-    return this._portalApi.getMeteringProfile(id);
-}
-
-  addMeteringProfile(data: any): Observable<any> {
-    return this._portalApi.addMeteringProfile(data);
+getMeteringProfile(id: number): Observable<IMeteringProfile> {
+  return this._portalApi.getMeteringProfile(id);
 }
 
-  updateMeteringProfile(data: any): Observable<any> {
-    return this._portalApi.updateMeteringProfile(data);
+addMeteringProfile(data: any): Observable<any> {
+  return this._portalApi.addMeteringProfile(data);
 }
 
-  getRegions(): Observable<any[]> {
-    return this._portalApi.getRegions();
+updateMeteringProfile(data: any): Observable<any> {
+  return this._portalApi.updateMeteringProfile(data);
 }
 
-  getProvinces(): Observable<any[]> {
-    return this._portalApi.getProvinces();
+getRegions(): Observable<any[]> {
+  return this._portalApi.getRegions();
 }
 
-  getBarangays(): Observable<any[]> {
-    return this._portalApi.getBarangays();
+getProvinces(): Observable<any[]> {
+  return this._portalApi.getProvinces();
 }
 
-  getMunicipalities(): Observable<any[]> {
-    return this._portalApi.getMunicipalities();
+getBarangays(): Observable<any[]> {
+  return this._portalApi.getBarangays();
+}
+
+getMunicipalities(): Observable<any[]> {
+  return this._portalApi.getMunicipalities();
+}
+
+  getStringDate(d: Date | string): string {
+    if (typeof d == "string") return d; 
+    
+    let sDate: string = "";
+
+    sDate = d.getUTCFullYear() + "-" + (d.getUTCMonth() + 1) + "-" + (d.getUTCDate() + 1) + "T00:08:00.000Z";
+    return sDate;
   }
 }
