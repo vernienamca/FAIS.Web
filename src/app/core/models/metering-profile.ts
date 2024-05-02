@@ -24,4 +24,3 @@ export interface IMeteringProfile {
     updatedAt?: Date;
     isAdded?: boolean 
   }
-  
