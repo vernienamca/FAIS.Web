@@ -8,7 +8,6 @@ import { PortalService } from 'src/app/core/services/portal.service';
 import { IMeteringProfile } from 'src/app/core/models/metering-profile';
 import { SecurityService } from 'src/app/core/services/security.service';
 import {IRole} from 'src/app/core/models/role'
-import { RoleNames } from 'src/app/core/enums/role.enums';
 import { MatDialog } from '@angular/material/dialog';
 import { MeteringConfirmationDialogComponent } from './metering-confirmation-dialog/metering-confirmation-dialog.component';
 import { ModuleEnum } from 'src/app/core/enums/module-enum';
@@ -34,13 +33,18 @@ export class MeteringProfileComponent implements OnInit, OnDestroy {
  transmissionGrid: any[] = [];
  facilityLocation: any[] = [];
  createdBy: string;
- createdAt: Date;
+ createdAt: Date | null = null;
  updatedBy: string;
  updatedAt: Date;
  roleIds: number[] = [];
  roles: IRole[] = [];
  isAdmin: boolean = false;
  isSaving: boolean;
+ hasAccess = false;
+ regions: any[] = [];
+ provinces: any[] = [];
+ municipalities: any[] =[];
+ barangays: any[] =[];
 
  get formControls() {
   return {
@@ -94,12 +98,7 @@ export class MeteringProfileComponent implements OnInit, OnDestroy {
     adProvSeq: [''], 
     adBrgySeq: [''] 
     });
-    // read user story to check the limitations of roles
-    // to refactor this you just need to add read on roles and disable fields...
-    // just don't forget to add your scripts...
-    //
-    //TODO :  ASK MA'AM NICOLE ABOUT THE DROPDOWN ON THE ADDRESS..
-    //ADD UDF1 UDF2 UDF3 on the metering profile.
+
     this._securityService.getPermissions(parseInt(localStorage.getItem('user_id')))
     .pipe(takeUntil(this._onDestroy$))
     .subscribe(data => {
@@ -107,6 +106,26 @@ export class MeteringProfileComponent implements OnInit, OnDestroy {
       if (!permission || permission.some(s => s.isRead) === false) {
         this._router.navigate([`pages/error-401`]);
       }
+      if(permission.some(s => s.isUpdate) === false) {
+        this.form.controls['meteringPointName'].disable();
+        this.form.controls['customer'].disable();
+        this.form.controls['installationTypeSeq'].disable();
+        this.form.controls['meteringClass'].disable();
+        this.form.controls['transGrid'].disable();
+        this.form.controls['districtSeq'].disable();
+        this.form.controls['facilityLocationSeq'].disable();
+        this.form.controls['lineSegment'].disable();
+        this.form.controls['remarks'].disable();
+        this.form.controls['isActive'].disable();
+        this.form.controls['udf1'].disable();
+        this.form.controls['udf2'].disable();
+        this.form.controls['udf3'].disable();
+        this.form.controls['adRegionSeq'].disable();
+        this.form.controls['adMunSeq'].disable();
+        this.form.controls['adProvSeq'].disable();
+        this.form.controls['adBrgySeq'].disable();
+      }
+      this.hasAccess = permission.some(s => s.isUpdate);
     });
   }
 
@@ -129,10 +148,46 @@ export class MeteringProfileComponent implements OnInit, OnDestroy {
         return;
       }
       this.installationType = data.filter(type => type.code =='INT');
-      this.meteringClassification = data.filter(type => type.code =='MTC');
+      this.meteringClassification = data.filter(type => type.code =='MC');
       this.transmissionGrid = data.filter(type => type.code === 'TRG');
       this.districtOffice = data.filter(type => type.code === 'DTO');
-      this.facilityLocation = data.filter(type => type.code == 'FCL');
+      this.facilityLocation = data.filter(type => type.code == 'FL');
+    })
+
+    this._portalService.getRegions()
+    .pipe(takeUntil(this._onDestroy$))
+    .subscribe(data => {
+      if(!data){
+        return;
+      }
+      this.regions = data;
+    })
+
+    this._portalService.getProvinces()
+    .pipe(takeUntil(this._onDestroy$))
+    .subscribe(data => {
+      if(!data){
+        return;
+      }
+      this.provinces = data;
+    })
+
+    this._portalService.getMunicipalities()
+    .pipe(takeUntil(this._onDestroy$))
+    .subscribe(data => {
+      if(!data){
+        return;
+      }
+      this.municipalities = data;
+    })
+
+    this._portalService.getBarangays()
+    .pipe(takeUntil(this._onDestroy$))
+    .subscribe(data => {
+      if(!data){
+        return;
+      }
+      this.barangays = data;
     })
 
     if(this.id){
@@ -153,7 +208,6 @@ export class MeteringProfileComponent implements OnInit, OnDestroy {
           {
            editdata.id = parseInt(this._route.snapshot.paramMap.get('id'));
            editdata.createdBy = data.createdBy;
-           console.log(editdata)
            this._updateMetering(editdata)
           }
           else {
@@ -194,27 +248,31 @@ export class MeteringProfileComponent implements OnInit, OnDestroy {
        const administratorRole = this.roles.find(role => role.name === 'Administrator');
        this.roleIds.push(administratorRole.id)
       }
-      else {
-        this._disableFormFields(roleAuthorized);
+
+      if (roleAuthorized.name === 'Metering Librarian') {
+        const meteringLibrarianRole = this.roles.find(role => role.name === 'Metering Librarian');
+        this.roleIds.push(meteringLibrarianRole.id)
       }
     });
 }
   
   private _addMetering(data: IMeteringProfile): void {
     data.statusDate = new Date();
+    data.createdAt = new Date();
     this._portalService.addMeteringProfile(data)
     .pipe(takeUntil(this._onDestroy$))
     .subscribe(data => {
+      console.log('Result after adding:', data); 
       if(!data){
         return;
       }
-      this.id = data.id;
       const notifData = {
         roleIds: this.roleIds, 
-        id: this.id,
-        meteringPointName: data.meteringPointName,
+        id: data.result.id,
+        assetName: data.result.meteringPointName,
         editMode: this.isEditMode,
-        isAdmin: this.isAdmin
+        isAdmin: this.isAdmin,
+        ModuleId: ModuleEnum.MeteringProfile
       };
       this._securityService.postNotifRole(notifData)
       .pipe(takeUntil(this._onDestroy$))
@@ -226,13 +284,14 @@ export class MeteringProfileComponent implements OnInit, OnDestroy {
 
       this._snackBar.open('Metering profile has been successfully saved.', 'Close');
       setTimeout(() => {
-        this._router.navigate([`apps/metering-profile/${data.id}`]); 
+        this._router.navigate([`apps/metering-profile/edit/${notifData.id}`]); 
       }, 2000);
   });
 }
 
   private _updateMetering(data: IMeteringProfile): void{
     data.statusDate = new Date();
+    data.createdAt = this.createdAt
     this._portalService.updateMeteringProfile(data)
       .pipe(takeUntil(this._onDestroy$))
       .subscribe(data => {
@@ -245,7 +304,7 @@ export class MeteringProfileComponent implements OnInit, OnDestroy {
         id: this.id,
         assetName: data.result.name,
         editMode: this.isEditMode,
-        isAdmin: this.isAdmin
+        ModuleId: ModuleEnum.MeteringProfile
       };
     this._securityService.postNotifRole(notifData)
       .pipe(takeUntil(this._onDestroy$))
@@ -300,39 +359,13 @@ export class MeteringProfileComponent implements OnInit, OnDestroy {
       this.updatedAt = meteringData.updatedAt
       this.statusDate = meteringData.statusDate
    }
-   // TODO: Refactor this part to insert the usage permission 
+
   private _getRoleAuthorization(roles: any[]): any {
     const relevantRoles = roles.filter(role => this.roles.some(r => r.name === role.name && role.isActive === true));
     if (relevantRoles.length > 0) {
       const firstRole = relevantRoles.reduce((minRole, currentRole) => minRole.userRoleId < currentRole.userRoleId ? minRole : currentRole);
       return firstRole;
     }
-  }
-
-  private _disableFormFields(role: IRole): void {
-    let fieldsToDisable: string[] = [];
-    switch (role.name) {
-      case RoleNames.Administrator:
-        fieldsToDisable = [''];
-        break;
-      default: 
-        fieldsToDisable = [
-            'meteringPointName', 'customer', 'installationTypeSeq', 
-            'meteringClass', 'transGrid','districtSeq', 
-            'facilityLocationSeq', 'lineSegment', 'remarks', 
-            'isActive','udf1','udf2','udf3','adRegionSeq', 
-            'adMunSeq', 'adProvSeq', 'adBrgySeq'
-        ];
-        break;
-    }
-
-    fieldsToDisable.forEach(field => {
-      const control = this.form.get(field);
-      if (control)
-      {
-        control.disable();
-      }
-    });
   }
 
   private _getRoles(): Observable<IRole[]> {

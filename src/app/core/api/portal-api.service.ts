@@ -257,4 +257,20 @@ export class PortalApi extends BaseApi {
     updateMeteringProfile(data: any): Observable<any> {
         return this.put<any>(`${this._apiUrl}/meteringprofile/`, data);
     }
+
+    getRegions(): Observable<any[]> {
+        return this.get<any>(`${this._apiUrl}/meteringprofile/getregions`);
+    }
+
+    getProvinces(): Observable<any[]> {
+        return this.get<any>(`${this._apiUrl}/meteringprofile/getprovices`);
+    }
+
+    getMunicipalities(): Observable<any[]> {
+        return this.get<any>(`${this._apiUrl}/meteringprofile/getmunicipality`);
+    }
+    
+    getBarangays(): Observable<any[]> {
+        return this.get<any>(`${this._apiUrl}/meteringprofile/getbarangay`);
+    }
 }

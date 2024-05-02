@@ -284,18 +284,33 @@ export class PortalService {
 }
 
   getMeteringProfiles(): Observable<IMeteringProfile[]> {
-   return this._portalApi.getMeteringProfiles();
+    return this._portalApi.getMeteringProfiles();
 }
   getMeteringProfile(id: number): Observable<IMeteringProfile> {
-   return this._portalApi.getMeteringProfile(id);
+    return this._portalApi.getMeteringProfile(id);
 }
 
   addMeteringProfile(data: any): Observable<any> {
-  return this._portalApi.addMeteringProfile(data);
+    return this._portalApi.addMeteringProfile(data);
 }
 
   updateMeteringProfile(data: any): Observable<any> {
-  return this._portalApi.updateMeteringProfile(data);
+    return this._portalApi.updateMeteringProfile(data);
 }
 
+  getRegions(): Observable<any[]> {
+    return this._portalApi.getRegions();
+}
+
+  getProvinces(): Observable<any[]> {
+    return this._portalApi.getProvinces();
+}
+
+  getBarangays(): Observable<any[]> {
+    return this._portalApi.getBarangays();
+}
+
+  getMunicipalities(): Observable<any[]> {
+    return this._portalApi.getMunicipalities();
+  }
 }

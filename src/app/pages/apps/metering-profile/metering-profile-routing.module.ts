@@ -15,7 +15,7 @@ const routes: VexRoutes = [
     }
   },
   {
-    path: ':id',
+    path: 'edit/:id',
     component: MeteringProfileComponent,
     data: {
       pageMode: PageMode.Edit,

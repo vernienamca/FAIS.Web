@@ -28,6 +28,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MeteringConfirmationDialogComponent} from './metering-confirmation-dialog/metering-confirmation-dialog.component'
 import { MatDividerModule } from '@angular/material/divider';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 @NgModule({
   declarations: [MeteringProfileListComponent, MeteringProfileComponent, MeteringConfirmationDialogComponent],
@@ -58,7 +59,8 @@ import { MatDividerModule } from '@angular/material/divider';
     MatDialogModule,
     MatSnackBarModule,
     MatProgressBarModule,
-    MatDividerModule
+    MatDividerModule,
+    FlexLayoutModule
   ]
 })
 export class MeteringProfileModule {

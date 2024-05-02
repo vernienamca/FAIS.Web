@@ -6,6 +6,11 @@ export interface IMeteringProfile {
     meteringPointName: string;
     installationTypeSeq: number;
     facilityLocationSeq: number;
+    meteringClassDescription: string;
+    installationTypeDescription: string;
+    facilityLocationDescription: string;
+    transGridDescription: string;
+    lineSegment: string;
     remarks: string;
     adReqionSeq: number;
     adProvSeq: number;
