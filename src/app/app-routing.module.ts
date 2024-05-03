@@ -123,6 +123,10 @@ const routes: VexRoutes = [
             loadChildren: () => import('./pages/apps/library-types/library-types.module').then(m => m.LibraryTypesModule)
           },
           {
+            path: 'metering-profile',
+            loadChildren: () => import('./pages/apps/metering-profile/metering-profile.module').then(m => m.MeteringProfileModule)
+          },
+          {
             path: 'plant-information',
             loadChildren: () => import('./pages/apps/plant-information/plant-information.module').then(m => m.PlantInformationModule)
           }

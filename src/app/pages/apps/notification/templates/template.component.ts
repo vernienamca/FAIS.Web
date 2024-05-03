@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from "@angular/core";
+import { Component, OnDestroy, OnInit, ViewChild } from "@angular/core";
 import {
   FormGroup,
   Validators,
@@ -12,6 +12,9 @@ import { Subject, finalize, takeUntil } from "rxjs";
 import { PortalService } from "src/app/core/services/portal.service";
 import { ITemplate } from 'src/app/core/models/template'
 import { PageMode } from 'src/app/core/enums/page-mode.enum';
+import { MatDialog } from '@angular/material/dialog';
+import { ViewInterpolationDialogComponent } from "./view-interpolation-dialog/view-interpolation-dialog.component";
+import { IStringInterpolation } from "src/app/core/models/string-interpolation";
 
 @Component({
   selector: 'vex-template',
@@ -25,12 +28,14 @@ export class TemplateComponent implements OnInit, OnDestroy {
   createdAt: Date;
   updatedBy: string;
   updatedAt: Date;
+  todayDate: Date;
   pageMode: PageMode;
   id: number;
+  @ViewChild("contentEditor", { static: true }) contentEditor: any;
 
   targetList: any[] = [
-    { text: "Role", icon: "" },
-    { text: "User", icon: "" },
+    { text: "Role", icon: "", value: 1 },
+    { text: "User", icon: "", value: 2 },
   ];
   rolesList: any[] = [];
   usersList: any[] = [];
@@ -39,11 +44,11 @@ export class TemplateComponent implements OnInit, OnDestroy {
     { text: "Standard", icon: "", value: 9 },
   ];
   iconColorList: any[] = [
-    { text: "Light Green", color: "#9FCD63" },
-    { text: "Light Gray", color: "#BCC9BC" },
-    { text: "Amber", color: "#212121" },
-  { text: "Blue", color: "#0000FF" },
-    { text: "Brown", color: "#A5652A" },
+    { text: "Light Green", color: "#9FCD63", value: 0 },
+    { text: "Light Gray", color: "#BCC9BC", value: 1 },
+    { text: "Amber", color: "#212121", value: 2 },
+    { text: "Blue", color: "#0000FF", value: 3 },
+    { text: "Brown", color: "#A5652A", value: 4 },
   ];
   iconList: any[] = [
     { text: "Release Note", icon: "insert_drive_file" },
@@ -55,6 +60,7 @@ export class TemplateComponent implements OnInit, OnDestroy {
   form: FormGroup;
   layoutCtrl = new UntypedFormControl("fullwidth");
   statusLabel = "Active";
+  stringInterpolations: IStringInterpolation[] = [];
 
 
   public Editor = ClassicEditor;
@@ -62,6 +68,7 @@ export class TemplateComponent implements OnInit, OnDestroy {
   get formControls() {
     return {
       subject: this.form.get("subject"),
+      url: this.form.get("url"),
       startDate: this.form.get("startDate"),
       startTime: this.form.get("startTime"),
       endDate: this.form.get("endDate"),
@@ -74,6 +81,7 @@ export class TemplateComponent implements OnInit, OnDestroy {
       iconColor: this.form.get("iconColor"),
       icon: this.form.get("icon"),
       isActive: this.form.get("isActive"),
+      statusDate: this.form.get("statusDate")
     };
   }
 
@@ -89,10 +97,12 @@ export class TemplateComponent implements OnInit, OnDestroy {
     private _router: Router,
     private _route: ActivatedRoute,
     private _portalService: PortalService,
-    private _snackBar: MatSnackBar
+    private _snackBar: MatSnackBar,
+    private _dialog: MatDialog
   ) {
     this.form = this._fb.group({
       subject: ["", [Validators.required]],
+      url: ["", [Validators.required]],
       startDate: ["", [Validators.required]],
       startTime: ["", [Validators.required]],
       endDate: ["", [Validators.required]],
@@ -105,34 +115,30 @@ export class TemplateComponent implements OnInit, OnDestroy {
       iconColor: ["", [Validators.required]],
       icon: ["", [Validators.required]],
       //status: [true, []],
-      isActive: [true, []]
+      isActive: [true, []],
+      statusDate: [new Date()]
     });
 
     this.id = parseInt(this._route.snapshot.paramMap.get('id'));
-    // const id = parseInt(this._route.snapshot.paramMap.get('id'));
     this.pageMode = this._route.snapshot.data.pageMode;
 
-    this.pageLabel =  this.pageMode == 1 ? 'Add Alerts' : 'Edit Alerts';
+    this.pageLabel =  this.pageMode == 1 ? 'Add Notification Templates' : 'Edit Notification Templates';
 
     this._getRoles();
     this._getUsers();
 
-    const id = parseInt(this._route.snapshot.paramMap.get("id"));
-    this.id = parseInt(this._route.snapshot.paramMap.get('id'));
-      // const id = parseInt(this._route.snapshot.paramMap.get('id'));
       this.pageMode = this._route.snapshot.data.pageMode;
   
-      this.pageLabel =  this.pageMode == 1 ? 'Add Alert' : 'Edit Alert';
+      this.pageLabel =  this.pageMode == 1 ? 'Add Notification Templates' : 'Edit Notification Templates';
   
       if (this.pageMode === 2) {
         if (this.id) {
-          this._portalService.getAlert(this.id)
+          this._portalService.getNotificationTemplate(this.id)
             .pipe(takeUntil(this._onDestroy$))
             .subscribe(data => {
               if (!data) {
                 return;
               }
-              console.log("getalert", data);
               this._initializeData(data);
             });
           return;
@@ -140,7 +146,10 @@ export class TemplateComponent implements OnInit, OnDestroy {
     }
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this._getStringInterpolations();
+    this.todayDate = new Date();
+  }
 
   ngOnDestroy(): void {
     this._onDestroy$.next();
@@ -152,11 +161,15 @@ export class TemplateComponent implements OnInit, OnDestroy {
   }
 
   save(): void {
-    console.log("save");
     var isValid = true;
     if (!this.formControls.subject.value) {
       this.formControls.subject.markAsTouched();
       this.formControls.subject.updateValueAndValidity();
+      isValid = false;
+    }
+    if (!this.formControls.url.value) {
+      this.formControls.url.markAsTouched();
+      this.formControls.url.updateValueAndValidity();
       isValid = false;
     }
     if (!this.formControls.startDate.value) {
@@ -177,6 +190,12 @@ export class TemplateComponent implements OnInit, OnDestroy {
     if (!this.formControls.endTime.value) {
       this.formControls.endTime.markAsTouched();
       this.formControls.endTime.updateValueAndValidity();
+      isValid = false;
+    }
+    if (this.formControls.startDate.value > this.formControls.endDate.value) {
+      this.formControls.endDate.markAsTouched();
+      this.formControls.endDate.updateValueAndValidity();
+      this.formControls.endDate.setErrors({"lessthanstartdate": true});
       isValid = false;
     }
     if (!this.formControls.content.value) {
@@ -214,11 +233,6 @@ export class TemplateComponent implements OnInit, OnDestroy {
       this.formControls.icon.updateValueAndValidity();
       isValid = false;
     }
-    if (!this.formControls.isActive.value) {
-      this.formControls.isActive.markAsTouched();
-      this.formControls.isActive.updateValueAndValidity();
-      isValid = false;
-    }
     if (!isValid) {
       return;
     }
@@ -226,24 +240,13 @@ export class TemplateComponent implements OnInit, OnDestroy {
     data.id = parseInt(this._route.snapshot.paramMap.get("id"));
     data.isActive = data.isActive ? "Y" : "N";
     data.updatedBy = parseInt(localStorage.getItem("user_id"));
-    console.log("data");
-    console.log(data);
-    
-    // this._portalService
-    //   .updateAlert(data)
-    //   .pipe(takeUntil(this._onDestroy$))
-    //   .subscribe((data) => {
-    //     if (!data) {
-    //       return;
-    //     }
-    //     let snackBarRef = this._snackBar.open(
-    //       "Alert has been successfully updated.",
-    //       "Close"
-    //     );
-    //     snackBarRef.afterDismissed().subscribe(() => {
-    //       window.location.reload();
-    //     });
-    //   });
+
+    data.receiver = data.target == "Role" ? 1 : 2;
+    data.users = (data && data.users) ? data.users.join(",") : "";
+    data.roles = (data && data.roles) ? data.roles.join(",") : "";
+
+    data.startDate = this._portalService.getStringDate(data.startDate);
+    data.endDate = this._portalService.getStringDate(data.endDate);
 
     if (this.pageMode === 1) {
       data.createdBy = parseInt(localStorage.getItem('user_id'));
@@ -263,7 +266,6 @@ export class TemplateComponent implements OnInit, OnDestroy {
     else if (this.pageMode === 2) {
       data.updatedBy = parseInt(localStorage.getItem('user_id'));
       data.id = this.id;
-console.log("update data", data);
 
       this._portalService.updateAlert(this.id, data)
       .pipe(takeUntil(this._onDestroy$))
@@ -311,36 +313,63 @@ console.log("update data", data);
         if (!data) {
           return;
         }
-        console.log("data");
-        console.log(data);
         this.usersList = data;
       });
   }
 
   private _initializeData(data: any): void {
-    console.log("test",data);
     if (data == null || data.result == null)
       return;
 
     data = data.result;
+
     this.form.setValue({
       subject: data.subject,
+      url: data.url ? data.url : "",
       startDate: data.startDate,
       startTime: data.startTime,
       endDate: data.endDate,
       endTime: data.endTime,
       content: data.content,
-      target: data.target == 'Role' ? 'Role' : 'User',
-      roles: data.roles,
-      users: data.users,
-      notificationType: data.notificationType,
-      iconColor: data.iconColor,
+      target: data.target == 'Role' || data.target == 1 ? "1" : "2",
+      roles: data.roles ? data.roles.split(",") : [],
+      users: data.users ? data.users.split(",") : [],
+      notificationType: data.notificationType.toString(),
+      iconColor: data.iconColor.toString(),
       icon: data.icon,
       isActive: data.isActive === 'Y',
+      statusDate: data.statusDate
     });
     this.createdBy = data.createdBy;
     this.createdAt = data.createdAt;
     this.updatedBy = data.updatedBy || 'N/A';
     this.updatedAt = data.updatedAt;
+  }
+
+  viewInterpolation(): void {
+    const dialogRef = this._dialog.open(ViewInterpolationDialogComponent, {
+      data: {
+        stringInterpolations: this.stringInterpolations
+      },
+      width: '700px'
+    });
+
+    
+    dialogRef.afterClosed().subscribe(result => {
+      if(result && result.data && result.data.transactionCode) {
+        this.form.patchValue({content: this.formControls.content.value + " " + result.data.transactionCode});
+      }
+    });
+  }
+  private _getStringInterpolations(): void {
+    this._portalService.getStringInterpolations()
+      .pipe(takeUntil(this._onDestroy$))
+      .subscribe(data => {
+        this.stringInterpolations = data;
+      });
+  }
+
+  private _getDate(d: Date): void {
+    return 
   }
 }

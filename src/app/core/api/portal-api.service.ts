@@ -17,6 +17,7 @@ import { ILibraryTypes } from "../models/library-types";
 import { IAssetProfile } from "../models/asset-profile";
 import { IPlantInformation } from "../models/plant-information";
 import { IPermission } from "../models/permission";
+import { IMeteringProfile } from "../models/metering-profile";
 
 export class PortalApi extends BaseApi {
     private _apiUrl = `${environment.apiGatewayBaseUrl}`;
@@ -95,6 +96,10 @@ export class PortalApi extends BaseApi {
 
     getSetting(id: number): Observable<ISettings> {
         return this.get<ISettings>(`${this._apiUrl}/settings/${id}`);
+    }
+
+    getUserActivities(userId: number): Observable<IAuditLogs[]> {
+        return this.get<IAuditLogs[]>(`${this._apiUrl}/user/activities/${userId}`);
     }
 
     updateModule(data: any): Observable<any> {
@@ -261,5 +266,37 @@ export class PortalApi extends BaseApi {
 
     getAssetProfile(id: number): Observable<IAssetProfile> {
         return this.get<IAssetProfile>(`${this._apiUrl}/assetprofile/getbyid?id=${id}`);
+    }
+
+    getMeteringProfiles(): Observable<IMeteringProfile[]> {
+        return this.get<IMeteringProfile[]>(`${this._apiUrl}/meteringprofile/get`);
+    }
+    
+    getMeteringProfile(id: number): Observable<IMeteringProfile> {
+        return this.get<IMeteringProfile>(`${this._apiUrl}/meteringprofile/${id}`);
+    }
+
+    addMeteringProfile(data: any): Observable<any> {
+        return this.post<any>(`${this._apiUrl}/meteringprofile/`, data);
+    }
+
+    updateMeteringProfile(data: any): Observable<any> {
+        return this.put<any>(`${this._apiUrl}/meteringprofile/`, data);
+    }
+
+    getRegions(): Observable<any[]> {
+        return this.get<any>(`${this._apiUrl}/meteringprofile/getregions`);
+    }
+
+    getProvinces(): Observable<any[]> {
+        return this.get<any>(`${this._apiUrl}/meteringprofile/getprovices`);
+    }
+
+    getMunicipalities(): Observable<any[]> {
+        return this.get<any>(`${this._apiUrl}/meteringprofile/getmunicipality`);
+    }
+    
+    getBarangays(): Observable<any[]> {
+        return this.get<any>(`${this._apiUrl}/meteringprofile/getbarangay`);
     }
 }

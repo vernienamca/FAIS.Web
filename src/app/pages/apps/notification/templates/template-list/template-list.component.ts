@@ -82,7 +82,7 @@ export class TemplateListComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnInit(): void {
-    this._portalService.getAlerts()
+    this._portalService.getNotificationTemplates()
       .pipe(takeUntil(this._onDestroy$))
       .subscribe((data) => {
         if (!data) {
@@ -152,7 +152,7 @@ export class TemplateListComponent implements OnInit, OnDestroy, AfterViewInit {
     this.subject$.next(this.templates);
   }
 
-  createAlert(): void {
+  createNotificationTemplate(): void {
     this._router.navigate(["apps/templates/add"]);
   }
 }

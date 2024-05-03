@@ -67,7 +67,6 @@ export class ChangePasswordComponent implements OnInit, OnDestroy {
         newPassword: ['', [Validators.required]],
         confirmPassword: ['', [Validators.required]]
       });
-
       this._securityService.getSettings(1)
         .pipe(takeUntil(this._onDestroy$))
         .subscribe(data => {
@@ -141,7 +140,7 @@ export class ChangePasswordComponent implements OnInit, OnDestroy {
     this.hasAtLeastOneNumber = /[0-9]/.test(event.target.value);
     this.hasAtLeastOneLowercaseChar = /[a-z]/.test(event.target.value);
     this.hasAtLeastOneUppercaseChar = /[A-Z\s]+/.test(event.target.value);
-    this.hasMinSpecialCharacters = (event.target.value.match(/[@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/g) || []).length >= this.minSpecialCharacters;
+    this.hasMinSpecialCharacters = (event.target.value.match(/[@$%^&*()_+\-=\[\]{};':"\\|,.<>\/]/g) || []).length >= this.minSpecialCharacters;
     this.isValidPasswordCriteria = !this.hasMinPasswordLength || !this.hasAtLeastOneNumber || !this.hasAtLeastOneLowercaseChar 
       || !this.hasAtLeastOneUppercaseChar || !this.hasMinSpecialCharacters
   }
@@ -181,5 +180,12 @@ export class ChangePasswordComponent implements OnInit, OnDestroy {
           location.href = '/login'
         }, 5000);
       });
+  }
+
+  onInput(value: string) {
+    if (value.includes('?') || value.includes('#') ) {
+      this._snackBar.open('Your password must not contain the following invalid characters ?, #.', 'Okay');
+      return;
+    }
   }
 }

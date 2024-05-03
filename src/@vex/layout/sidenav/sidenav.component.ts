@@ -108,7 +108,7 @@ export class SidenavComponent implements OnInit {
         let groupNames: string[] = [];
         let childrens: NavigationLink[] = [];
         let settings: NavigationLink;
-        data.filter(t => !t.moduleName.toLocaleLowerCase().includes('add/edit')).forEach(item => {
+        data.filter(t => t.sequence !== 0).forEach(item => {
           if (!groupNames.includes(item.groupName)) {
             groupNames.push(item.groupName);
           }

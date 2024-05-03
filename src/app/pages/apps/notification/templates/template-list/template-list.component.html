@@ -3,8 +3,8 @@
     <div [class.container]="layoutCtrl.value === 'boxed'" [class.px-gutter]="layoutCtrl.value === 'fullwidth'" 
       class="w-full flex flex-col sm:flex-row justify-between">
       <div>
-        <h1 class="title mt-0 mb-1">Alerts ({{ totalCount }})</h1>
-        <vex-breadcrumbs [crumbs]="['System Management', 'Alerts']"></vex-breadcrumbs>
+        <h1 class="title mt-0 mb-1">Notification Templates ({{ totalCount }})</h1>
+        <vex-breadcrumbs [crumbs]="['System Management', 'Notification Templates']"></vex-breadcrumbs>
       </div>
       <div class="hidden sm:block">
         <mat-button-toggle-group [formControl]="layoutCtrl" class="mt-4 sm:mt-0">
@@ -20,14 +20,14 @@
         <div class="bg-foreground rounded-full border px-4 max-w-[300px] flex-auto flex items-center border border-gray-300">
           <mat-icon class="icon-sm text-secondary" svgIcon="mat:search"></mat-icon>
           <input [formControl]="searchCtrl" class="px-4 py-2 border-0 outline-none w-full bg-transparent" 
-            placeholder="Search alerts here..." type="search">
+            placeholder="Search notification templates here..." type="search">
         </div>
         <span class="flex-1"></span>
         <button [matMenuTriggerFor]="columnFilterMenu" class="ml-4 flex-none" mat-icon-button matTooltip="Filter Columns" type="button">
           <mat-icon svgIcon="mat:filter_list"></mat-icon>
         </button>
-        <button (click)="createAlert()" class="ml-4 flex-none" color="primary"
-          mat-mini-fab matTooltip="Add Alert" type="button">
+        <button (click)="createNotificationTemplate()" class="ml-4 flex-none" color="primary"
+          mat-mini-fab matTooltip="Add Notification Template" type="button">
           <mat-icon svgIcon="mat:add"></mat-icon>
         </button>
       </div>

@@ -17,6 +17,7 @@ import { IAssetProfile } from '../models/asset-profile';
 import { IPermission } from '../models/permission';
 import { IPlantInformation } from '../models/plant-information';
 import { ITemplate } from '../models/template';
+import { IMeteringProfile } from '../models/metering-profile';
 
 @Injectable({
   providedIn: 'root'
@@ -25,6 +26,7 @@ export class PortalService {
   isMyProfile$ = new BehaviorSubject<boolean>(false);
   addedUserRole$ = new BehaviorSubject<IUserRole>(null);
   userRoleIds$ = new BehaviorSubject<number[]>(null);
+  stringInterpolations$ = new BehaviorSubject<IStringInterpolation[]>(null);
 
   constructor(
     private _portalApi: PortalApi, 
@@ -88,12 +90,16 @@ export class PortalService {
     return this._portalApi.getStringInterpolation(id);
   }
 
-  getAlerts(): Observable<ITemplate[]> {
+  getNotificationTemplates(): Observable<ITemplate[]> {
     return this._portalApi.getTemplates();
   }
 
-  getAlert(id: number): Observable<ITemplate> {
+  getNotificationTemplate(id: number): Observable<ITemplate> {
     return this._portalApi.getTemplate(id);
+  }
+
+  getUserActivities(userId: number): Observable<IAuditLogs[]> {
+    return this._portalApi.getUserActivities(userId);
   }
 
   exportAuditLogs(): void {
@@ -278,6 +284,7 @@ export class PortalService {
     return this._portalApi.getAssetProfile(id);
 }
 
+<<<<<<< HEAD
   getPlantInformations(): Observable<IPlantInformation[]> {
     return this._portalApi.getPlantInformations();
   }
@@ -308,5 +315,45 @@ export class PortalService {
 
   createPlantInformation(data: any): Observable<any> {
     return this._portalApi.createPlantInformation(data);
+=======
+getMeteringProfiles(): Observable<IMeteringProfile[]> {
+  return this._portalApi.getMeteringProfiles();
+}
+getMeteringProfile(id: number): Observable<IMeteringProfile> {
+  return this._portalApi.getMeteringProfile(id);
+}
+
+addMeteringProfile(data: any): Observable<any> {
+  return this._portalApi.addMeteringProfile(data);
+}
+
+updateMeteringProfile(data: any): Observable<any> {
+  return this._portalApi.updateMeteringProfile(data);
+}
+
+getRegions(): Observable<any[]> {
+  return this._portalApi.getRegions();
+}
+
+getProvinces(): Observable<any[]> {
+  return this._portalApi.getProvinces();
+}
+
+getBarangays(): Observable<any[]> {
+  return this._portalApi.getBarangays();
+}
+
+getMunicipalities(): Observable<any[]> {
+  return this._portalApi.getMunicipalities();
+}
+
+  getStringDate(d: Date | string): string {
+    if (typeof d == "string") return d; 
+    
+    let sDate: string = "";
+
+    sDate = d.getUTCFullYear() + "-" + (d.getUTCMonth() + 1) + "-" + (d.getUTCDate() + 1) + "T00:08:00.000Z";
+    return sDate;
+>>>>>>> master
   }
 }

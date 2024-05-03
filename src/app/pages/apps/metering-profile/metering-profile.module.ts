@@ -13,27 +13,28 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
-import { RelativeDateTimeModule } from 'src/@vex/pipes/relative-date-time/relative-date-time.module';
-import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { MatDialogModule } from '@angular/material/dialog';
-import { FlexLayoutModule } from '@angular/flex-layout';
+import { MeteringProfileListComponent } from './metering-profile-list/metering-profile-list.component';
+import { MeteringProfileRoutingModule } from './metering-profile-routing.module';
+import { MeteringProfileComponent } from './metering-profile.component';
+import { ComponentsAutocompleteRoutingModule } from '../../ui/components/components-autocomplete/components-autocomplete-routing.module';
+import { ComponentsOverviewAutocompleteModule } from '../../ui/components/components-overview/components/components-overview-autocomplete/components-overview-autocomplete.module';
 import { SecondaryToolbarModule } from 'src/@vex/components/secondary-toolbar/secondary-toolbar.module';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatInputModule } from '@angular/material/input';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { AssetProfileListComponent } from './asset-profile-list/asset-profile-list.component';
-import { AssetProfileRoutingModule } from './asset-profile-routing.module';
-import { AssetProfileComponent } from './asset-profile.component';
-import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
-import { AssetConfirmationDialogComponent} from './asset-confirmation-dialog/asset-confirmation-dialog.component'
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MeteringConfirmationDialogComponent} from './metering-confirmation-dialog/metering-confirmation-dialog.component'
 import { MatDividerModule } from '@angular/material/divider';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 @NgModule({
-  declarations: [AssetProfileListComponent, AssetProfileComponent, AssetConfirmationDialogComponent],
+  declarations: [MeteringProfileListComponent, MeteringProfileComponent, MeteringConfirmationDialogComponent],
   imports: [
     CommonModule,
-    AssetProfileRoutingModule,
+    MeteringProfileRoutingModule,
     PageLayoutModule,
     BreadcrumbsModule,
     MatPaginatorModule,
@@ -45,21 +46,22 @@ import { MatDividerModule } from '@angular/material/divider';
     MatMenuModule,
     FormsModule,
     MatTooltipModule,
-    ReactiveFormsModule,
+    ReactiveFormsModule.withConfig({warnOnNgModelWithFormControl: 'never'}),
     MatSelectModule,
     MatButtonToggleModule,
-    RelativeDateTimeModule,
-    MatProgressBarModule,
-    MatDialogModule,
-    FlexLayoutModule,
+    ComponentsAutocompleteRoutingModule,
+    ComponentsOverviewAutocompleteModule,
     SecondaryToolbarModule,
-    MatSnackBarModule,
-    MatFormFieldModule,
+    MatTabsModule,
+    MatAutocompleteModule,
     MatInputModule,
     MatSlideToggleModule,
-    NgxMatSelectSearchModule,
-    MatDividerModule
+    MatDialogModule,
+    MatSnackBarModule,
+    MatProgressBarModule,
+    MatDividerModule,
+    FlexLayoutModule
   ]
 })
-export class AssetProfileModule {
+export class MeteringProfileModule {
 }
