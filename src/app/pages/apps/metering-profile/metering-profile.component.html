@@ -1,0 +1,195 @@
+<vex-secondary-toolbar [current]="isEditMode ? 'Edit Metering Profile' : 'Add Metering Profile'">
+    <vex-breadcrumbs
+      [crumbs]="['Profile Management', 'Metering Profile', isEditMode ? 'Edit Metering Profile' : 'Add Metering Profile']"
+      class="flex-auto"></vex-breadcrumbs>
+    <button class="ml-2" color="primary" mat-icon-button type="button">
+      <mat-icon svgIcon="mat:more_vert"></mat-icon>
+    </button>
+  </vex-secondary-toolbar>
+  <mat-progress-bar *ngIf="isSaving" mode="indeterminate" color="primary"></mat-progress-bar>
+
+  <div class="p-gutter container" [class.container]="layoutCtrl.value === 'boxed'" [class.px-gutter]="layoutCtrl.value === 'fullwidth'">
+    <div class="flex flex-col sm:flex-row gap-4">
+      <div class="card flex-auto">
+        <div class="px-6 py-4 border-b flex items-center gap-2">
+          <button [ngClass]="[form.invalid || isSaving ? '!bg-gray' : '!bg-green', '!text-contrast-white']" mat-raised-button
+            type="button" (click)="save()" [disabled]="form.invalid || isSaving">
+            <mat-icon class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" svgIcon="mat:archive"></mat-icon> Save
+          </button>
+          <button color="primary" mat-stroked-button type="button" [routerLink]="['/apps/metering-profile']">
+            <mat-icon class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" svgIcon="mat:close"></mat-icon> Close
+          </button>
+        </div>
+  
+        <div class="px-6 py-4 flex flex-col sm:flex-row gap-6">
+          <form [formGroup]="form" class="flex flex-col flex-auto form-container">
+            <div class="flex flex-col sm:flex-row sm:gap-4">
+              <mat-form-field appearance="fill">
+                <mat-label>Metering Point Name</mat-label>
+                <input matInput formControlName="meteringPointName">
+              </mat-form-field>
+  
+              <mat-form-field appearance="fill">
+                <mat-label>Customer</mat-label>
+                <input matInput formControlName="customer">
+              </mat-form-field>
+            </div>
+  
+            <div class="flex flex-col sm:flex-row sm:gap-4">
+             <mat-form-field appearance="fill">
+                <mat-label>Installation Type</mat-label>
+                <mat-select formControlName="installationTypeSeq" >
+                  <mat-option *ngFor="let type of installationType" [value]="type.id">
+                    {{ type.description}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+  
+              <mat-form-field appearance="fill">
+                <mat-label>Metering Classification</mat-label>
+                <mat-select formControlName="meteringClass" >
+                  <mat-option *ngFor="let class of meteringClassification" [value]="class.id">
+                    {{ class.description}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+  
+            <div class="flex flex-col sm:flex-row sm:gap-4">
+              <mat-form-field appearance="fill">
+                <mat-label>Transmission Grid</mat-label>
+                <mat-select formControlName="transGrid" >
+                  <mat-option *ngFor="let grid of transmissionGrid" [value]="grid.id">
+                    {{ grid.description}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+  
+              <mat-form-field appearance="fill">
+                <mat-label>District Office</mat-label>
+                <mat-select formControlName="districtSeq" >
+                  <mat-option *ngFor="let district of districtOffice" [value]="district.id">
+                    {{ district.description}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+   
+            <div class="flex flex-col sm:flex-row sm:gap-4">
+              <mat-form-field appearance="fill">
+                <mat-label>FacilityLocation</mat-label>
+                <mat-select formControlName="facilityLocationSeq" >
+                  <mat-option *ngFor="let location of facilityLocation" [value]="location.id">
+                    {{ location.description}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+
+                <mat-form-field appearance="fill" class="economic-life-field">
+                  <mat-label>Line Segment</mat-label>
+                  <input matInput formControlName="lineSegment">
+                </mat-form-field>
+            </div>
+
+            <div class="flex flex-col sm:flex-row sm:gap-4">
+            <mat-form-field appearance="fill">
+              <mat-label>Remarks</mat-label>
+              <textarea matInput formControlName="remarks" style="resize: none;"></textarea>
+            </mat-form-field>
+
+          </div>
+
+            <div class="flex flex-col sm:flex-row sm:gap-4">
+              <mat-form-field appearance="fill">
+                <mat-label>UDF1</mat-label>
+                <input matInput formControlName="udf1">
+              </mat-form-field>
+  
+              <mat-form-field appearance="fill">
+                <mat-label>UDF2</mat-label>
+                <input matInput formControlName="udf2">
+              </mat-form-field>
+            </div>
+
+            
+            <div class="flex flex-col sm:flex-row sm:gap-4">
+              <mat-form-field appearance="fill">
+                <mat-label>UDF3</mat-label>
+                <input matInput formControlName="udf3">
+              </mat-form-field>
+              </div>
+
+              <hr class="w-full">
+              <h2 class="my-4 title flex-auto">Address</h2>
+            <div class="flex flex-col sm:flex-row sm:gap-4">
+              <mat-form-field appearance="fill">
+                <mat-label>Region</mat-label>
+                <mat-select formControlName="adRegionSeq" >
+                  <mat-option *ngFor="let region of regions" [value]="region.id">
+                    {{ region.description}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+
+              <mat-form-field appearance="fill">
+                <mat-label>Municipality/City</mat-label>
+                <mat-select formControlName="adMunSeq" >
+                  <mat-option *ngFor="let city of municipalities" [value]="city.id">
+                    {{ city.description}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+
+            <div class="flex flex-col sm:flex-row sm:gap-4">
+              <mat-form-field appearance="fill">
+                <mat-label>Province</mat-label>
+                <mat-select formControlName="adProvSeq" >
+                  <mat-option *ngFor="let province of provinces" [value]="province.id">
+                    {{ province.description}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+    
+              <mat-form-field appearance="fill">
+                <mat-label>Barangay</mat-label>
+                <mat-select formControlName="adBrgySeq" >
+                  <mat-option *ngFor="let barangay of barangays" [value]="barangay.id">
+                    {{ barangay.description}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              </div>
+  
+            <div class="flex flex-col sm:flex-row sm:gap-4" [style.margin-left.px]="10" [style.margin-top.px]="50" [style.margin-bottom.px]="30">
+              <div [formGroup]="form">
+                <mat-slide-toggle labelPosition="before" formControlName="isActive">
+                  {{ form.value.isActive ? 'Active' : 'Inactive' }}
+                </mat-slide-toggle>
+                
+  
+                <span [style.margin-left.px]="50"> <strong>Status Date: </strong>{{ statusDate | date: 'MM/dd/yyyy' }}</span>
+              </div>
+            </div>
+  
+            <blockquote fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px"  [style.margin-left.px]="10"
+              *ngIf="isEditMode" >
+              <span fxFlex>
+                <strong>Created By</strong>:{{createdBy}}
+              </span>
+              <span fxFlex>
+                <strong>Date Created</strong>: {{ createdAt | date: 'MM/dd/yyyy hh:mm a' }}
+              </span>
+              <span fxFlex>
+                <strong>Modified By</strong>: {{ updatedBy }}
+              </span>
+              <span fxFlex>
+                <strong>Date Modified</strong>: {{ updatedAt ? (updatedAt | date: 'MM/dd/yyyy hh:mm a') : 'N/A' }}
+              </span>
+            </blockquote>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  
