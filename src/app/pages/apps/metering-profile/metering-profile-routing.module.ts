@@ -26,6 +26,7 @@ const routes: VexRoutes = [
     path: 'add',
     component: MeteringProfileComponent,
     data: {
+      pageMode: PageMode.Add,
       toolbarShadowEnabled: false
     }
   }
