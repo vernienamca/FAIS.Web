@@ -12,6 +12,7 @@ import {IRole} from 'src/app/core/models/role'
 import { RoleNames } from 'src/app/core/enums/role.enums';
 import { MatDialog } from '@angular/material/dialog';
 import { AssetConfirmationDialogComponent } from './asset-confirmation-dialog/asset-confirmation-dialog.component';
+import { ModuleEnum } from 'src/app/core/enums/module-enum';
 
 @Component({
   selector: 'vex-module',
@@ -121,7 +122,6 @@ export class AssetProfileComponent implements OnInit, OnDestroy {
 
    save(): void{
     this.isSaving = true;
-
     this._dialog.open(AssetConfirmationDialogComponent,{
     width: '500px',
     disableClose: true
@@ -135,7 +135,7 @@ export class AssetProfileComponent implements OnInit, OnDestroy {
            this._updateAsset(editdata)
           }
           else {
-            this._addAsset(data);
+            this._addAsset(data); 
           }
           else {
             this._snackBar.open('User Cancelled saving.', 'Close');
@@ -206,7 +206,8 @@ export class AssetProfileComponent implements OnInit, OnDestroy {
         id: this.id,
         assetName: data.name,
         editMode: this.isEditMode,
-        isAdmin: this.isAdmin
+        isAdmin: this.isAdmin,
+        ModuleId: ModuleEnum.AssetProfile
       };
       this._securityService.postNotifRole(notifData)
       .pipe(takeUntil(this._onDestroy$))
@@ -240,7 +241,7 @@ export class AssetProfileComponent implements OnInit, OnDestroy {
         id: this.id,
         assetName: data.result.name,
         editMode: this.isEditMode,
-        isAdmin: this.isAdmin
+        ModuleId: ModuleEnum.AssetProfile
       };
     this._securityService.postNotifRole(notifData)
       .pipe(takeUntil(this._onDestroy$))
@@ -302,7 +303,6 @@ export class AssetProfileComponent implements OnInit, OnDestroy {
     else { 
       this._router.navigate(['/pages/error-401']); 
     }
-   
   }
 
   private _disableFormFields(role: IRole): void {
