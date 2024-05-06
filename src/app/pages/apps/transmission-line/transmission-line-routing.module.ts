@@ -4,6 +4,7 @@ import { QuicklinkModule } from 'ngx-quicklink';
 import { VexRoutes } from '../../../../@vex/interfaces/vex-route.interface';
 import { TransmissionLineListComponent } from './transmission-line-list/transmission-line-list.component';
 import { TransmissionProfileComponent } from './transmission-line.component';
+import { PageMode } from 'src/app/core/enums/page-mode.enum';
 
 const routes: VexRoutes = [
   {
@@ -18,6 +19,7 @@ const routes: VexRoutes = [
     path: 'edit/:id',
     component: TransmissionProfileComponent,
     data: {
+      pageMode: PageMode.Edit,
       toolbarShadowEnabled: false
     }
   },
@@ -25,6 +27,7 @@ const routes: VexRoutes = [
     path: 'add',
     component: TransmissionProfileComponent,
     data: {
+      pageMode: PageMode.Add,
       toolbarShadowEnabled: false
     }
   }
