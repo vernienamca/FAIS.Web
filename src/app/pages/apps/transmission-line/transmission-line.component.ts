@@ -100,7 +100,7 @@ export class TransmissionProfileComponent implements OnInit, OnDestroy {
     this._securityService.getPermissions(parseInt(localStorage.getItem('user_id')))
     .pipe(takeUntil(this._onDestroy$))
     .subscribe(data => {
-      const permission = data.filter(a => a.moduleId === ModuleEnum.AddorEditMeteringProfile);
+      const permission = data.filter(a => a.moduleId === ModuleEnum.AddorEditTransmissionProfile);
       if (!permission || permission.some(s => s.isRead) === false) {
         this._router.navigate([`pages/error-401`]);
       }
