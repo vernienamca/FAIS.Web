@@ -17,6 +17,7 @@ import { IAssetProfile } from '../models/asset-profile';
 import { IPermission } from '../models/permission';
 import { ITemplate } from '../models/template';
 import { IMeteringProfile } from '../models/metering-profile';
+import { ITransmissionProfile } from '../models/transmission-profile';
 
 @Injectable({
   providedIn: 'root'
@@ -322,4 +323,20 @@ getMunicipalities(): Observable<any[]> {
     sDate = d.getUTCFullYear() + "-" + (d.getUTCMonth() + 1) + "-" + (d.getUTCDate() + 1) + "T00:08:00.000Z";
     return sDate;
   }
+
+getTransmissionProfiles(): Observable<any[]> {
+ return this._portalApi.getTransmissionProfiles();
+}
+
+getTransmissionProfile(id: number): Observable<ITransmissionProfile>{
+  return this._portalApi.getTransmissionProfile(id);
+}
+
+addTransmissionProfile(transmissionProfile: any): Observable<any> {
+  return this._portalApi.addTransmissionProfile(transmissionProfile);
+}
+
+updateTransmissionProfile(id: number, data: any): Observable<any> {
+  return this._portalApi.updateTransmissionProfile(id,data);
+}
 }

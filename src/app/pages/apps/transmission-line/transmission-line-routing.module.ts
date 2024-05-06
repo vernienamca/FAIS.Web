@@ -2,31 +2,29 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { QuicklinkModule } from 'ngx-quicklink';
 import { VexRoutes } from '../../../../@vex/interfaces/vex-route.interface';
-import { MeteringProfileListComponent } from './metering-profile-list/metering-profile-list.component';
-import { MeteringProfileComponent } from './metering-profile.component';
-import { PageMode } from 'src/app/core/enums/page-mode.enum';
+import { TransmissionLineListComponent } from './transmission-line-list/transmission-line-list.component';
+import { TransmissionProfileComponent } from './transmission-line.component';
 
 const routes: VexRoutes = [
   {
     path: '',
-    component: MeteringProfileListComponent,
+    component: TransmissionLineListComponent,
     data: {
       toolbarShadowEnabled: false
     }
   },
+
   {
     path: 'edit/:id',
-    component: MeteringProfileComponent,
+    component: TransmissionProfileComponent,
     data: {
-      pageMode: PageMode.Edit,
       toolbarShadowEnabled: false
     }
   },
   {
     path: 'add',
-    component: MeteringProfileComponent,
+    component: TransmissionProfileComponent,
     data: {
-      pageMode: PageMode.Add,
       toolbarShadowEnabled: false
     }
   }
@@ -36,5 +34,5 @@ const routes: VexRoutes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule, QuicklinkModule]
 })
-export class MeteringProfileRoutingModule {
+export class TransmissionProfileRoutingModule {
 }
