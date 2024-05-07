@@ -263,7 +263,7 @@ export class ChartAccountComponent implements OnInit, OnDestroy {
           });
         } else {
     
-          this._portalService.addChartOfAccounts(chartOfAccounts)
+          this._portalService.createChartOfAccounts(chartOfAccounts)
           .pipe(takeUntil(this._onDestroy$))
           .subscribe(data => {
             if (!data) {
