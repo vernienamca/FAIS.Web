@@ -211,7 +211,7 @@ export class PortalApi extends BaseApi {
         });
     }
 
-    addChartOfAccounts(chartOfAccounts: any): Observable<any> {
+    createChartOfAccounts(chartOfAccounts: any): Observable<any> {
         return this.post<any>(`${this._apiUrl}/chartofaccounts`, chartOfAccounts);
     }
 
@@ -231,7 +231,7 @@ export class PortalApi extends BaseApi {
         return this.get<IAssetProfile[]>(`${this._apiUrl}/assetprofile/get`);
     }
 
-    addAssetProfile(data: any): Observable<any> {
+    createAssetProfile(data: any): Observable<any> {
         return this.post<any>(`${this._apiUrl}/assetprofile/asset-profile`, data);
     }
 
@@ -251,7 +251,7 @@ export class PortalApi extends BaseApi {
         return this.get<IMeteringProfile>(`${this._apiUrl}/meteringprofile/${id}`);
     }
 
-    addMeteringProfile(data: any): Observable<any> {
+    createMeteringProfile(data: any): Observable<any> {
         return this.post<any>(`${this._apiUrl}/meteringprofile/`, data);
     }
 
@@ -283,7 +283,7 @@ export class PortalApi extends BaseApi {
         return this.get<ITransmissionProfile>(`${this._apiUrl}/transmissionlineprofile/getbyid?id=${id}`);
     }
 
-    addTransmissionProfile(data: any): Observable<any> {
+    createTransmissionProfile(data: any): Observable<any> {
         return this.post<any>(`${this._apiUrl}/transmissionlineprofile/transmission-line-profile`, data);
     }
 

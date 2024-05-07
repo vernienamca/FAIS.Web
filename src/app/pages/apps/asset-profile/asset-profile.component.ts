@@ -135,7 +135,7 @@ export class AssetProfileComponent implements OnInit, OnDestroy {
            this._updateAsset(editdata)
           }
           else {
-            this._addAsset(data); 
+            this._createAsset(data); 
           }
           else {
             this._snackBar.open('User Cancelled saving.', 'Close');
@@ -189,12 +189,12 @@ export class AssetProfileComponent implements OnInit, OnDestroy {
     });
 }
   
-  private _addAsset(data: IAssetProfile): void {
+  private _createAsset(data: IAssetProfile): void {
     if (Array.isArray(data.rcaglId)) {
       data.rcaglId = data.rcaglId.join(',');
     } 
     data.statusDate = new Date();
-    this._portalService.addAssetProfile(data)
+    this._portalService.createAssetProfile(data)
     .pipe(takeUntil(this._onDestroy$))
     .subscribe(data => {
       if(!data){

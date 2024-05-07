@@ -253,8 +253,8 @@ export class PortalService {
       });
   }
 
-  addChartOfAccounts(chartOfAccounts: any): Observable<any> {
-    return this._portalApi.addChartOfAccounts(chartOfAccounts);
+  createChartOfAccounts(chartOfAccounts: any): Observable<any> {
+    return this._portalApi.createChartOfAccounts(chartOfAccounts);
   }
 
   getChartOfAccountsById(id: number): Observable<IChart> {
@@ -272,8 +272,8 @@ export class PortalService {
     return this._portalApi.getAssetProfiles();
   }
 
-  addAssetProfile(assetProfile: any): Observable<any> {
-    return this._portalApi.addAssetProfile(assetProfile);
+  createAssetProfile(assetProfile: any): Observable<any> {
+    return this._portalApi.createAssetProfile(assetProfile);
 }
 
   updateAssetProfile(id: number , data:any): Observable<any> {
@@ -291,8 +291,8 @@ getMeteringProfile(id: number): Observable<IMeteringProfile> {
   return this._portalApi.getMeteringProfile(id);
 }
 
-addMeteringProfile(data: any): Observable<any> {
-  return this._portalApi.addMeteringProfile(data);
+createMeteringProfile(data: any): Observable<any> {
+  return this._portalApi.createMeteringProfile(data);
 }
 
 updateMeteringProfile(data: any): Observable<any> {
@@ -332,11 +332,11 @@ getTransmissionProfile(id: number): Observable<ITransmissionProfile>{
   return this._portalApi.getTransmissionProfile(id);
 }
 
-addTransmissionProfile(transmissionProfile: any): Observable<any> {
-  return this._portalApi.addTransmissionProfile(transmissionProfile);
+createTransmissionProfile(transmissionProfile: any): Observable<any> {
+  return this._portalApi.createTransmissionProfile(transmissionProfile);
 }
 
 updateTransmissionProfile(id: number, data: any): Observable<any> {
-  return this._portalApi.updateTransmissionProfile(id,data);
+  return this._portalApi.updateTransmissionProfile(id, data);
 }
 }
