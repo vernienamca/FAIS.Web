@@ -17,6 +17,7 @@ import { IAssetProfile } from '../models/asset-profile';
 import { IPermission } from '../models/permission';
 import { ITemplate } from '../models/template';
 import { IMeteringProfile } from '../models/metering-profile';
+import { IProjectProfile } from '../models/project-profile';
 
 @Injectable({
   providedIn: 'root'
@@ -281,6 +282,38 @@ export class PortalService {
 
   getAssetProfile(id: number): Observable<IAssetProfile> {
     return this._portalApi.getAssetProfile(id);
+}
+
+getProjectProfiles(): Observable<IProjectProfile[]> {
+  return this._portalApi.getProjectProfiles();
+}
+
+getProjectProfile(id: number): Observable<IProjectProfile> {
+  return this._portalApi.getProjectProfile(id);
+}
+
+updateProjectProfile(data: any): Observable<any> {
+  return this._portalApi.updateProjectProfile(data);
+}
+
+exportProjectProfiles(): void {
+  this._portalApi.exportProjectProfiles().subscribe(response => {
+    const contentDisposition = response.headers.get('Content-Disposition');
+    const filename = contentDisposition 
+      ? contentDisposition.split(';')[1].trim().split('=')[1] 
+      : 'Library_Type_Options_' + this._datePipe.transform(new Date(), 'medium') + '.xlsx';
+
+      const blob = new Blob([response.body], { type: 'application/actet-stream' });
+
+      const link = document.createElement('a');
+      link.href = window.URL.createObjectURL(blob);
+      link.download = filename;
+      link.click();
+    });
+  }
+
+createProjectProfile(data: any): Observable<any> {
+  return this._portalApi.createProjectProfile(data);
 }
 
 getMeteringProfiles(): Observable<IMeteringProfile[]> {

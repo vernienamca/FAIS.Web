@@ -1,0 +1,130 @@
+<vex-secondary-toolbar current="{{pageMode === 1 ? 'Edit Project Profile':'Add Project Profile'}}">
+  <vex-breadcrumbs [crumbs]="['System Management', 'Project Profile', 'Edit Project Profile']" class="flex-auto"></vex-breadcrumbs>
+  <button class="ml-2" color="primary" mat-icon-button type="button">
+    <mat-icon svgIcon="mat:more_vert"></mat-icon>
+  </button>
+</vex-secondary-toolbar>
+<div class="p-gutter container" [class.container]="layoutCtrl.value === 'boxed'" [class.px-gutter]="layoutCtrl.value === 'fullwidth'">
+  <div class="flex flex-col sm:flex-row gap-4">
+    <div class="card flex-auto">
+      <div class="px-6 py-4 border-b flex items-center gap-2">
+        <button [ngClass]="form.touched && form.invalid ? '!bg-gray':'!bg-green'" class="!text-contrast-white" mat-raised-button type="button" (click)="save()" [disabled]="form.touched && form.invalid">
+          <mat-icon class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" svgIcon="mat:archive"></mat-icon> Save
+        </button>
+        <button color="primary" mat-raised-button type="button" [routerLink]="['/apps/project-profile']">
+          <mat-icon class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" svgIcon="mat:close"></mat-icon> Close
+        </button>
+      </div>
+      <div class="px-6 py-4 flex flex-col">
+        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
+          <form [formGroup]="form" class="flex flex-col flex-auto form-container">
+            <div class="flex flex-col flex-auto sm:flex-row sm:gap-4" [style.marginTop.px]="20">
+              <mat-form-field appearance="fill" class="flex-auto">
+                <mat-label>Project Name</mat-label>
+                <input matInput formControlName="projectName" required>
+                <mat-error *ngIf="formControls.projectName.touched && formControls.projectName.invalid">
+                  <span *ngIf="formControls.projectName.getError('required')">
+                    Project Name is required
+                  </span>
+                </mat-error>
+              </mat-form-field>
+              <mat-form-field appearance="fill" class="flex-auto">
+                  <mat-label>Project Class Seq</mat-label>
+                  <input matInput formControlName="projClassSeq" required>
+                  <mat-error *ngIf="formControls.projClassSeq.touched && formControls.projClassSeq.invalid">
+                      <span *ngIf="formControls.projClassSeq.getError('required')">
+                      Project class seq is required
+                      </span>
+                  </mat-error>
+              </mat-form-field>
+          </div>
+        
+      <div class="flex flex-col flex-auto sm:flex-row sm:gap-4" [style.marginTop.px]="20">
+        <mat-form-field appearance="fill" class="flex-auto">
+            <mat-label>Project Stage Seq</mat-label>
+            <input matInput formControlName="projectStageSeq">
+        </mat-form-field>
+        <mat-form-field appearance="fill" class="flex-auto">
+            <mat-label>TPSR Month</mat-label>
+            <input matInput formControlName="projectStageSeq">
+        </mat-form-field>
+    </div>
+<!--       
+<hr class="w-full my-8">
+<h2 class="m-0 title flex-auto">Address</h2>
+<div class="flex flex-col flex-auto sm:flex-row sm:gap-4" [style.marginTop.px]="20">
+  <mat-form-field appearance="fill" class="flex-auto">
+      <mat-label>Region</mat-label>
+      <input matInput formControlName="region">
+  </mat-form-field>
+  <mat-form-field appearance="fill" class="flex-auto">
+      <mat-label>Municipality / City</mat-label>
+      <input matInput formControlName="municipalityCity">
+  </mat-form-field>
+</div>
+
+<div class="flex flex-col flex-auto sm:flex-row sm:gap-4" [style.marginTop.px]="20">
+  <mat-form-field appearance="fill" class="flex-auto">
+      <mat-label>Province</mat-label>
+      <input matInput formControlName="province">
+  </mat-form-field>
+  <mat-form-field appearance="fill" class="flex-auto">
+      <mat-label>Barangay</mat-label>
+      <input matInput formControlName="barangay">
+  </mat-form-field>
+</div> -->
+
+        
+<hr class="w-full my-8">
+        <div class="table-container" [style.margin-top.px]="50" >
+          <div class="flex flex-row" fxLayoutAlign="end" [style.margin-bottom.px]="10" [style.margin-right.px]="30">
+            <h2 class="m-0 title flex-auto">Cost Center</h2>
+            <button class="rounded-full !bg-green !text-white" mat-raised-button type="button" (click)="addNewRow()">
+              <mat-icon svgIcon="mat:add"></mat-icon>
+              <span>Add</span>
+            </button>
+          </div>
+          <mat-divider style="margin: 10px 0;"></mat-divider>
+          <div class="wijmotable">
+            <wj-flex-grid class="main-grid px-4 py-4" #projectProfileGrid [itemsSource]="projectProfileCostCenterData" [selectionMode]="'Row'" [allowResizing]="false" style="width: 100%; border:none ; padding-right: 2%;" >
+              <wj-flex-grid-column binding="costCenterType" header="Cost Center Type" width="30*" ></wj-flex-grid-column>
+              <wj-flex-grid-column binding="costCenterNo" header="Cost Center No." width="30*" ></wj-flex-grid-column>
+              <!-- wordWrap="true" -->
+              <wj-flex-grid-column binding="action" header="Action"  width="10*" >
+                <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-cell="cell">
+                  <button mat-button (click)="onDeleteRow(cell.item)">
+                    <mat-icon>close</mat-icon>
+                  </button>
+                </ng-template>
+              </wj-flex-grid-column>
+            </wj-flex-grid>
+          </div>
+          <div class="flex flex-row" fxLayoutAlign="end" [style.margin-top.px]="10" [style.margin-right.px]="40">
+            <div id="thePager"></div>
+          </div>
+        </div>
+            <div class="flex flex-col sm:flex-row sm:gap-4">
+              <mat-slide-toggle color="accent" labelPosition="before" formControlName="isActive" (change)="onToggleStatus($event)">
+                {{ statusLabel }}
+              </mat-slide-toggle>
+            </div>
+            <blockquote *ngIf="pageMode === 2" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px" [style.marginTop.px]="30">
+              <span fxFlex>
+                <strong>Created By</strong>: {{ createdBy }}
+              </span>
+              <span fxFlex>
+                <strong>Date Created</strong>: {{ createdAt | date: 'MM/dd/yyyy hh:mm a' }}
+              </span>
+              <span fxFlex>
+                <strong>Modified By</strong>: {{ updatedBy }}
+              </span>
+              <span fxFlex>
+                <strong>Date Modified</strong>: {{ updatedAt ? (updatedAt | date: 'MM/dd/yyyy hh:mm a') : 'N/A' }}
+              </span>
+            </blockquote>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

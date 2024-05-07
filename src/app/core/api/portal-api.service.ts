@@ -15,6 +15,7 @@ import { IProFormaEntry } from "../models/pro-forma-entry";
 import { IChart } from "../models/chart";
 import { ILibraryTypes } from "../models/library-types";
 import { IAssetProfile } from "../models/asset-profile";
+import { IProjectProfile } from "../models/project-profile";
 import { IPermission } from "../models/permission";
 import { IMeteringProfile } from "../models/metering-profile";
 
@@ -228,6 +229,29 @@ export class PortalApi extends BaseApi {
 
     getAssetProfiles(): Observable<IAssetProfile[]> {
         return this.get<IAssetProfile[]>(`${this._apiUrl}/assetprofile/get`);
+    }
+    getProjectProfiles(): Observable<IProjectProfile[]> {
+        return this.get<IProjectProfile>(`${this._apiUrl}/projectprofile`);
+    }
+
+    getProjectProfile(id: number): Observable<IProjectProfile> {
+        return this.get<IProjectProfile>(`${this._apiUrl}/projectprofile/${id}`);
+    }
+
+    updateProjectProfile(data: any): Observable<any> {
+        return this.put<any>(`${this._apiUrl}/projectprofile`, data);
+    }
+
+    createProjectProfile(data: any): Observable<any> {
+        return this.post<any>(`${this._apiUrl}/projectprofile`, data);
+    }
+
+    exportProjectProfiles(): Observable<HttpResponse<Blob>>  {
+        return this.get(`${this._apiUrl}/projectprofile/export`,   
+        {
+            observe: 'response',
+            responseType: 'blob' as 'json'
+        });
     }
 
     addAssetProfile(data: any): Observable<any> {

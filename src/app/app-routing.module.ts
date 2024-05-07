@@ -125,6 +125,10 @@ const routes: VexRoutes = [
           {
             path: 'metering-profile',
             loadChildren: () => import('./pages/apps/metering-profile/metering-profile.module').then(m => m.MeteringProfileModule)
+          },
+          {
+            path: 'project-profile',
+            loadChildren: () => import('./pages/apps/project-profile/project-profile.module').then(m => m.ProjectProfileModule)
           }
         ]
       },
