@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit,ViewChild } from '@angular/core';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { PortalService } from 'src/app/core/services/portal.service';
 import { IChart, IChartDetails } from 'src/app/core/models/chart';
@@ -91,7 +91,8 @@ export class ChartAccountComponent implements OnInit, OnDestroy {
     private _fb: FormBuilder,
     private _route: ActivatedRoute,
     private _portalService: PortalService,
-    private _snackBar: MatSnackBar
+    private _snackBar: MatSnackBar,
+    private _router: Router
   ) {
     this.form = this._fb.group({
       accountgroup: ['', [Validators.required]],
@@ -262,7 +263,6 @@ export class ChartAccountComponent implements OnInit, OnDestroy {
           }
           });
         } else {
-    
           this._portalService.createChartOfAccounts(chartOfAccounts)
           .pipe(takeUntil(this._onDestroy$))
           .subscribe(data => {
@@ -274,16 +274,17 @@ export class ChartAccountComponent implements OnInit, OnDestroy {
                 duration: 3000,
               });
             } else {
-              let snackBarRef = this._snackBar.open('Chart of Accounts added successfully.', 'Close', {
-                duration: 3000,
+                this._snackBar.open('Chart of Accounts added successfully.', 'Close', {
+                duration: 3000
               });
-              snackBarRef.afterDismissed().subscribe(() => {
-                window.location.reload();
-            });
-          }
+              setTimeout(() => {
+                this._router.navigate([`apps/chart-accounts/edit/${data.id}`]); 
+              }, 2000);
+            }
           });
         }
-  }
+      }
+        
 
   private areFormsEqual(formValue1: any, formValue2: any): boolean {
     const convertNumberToString = (obj: any) => {
