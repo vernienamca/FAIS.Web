@@ -40,10 +40,10 @@ export class ChartListComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @Input()
   columns: TableColumn<IChart>[] = [
-    { label: 'Account Group', property: 'acountGroup', type: 'text', visible: true, cssClasses: ['font-medium'] },
-    { label: 'Sub-Account Group', property: 'subAcountGroup', type: 'text', visible: true },
-    { label: 'Rca Gl', property: 'rcaGL', type: 'text', visible: true },
-    { label: 'Rca Sl', property: 'rcaSL', type: 'text', visible: true },
+    { label: 'Major Account Group', property: 'acountGroup', type: 'text', visible: true, cssClasses: ['font-medium'] },
+    { label: 'Sub-Major Account Group', property: 'subAcountGroup', type: 'text', visible: true },
+    { label: 'Rca Gl Account', property: 'rcaGL', type: 'text', visible: true },
+    { label: 'Rca Sl Account', property: 'rcaSL', type: 'text', visible: true },
     { label: 'Rca Ledger Title', property: 'rcaLedgerTitle', type: 'text', visible: true },
     { label: 'Status', property: 'isActive', type: 'badge', visible: true },
     { label: 'Actions', property: 'actions', type: 'button', visible: true }
