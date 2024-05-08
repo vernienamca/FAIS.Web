@@ -312,7 +312,7 @@ export class AssetProfileComponent implements OnInit, OnDestroy {
         fieldsToDisable = ['rcaglId', 'rcaSLId', 'costcenter', 'economiclife', 'residuallife'];
         break;
       case RoleNames.PADLibrarian:
-        fieldsToDisable = ['name', 'assetCategoryId', 'assetClassId', 'description'];
+        fieldsToDisable = ['name', 'assetCategoryId', 'assetClassId', 'description','assetType'];
         break;
       case RoleNames.Administrator:
         fieldsToDisable = [''];
