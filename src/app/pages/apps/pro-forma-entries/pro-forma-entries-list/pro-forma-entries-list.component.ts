@@ -162,4 +162,15 @@ export class ProFormaEntriesListComponent implements OnInit, OnDestroy, AfterVie
   edit(proFormaEntry: any): void {
     this._router.navigate([`apps/pro-forma-entries/edit/${proFormaEntry.id}`]);
   }
+
+  delete(proFormaEntry: any): void {
+    this._portalService.deleteProFormaEntry(proFormaEntry.id)
+    .pipe(takeUntil(this._onDestroy$))
+    .subscribe(libraryData => {
+      if (!libraryData) {
+        return;
+      }
+     
+    });
+  }
 }
