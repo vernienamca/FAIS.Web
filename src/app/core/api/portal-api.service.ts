@@ -118,6 +118,10 @@ export class PortalApi extends BaseApi {
         return this.put<any>(`${this._apiUrl}/notification/interpolation/${id}`, data);
     }
 
+    deleteInterpolation(id: number, data: any): Observable<any> {
+        return this.put<any>(`${this._apiUrl}/notification/interpolation/delete/${id}`, data);
+    }
+
     createAlert(data: any): Observable<any> {
         return this.post<any>(`${this._apiUrl}/notification/template`, data);
     }
