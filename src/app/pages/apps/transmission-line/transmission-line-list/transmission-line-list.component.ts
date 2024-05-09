@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { Observable, of, ReplaySubject, Subject } from 'rxjs';
-import { filter, finalize, takeUntil } from 'rxjs/operators';
+import { Observable,ReplaySubject, Subject, finalize, takeUntil } from 'rxjs';
+import { filter} from 'rxjs/operators';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -13,14 +13,14 @@ import { stagger40ms } from '../../../../../@vex/animations/stagger.animation';
 import { UntypedFormControl } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { PortalService } from 'src/app/core/services/portal.service';
-import { IChart } from 'src/app/core/models/chart';
 import { Router } from '@angular/router';
+import { ITransmissionProfile } from 'src/app/core/models/transmission-profile';
 
 @UntilDestroy()
 @Component({
-  selector: 'vex-chart-table',
-  templateUrl: './chart-list.component.html',
-  styleUrls: ['./chart-list.component.scss'],
+  selector: 'vex-transmission-line-table',
+  templateUrl: './transmission-line-list.component.html',
+  styleUrls: ['./transmission-line-list.component.scss'],
   animations: [
     fadeInUp400ms,
     stagger40ms
@@ -35,28 +35,30 @@ import { Router } from '@angular/router';
   ]
 })
 
-export class ChartListComponent implements OnInit, OnDestroy, AfterViewInit {
+export class TransmissionLineListComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @Input()
-  columns: TableColumn<IChart>[] = [
-    { label: 'Major Account Group', property: 'acountGroup', type: 'text', visible: true, cssClasses: ['font-medium'] },
-    { label: 'Sub-Major Account Group', property: 'subAcountGroup', type: 'text', visible: true },
-    { label: 'Rca Gl Account', property: 'rcaGL', type: 'text', visible: true },
-    { label: 'Rca Sl Account', property: 'rcaSL', type: 'text', visible: true },
-    { label: 'Rca Ledger Title', property: 'rcaLedgerTitle', type: 'text', visible: true },
+  columns: TableColumn<ITransmissionProfile>[] = [
+    { label: 'TL ID', property: 'id', type: 'text', visible: true, cssClasses: ['font-medium'] },
+    { label: 'Line Stretch', property: 'lineStretch', type: 'text', visible: true },
+    { label: 'Voltage Level', property: 'voltageId', type: 'text', visible: true },
+    { label: 'Total Structures', property: 'st', type: 'text', visible: true },
+    { label: 'No. of Circuit', property: 'noCircuitId', type: 'text', visible: true },
+    { label: 'Installation Date', property: 'installationDate', type: 'text', visible: true },
+    { label: 'Route Length', property: 'routeLength', type: 'text', visible: true},
     { label: 'Status', property: 'isActive', type: 'badge', visible: true },
     { label: 'Actions', property: 'actions', type: 'button', visible: true }
   ];
   layoutCtrl = new UntypedFormControl('fullwidth');
-  subject$: ReplaySubject<IChart[]> = new ReplaySubject<IChart[]>(1);
-  data$: Observable<IChart[]> = this.subject$.asObservable();
-  charts: IChart[];
+  subject$: ReplaySubject<ITransmissionProfile[]> = new ReplaySubject<ITransmissionProfile[]>(1);
+  data$: Observable<ITransmissionProfile[]> = this.subject$.asObservable();
+  profiles: ITransmissionProfile[];
   totalCount: number = 0;
   pageSize = 10;
   pageSizeOptions: number[] = [5, 10, 20, 50];
-  dataSource: MatTableDataSource<IChart> | null;
-  selection = new SelectionModel<IChart>(true, []);
+  dataSource: MatTableDataSource<ITransmissionProfile> | null;
+  selection = new SelectionModel<ITransmissionProfile>(true, []);
   searchCtrl = new UntypedFormControl();
   labels = aioTableLabels;
   isListLoading = false;
@@ -67,33 +69,34 @@ export class ChartListComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private _onDestroy$ = new Subject<void>();
 
-  constructor(
+  constructor (
     private _router: Router,
     private _portalService: PortalService
-  ){}
+  ) { 
+  }
 
   ngOnInit(): void {
-    this._portalService.getChartAccounts()
-      .pipe(
-        takeUntil(this._onDestroy$),
-        finalize(() => this.isListLoading = false)
-      )
-      .subscribe(data => {
-        if (!data) {
-          return;
-        }
-        this.subject$.next(data);
-      });
-
+    this._portalService.getTransmissionProfiles()
+    .pipe(
+      takeUntil(this._onDestroy$),
+      finalize(() => this.isListLoading = false)
+    )
+    .subscribe(data => {
+      if (!data) {
+        return;
+      }
+      this.subject$.next(data);
+    });
+    
     this.dataSource = new MatTableDataSource();
     this.data$
-      .pipe(filter<IChart[]>(Boolean))
-      .subscribe(charts => {
-        this.totalCount = charts.length;
-        this.charts = charts;
-        this.dataSource.data = charts;
+      .pipe(filter<ITransmissionProfile[]>(Boolean))
+      .subscribe(profiles => {
+        this.totalCount = profiles.length;
+        this.profiles = profiles;
+        this.dataSource.data = profiles;
       });
-
+     
     this.searchCtrl.valueChanges.pipe(
       untilDestroyed(this)
     ).subscribe(value => this._onFilterChange(value));
@@ -110,7 +113,7 @@ export class ChartListComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   edit(chart: any): void {
-    this._router.navigate([`apps/chart-accounts/edit/${chart.id}`]);
+    this._router.navigate([`apps/transmission-profile/edit/${chart.id}`]);
   }
   
   exportChartLogs(): void {

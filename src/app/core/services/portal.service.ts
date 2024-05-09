@@ -17,6 +17,7 @@ import { IAssetProfile } from '../models/asset-profile';
 import { IPermission } from '../models/permission';
 import { ITemplate } from '../models/template';
 import { IMeteringProfile } from '../models/metering-profile';
+import { ITransmissionProfile } from '../models/transmission-profile';
 
 @Injectable({
   providedIn: 'root'
@@ -236,6 +237,9 @@ export class PortalService {
     return this._portalApi.updateProFormaEntry(id,data);
 }
 
+deleteProFormaEntry(id: number): Observable<any> {
+  return this._portalApi.deleteProFormaEntry(id);
+}
   exportProFormaEntries(): void {
     this._portalApi.exportProFormaEntries().subscribe(response => {
       const contentDisposition = response.headers.get('Content-Disposition');
@@ -252,8 +256,8 @@ export class PortalService {
       });
   }
 
-  addChartOfAccounts(chartOfAccounts: any): Observable<any> {
-    return this._portalApi.addChartOfAccounts(chartOfAccounts);
+  createChartOfAccounts(chartOfAccounts: any): Observable<any> {
+    return this._portalApi.createChartOfAccounts(chartOfAccounts);
   }
 
   getChartOfAccountsById(id: number): Observable<IChart> {
@@ -271,8 +275,8 @@ export class PortalService {
     return this._portalApi.getAssetProfiles();
   }
 
-  addAssetProfile(assetProfile: any): Observable<any> {
-    return this._portalApi.addAssetProfile(assetProfile);
+  createAssetProfile(assetProfile: any): Observable<any> {
+    return this._portalApi.createAssetProfile(assetProfile);
 }
 
   updateAssetProfile(id: number , data:any): Observable<any> {
@@ -290,8 +294,8 @@ getMeteringProfile(id: number): Observable<IMeteringProfile> {
   return this._portalApi.getMeteringProfile(id);
 }
 
-addMeteringProfile(data: any): Observable<any> {
-  return this._portalApi.addMeteringProfile(data);
+createMeteringProfile(data: any): Observable<any> {
+  return this._portalApi.createMeteringProfile(data);
 }
 
 updateMeteringProfile(data: any): Observable<any> {
@@ -322,4 +326,20 @@ getMunicipalities(): Observable<any[]> {
     sDate = d.getUTCFullYear() + "-" + (d.getUTCMonth() + 1) + "-" + (d.getUTCDate() + 1) + "T00:08:00.000Z";
     return sDate;
   }
+
+getTransmissionProfiles(): Observable<any[]> {
+ return this._portalApi.getTransmissionProfiles();
+}
+
+getTransmissionProfile(id: number): Observable<ITransmissionProfile>{
+  return this._portalApi.getTransmissionProfile(id);
+}
+
+createTransmissionProfile(transmissionProfile: any): Observable<any> {
+  return this._portalApi.createTransmissionProfile(transmissionProfile);
+}
+
+updateTransmissionProfile(id: number, data: any): Observable<any> {
+  return this._portalApi.updateTransmissionProfile(id, data);
+}
 }
