@@ -154,6 +154,10 @@ export class PortalApi extends BaseApi {
         return this.put<any>(`${this._apiUrl}/proformaentries`, data);
     }
 
+    deleteProFormaEntry(id: number): Observable<any> {
+        return this.delete<any>(`${this._apiUrl}/proformaentries/DeleteProforma/${id}`);
+    }
+
     exportProFormaEntries(): Observable<HttpResponse<Blob>>  {
         return this.get(`${this._apiUrl}/proFormaentry/export`,  
         {

@@ -237,6 +237,9 @@ export class PortalService {
     return this._portalApi.updateProFormaEntry(id,data);
 }
 
+deleteProFormaEntry(id: number): Observable<any> {
+  return this._portalApi.deleteProFormaEntry(id);
+}
   exportProFormaEntries(): void {
     this._portalApi.exportProFormaEntries().subscribe(response => {
       const contentDisposition = response.headers.get('Content-Disposition');
