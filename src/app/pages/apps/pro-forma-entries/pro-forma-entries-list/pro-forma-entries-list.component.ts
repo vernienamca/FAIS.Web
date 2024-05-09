@@ -3,6 +3,7 @@ import { Observable, of, ReplaySubject, Subject } from 'rxjs';
 import { filter, finalize, takeUntil } from 'rxjs/operators';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { MatDialog } from '@angular/material/dialog';
 import { TableColumn } from '../../../../../@vex/interfaces/table-column.interface';
@@ -74,7 +75,8 @@ export class ProFormaEntriesListComponent implements OnInit, OnDestroy, AfterVie
   constructor(
     private _dialog: MatDialog,
     private _portalService: PortalService,
-    private _router: Router
+    private _router: Router,
+   private _snackBar: MatSnackBar
   ) {
   }
 
@@ -166,10 +168,25 @@ export class ProFormaEntriesListComponent implements OnInit, OnDestroy, AfterVie
   delete(proFormaEntry: any): void {
     this._portalService.deleteProFormaEntry(proFormaEntry.id)
     .pipe(takeUntil(this._onDestroy$))
-    .subscribe(libraryData => {
-      if (!libraryData) {
-        return;
-      }
+    .subscribe(data => {
+        if (!data) {
+              return;
+            }
+            if (data.errorDescription) {
+              this._snackBar.open(data.errorDescription, 'Close', {
+                duration: 5000,
+              });
+            } else {
+              let snackbarRef = this._snackBar.open('Pro-Forma Entry deleted successfully.', 'Close', {
+                duration: 2000,
+              });
+
+              snackbarRef.afterDismissed().subscribe(() => {
+                window.location.reload();
+              });
+           
+            
+            }
      
     });
   }

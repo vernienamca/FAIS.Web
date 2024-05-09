@@ -69,6 +69,13 @@
 
             <div class="flex flex-col sm:flex-row sm:gap-4">
               <mat-form-field appearance="fill" class="flex-auto">
+                <mat-label>UDF1</mat-label>
+                <input matInput formControlName="udf1" >
+              </mat-form-field>
+            </div>
+
+            <div class="flex flex-col sm:flex-row sm:gap-4">
+              <mat-form-field appearance="fill" class="flex-auto">
                 <mat-label>Remarks</mat-label>
                 <input matInput formControlName="remark" required>
                 <mat-error *ngIf="formControls.remark.touched && formControls.remark.invalid">
