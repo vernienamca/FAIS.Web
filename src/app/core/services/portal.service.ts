@@ -139,6 +139,10 @@ export class PortalService {
     return this._portalApi.updateInterpolation(id, data);
   }
 
+  deleteInterpolation(id: number, data: any): Observable<any> {
+    return this._portalApi.deleteInterpolation(id, data);
+  }
+
   createAlert(data: ITemplate): Observable<ITemplate> {
     return this._portalApi.createAlert(data);
   }

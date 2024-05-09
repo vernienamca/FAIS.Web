@@ -126,6 +126,7 @@
           <tr *matHeaderRowDef="visibleColumns" mat-header-row></tr>
           <tr (click)="edit(row)" *matRowDef="let row; columns: visibleColumns;" @fadeInUp 
           class="hover:bg-hover trans-ease-out cursor-pointer" mat-row></tr>
+          
         </table>
   
         <mat-paginator [pageSizeOptions]="pageSizeOptions" [pageSize]="pageSize" class="sticky left-0"></mat-paginator>
@@ -144,6 +145,10 @@
       <button (click)="edit(interpolation)" mat-menu-item [disabled]="!hasUpdateAccess">
         <mat-icon svgIcon="mat:edit"></mat-icon>
         <span>Edit</span>
+      </button>
+      <button (click)="delete(interpolation)" mat-menu-item [disabled]="!hasUpdateAccess">
+        <mat-icon svgIcon="mat:delete"></mat-icon>
+        <span>delete</span>
       </button>
     </ng-template>
   </mat-menu>
