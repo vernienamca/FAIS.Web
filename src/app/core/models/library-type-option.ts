@@ -7,6 +7,7 @@ export interface ILibraryTypeOption {
     description: string;
     isActive: string;
     remark: string;
+    ranking: string;
     createdBy: number;
     createdByName: string;
     createdAt: Date;
