@@ -9,7 +9,7 @@ import { CollectionViewNavigator } from '@grapecity/wijmo.input';
 import { FlexGrid } from '@grapecity/wijmo.grid';
 import { PortalService } from 'src/app/core/services/portal.service';
 import * as wjcCore from '@grapecity/wijmo';
-import { IProjectProfileCostCenter } from 'src/app/core/models/project-profile';
+import { IProjectProfileComponent } from 'src/app/core/models/project-profile';
 
 @Component({
   selector: 'vex-project-profile',
@@ -29,7 +29,7 @@ export class ProjectProfileComponent implements OnInit, OnDestroy {
   types: ILibraryTypes[];
   libraryTypes = [];
   id: number;
-  projectProfileCostCenterData = this.getProjectProfileCostCenterData(5);
+  projectProfileComponentData = this.getProjectProfileComponentData(0);
 
   addNewRow(): void {
     const newItem = {
@@ -48,18 +48,26 @@ export class ProjectProfileComponent implements OnInit, OnDestroy {
   }  
   
   
-  getProjectProfileCostCenterData(count: number) {
+  getProjectProfileComponentData(count: number) {
     const maxRowsToShow = 5;
     const pageSize = Math.min(count, maxRowsToShow);
 
     const data = [];
     for (let i = 0; i < count; i++) {
       data.push({
-        projectName: '',
-        projClassSeq: '',
-        action: '',
+        id: '',
+        pjcId: '',
+        projectComponent: '',
+        details: '',
+        projectStage: '',
+        transmissionGrid: '',
+        startDate: '',
+        targetDate: '',
+        completionDate: '',
+        action: ''
       });
     }
+
     const collectionView = new wjcCore.CollectionView(data, { pageSize });
     return collectionView;
   }
@@ -78,6 +86,9 @@ export class ProjectProfileComponent implements OnInit, OnDestroy {
       recordedAMR: this.form.get('recordedAMR'),
       unrecordedAMR: this.form.get('unrecordedAMR'),
       remarks: this.form.get('remarks'),
+      udf1: this.form.get('udf1'),
+      udf2: this.form.get('udf2'),
+      udf3: this.form.get('udf3'),
       isActive: this.form.get('isActive'),
       statusDate: this.form.get('statusDate'),
     };
@@ -104,6 +115,9 @@ export class ProjectProfileComponent implements OnInit, OnDestroy {
       recordedAMR: [''],
       unrecordedAMR: [''],
       remarks: [''],
+      udf1: [''],
+      udf2: [''],
+      udf3: [''],
       isActive: [true],
       status: [''],
       statusDate: ['']
@@ -131,6 +145,9 @@ export class ProjectProfileComponent implements OnInit, OnDestroy {
           totalAMRCost: data.totalAMRCost || '',
           recordedAMR: data.recordedAMR || '',
           unrecordedAMR: data.unrecordedAMR || '',
+          udf1: data.udf1 || '',
+          udf2: data.udf2 || '',
+          udf3: data.udf3 || '',
           remarks: data.remarks || '',
           isActive: data.isActive || 'Y',
           status: data.status || '',
@@ -148,7 +165,7 @@ export class ProjectProfileComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.id = parseInt(this._route.snapshot.paramMap.get('id'));
-    this.projectProfileCostCenterData = this.getProjectProfileCostCenterData(this.id);
+    this.projectProfileComponentData = this.getProjectProfileComponentData(this.id);
   }
 
   ngOnDestroy(): void {
@@ -172,7 +189,7 @@ export class ProjectProfileComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const wijmoInvalid = this.projectProfileCostCenterData.sourceCollection.some((item: any) => {
+    const wijmoInvalid = this.projectProfileComponentData.sourceCollection.some((item: any) => {
       return item.gl === '' || /^[a-zA-Z]+$/.test(item.glNo) || item.sl === '' || /^[a-zA-Z]+$/.test(item.sl) || item.faisRefNo === '';
     });
       if (wijmoInvalid) {
@@ -184,13 +201,17 @@ export class ProjectProfileComponent implements OnInit, OnDestroy {
 
       const collectionView = this.costCenterGrid.collectionView;
       const allItems = collectionView.sourceCollection as any[];
-      const projectProfileCostCenterDTOArray: IProjectProfileCostCenter[] = allItems.map((item: any) => {
+      const projectProfileComponentDTOArray: IProjectProfileComponent[] = allItems.map((item: any) => {
         return {
           id: item.id || 0,
-          projectProfileId: this.id || 0,
-          costCenterType: item.costCenterType,
-          costCenterNo: item.costCenterNo,
-          costCenter: item.costCenter,
+          pjcId: this.id || 0,
+          projectComponent: item.projectComponent,
+          details: item.details,
+          projectStage: item.projectStage,
+          transmissionGrid: item.transmissionGrid,
+          startDate: item.startDate,
+          targetDate: item.targetDate,
+          completionDate: item.completionDate,
           dateRemoved: null,
           createdBy: parseInt(localStorage.getItem('user_id')),
           createdAt: this.createdAt = new Date(),
@@ -205,7 +226,7 @@ export class ProjectProfileComponent implements OnInit, OnDestroy {
 
     if (this.pageMode === 1) {
       data.createdBy = parseInt(localStorage.getItem('user_id'));
-      data.projectProfileCostCenterDTO = projectProfileCostCenterDTOArray;
+      data.projectProfileComponentDTO = projectProfileComponentDTOArray;
 
       this._portalService.createProjectProfile(data)
       .pipe(takeUntil(this._onDestroy$))

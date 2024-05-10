@@ -29,7 +29,7 @@
                 </mat-error>
               </mat-form-field>
               <mat-form-field appearance="fill" class="flex-auto">
-                  <mat-label>Project Class Seq</mat-label>
+                  <mat-label>Project Classification</mat-label>
                   <input matInput formControlName="projClassSeq" required>
                   <mat-error *ngIf="formControls.projClassSeq.touched && formControls.projClassSeq.invalid">
                       <span *ngIf="formControls.projClassSeq.getError('required')">
@@ -41,14 +41,46 @@
         
       <div class="flex flex-col flex-auto sm:flex-row sm:gap-4" [style.marginTop.px]="20">
         <mat-form-field appearance="fill" class="flex-auto">
-            <mat-label>Project Stage Seq</mat-label>
+            <mat-label>Project Stage</mat-label>
             <input matInput formControlName="projectStageSeq">
         </mat-form-field>
         <mat-form-field appearance="fill" class="flex-auto">
             <mat-label>TPSR Month</mat-label>
-            <input matInput formControlName="projectStageSeq">
+            <input matInput formControlName="tpsrMonth">
         </mat-form-field>
     </div>
+    <div class="flex flex-col flex-auto sm:flex-row sm:gap-4" [style.marginTop.px]="20">
+      <mat-form-field appearance="fill" class="flex-auto">
+          <mat-label>No. of Components Completed</mat-label>
+          <input matInput formControlName="noOfComponentsCompleted">
+      </mat-form-field>
+      <mat-form-field appearance="fill" class="flex-auto">
+          <mat-label>No. of Components Under Construction</mat-label>
+          <input matInput formControlName="noOfComponentsUnderConstruction">
+      </mat-form-field>
+  </div>
+  <div class="flex flex-col flex-auto sm:flex-row sm:gap-4" [style.marginTop.px]="20">
+    <mat-form-field appearance="fill">
+      <mat-label>Remarks</mat-label>
+      <textarea matInput formControlName="remarks" style="resize: none;"></textarea>
+    </mat-form-field>
+  </div>
+<div class="flex flex-col flex-auto sm:flex-row sm:gap-4" [style.marginTop.px]="20">
+  <mat-form-field appearance="fill" class="flex-auto">
+      <mat-label>UDF 1</mat-label>
+      <input matInput formControlName="udf1">
+  </mat-form-field>
+  <mat-form-field appearance="fill" class="flex-auto">
+      <mat-label>UDF 2</mat-label>
+      <input matInput formControlName="udf2">
+  </mat-form-field>
+</div>
+<div class="flex flex-col sm:flex-row sm:gap-4">
+  <mat-form-field appearance="fill">
+    <mat-label>UDF3</mat-label>
+    <input matInput formControlName="udf3">
+  </mat-form-field>
+  </div>
 <!--       
 <hr class="w-full my-8">
 <h2 class="m-0 title flex-auto">Address</h2>
@@ -78,7 +110,7 @@
 <hr class="w-full my-8">
         <div class="table-container" [style.margin-top.px]="50" >
           <div class="flex flex-row" fxLayoutAlign="end" [style.margin-bottom.px]="10" [style.margin-right.px]="30">
-            <h2 class="m-0 title flex-auto">Cost Center</h2>
+            <h2 class="m-0 title flex-auto">Project Component</h2>
             <button class="rounded-full !bg-green !text-white" mat-raised-button type="button" (click)="addNewRow()">
               <mat-icon svgIcon="mat:add"></mat-icon>
               <span>Add</span>
@@ -86,9 +118,15 @@
           </div>
           <mat-divider style="margin: 10px 0;"></mat-divider>
           <div class="wijmotable">
-            <wj-flex-grid class="main-grid px-4 py-4" #projectProfileGrid [itemsSource]="projectProfileCostCenterData" [selectionMode]="'Row'" [allowResizing]="false" style="width: 100%; border:none ; padding-right: 2%;" >
-              <wj-flex-grid-column binding="costCenterType" header="Cost Center Type" width="30*" ></wj-flex-grid-column>
-              <wj-flex-grid-column binding="costCenterNo" header="Cost Center No." width="30*" ></wj-flex-grid-column>
+            <wj-flex-grid class="main-grid px-4 py-4" #projectProfileGrid [itemsSource]="projectProfileComponentData" [selectionMode]="'Row'" [allowResizing]="false" style="width: 100%; border:none ; padding-right: 2%;" >
+              <wj-flex-grid-column binding="pjcId" header="PJC ID" width="30*" ></wj-flex-grid-column>
+              <wj-flex-grid-column binding="projectComponent" header="Project Component" width="30*" ></wj-flex-grid-column>
+              <wj-flex-grid-column binding="details" header="Details" width="30*" ></wj-flex-grid-column>
+              <wj-flex-grid-column binding="projectStage" header="Project Stage" width="30*" ></wj-flex-grid-column>
+              <wj-flex-grid-column binding="transmissionGrid" header="Transmission Grid" width="30*" ></wj-flex-grid-column>
+              <wj-flex-grid-column binding="startDate" header="Start Date" width="30*" ></wj-flex-grid-column>
+              <wj-flex-grid-column binding="targetDate" header="Target Date" width="30*" ></wj-flex-grid-column>
+              <wj-flex-grid-column binding="completionDate" header="Completion Date" width="30*" ></wj-flex-grid-column>
               <!-- wordWrap="true" -->
               <wj-flex-grid-column binding="action" header="Action"  width="10*" >
                 <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-cell="cell">

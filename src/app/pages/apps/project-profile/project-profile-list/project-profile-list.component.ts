@@ -54,6 +54,9 @@ export class ProjectProfileListComponent implements OnInit, OnDestroy, AfterView
     { label: 'Total AMR Cost', property: 'totalAMRCost', type: 'text', visible: true },
     { label: 'Recorded AMR', property: 'recordedAMR', type: 'text', visible: true },
     { label: 'Unrecorded AMR', property: 'unrecordedAMR', type: 'text', visible: true },
+    { label: 'UDF 1', property: 'udf1', type: 'text', visible: true },
+    { label: 'UDF 2', property: 'udf2', type: 'text', visible: true },
+    { label: 'UDF 3', property: 'udf3', type: 'text', visible: true },
     { label: 'Remarks', property: 'remarks', type: 'text', visible: true },
     { label: 'Status', property: 'isActive', type: 'badge', visible: true },
     { label: 'Actions', property: 'actions', type: 'button', visible: true }

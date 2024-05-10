@@ -11,6 +11,9 @@ export interface IProjectProfile {
     recordedAMR: string;
     unrecordedAMR: string;
     remarks: string;
+    udf1: string;
+    udf2: string;
+    udf3: string;
     status: string;
     statusDate?: Date
     isActive: string;
@@ -20,17 +23,21 @@ export interface IProjectProfile {
     updatedBy?: number;
     updatedByName: string;
     updatedAt?: Date;
-    projectProfileCostCenterDTO: IProjectProfileCostCenter[];
-    projectProfileCostCenterModel: IProjectProfileCostCenter[];
-    projectProfileCostCenter: IProjectProfileCostCenter[];
+    projectProfileComponentDTO: IProjectProfileComponent[];
+    projectProfileComponentModel: IProjectProfileComponent[];
+    projectProfileComponent: IProjectProfileComponent[];
 }
 
-export interface IProjectProfileCostCenter {
+export interface IProjectProfileComponent {
     id: number;
-    projectProfileId: number;
-    costCenterType: string;
-    costCenterNo: string;
-    costCenter: string;
+    pjcId: number;
+    projectComponent: number;
+    details: number;
+    projectStage: number;
+    transmissionGrid: number;
+    startDate: number;
+    targetDate: number;
+    completionDate: number;
     dateRemoved: Date;
     createdBy: number;
     createdAt: Date;
