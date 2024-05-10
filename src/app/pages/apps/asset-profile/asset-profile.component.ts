@@ -77,7 +77,7 @@ export class AssetProfileComponent implements OnInit, OnDestroy {
     rcaglId: ['', Validators.required],
     assetCategoryId: ['',Validators.required],
     rcaSLId: ['',Validators.required],
-    assetClassId: ['',],
+    assetClassId: ['',Validators.required],
     costcenter: ['',Validators.required],
     assetType: ['',Validators.required],
     description: [''],
