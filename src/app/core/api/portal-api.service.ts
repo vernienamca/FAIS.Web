@@ -130,6 +130,10 @@ export class PortalApi extends BaseApi {
         return this.put<any>(`${this._apiUrl}/notification/template/${id}`, data);
     }
 
+    deleteAlert(id: number, data: any): Observable<any> {
+        return this.put<any>(`${this._apiUrl}/notification/template/delete/${id}`, data);
+    }
+
     getAppVersions(): Observable<any[]> {
         return this.get<any>(`${this._apiUrl}/version/get`);
     }

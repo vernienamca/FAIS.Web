@@ -151,6 +151,10 @@ export class PortalService {
     return this._portalApi.updateAlert(id, data);
   }
 
+  deleteAlert(id: number, data: any): Observable<any> {
+    return this._portalApi.deleteAlert(id, data);
+  }
+
   getAppVersions(): Observable<any[]> {
     return this._portalApi.getAppVersions();
   }

@@ -26,6 +26,7 @@ import { MatSelectChange } from "@angular/material/select";
 import { PortalService } from "src/app/core/services/portal.service";
 import { ITemplate } from "src/app/core/models/template";
 import { Router } from "@angular/router";
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @UntilDestroy()
 @Component({
@@ -72,7 +73,8 @@ export class TemplateListComponent implements OnInit, OnDestroy, AfterViewInit {
   constructor(
     private _dialog: MatDialog,
     private _portalService: PortalService,
-    private _router: Router
+    private _router: Router,
+    private _snackBar: MatSnackBar,
   ) {}
 
   get visibleColumns() {
@@ -118,6 +120,14 @@ export class TemplateListComponent implements OnInit, OnDestroy, AfterViewInit {
     this._router.navigate([`apps/templates/edit/${template.id}`]);
   }
 
+  delete(template: any): void {
+    console.log(template);
+    if(template.id != null)
+    {
+      this._deleteAlert(template.id);
+    }
+  }
+
   onFilterChange(value: string): void {
     if (!this.dataSource) {
       return;
@@ -154,5 +164,15 @@ export class TemplateListComponent implements OnInit, OnDestroy, AfterViewInit {
 
   createNotificationTemplate(): void {
     this._router.navigate(["apps/templates/add"]);
+  }
+
+  private _deleteAlert(id): void{
+    this._portalService.deleteAlert(id, null)
+      .pipe(takeUntil(this._onDestroy$))
+      .subscribe(data => {
+          this._snackBar.open('User successfully deleted template.', 'Close');
+          window.location.reload();
+          return;
+    })
   }
 }
