@@ -259,10 +259,9 @@ export class MeteringProfileComponent implements OnInit, OnDestroy {
   private _addMetering(data: IMeteringProfile): void {
     data.statusDate = new Date();
     data.createdAt = new Date();
-    this._portalService.addMeteringProfile(data)
+    this._portalService.createMeteringProfile(data)
     .pipe(takeUntil(this._onDestroy$))
     .subscribe(data => {
-      console.log('Result after adding:', data); 
       if(!data){
         return;
       }
@@ -333,7 +332,6 @@ export class MeteringProfileComponent implements OnInit, OnDestroy {
 
   private _initializeData(data: any): void {
     const meteringData = data
-    console.log(meteringData)
     this.form.patchValue({
       meteringPointName: meteringData.meteringPointName,
       customer: meteringData.customer,

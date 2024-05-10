@@ -21,7 +21,7 @@
 }
 
 mat-form-field {
-  width: 100%;
+  width: 49%;
 }
 
 .is-active {
@@ -46,51 +46,7 @@ mat-form-field {
   --mdc-switch-selected-focus-track-color: #008000;
   --mdc-switch-selected-focus-handle-color: #008000;
 }
-.mat-form-field.fill-container,
-.mat-form-field.fill-container .mat-form-field-infix,
-.mat-form-field.fill-container .mat-form-field-flex,
-.mat-form-field.fill-container .mat-form-field-wrapper {
-  height: 100%;
-  width: 100%;
-}
 
-.mat-form-field.fill-container textarea {
-  height: calc(100% - 25px);
+hr {
+  border-top: 5px dashed #D8D8D8;
 }
-
-.wjcGrid .wj-colheaders   .wj-header {
-  text-overflow: initial;
-}
-.wijmotable {
-  max-width: calc(100vw - 280px);
-}
-.delete.mat-mdc-button {
-  width: 100%;
-  >.mat-icon {
-    margin-right: 0;
-  }
-}
-
-.wijmotable {
-	overflow-x: auto;
-    padding-right: 40px;
-}
-
-.long-table {
-	min-width: 3000px !important;
-}
-
-@media (max-width: 1279px) {
-  .wijmotable {
-    max-width: calc(100vw);
-  }
-  .delete.mat-mdc-button {
-    padding: 0;
-  }
-}
-@media (max-width: 2888px) {
-  .delete {
-    min-width: unset;
-  }
-}
-

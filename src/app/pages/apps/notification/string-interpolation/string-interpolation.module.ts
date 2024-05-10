@@ -23,9 +23,12 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { SecondaryToolbarModule } from 'src/@vex/components/secondary-toolbar/secondary-toolbar.module';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { StringInterpolationConfirmationDialogComponent } from './string-interpolation-confirmation-dialog/string-interpolation-confirmation-dialog.component';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
-  declarations: [StringInterpolationListComponent, StringInterpolationComponent],
+  declarations: [StringInterpolationListComponent, StringInterpolationComponent, StringInterpolationConfirmationDialogComponent],
   imports: [
     CommonModule,
     StringInterpolationRoutingModule,
@@ -50,7 +53,9 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     MatProgressBarModule,
     SecondaryToolbarModule,
     BreadcrumbsModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatDividerModule,
+    MatDialogModule
   ]
 })
 export class StringInterpolationModule {

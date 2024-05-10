@@ -15,6 +15,9 @@ import { PortalService } from "src/app/core/services/portal.service";
 import { IStringInterpolation } from "src/app/core/models/string-interpolation";
 import { Router } from "@angular/router";
 import { SecurityService } from "src/app/core/services/security.service";
+import { MatDialog } from '@angular/material/dialog';
+import { StringInterpolationConfirmationDialogComponent } from '../string-interpolation-confirmation-dialog/string-interpolation-confirmation-dialog.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @UntilDestroy()
 @Component({
@@ -64,7 +67,9 @@ export class StringInterpolationListComponent implements OnInit, OnDestroy, Afte
   constructor(
     private _portalService: PortalService,
     private _router: Router,
-    private _securityService: SecurityService
+    private _securityService: SecurityService,
+    private _dialog: MatDialog,
+    private _snackBar: MatSnackBar,
   ) {
     const userId = parseInt(localStorage.getItem('user_id'));
     this._securityService.getPermissions(userId)
@@ -122,6 +127,21 @@ export class StringInterpolationListComponent implements OnInit, OnDestroy, Afte
     this._router.navigate([`apps/interpolations/edit/${interpolation.id}`]);
   }
 
+  delete(interpolation: any): void {
+    console.log(interpolation);
+    this._dialog.open(StringInterpolationConfirmationDialogComponent,{
+      width: '500px',
+      disableClose: true
+      })
+      .afterClosed().subscribe((result: boolean) => {
+       if(result)
+        if(interpolation.id != null)
+          this._deleteStringInterpolation(interpolation.id);
+          this._snackBar.open('User successfully deleted interpolation.', 'Close');
+          window.location.reload();
+      })
+  }
+
   onFilterChange(value: string) : void {
     if (!this.dataSource) {
       return;
@@ -151,5 +171,15 @@ export class StringInterpolationListComponent implements OnInit, OnDestroy, Afte
 
   createStringInterpolation(): void{
     this._router.navigate(["apps/interpolations/add"]);
+  }
+
+  private _deleteStringInterpolation(id): void{
+    this._portalService.deleteInterpolation(id, null)
+      .pipe(takeUntil(this._onDestroy$))
+      .subscribe(data => {
+        if(!data){
+          return;
+      }
+    })
   }
 }

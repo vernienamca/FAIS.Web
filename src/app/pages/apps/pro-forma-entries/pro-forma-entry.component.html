@@ -44,7 +44,7 @@
         </div>
         <mat-divider style="margin: 10px 0;"></mat-divider>
         <div class="wijmotable">
-          <wj-flex-grid class="main-grid px-4 py-4" #proformaGrid [itemsSource]="proformaData" [selectionMode]="'Row'" [allowResizing]="false" style="width: 100%; border:none ; padding-right: 2%;" >
+          <wj-flex-grid class="main-grid long-table px-4 py-4" #proformaGrid [itemsSource]="proformaData" [selectionMode]="'Row'" [allowResizing]="false" style="width: 100%; border:none ; padding-right: 2%;" >
             <wj-flex-grid-column binding="faisRefNo" header="FAIS Ref No." width="30*" ></wj-flex-grid-column>
             <wj-flex-grid-column binding="tranTypeSeq" header="Transaction Seq." width="30*" ></wj-flex-grid-column>
             <wj-flex-grid-column binding="costCenter" header="Cost Center" width="30*" ></wj-flex-grid-column>

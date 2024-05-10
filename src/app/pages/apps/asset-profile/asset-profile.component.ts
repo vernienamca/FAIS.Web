@@ -77,7 +77,7 @@ export class AssetProfileComponent implements OnInit, OnDestroy {
     rcaglId: ['', Validators.required],
     assetCategoryId: ['',Validators.required],
     rcaSLId: ['',Validators.required],
-    assetClassId: ['',],
+    assetClassId: ['',Validators.required],
     costcenter: ['',Validators.required],
     assetType: ['',Validators.required],
     description: [''],
@@ -135,7 +135,7 @@ export class AssetProfileComponent implements OnInit, OnDestroy {
            this._updateAsset(editdata)
           }
           else {
-            this._addAsset(data); 
+            this._createAsset(data); 
           }
           else {
             this._snackBar.open('User Cancelled saving.', 'Close');
@@ -189,12 +189,12 @@ export class AssetProfileComponent implements OnInit, OnDestroy {
     });
 }
   
-  private _addAsset(data: IAssetProfile): void {
+  private _createAsset(data: IAssetProfile): void {
     if (Array.isArray(data.rcaglId)) {
       data.rcaglId = data.rcaglId.join(',');
     } 
     data.statusDate = new Date();
-    this._portalService.addAssetProfile(data)
+    this._portalService.createAssetProfile(data)
     .pipe(takeUntil(this._onDestroy$))
     .subscribe(data => {
       if(!data){
@@ -312,7 +312,7 @@ export class AssetProfileComponent implements OnInit, OnDestroy {
         fieldsToDisable = ['rcaglId', 'rcaSLId', 'costcenter', 'economiclife', 'residuallife'];
         break;
       case RoleNames.PADLibrarian:
-        fieldsToDisable = ['name', 'assetCategoryId', 'assetClassId', 'description'];
+        fieldsToDisable = ['name', 'assetCategoryId', 'assetClassId', 'description','assetType'];
         break;
       case RoleNames.Administrator:
         fieldsToDisable = [''];

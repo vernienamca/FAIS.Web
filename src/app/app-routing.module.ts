@@ -129,7 +129,12 @@ const routes: VexRoutes = [
           {
             path: 'project-profile',
             loadChildren: () => import('./pages/apps/project-profile/project-profile.module').then(m => m.ProjectProfileModule)
+          },
+          {
+            path: 'transmission-profile',
+            loadChildren: () => import('./pages/apps/transmission-line/transmission-line.module').then(m => m.TransmissionProfileModule)
           }
+
         ]
       },
       {
