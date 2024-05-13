@@ -19,6 +19,7 @@ import { PortalService } from 'src/app/core/services/portal.service';
 import { IProFormaEntry } from 'src/app/core/models/pro-forma-entry';
 import { ProFormaEntryStatusEnum } from 'src/app/core/enums/pro-forma-entry-status.enum';
 import { Router } from '@angular/router';
+import { DialogComponent } from '../../dialog/dialog.component';
 
 @UntilDestroy()
 @Component({
@@ -166,28 +167,33 @@ export class ProFormaEntriesListComponent implements OnInit, OnDestroy, AfterVie
   }
 
   delete(proFormaEntry: any): void {
-    this._portalService.deleteProFormaEntry(proFormaEntry.id)
-    .pipe(takeUntil(this._onDestroy$))
-    .subscribe(data => {
-        if (!data) {
-              return;
-            }
-            if (data.errorDescription) {
-              this._snackBar.open(data.errorDescription, 'Close', {
-                duration: 5000,
-              });
-            } else {
-              let snackbarRef = this._snackBar.open('Pro-Forma Entry deleted successfully.', 'Close', {
-                duration: 2000,
-              });
 
-              snackbarRef.afterDismissed().subscribe(() => {
-                window.location.reload();
-              });
-           
-            
-            }
-     
+
+    const dialogRef = this._dialog.open(DialogComponent, {
+      data: {
+        cancelButtonLabel: "Cancel",
+        confirmButtonLabel: "Continue delete pro-forma entry",
+        dialogHeader: "Delete pro-forma entry",
+        dialogContent: "Are you sure you would like to delete this pro-forma entry?",
+        callbackMethod: function() {
+         
+        }
+      },
+      width: '700px'
+    });
+
+    
+    dialogRef.afterClosed().subscribe(result => {
+      if(result != undefined) {
+        this._portalService.deleteProFormaEntry(proFormaEntry.id)
+        .pipe(takeUntil(this._onDestroy$))
+        .subscribe(libraryData => {
+          if (!libraryData) {
+            return;
+          }
+        
+        });
+      }
     });
   }
 }
