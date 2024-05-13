@@ -86,9 +86,9 @@ export class LibraryTypeOptionComponent implements OnInit, OnDestroy {
           isActive: data.isActive === 'Y',
           remark: data.remark,
           ranking : data.ranking,
-          udf1 : data.udf1,
-          udf2 : data.udf2,
-          udf3 : data.udf3
+          udf1 : data.udF1,
+          udf2 : data.udF2,
+          udf3 : data.udF3
         });
         this.form.get('libraryTypeId').setValue(data.libraryTypeId, data.libraryTypeName)
         this.statusLabel = data.isActive === 'Y' ? 'Active' : 'Inactive'; 
