@@ -192,7 +192,7 @@ export class ProjectProfileListComponent implements OnInit, OnDestroy, AfterView
     this.dataSource.data = this.librarytypeoptions.filter(t => t.projectName === event.value);
   }
 
-  add() {
+  add(): void {
     this._router.navigate(['apps/project-profile/add']);
   }
   
