@@ -26,7 +26,7 @@
         <mat-icon svgIcon="mat:filter_list"></mat-icon>
       </button>
       <button class="ml-4 flex-none" color="primary" [routerLink]="['add']"
-      mat-mini-fab matTooltip="Add transmission profile" type="button">
+      mat-mini-fab matTooltip="Add transmission profile" type="button" [disabled]="!hasCreateAccess">
       <mat-icon svgIcon="mat:add"></mat-icon>
     </button>
       </div>
@@ -107,7 +107,7 @@
 </mat-menu>
 <mat-menu #actionsMenu="matMenu" xPosition="before" yPosition="below">
   <ng-template let-chart="chart" matMenuContent>
-    <button (click)="edit(chart)" mat-menu-item>
+    <button (click)="edit(chart)" mat-menu-item [disabled]="!hasUpdateAccess">
       <mat-icon svgIcon="mat:edit"></mat-icon>
       <span>Edit</span>
     </button>
