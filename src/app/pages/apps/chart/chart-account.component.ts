@@ -11,6 +11,8 @@ import * as wjcCore from '@grapecity/wijmo';
 import { CollectionViewNavigator } from '@grapecity/wijmo.input';
 import { FlexGrid } from '@grapecity/wijmo.grid';
 import { ILibraryTypeOption } from 'src/app/core/models/library-type-option';
+import { SecurityService } from 'src/app/core/services/security.service';
+import { ModuleEnum } from 'src/app/core/enums/module-enum';
 
 @Component({
   selector: 'vex-chart',
@@ -38,6 +40,7 @@ export class ChartAccountComponent implements OnInit, OnDestroy {
   statusDate: Date | null = null;
   initialFormValues: any;
   chartData: IChart | null = null;
+  hasAccess = false;
 
   addNewRow(): void {
     const newItem = {
@@ -92,7 +95,8 @@ export class ChartAccountComponent implements OnInit, OnDestroy {
     private _route: ActivatedRoute,
     private _portalService: PortalService,
     private _snackBar: MatSnackBar,
-    private _router: Router
+    private _router: Router,
+    private _securityService: SecurityService
   ) {
     this.form = this._fb.group({
       accountgroup: ['', [Validators.required]],
@@ -102,7 +106,25 @@ export class ChartAccountComponent implements OnInit, OnDestroy {
       title: ['', [Validators.required]],
       isActive: [true, []],
     });
-  }
+    this._securityService.getPermissions(parseInt(localStorage.getItem('user_id')))
+      .pipe(takeUntil(this._onDestroy$))
+      .subscribe(data => {
+        const permission = data.filter(a => a.moduleId === ModuleEnum.AddorEditChartOfAccounts);
+        if (!permission || permission.some(s => s.isRead) === false) {
+          this._router.navigate([`pages/error-401`]);
+        }
+        if(permission.some(s => s.isUpdate) === false) {
+          this.form.controls['accountgroup'].disable();
+          this.form.controls['subaccount'].disable();
+          this.form.controls['rcagl'].disable();
+          this.form.controls['rcasl'].disable();
+          this.form.controls['title'].disable();
+          this.form.controls['isActive'].disable();
+        }
+        this.hasAccess = permission.some(s => s.isUpdate);
+      });
+    }
+
 
   ngOnInit(): void {
     this.salesData = this.getSalesData(0);

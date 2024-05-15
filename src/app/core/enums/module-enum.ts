@@ -23,4 +23,5 @@ export enum ModuleEnum {
     AddOrEditStringInterpolation = 22,
     AddorEditMeteringProfile = 23,
     AddorEditTransmissionProfile = 24,
+    AddorEditChartOfAccounts = 25
 }
