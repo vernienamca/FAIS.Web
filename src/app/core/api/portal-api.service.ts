@@ -244,7 +244,7 @@ export class PortalApi extends BaseApi {
         return this.get<IAssetProfile[]>(`${this._apiUrl}/assetprofile/get`);
     }
     getProjectProfiles(): Observable<IProjectProfile[]> {
-        return this.get<IProjectProfile>(`${this._apiUrl}/projectprofile`);
+        return this.get<IProjectProfile>(`${this._apiUrl}/projectprofile/get`);
     }
 
     getProjectProfile(id: number): Observable<IProjectProfile> {
