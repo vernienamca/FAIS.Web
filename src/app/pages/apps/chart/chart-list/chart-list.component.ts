@@ -15,6 +15,8 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { PortalService } from 'src/app/core/services/portal.service';
 import { IChart } from 'src/app/core/models/chart';
 import { Router } from '@angular/router';
+import { SecurityService } from 'src/app/core/services/security.service';
+import { ModuleEnum } from 'src/app/core/enums/module-enum';
 
 @UntilDestroy()
 @Component({
@@ -40,10 +42,10 @@ export class ChartListComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @Input()
   columns: TableColumn<IChart>[] = [
-    { label: 'Account Group', property: 'acountGroup', type: 'text', visible: true, cssClasses: ['font-medium'] },
-    { label: 'Sub-Account Group', property: 'subAcountGroup', type: 'text', visible: true },
-    { label: 'Rca Gl', property: 'rcaGL', type: 'text', visible: true },
-    { label: 'Rca Sl', property: 'rcaSL', type: 'text', visible: true },
+    { label: 'Major Account Group', property: 'acountGroup', type: 'text', visible: true, cssClasses: ['font-medium'] },
+    { label: 'Sub-Major Account Group', property: 'subAcountGroup', type: 'text', visible: true },
+    { label: 'Rca Gl Account', property: 'rcaGL', type: 'text', visible: true },
+    { label: 'Rca Sl Account', property: 'rcaSL', type: 'text', visible: true },
     { label: 'Rca Ledger Title', property: 'rcaLedgerTitle', type: 'text', visible: true },
     { label: 'Status', property: 'isActive', type: 'badge', visible: true },
     { label: 'Actions', property: 'actions', type: 'button', visible: true }
@@ -60,6 +62,8 @@ export class ChartListComponent implements OnInit, OnDestroy, AfterViewInit {
   searchCtrl = new UntypedFormControl();
   labels = aioTableLabels;
   isListLoading = false;
+  hasCreateAccess: boolean = false;
+  hasUpdateAccess: boolean = false;
 
   get visibleColumns() {
     return this.columns.filter(column => column.visible).map(column => column.property);
@@ -69,8 +73,22 @@ export class ChartListComponent implements OnInit, OnDestroy, AfterViewInit {
 
   constructor(
     private _router: Router,
-    private _portalService: PortalService
-  ){}
+    private _portalService: PortalService,
+    private _securityService: SecurityService
+  ){
+    const userId = parseInt(localStorage.getItem('user_id'));
+    this._securityService.getPermissions(userId)
+      .pipe(takeUntil(this._onDestroy$))
+      .subscribe(data => {
+        const listPermission = data.filter(a => a.moduleId === ModuleEnum.ChartofAccounts);
+        const rolePermission = data.filter(a => a.moduleId === ModuleEnum.AddorEditChartOfAccounts);
+        if (listPermission.some(s => s.isRead) === false) {
+          this._router.navigate([`pages/error-401`]);
+        }
+        this.hasCreateAccess = rolePermission.some(s => s.isCreate);
+        this.hasUpdateAccess = rolePermission.some(s => s.isUpdate);
+      });
+  }
 
   ngOnInit(): void {
     this._portalService.getChartAccounts()

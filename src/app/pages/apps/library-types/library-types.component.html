@@ -24,7 +24,7 @@
                 <input *ngIf="pageMode === 1" matInput formControlName="name" required>
                 <mat-select *ngIf="pageMode === 2" placeholder="Select Library Type" formControlName="name" (selectionChange)="onFilterUser($event)"
                   class="border-0 outline-none w-full bg-transparent flex-auto"> 
-                  <mat-option *ngFor="let libraryType of libraryTypes" [value]="libraryType[0]">{{libraryType[1]}}</mat-option>
+                  <mat-option *ngFor="let libraryType of libraryTypes" [value]="libraryType[1]">{{libraryType[1]}}</mat-option>
                 </mat-select>
                 <mat-error *ngIf="formControls.name.touched && formControls.name.invalid">
                   <span *ngIf="formControls.name.getError('required')">

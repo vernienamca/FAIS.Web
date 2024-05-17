@@ -16,6 +16,9 @@ import { PortalService } from 'src/app/core/services/portal.service';
 import { IMeteringProfile } from 'src/app/core/models/metering-profile';
 import { MeteringProfileStatusEnum } from 'src/app/core/enums/metering-profile-status.enum';
 import { Router } from '@angular/router';
+import { SecurityService } from 'src/app/core/services/security.service';
+import { ModuleEnum } from 'src/app/core/enums/module-enum';
+import { Module } from 'module';
 
 @UntilDestroy()
 @Component({
@@ -66,14 +69,30 @@ export class MeteringProfileListComponent implements OnInit, OnDestroy, AfterVie
   isListLoading = true;
   isEditMode: boolean = false;
   meteringProfileStatusEnum = MeteringProfileStatusEnum;
+  hasCreateAccess: boolean = false;
+  hasUpdateAccess: boolean = false;
 
 
   private _onDestroy$ = new Subject<void>();
 
   constructor(
     private _portalService: PortalService,
-    private _router: Router
+    private _router: Router,
+    private _securityService: SecurityService
   ) {
+    const userId = parseFloat(localStorage.getItem('user_id'));
+    this._securityService.getPermissions(userId)
+      .pipe(takeUntil(this._onDestroy$))
+      .subscribe(data => {
+        const listPermission = data.filter(a => a.moduleId === ModuleEnum.MeteringProfile);
+        const MeteringPermission = data.filter(a => a.moduleId === ModuleEnum.AddorEditMeteringProfile);
+        if (listPermission.some(s => s.isRead) === false) {
+          this._router.navigate([`pages/error-401`]);
+        }
+        this.hasCreateAccess = MeteringPermission.some(s => s.isCreate);
+        this.hasUpdateAccess = MeteringPermission.some(s => s.isUpdate);
+      });
+    
   }
 
   get visibleColumns() {

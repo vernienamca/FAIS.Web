@@ -15,9 +15,11 @@ import { IProFormaEntry } from "../models/pro-forma-entry";
 import { IChart } from "../models/chart";
 import { ILibraryTypes } from "../models/library-types";
 import { IAssetProfile } from "../models/asset-profile";
+import { IProjectProfile } from "../models/project-profile";
 import { IPlantInformation } from "../models/plant-information";
 import { IPermission } from "../models/permission";
 import { IMeteringProfile } from "../models/metering-profile";
+import { ITransmissionProfile } from "../models/transmission-profile";
 
 export class PortalApi extends BaseApi {
     private _apiUrl = `${environment.apiGatewayBaseUrl}`;
@@ -118,12 +120,20 @@ export class PortalApi extends BaseApi {
         return this.put<any>(`${this._apiUrl}/notification/interpolation/${id}`, data);
     }
 
+    deleteInterpolation(id: number, data: any): Observable<any> {
+        return this.put<any>(`${this._apiUrl}/notification/interpolation/delete/${id}`, data);
+    }
+
     createAlert(data: any): Observable<any> {
         return this.post<any>(`${this._apiUrl}/notification/template`, data);
     }
 
     updateAlert(id: number, data: any): Observable<any> {
         return this.put<any>(`${this._apiUrl}/notification/template/${id}`, data);
+    }
+
+    deleteAlert(id: number, data: any): Observable<any> {
+        return this.put<any>(`${this._apiUrl}/notification/template/delete/${id}`, data);
     }
 
     getAppVersions(): Observable<any[]> {
@@ -152,6 +162,10 @@ export class PortalApi extends BaseApi {
 
     updateProFormaEntry(id: number, data: any): Observable<any> {
         return this.put<any>(`${this._apiUrl}/proformaentries`, data);
+    }
+
+    deleteProFormaEntry(id: number): Observable<any> {
+        return this.delete<any>(`${this._apiUrl}/proformaentries/DeleteProforma/${id}`);
     }
 
     exportProFormaEntries(): Observable<HttpResponse<Blob>>  {
@@ -211,7 +225,7 @@ export class PortalApi extends BaseApi {
         });
     }
 
-    addChartOfAccounts(chartOfAccounts: any): Observable<any> {
+    createChartOfAccounts(chartOfAccounts: any): Observable<any> {
         return this.post<any>(`${this._apiUrl}/chartofaccounts`, chartOfAccounts);
     }
 
@@ -255,8 +269,31 @@ export class PortalApi extends BaseApi {
         });
     }
 
+    getProjectProfiles(): Observable<IProjectProfile[]> {
+        return this.get<IProjectProfile>(`${this._apiUrl}/projectprofile/get`);
+    }
 
-    addAssetProfile(data: any): Observable<any> {
+    getProjectProfile(id: number): Observable<IProjectProfile> {
+        return this.get<IProjectProfile>(`${this._apiUrl}/projectprofile/${id}`);
+    }
+
+    updateProjectProfile(data: any): Observable<any> {
+        return this.put<any>(`${this._apiUrl}/projectprofile`, data);
+    }
+
+    createProjectProfile(data: any): Observable<any> {
+        return this.post<any>(`${this._apiUrl}/projectprofile`, data);
+    }
+
+    exportProjectProfiles(): Observable<HttpResponse<Blob>>  {
+        return this.get(`${this._apiUrl}/projectprofile/export`,   
+        {
+            observe: 'response',
+            responseType: 'blob' as 'json'
+        });
+    }
+
+    createAssetProfile(data: any): Observable<any> {
         return this.post<any>(`${this._apiUrl}/assetprofile/asset-profile`, data);
     }
 
@@ -276,7 +313,7 @@ export class PortalApi extends BaseApi {
         return this.get<IMeteringProfile>(`${this._apiUrl}/meteringprofile/${id}`);
     }
 
-    addMeteringProfile(data: any): Observable<any> {
+    createMeteringProfile(data: any): Observable<any> {
         return this.post<any>(`${this._apiUrl}/meteringprofile/`, data);
     }
 
@@ -298,5 +335,21 @@ export class PortalApi extends BaseApi {
     
     getBarangays(): Observable<any[]> {
         return this.get<any>(`${this._apiUrl}/meteringprofile/getbarangay`);
+    }
+
+    getTransmissionProfiles(): Observable<any[]> {
+        return this.get<any>(`${this._apiUrl}/transmissionlineprofile/get`);
+    }
+
+    getTransmissionProfile(id: number): Observable<ITransmissionProfile> {
+        return this.get<ITransmissionProfile>(`${this._apiUrl}/transmissionlineprofile/getbyid?id=${id}`);
+    }
+
+    createTransmissionProfile(data: any): Observable<any> {
+        return this.post<any>(`${this._apiUrl}/transmissionlineprofile/transmission-line-profile`, data);
+    }
+
+    updateTransmissionProfile(id: number, data:any): Observable<ITransmissionProfile> {
+        return this.put<any>(`${this._apiUrl}/transmissionlineprofile/${id}`,data);
     }
 }

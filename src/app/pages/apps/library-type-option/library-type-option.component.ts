@@ -30,7 +30,11 @@ export class LibraryTypeOptionComponent implements OnInit, OnDestroy {
       code: this.form.get('code'),
       description: this.form.get('description'),
       status: this.form.get('isActive'),
-      remark: this.form.get('remark')
+      remark: this.form.get('remark'),
+      ranking: this.form.get('ranking'),
+      udf1: this.form.get('udf1'),
+      udf2: this.form.get('udf2'),
+      udf3: this.form.get('udf3')
     };
   }
 
@@ -48,7 +52,11 @@ export class LibraryTypeOptionComponent implements OnInit, OnDestroy {
       code: ['', [Validators.required]],
       description: ['', [Validators.required]],
       isActive: [true],
-      remark: ['']
+      remark: [''],
+      ranking: ['', [Validators.required, Validators.pattern(/^[0-9]+$/)]],
+      udf1: [''],
+      udf2: [''],
+      udf3: [''],
     });
 
     const id = parseInt(this._route.snapshot.paramMap.get('id'));
@@ -76,7 +84,11 @@ export class LibraryTypeOptionComponent implements OnInit, OnDestroy {
           code: data.code || '',
           description: data.description || '',
           isActive: data.isActive === 'Y',
-          remark: data.remark
+          remark: data.remark,
+          ranking : data.ranking,
+          udf1 : data.udF1,
+          udf2 : data.udF2,
+          udf3 : data.udF3
         });
         this.form.get('libraryTypeId').setValue(data.libraryTypeId, data.libraryTypeName)
         this.statusLabel = data.isActive === 'Y' ? 'Active' : 'Inactive'; 

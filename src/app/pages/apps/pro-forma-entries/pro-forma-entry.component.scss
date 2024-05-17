@@ -71,6 +71,15 @@ mat-form-field {
   }
 }
 
+.wijmotable {
+	overflow-x: auto;
+    padding-right: 40px;
+}
+
+.long-table {
+	min-width: 3000px !important;
+}
+
 @media (max-width: 1279px) {
   .wijmotable {
     max-width: calc(100vw);

@@ -18,6 +18,8 @@ import { IPermission } from '../models/permission';
 import { IPlantInformation } from '../models/plant-information';
 import { ITemplate } from '../models/template';
 import { IMeteringProfile } from '../models/metering-profile';
+import { IProjectProfile } from '../models/project-profile';
+import { ITransmissionProfile } from '../models/transmission-profile';
 
 @Injectable({
   providedIn: 'root'
@@ -139,12 +141,20 @@ export class PortalService {
     return this._portalApi.updateInterpolation(id, data);
   }
 
+  deleteInterpolation(id: number, data: any): Observable<any> {
+    return this._portalApi.deleteInterpolation(id, data);
+  }
+
   createAlert(data: ITemplate): Observable<ITemplate> {
     return this._portalApi.createAlert(data);
   }
 
   updateAlert(id: number, data: any): Observable<any> {
     return this._portalApi.updateAlert(id, data);
+  }
+
+  deleteAlert(id: number, data: any): Observable<any> {
+    return this._portalApi.deleteAlert(id, data);
   }
 
   getAppVersions(): Observable<any[]> {
@@ -237,6 +247,9 @@ export class PortalService {
     return this._portalApi.updateProFormaEntry(id,data);
 }
 
+deleteProFormaEntry(id: number): Observable<any> {
+  return this._portalApi.deleteProFormaEntry(id);
+}
   exportProFormaEntries(): void {
     this._portalApi.exportProFormaEntries().subscribe(response => {
       const contentDisposition = response.headers.get('Content-Disposition');
@@ -253,8 +266,8 @@ export class PortalService {
       });
   }
 
-  addChartOfAccounts(chartOfAccounts: any): Observable<any> {
-    return this._portalApi.addChartOfAccounts(chartOfAccounts);
+  createChartOfAccounts(chartOfAccounts: any): Observable<any> {
+    return this._portalApi.createChartOfAccounts(chartOfAccounts);
   }
 
   getChartOfAccountsById(id: number): Observable<IChart> {
@@ -272,8 +285,8 @@ export class PortalService {
     return this._portalApi.getAssetProfiles();
   }
 
-  addAssetProfile(assetProfile: any): Observable<any> {
-    return this._portalApi.addAssetProfile(assetProfile);
+  createAssetProfile(assetProfile: any): Observable<any> {
+    return this._portalApi.createAssetProfile(assetProfile);
 }
 
   updateAssetProfile(id: number , data:any): Observable<any> {
@@ -284,7 +297,6 @@ export class PortalService {
     return this._portalApi.getAssetProfile(id);
 }
 
-<<<<<<< HEAD
   getPlantInformations(): Observable<IPlantInformation[]> {
     return this._portalApi.getPlantInformations();
   }
@@ -315,7 +327,43 @@ export class PortalService {
 
   createPlantInformation(data: any): Observable<any> {
     return this._portalApi.createPlantInformation(data);
-=======
+  }
+
+  getProjectProfiles(): Observable<IProjectProfile[]> {
+    return this._portalApi.getProjectProfiles();
+  }
+  
+  getProjectProfile(id: number): Observable<IProjectProfile> {
+    return this._portalApi.getProjectProfile(id);
+  }
+  
+  createProjectProfile(data: any): Observable<any> {
+    return this._portalApi.createProjectProfile(data);
+  }
+  
+  updateProjectProfile(data: any): Observable<any> {
+    return this._portalApi.updateProjectProfile(data);
+  }
+  
+  exportProjectProfiles(): void {
+    this._portalApi.exportProjectProfiles().subscribe(response => {
+      const contentDisposition = response.headers.get('Content-Disposition');
+      const filename = contentDisposition 
+        ? contentDisposition.split(';')[1].trim().split('=')[1] 
+        : 'Library_Type_Options_' + this._datePipe.transform(new Date(), 'medium') + '.xlsx';
+  
+        const blob = new Blob([response.body], { type: 'application/actet-stream' });
+  
+        const link = document.createElement('a');
+        link.href = window.URL.createObjectURL(blob);
+        link.download = filename;
+        link.click();
+      });
+    }
+  
+
+
+
 getMeteringProfiles(): Observable<IMeteringProfile[]> {
   return this._portalApi.getMeteringProfiles();
 }
@@ -323,8 +371,8 @@ getMeteringProfile(id: number): Observable<IMeteringProfile> {
   return this._portalApi.getMeteringProfile(id);
 }
 
-addMeteringProfile(data: any): Observable<any> {
-  return this._portalApi.addMeteringProfile(data);
+createMeteringProfile(data: any): Observable<any> {
+  return this._portalApi.createMeteringProfile(data);
 }
 
 updateMeteringProfile(data: any): Observable<any> {
@@ -354,6 +402,22 @@ getMunicipalities(): Observable<any[]> {
 
     sDate = d.getUTCFullYear() + "-" + (d.getUTCMonth() + 1) + "-" + (d.getUTCDate() + 1) + "T00:08:00.000Z";
     return sDate;
->>>>>>> master
+
   }
+
+getTransmissionProfiles(): Observable<any[]> {
+ return this._portalApi.getTransmissionProfiles();
+}
+
+getTransmissionProfile(id: number): Observable<ITransmissionProfile>{
+  return this._portalApi.getTransmissionProfile(id);
+}
+
+createTransmissionProfile(transmissionProfile: any): Observable<any> {
+  return this._portalApi.createTransmissionProfile(transmissionProfile);
+}
+
+updateTransmissionProfile(id: number, data: any): Observable<any> {
+  return this._portalApi.updateTransmissionProfile(id, data);
+}
 }
