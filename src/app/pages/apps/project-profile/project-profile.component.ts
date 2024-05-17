@@ -151,7 +151,7 @@ export class ProjectProfileComponent implements OnInit, OnDestroy {
           remarks: data.remarks || '',
           isActive: data.isActive || 'Y',
           status: data.status || '',
-          statusDate: data.statusDate || ''
+          statusDate: data.statusDate = new Date()
         });
         this.statusLabel = data.isActive === 'Y' ? 'Active' : 'Inactive'; 
         this.createdBy = data.createdByName;
@@ -189,15 +189,15 @@ export class ProjectProfileComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const wijmoInvalid = this.projectProfileComponentData.sourceCollection.some((item: any) => {
-      return item.gl === '' || /^[a-zA-Z]+$/.test(item.glNo) || item.sl === '' || /^[a-zA-Z]+$/.test(item.sl) || item.faisRefNo === '';
-    });
-      if (wijmoInvalid) {
-        this._snackBar.open('Please fill in or delete the rows in the table.', 'Close', {
-          duration: 5000,
-        });
-        return;
-      }
+    // const wijmoInvalid = this.projectProfileComponentData.sourceCollection.some((item: any) => {
+    //   return item.gl === '' || /^[a-zA-Z]+$/.test(item.glNo) || item.sl === '' || /^[a-zA-Z]+$/.test(item.sl) || item.faisRefNo === '';
+    // });
+    //   if (wijmoInvalid) {
+    //     this._snackBar.open('Please fill in or delete the rows in the table.', 'Close', {
+    //       duration: 5000,
+    //     });
+    //     return;
+    //   }
 
       const collectionView = this.projectProfileGrid.collectionView;
       const allItems = collectionView.sourceCollection as any[];
@@ -223,8 +223,10 @@ export class ProjectProfileComponent implements OnInit, OnDestroy {
     const data = Object.assign({}, this.form.value);
     data.id = parseInt(this._route.snapshot.paramMap.get('id'));
     data.isActive = data.isActive ? 'Y' : 'N'; 
-
+    data.statusDate = new Date();
+    data.tpsrMonth = new Date();
     if (this.pageMode === 1) {
+      data.id = 0;
       data.createdBy = parseInt(localStorage.getItem('user_id'));
       data.projectProfileComponentDTO = projectProfileComponentDTOArray;
 

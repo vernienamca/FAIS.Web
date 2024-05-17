@@ -27,7 +27,7 @@
             <mat-icon svgIcon="mat:filter_list"></mat-icon>
           </button>
           <button (click)="add()" class="ml-4 flex-none" color="primary"
-            mat-mini-fab matTooltip="Add Metering Profile" type="button">
+            mat-mini-fab matTooltip="Add Metering Profile" type="button" [disabled]="!hasCreateAccess">
             <mat-icon svgIcon="mat:add"></mat-icon>
           </button>
         </div>
@@ -140,7 +140,7 @@
   </mat-menu>
   <mat-menu #actionsMenu="matMenu" xPosition="before" yPosition="below">
     <ng-template let-data="data" matMenuContent>
-      <button (click)="view(data)" mat-menu-item>
+      <button (click)="view(data)" mat-menu-item [disabled]="!hasUpdateAccess">
         <mat-icon svgIcon="mat:edit"></mat-icon>
         <span>Edit</span>
       </button>

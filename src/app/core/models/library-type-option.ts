@@ -8,6 +8,9 @@ export interface ILibraryTypeOption {
     isActive: string;
     remark: string;
     ranking: string;
+    udF1: string;
+    udF2: string;
+    udF3: string;
     createdBy: number;
     createdByName: string;
     createdAt: Date;

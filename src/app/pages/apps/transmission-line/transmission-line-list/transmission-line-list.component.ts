@@ -15,6 +15,8 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { PortalService } from 'src/app/core/services/portal.service';
 import { Router } from '@angular/router';
 import { ITransmissionProfile } from 'src/app/core/models/transmission-profile';
+import { SecurityService } from 'src/app/core/services/security.service';
+import { ModuleEnum } from 'src/app/core/enums/module-enum';
 
 @UntilDestroy()
 @Component({
@@ -62,6 +64,8 @@ export class TransmissionLineListComponent implements OnInit, OnDestroy, AfterVi
   searchCtrl = new UntypedFormControl();
   labels = aioTableLabels;
   isListLoading = false;
+  hasCreateAccess: boolean = false;
+  hasUpdateAccess: boolean = false;
 
   get visibleColumns() {
     return this.columns.filter(column => column.visible).map(column => column.property);
@@ -71,8 +75,21 @@ export class TransmissionLineListComponent implements OnInit, OnDestroy, AfterVi
 
   constructor (
     private _router: Router,
-    private _portalService: PortalService
+    private _portalService: PortalService,
+    private _securityService: SecurityService
   ) { 
+    const userId = parseInt(localStorage.getItem('user_id'));
+    this._securityService.getPermissions(userId)
+      .pipe(takeUntil(this._onDestroy$))
+      .subscribe(data => {
+        const listPermission = data.filter(a => a.moduleId === ModuleEnum.TransmissionLineProfile);
+        const rolePermission = data.filter(a => a.moduleId === ModuleEnum.AddorEditTransmissionProfile);
+        if (listPermission.some(s => s.isRead) === false) {
+          this._router.navigate([`pages/error-401`]);
+        }
+        this.hasCreateAccess = rolePermission.some(s => s.isCreate);
+        this.hasUpdateAccess = rolePermission.some(s => s.isUpdate);
+      });
   }
 
   ngOnInit(): void {
