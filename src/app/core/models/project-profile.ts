@@ -3,7 +3,7 @@ export interface IProjectProfile {
     projectName: string;
     projClassSeq: string;
     projectStageSeq: string;
-    tpsrMonth: string;
+    tpsrMonth: Date;
     noOfComponentsCompleted: string;
     noOfComponentsUnderConstruction: string;
     latestInspectionDate: string;
@@ -11,16 +11,16 @@ export interface IProjectProfile {
     recordedAMR: string;
     unrecordedAMR: string;
     remarks: string;
-    udf1: string;
-    udf2: string;
-    udf3: string;
+    udF1: string;
+    udF2: string;
+    udF3: string;
     status: string;
     statusDate?: Date
     isActive: string;
-    createdBy: number;
+    createdBy: string;
     createdByName: string;
     createdAt: Date;
-    updatedBy?: number;
+    updatedBy?: string;
     updatedByName: string;
     updatedAt?: Date;
     projectProfileComponentDTO: IProjectProfileComponent[];
