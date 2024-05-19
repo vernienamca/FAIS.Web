@@ -9,7 +9,7 @@ import { CollectionViewNavigator } from '@grapecity/wijmo.input';
 import { FlexGrid } from '@grapecity/wijmo.grid';
 import { PortalService } from 'src/app/core/services/portal.service';
 import * as wjcCore from '@grapecity/wijmo';
-import { IProjectProfileComponent } from 'src/app/core/models/project-profile';
+import { IProjectProfile, IProjectProfileComponent } from 'src/app/core/models/project-profile';
 
 @Component({
   selector: 'vex-project-profile',
@@ -145,18 +145,18 @@ export class ProjectProfileComponent implements OnInit, OnDestroy {
           totalAMRCost: data.totalAMRCost || '',
           recordedAMR: data.recordedAMR || '',
           unrecordedAMR: data.unrecordedAMR || '',
-          udf1: data.udf1 || '',
-          udf2: data.udf2 || '',
-          udf3: data.udf3 || '',
+          udf1: data.udF1 || '',
+          udf2: data.udF2 || '',
+          udf3: data.udF3 || '',
           remarks: data.remarks || '',
           isActive: data.isActive || 'Y',
           status: data.status || '',
           statusDate: data.statusDate = new Date()
         });
         this.statusLabel = data.isActive === 'Y' ? 'Active' : 'Inactive'; 
-        this.createdBy = data.createdByName;
+        this.createdBy = data.createdBy.toString();
         this.createdAt = data.createdAt;
-        this.updatedBy = data.updatedByName || 'N/A';
+        this.updatedBy = data.updatedBy.toString() || 'N/A';
         this.updatedAt = data.updatedAt;
 
       });
@@ -220,17 +220,49 @@ export class ProjectProfileComponent implements OnInit, OnDestroy {
         };
       });
     
-    const data = Object.assign({}, this.form.value);
-    data.id = parseInt(this._route.snapshot.paramMap.get('id'));
-    data.isActive = data.isActive ? 'Y' : 'N'; 
-    data.statusDate = new Date();
-    data.tpsrMonth = new Date();
-    if (this.pageMode === 1) {
-      data.id = 0;
-      data.createdBy = parseInt(localStorage.getItem('user_id'));
-      data.projectProfileComponentDTO = projectProfileComponentDTOArray;
+      const projectProfileDTO: IProjectProfile = {
+        id: this.id || 0,
+        projectName: this.formControls.projectName.value,
+        projClassSeq: this.formControls.projClassSeq.value,
+        projectStageSeq: this.formControls.projectStageSeq.value,
+        tpsrMonth: this.formControls.tpsrMonth.value,
+        noOfComponentsCompleted: this.formControls.noOfComponentsCompleted.value,
+        noOfComponentsUnderConstruction: this.formControls.noOfComponentsUnderConstruction.value,
+        latestInspectionDate: this.formControls.latestInspectionDate.value,
+        totalAMRCost: this.formControls.totalAMRCost.value,
+        recordedAMR: this.formControls.recordedAMR.value,
+        unrecordedAMR: this.formControls.unrecordedAMR.value,
+        remarks: this.formControls.remarks.value,
+        udF1: this.formControls.udf1.value,
+        udF2: this.formControls.udf2.value,
+        udF3: this.formControls.udf3.value,
+        isActive: this.formControls.isActive.value ? 'Y' : 'N',
+        statusDate: this.formControls.statusDate.value,
+        createdBy: (localStorage.getItem('user_id')),
+        createdAt: this.createdAt = new Date(),
+        updatedBy: (localStorage.getItem('user_id')),
+        updatedAt: this.updatedAt,
+        projectProfileComponentDTO: projectProfileComponentDTOArray,
+        status: '',
+        createdByName: '',
+        updatedByName: '',
+        projectProfileComponentModel: [],
+        projectProfileComponent: []
+      };
 
-      this._portalService.createProjectProfile(data)
+
+    const data = Object.assign({}, this.form.value);
+    projectProfileDTO.id = parseInt(this._route.snapshot.paramMap.get('id'));
+    projectProfileDTO.isActive = data.isActive ? 'Y' : 'N'; 
+    projectProfileDTO.statusDate = new Date();
+    projectProfileDTO.tpsrMonth = new Date();
+
+    if (this.pageMode === 1) {
+      projectProfileDTO.id = 0;
+      projectProfileDTO.createdBy = localStorage.getItem('user_id');
+      projectProfileDTO.projectProfileComponentDTO = projectProfileComponentDTOArray;
+
+      this._portalService.createProjectProfile(projectProfileDTO)
       .pipe(takeUntil(this._onDestroy$))
       .subscribe(data => {
         if (!data) {
@@ -243,9 +275,11 @@ export class ProjectProfileComponent implements OnInit, OnDestroy {
       });
     }
     else if (this.pageMode === 2) {
-      data.updatedBy = parseInt(localStorage.getItem('user_id'));
+      projectProfileDTO.projectStageSeq = "0";
 
-      this._portalService.updateProjectProfile(data)
+      projectProfileDTO.updatedBy = localStorage.getItem('user_id');
+
+      this._portalService.updateProjectProfile(projectProfileDTO)
       .pipe(takeUntil(this._onDestroy$))
       .subscribe(data => {
         if (!data) {
