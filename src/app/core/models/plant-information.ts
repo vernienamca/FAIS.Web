@@ -2,20 +2,20 @@ export interface IPlantInformation {
     id:number;
     plantCode: string;
     substationName: string;
-    class: string;
+    classId: string;
     substationNameOld: string;
-    transmissionGrid: string;
-    districtOffice: string;
+    transGrid: string;
+    districtId: string;
     mtd: string;
     commisioningDate: string;
     googleMapCoordinates: string;
     udf1: string;
     udf2: string;
     udf3: string;
-    region: string;
-    municipalityCity: string;
-    province: string;
-    barangay: string;
+    regionId: string;
+    munId: string;
+    provId: string;
+    brgyId: string;
     status: string;
     statusDate?: Date
     isActive: string;

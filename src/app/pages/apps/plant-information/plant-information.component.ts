@@ -30,6 +30,17 @@ export class PlantInformationComponent implements OnInit, OnDestroy {
   libraryTypes = [];
   id: number;
   plantInformationCostCenterData = this.getPlantInformationCostCenterData(5);
+  hasAccess = false;
+  
+ installationType: any [] = [];
+ districtOffice: any [] = [];
+ plantInfoClassification: any [] = [];
+ transmissionGrid: any[] = [];
+ facilityLocation: any[] = [];
+ regions: any[] = [];
+ provinces: any[] = [];
+ municipalities: any[] =[];
+ barangays: any[] =[];
 
   addNewRow(): void {
     const newItem = {
@@ -69,20 +80,20 @@ export class PlantInformationComponent implements OnInit, OnDestroy {
     return {
       plantCode: this.form.get('plantCode'),
       substationName: this.form.get('substationName'),
-      class: this.form.get('class'),
+      classId: this.form.get('classId'),
       substationNameOld: this.form.get('substationNameOld'),
-      transmissionGrid: this.form.get('transmissionGrid'),
-      districtOffice: this.form.get('districtOffice'),
+      transGrid: this.form.get('transGrid'),
+      districtId: this.form.get('districtId'),
       mtd: this.form.get('mtd'),
       commisioningDate: this.form.get('commisioningDate'),
       googleMapCoordinates: this.form.get('googleMapCoordinates'),
       udf1: this.form.get('udf1'),
       udf2: this.form.get('udf2'),
       udf3: this.form.get('udf3'),
-      region: this.form.get('region'),
-      municipalityCity: this.form.get('municipalityCity'),
-      province: this.form.get('province'),
-      barangay: this.form.get('barangay'),
+      regionId: this.form.get('regionId'),
+      munId: this.form.get('munId'),
+      provId: this.form.get('provId'),
+      brgyId: this.form.get('brgyId'),
       isActive: this.form.get('isActive'),
       statusDate: this.form.get('statusDate'),
     };
@@ -100,20 +111,20 @@ export class PlantInformationComponent implements OnInit, OnDestroy {
     this.form = this._fb.group({
       plantCode: ['', [Validators.required]],
       substationName: ['', [Validators.required]],
-      class: [''],
+      classId: [''],
       substationNameOld: [''],
-      transmissionGrid: [''],
-      districtOffice: [''],
+      transGrid: [''],
+      districtId: [''],
       mtd: [''],
       commisioningDate: [''],
       googleMapCoordinates: [''],
       udf1: [''],
       udf2: [''],
       udf3: [''],
-      region: [''],
-      municipalityCity: [''],
-      province: [''],
-      barangay: [''],
+      regionId: [''],
+      munId: [''],
+      provId: [''],
+      brgyId: [''],
       isActive: [true],
       status: [''],
       statusDate: ['']
@@ -133,20 +144,20 @@ export class PlantInformationComponent implements OnInit, OnDestroy {
         this.form.patchValue({
           plantCode: data.plantCode || '',
           substationName: data.substationName || '',
-          class: data.class || '',
+          classId: data.classId || '',
           substationNameOld: data.substationNameOld || '',
-          transmissionGrid: data.transmissionGrid || '',
-          districtOffice: data.districtOffice || '',
+          transGrid: data.transGrid || '',
+          districtId: data.districtId || '',
           mtd: data.mtd || '',
           commisioningDate: data.commisioningDate || '',
           googleMapCoordinates: data.googleMapCoordinates || '',
           udf1: data.udf1 || '',
           udf2: data.udf2 || '',
           udf3: data.udf3 || '',
-          region: data.region || '',
-          municipalityCity: data.municipalityCity || '',
-          province: data.province || '',
-          barangay: data.barangay || '',
+          regionId: data.regionId || '',
+          munId: data.munId || '',
+          provId: data.provId || '',
+          brgyId: data.brgyId || '',
           isActive: data.isActive || 'Y',
           status: data.status || '',
           statusDate: data.statusDate || ''
@@ -162,8 +173,59 @@ export class PlantInformationComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.id = parseInt(this._route.snapshot.paramMap.get('id'));
-    this.plantInformationCostCenterData = this.getPlantInformationCostCenterData(this.id);
+    // this.id = parseInt(this._route.snapshot.paramMap.get('id'));
+    // this.plantInformationCostCenterData = this.getPlantInformationCostCenterData(this.id);
+
+    this._portalService.getLibraryTypes()
+    .pipe(takeUntil(this._onDestroy$))
+    .subscribe(data => {
+      if(!data) {
+        return;
+      }
+      this.installationType = data.filter(type => type.code =='INT');
+      this.plantInfoClassification = data.filter(type => type.code =='MC');
+      this.transmissionGrid = data.filter(type => type.code === 'TRG');
+      this.districtOffice = data.filter(type => type.code === 'DTO');
+      this.facilityLocation = data.filter(type => type.code == 'FL');
+    })
+
+    this._portalService.getRegions()
+    .pipe(takeUntil(this._onDestroy$))
+    .subscribe(data => {
+      console.log("data");
+      console.log(data);
+      if(!data){
+        return;
+      }
+      this.regions = data;
+    })
+
+    this._portalService.getProvinces()
+    .pipe(takeUntil(this._onDestroy$))
+    .subscribe(data => {
+      if(!data){
+        return;
+      }
+      this.provinces = data;
+    })
+
+    this._portalService.getMunicipalities()
+    .pipe(takeUntil(this._onDestroy$))
+    .subscribe(data => {
+      if(!data){
+        return;
+      }
+      this.municipalities = data;
+    })
+
+    this._portalService.getBarangays()
+    .pipe(takeUntil(this._onDestroy$))
+    .subscribe(data => {
+      if(!data){
+        return;
+      }
+      this.barangays = data;
+    })
   }
 
   ngOnDestroy(): void {
