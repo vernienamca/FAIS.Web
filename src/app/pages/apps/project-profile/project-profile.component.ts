@@ -30,6 +30,8 @@ export class ProjectProfileComponent implements OnInit, OnDestroy {
   libraryTypes = [];
   id: number;
   projectProfileComponentData = this.getProjectProfileComponentData(0);
+  projectProfileClassification: any [] = [];
+  projectProfileStage: any [] = [];
 
   addNewRow(): void {
     const newItem = {
@@ -166,6 +168,15 @@ export class ProjectProfileComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.id = parseInt(this._route.snapshot.paramMap.get('id'));
     this.projectProfileComponentData = this.getProjectProfileComponentData(this.id);
+    this._portalService.getLibraryTypes()
+    .pipe(takeUntil(this._onDestroy$))
+    .subscribe(data => {
+      if(!data) {
+        return;
+      }
+      this.projectProfileClassification = data.filter(type => type.code =='PC');
+      this.projectProfileStage = data.filter(type => type.code === 'PS');
+    })
   }
 
   ngOnDestroy(): void {
