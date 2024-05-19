@@ -28,21 +28,24 @@
                   </span>
                 </mat-error>
               </mat-form-field>
-              <mat-form-field appearance="fill" class="flex-auto">
-                  <mat-label>Project Classification</mat-label>
-                  <input matInput formControlName="projClassSeq" required>
-                  <mat-error *ngIf="formControls.projClassSeq.touched && formControls.projClassSeq.invalid">
-                      <span *ngIf="formControls.projClassSeq.getError('required')">
-                      Project class seq is required
-                      </span>
-                  </mat-error>
+              <mat-form-field appearance="fill">
+                <mat-label>Project Classification</mat-label>
+                <mat-select formControlName="projClassSeq" >
+                  <mat-option *ngFor="let class of projectProfileClassification" [value]="class.id">
+                    {{ class.description}}
+                  </mat-option>
+                </mat-select>
               </mat-form-field>
           </div>
         
       <div class="flex flex-col flex-auto sm:flex-row sm:gap-4" [style.marginTop.px]="20">
-        <mat-form-field appearance="fill" class="flex-auto">
-            <mat-label>Project Stage</mat-label>
-            <input matInput formControlName="projectStageSeq">
+        <mat-form-field appearance="fill">
+          <mat-label>Project Stage</mat-label>
+          <mat-select formControlName="projectStageSeq" >
+            <mat-option *ngFor="let class of projectProfileStage" [value]="class.id">
+              {{ class.description}}
+            </mat-option>
+          </mat-select>
         </mat-form-field>
         <mat-form-field appearance="fill" class="flex-auto">
             <mat-label>TPSR Month</mat-label>
