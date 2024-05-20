@@ -2,7 +2,7 @@ export interface IProjectProfile {
     id:number;
     projectName: string;
     projClassSeq: string;
-    projectStageSeq: string;
+    projStageSeq: string;
     tpsrMonth: Date;
     noOfComponentsCompleted: string;
     noOfComponentsUnderConstruction: string;

@@ -18,6 +18,7 @@ import { IProjectProfile, IProjectProfileComponent } from 'src/app/core/models/p
 })
 export class ProjectProfileComponent implements OnInit, OnDestroy {
   @ViewChild('projectProfileGrid') projectProfileGrid: FlexGrid;
+  yesterday = new Date();
   pageMode: PageMode;
   form: FormGroup; 
   layoutCtrl = new UntypedFormControl('fullwidth');
@@ -79,7 +80,7 @@ export class ProjectProfileComponent implements OnInit, OnDestroy {
     return {
       projectName: this.form.get('projectName'),
       projClassSeq: this.form.get('projClassSeq'),
-      projectStageSeq: this.form.get('projectStageSeq'),
+      projStageSeq: this.form.get('projStageSeq'),
       tpsrMonth: this.form.get('tpsrMonth'),
       noOfComponentsCompleted: this.form.get('noOfComponentsCompleted'),
       noOfComponentsUnderConstruction: this.form.get('noOfComponentsUnderConstruction'),
@@ -108,7 +109,7 @@ export class ProjectProfileComponent implements OnInit, OnDestroy {
     this.form = this._fb.group({
       projectName: ['', [Validators.required]],
       projClassSeq: ['', [Validators.required]],
-      projectStageSeq: [''],
+      projStageSeq: [''],
       tpsrMonth: [''],
       noOfComponentsCompleted: [''],
       noOfComponentsUnderConstruction: [''],
@@ -139,7 +140,7 @@ export class ProjectProfileComponent implements OnInit, OnDestroy {
         this.form.patchValue({
           projectName: data.projectName || '',
           projClassSeq: data.projClassSeq || '',
-          projectStageSeq: data.projectStageSeq || '',
+          projStageSeq: data.projStageSeq || '',
           tpsrMonth: data.tpsrMonth || '',
           noOfComponentsCompleted: data.noOfComponentsCompleted || '',
           noOfComponentsUnderConstruction: data.noOfComponentsUnderConstruction || '',
@@ -167,7 +168,10 @@ export class ProjectProfileComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.id = parseInt(this._route.snapshot.paramMap.get('id'));
+
+    if(!isNaN(this.id))
     this.projectProfileComponentData = this.getProjectProfileComponentData(this.id);
+
     this._portalService.getLibraryTypes()
     .pipe(takeUntil(this._onDestroy$))
     .subscribe(data => {
@@ -177,6 +181,7 @@ export class ProjectProfileComponent implements OnInit, OnDestroy {
       this.projectProfileClassification = data.filter(type => type.code =='PC');
       this.projectProfileStage = data.filter(type => type.code === 'PS');
     })
+
   }
 
   ngOnDestroy(): void {
@@ -235,7 +240,7 @@ export class ProjectProfileComponent implements OnInit, OnDestroy {
         id: this.id || 0,
         projectName: this.formControls.projectName.value,
         projClassSeq: this.formControls.projClassSeq.value,
-        projectStageSeq: this.formControls.projectStageSeq.value,
+        projStageSeq: this.formControls.projStageSeq.value,
         tpsrMonth: this.formControls.tpsrMonth.value,
         noOfComponentsCompleted: this.formControls.noOfComponentsCompleted.value,
         noOfComponentsUnderConstruction: this.formControls.noOfComponentsUnderConstruction.value,
@@ -286,7 +291,6 @@ export class ProjectProfileComponent implements OnInit, OnDestroy {
       });
     }
     else if (this.pageMode === 2) {
-      projectProfileDTO.projectStageSeq = "0";
 
       projectProfileDTO.updatedBy = localStorage.getItem('user_id');
 

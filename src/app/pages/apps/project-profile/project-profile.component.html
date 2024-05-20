@@ -41,15 +41,23 @@
       <div class="flex flex-col flex-auto sm:flex-row sm:gap-4" [style.marginTop.px]="20">
         <mat-form-field appearance="fill">
           <mat-label>Project Stage</mat-label>
-          <mat-select formControlName="projectStageSeq" >
+          <mat-select formControlName="projStageSeq" >
             <mat-option *ngFor="let class of projectProfileStage" [value]="class.id">
               {{ class.description}}
             </mat-option>
           </mat-select>
         </mat-form-field>
-        <mat-form-field appearance="fill" class="flex-auto">
+        <!-- <mat-form-field appearance="fill" class="flex-auto">
             <mat-label>TPSR Month</mat-label>
             <input matInput formControlName="tpsrMonth">
+        </mat-form-field> -->
+
+        <mat-form-field appearance="fill" class="flex-auto">
+          <mat-label>TPSR Month</mat-label>
+          <input matInput [matDatepicker]="tpsrMonth" inputFormat="MM/dd/yyyy" autocomplete="off" [min]="yesterday"
+            id="tpsrMonth" formControlName="tpsrMonth" type="text" required>
+          <mat-datepicker-toggle matSuffix [for]="tpsrMonth"></mat-datepicker-toggle>
+          <mat-datepicker #tpsrMonth></mat-datepicker>
         </mat-form-field>
     </div>
     <div class="flex flex-col flex-auto sm:flex-row sm:gap-4" [style.marginTop.px]="20">

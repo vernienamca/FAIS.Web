@@ -27,6 +27,8 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatInputModule } from '@angular/material/input';
 import {WjGridModule} from '@grapecity/wijmo.angular2.grid';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
 
 @NgModule({
   declarations: [ProjectProfileListComponent, ProjectProfileComponent],
@@ -57,7 +59,9 @@ import {WjGridModule} from '@grapecity/wijmo.angular2.grid';
     MatTabsModule,
     SecondaryToolbarModule,
     MatSnackBarModule,
-    WjGridModule
+    WjGridModule,
+    MatDatepickerModule,
+    MatNativeDateModule
   ]
 })
 export class ProjectProfileModule {
