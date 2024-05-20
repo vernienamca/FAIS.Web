@@ -301,12 +301,16 @@ deleteProFormaEntry(id: number): Observable<any> {
     return this._portalApi.getPlantInformations();
   }
 
-  getPlantInformation(id: number): Observable<IPlantInformation> {
-    return this._portalApi.getPlantInformation(id);
+  getPlantInformation(plantCode: string): Observable<IPlantInformation> {
+    return this._portalApi.getPlantInformation(plantCode);
   }
 
-  updatePlantInformation(data: any): Observable<any> {
-    return this._portalApi.updatePlantInformation(data);
+  createPlantInformation(data: any): Observable<any> {
+    return this._portalApi.createPlantInformation(data);
+  }
+
+  updatePlantInformation(plantCode: string, data: any): Observable<any> {
+    return this._portalApi.updatePlantInformation(plantCode, data);
   }
 
   exportPlantInformations(): void {
@@ -324,10 +328,6 @@ deleteProFormaEntry(id: number): Observable<any> {
         link.click();
       });
     }
-
-  createPlantInformation(data: any): Observable<any> {
-    return this._portalApi.createPlantInformation(data);
-  }
 
   getProjectProfiles(): Observable<IProjectProfile[]> {
     return this._portalApi.getProjectProfiles();

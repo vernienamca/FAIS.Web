@@ -249,16 +249,16 @@ export class PortalApi extends BaseApi {
         return this.get<IPlantInformation>(`${this._apiUrl}/plantinformation`);
     }
 
-    getPlantInformation(id: number): Observable<IPlantInformation> {
-        return this.get<IPlantInformation>(`${this._apiUrl}/plantinformation/${id}`);
-    }
-
-    updatePlantInformation(data: any): Observable<any> {
-        return this.put<any>(`${this._apiUrl}/plantinformation`, data);
+    getPlantInformation(plantCode: string): Observable<IPlantInformation> {
+        return this.get<IPlantInformation>(`${this._apiUrl}/plantinformation/getbycode/${plantCode}`);
     }
 
     createPlantInformation(data: any): Observable<any> {
-        return this.post<any>(`${this._apiUrl}/plantinformation`, data);
+        return this.post<any>(`${this._apiUrl}/plant-information/plant-information`, data);
+    }
+
+    updatePlantInformation(plantCode: string, data: any): Observable<any> {
+        return this.put<any>(`${this._apiUrl}/plantinformation/${plantCode}`, data);
     }
 
     exportPlantInformations(): Observable<HttpResponse<Blob>>  {

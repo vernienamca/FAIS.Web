@@ -176,20 +176,12 @@ export class PlantInformationListComponent implements OnInit, OnDestroy, AfterVi
     this._portalService.exportPlantInformations();
   }
 
-  onFilterUser(event: any): void {    
-    if (!event.value || event.value == "All") {
-      this.dataSource.data = this.librarytypeoptions;
-      return;
-    }
-    this.dataSource.data = this.librarytypeoptions.filter(t => t.plantCode === event.value);
-  }
-
-  add() {
+  add(): void {
     this._router.navigate(['apps/plant-information/add']);
   }
   
   edit(plantInformation: any): void {
-    this._router.navigate([`apps/plant-information/edit/${plantInformation.id}`]);
+    this._router.navigate([`apps/plant-information/edit/${plantInformation.plantCode}`]);
   }
   
   googleMap(plantInformation: any): void {

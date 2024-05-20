@@ -31,8 +31,7 @@ export interface IPlantInformation {
 }
 
 export interface IPlantInformationCostCenter {
-    id: number;
-    plantInformationId: number;
+    plantCode: string;
     costCenterType: string;
     costCenterNo: string;
     costCenter: string;

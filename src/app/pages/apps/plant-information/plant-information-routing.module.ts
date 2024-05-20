@@ -15,7 +15,7 @@ const routes: VexRoutes = [
     }
   },
   {
-    path: 'edit/:id',
+    path: 'edit/:plantcode',
     component: PlantInformationComponent,
     data: {
       pageMode: PageMode.Edit,

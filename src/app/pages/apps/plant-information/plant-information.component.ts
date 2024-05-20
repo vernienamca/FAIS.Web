@@ -28,7 +28,7 @@ export class PlantInformationComponent implements OnInit, OnDestroy {
   updatedAt: Date;
   types: ILibraryTypes[];
   libraryTypes = [];
-  id: number;
+  plantCode: string;
   plantInformationCostCenterData = this.getPlantInformationCostCenterData(5);
   hasAccess = false;
   
@@ -130,11 +130,11 @@ export class PlantInformationComponent implements OnInit, OnDestroy {
       statusDate: ['']
     });
 
-    const id = parseInt(this._route.snapshot.paramMap.get('id'));
+    const plantCode = this._route.snapshot.paramMap.get('plantcode');
     this.pageMode = this._route.snapshot.data.pageMode;
 
     if (this.pageMode === 2) {
-      this._portalService.getPlantInformation(id)
+      this._portalService.getPlantInformation(plantCode)
       .pipe(takeUntil(this._onDestroy$))
       .subscribe(data => {
         if (!data) {
@@ -261,10 +261,10 @@ export class PlantInformationComponent implements OnInit, OnDestroy {
 
       const collectionView = this.costCenterGrid.collectionView;
       const allItems = collectionView.sourceCollection as any[];
+
       const plantInformationCostCenterDTOArray: IPlantInformationCostCenter[] = allItems.map((item: any) => {
         return {
-          id: item.id || 0,
-          plantInformationId: this.id || 0,
+          plantCode: this.plantCode || '',
           costCenterType: item.costCenterType,
           costCenterNo: item.costCenterNo,
           costCenter: item.costCenter,
@@ -299,7 +299,7 @@ export class PlantInformationComponent implements OnInit, OnDestroy {
     else if (this.pageMode === 2) {
       data.updatedBy = parseInt(localStorage.getItem('user_id'));
 
-      this._portalService.updatePlantInformation(data)
+      this._portalService.updatePlantInformation(data.plantCode, data)
       .pipe(takeUntil(this._onDestroy$))
       .subscribe(data => {
         if (!data) {
@@ -311,12 +311,5 @@ export class PlantInformationComponent implements OnInit, OnDestroy {
         });
       });
     }
-  }
-
-  onFilterUser(event: any): void {        
-    if (!event.value) {
-      return;
-    }
-    this.types = this.types.filter(t => t.name === event.value);
   }
 }
