@@ -271,7 +271,6 @@ export class ProjectProfileComponent implements OnInit, OnDestroy {
     projectProfileDTO.id = parseInt(this._route.snapshot.paramMap.get('id'));
     projectProfileDTO.isActive = data.isActive ? 'Y' : 'N'; 
     projectProfileDTO.statusDate = new Date();
-    projectProfileDTO.tpsrMonth = new Date();
 
     if (this.pageMode === 1) {
       projectProfileDTO.id = 0;
