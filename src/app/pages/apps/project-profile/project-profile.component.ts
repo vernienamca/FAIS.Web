@@ -136,7 +136,7 @@ export class ProjectProfileComponent implements OnInit, OnDestroy {
         if (!data) {
           return;
         }
-
+        this.projectProfileComponentData = new wjcCore.CollectionView(data.projectProfileComponents, { pageSize: 5 });
         this.form.patchValue({
           projectName: data.projectName || '',
           projClassSeq: data.projClassSeq || '',
@@ -232,7 +232,8 @@ export class ProjectProfileComponent implements OnInit, OnDestroy {
           createdBy: parseInt(localStorage.getItem('user_id')),
           createdAt: this.createdAt = new Date(),
           updatedBy: parseInt(localStorage.getItem('user_id')),
-          updatedAt: null
+          updatedAt: null,
+          projectProfileId: this.id || 0
         };
       });
     
@@ -258,12 +259,12 @@ export class ProjectProfileComponent implements OnInit, OnDestroy {
         createdAt: this.createdAt = new Date(),
         updatedBy: (localStorage.getItem('user_id')),
         updatedAt: this.updatedAt,
-        projectProfileComponentDTO: projectProfileComponentDTOArray,
+        projectProfileComponentsDTO: projectProfileComponentDTOArray,
         status: '',
         createdByName: '',
         updatedByName: '',
         projectProfileComponentModel: [],
-        projectProfileComponent: []
+        projectProfileComponents: []
       };
 
 
@@ -275,7 +276,7 @@ export class ProjectProfileComponent implements OnInit, OnDestroy {
     if (this.pageMode === 1) {
       projectProfileDTO.id = 0;
       projectProfileDTO.createdBy = localStorage.getItem('user_id');
-      projectProfileDTO.projectProfileComponentDTO = projectProfileComponentDTOArray;
+      projectProfileDTO.projectProfileComponentsDTO = projectProfileComponentDTOArray;
 
       this._portalService.createProjectProfile(projectProfileDTO)
       .pipe(takeUntil(this._onDestroy$))

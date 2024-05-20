@@ -23,9 +23,9 @@ export interface IProjectProfile {
     updatedBy?: string;
     updatedByName: string;
     updatedAt?: Date;
-    projectProfileComponentDTO: IProjectProfileComponent[];
+    projectProfileComponentsDTO: IProjectProfileComponent[];
     projectProfileComponentModel: IProjectProfileComponent[];
-    projectProfileComponent: IProjectProfileComponent[];
+    projectProfileComponents: IProjectProfileComponent[];
 }
 
 export interface IProjectProfileComponent {
@@ -43,6 +43,7 @@ export interface IProjectProfileComponent {
     createdAt: Date;
     updatedBy: number;
     updatedAt: Date;
+    projectProfileId: number;
   }
   
 
