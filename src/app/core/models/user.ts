@@ -18,6 +18,7 @@ export interface IUser {
   createdAt: Date,
   updatedBy?: string;
   updatedAt?: Date
+  errorDescription?: string;
 }
 
 export interface IUserRole {
