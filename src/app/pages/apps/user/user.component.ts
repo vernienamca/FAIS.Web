@@ -77,7 +77,7 @@ export class UserComponent implements OnInit, OnDestroy {
       position: ['', [Validators.required]],
       firstName: ['', [Validators.required]],
       lastName: ['', [Validators.required]],
-      emailAddress: ['', [Validators.required]],
+      emailAddress: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)]],
       mobileNumber: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
       taFG: ['', []],
       oupFG: ['', []],
@@ -210,10 +210,18 @@ export class UserComponent implements OnInit, OnDestroy {
         if (!data) {
           return;
         }
+        if (data.errorDescription) {
+        let snackBarRef = this._snackBar.open(data.errorDescription, 'Close');
+          snackBarRef.afterDismissed().subscribe(() => {
+          window.location.reload();
+        });
+      }
+      else {
         let snackBarRef = this._snackBar.open('User has been successfully saved.', 'Close');
         snackBarRef.afterDismissed().subscribe(() => {
           this._router.navigate([`apps/users/edit/${data.id}`]);
-        });
+        }); 
+        }
       });
   }
 
@@ -224,10 +232,18 @@ export class UserComponent implements OnInit, OnDestroy {
         if (!data) {
           return;
         }
+        if (data.errorDescription) {
+          let snackBarRef = this._snackBar.open(data.errorDescription, 'Close');
+            snackBarRef.afterDismissed().subscribe(() => {
+            window.location.reload();
+          });
+        }
+        else {
         let snackBarRef = this._snackBar.open('User has been successfully updated.', 'Close');
         snackBarRef.afterDismissed().subscribe(() => {
           window.location.reload();
         });
+      }
       });
   }
 
