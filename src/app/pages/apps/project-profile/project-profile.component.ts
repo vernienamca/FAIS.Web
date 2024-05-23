@@ -6,10 +6,13 @@ import { Subject, takeUntil } from 'rxjs';
 import { PageMode } from 'src/app/core/enums/page-mode.enum';
 import { ILibraryTypes } from 'src/app/core/models/library-types';
 import { CollectionViewNavigator } from '@grapecity/wijmo.input';
+import { SecurityService } from 'src/app/core/services/security.service';
 import { FlexGrid } from '@grapecity/wijmo.grid';
 import { PortalService } from 'src/app/core/services/portal.service';
 import * as wjcCore from '@grapecity/wijmo';
 import { IProjectProfile, IProjectProfileComponent } from 'src/app/core/models/project-profile';
+import { ModuleEnum } from 'src/app/core/enums/module-enum';
+import { MatButton } from '@angular/material/button';
 
 @Component({
   selector: 'vex-project-profile',
@@ -18,6 +21,8 @@ import { IProjectProfile, IProjectProfileComponent } from 'src/app/core/models/p
 })
 export class ProjectProfileComponent implements OnInit, OnDestroy {
   @ViewChild('projectProfileGrid') projectProfileGrid: FlexGrid;
+  @ViewChild('addbutton') addbutton: MatButton;
+  @ViewChild('savebutton') savebutton: MatButton;
   yesterday = new Date();
   pageMode: PageMode;
   form: FormGroup; 
@@ -33,7 +38,7 @@ export class ProjectProfileComponent implements OnInit, OnDestroy {
   projectProfileComponentData = this.getProjectProfileComponentData(0);
   projectProfileClassification: any [] = [];
   projectProfileStage: any [] = [];
-
+ hasAccess = false;
   addNewRow(): void {
     const newItem = {
       costCenterType: '',
@@ -93,7 +98,7 @@ export class ProjectProfileComponent implements OnInit, OnDestroy {
       udf2: this.form.get('udf2'),
       udf3: this.form.get('udf3'),
       isActive: this.form.get('isActive'),
-      statusDate: this.form.get('statusDate'),
+      statusDate: this.form.get('statusDate')
     };
   }
 
@@ -104,7 +109,8 @@ export class ProjectProfileComponent implements OnInit, OnDestroy {
     private _route: ActivatedRoute,
     private _portalService: PortalService,
     private _snackBar: MatSnackBar,
-    private _router: Router
+    private _router: Router,
+    private _securityService: SecurityService,
   ) {
     this.form = this._fb.group({
       projectName: ['', [Validators.required]],
@@ -125,6 +131,39 @@ export class ProjectProfileComponent implements OnInit, OnDestroy {
       status: [''],
       statusDate: ['']
     });
+
+    this._securityService.getPermissions(parseInt(localStorage.getItem('user_id')))
+    .pipe(takeUntil(this._onDestroy$))
+    .subscribe(data => {
+      const permission = data.filter(a => a.moduleId === ModuleEnum.AddorEditProjectProfile);
+      if (!permission || permission.some(s => s.isRead) === false) {
+        this._router.navigate([`pages/error-401`]);
+      }
+      if(permission.some(s => s.isUpdate) === false) {
+        this.form.controls['projectName'].disable();
+        this.form.controls['projClassSeq'].disable();
+        this.form.controls['projStageSeq'].disable();
+        this.form.controls['tpsrMonth'].disable();
+        this.form.controls['noOfComponentsCompleted'].disable();
+        this.form.controls['noOfComponentsUnderConstruction'].disable();
+        this.form.controls['latestInspectionDate'].disable();
+        this.form.controls['totalAMRCost'].disable();
+        this.form.controls['recordedAMR'].disable();
+        this.form.controls['unrecordedAMR'].disable();
+        this.form.controls['remarks'].disable();
+        this.form.controls['udf1'].disable();
+        this.form.controls['udf2'].disable();
+        this.form.controls['udf3'].disable();
+        this.form.controls['isActive'].disable();
+        this.form.controls['statusDate'].disable();
+        //this.form.controls['addbutton'].disable();
+        this.addbutton.disabled = true;
+        this.savebutton.disabled = true;
+        this.projectProfileGrid.isDisabled = true;
+      }
+      this.hasAccess = permission.some(s => s.isUpdate);
+    });
+  
 
     const id = parseInt(this._route.snapshot.paramMap.get('id'));
     this.pageMode = this._route.snapshot.data.pageMode;
