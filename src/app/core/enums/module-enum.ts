@@ -31,5 +31,6 @@ export enum ModuleEnum {
     AddorEditTransmissionProfile = 30,
     AddorEditChartOfAccounts = 31,
     AddorEditProjectProfile = 32,
-    AddorEditProformaEntries = 33
+    AddorEditProformaEntries = 33,
+    ProjectProfile = 34
 }
