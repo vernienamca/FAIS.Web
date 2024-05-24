@@ -266,16 +266,6 @@ export class ProjectProfileComponent implements OnInit, OnDestroy {
       return;
     }
 
-    // const wijmoInvalid = this.projectProfileComponentData.sourceCollection.some((item: any) => {
-    //   return item.gl === '' || /^[a-zA-Z]+$/.test(item.glNo) || item.sl === '' || /^[a-zA-Z]+$/.test(item.sl) || item.faisRefNo === '';
-    // });
-    //   if (wijmoInvalid) {
-    //     this._snackBar.open('Please fill in or delete the rows in the table.', 'Close', {
-    //       duration: 5000,
-    //     });
-    //     return;
-    //   }
-
       const collectionView = this.projectProfileGrid.collectionView;
       const allItems = collectionView.sourceCollection as any[];
       const projectProfileComponentDTOArray: IProjectProfileComponent[] = allItems.map((item: any) => {
