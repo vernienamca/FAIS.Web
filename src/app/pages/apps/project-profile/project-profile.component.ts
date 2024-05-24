@@ -237,8 +237,8 @@ export class ProjectProfileComponent implements OnInit, OnDestroy {
       this.projectProfileClassification = data.filter(type => type.code =='PC');
       this.projectProfileStage = data.filter(type => type.code === 'PS');
       this.projectProfileTransmissionGrid = data.filter(type => type.code === 'PTG');
-      this.projectProfileStageMap = new DataMap(this.products, 'id', 'name');
-      this.projectProfileTransmissionGridMap = new DataMap(this.products, 'id', 'name');
+      this.projectProfileStageMap = new DataMap(this.projectProfileStage, 'id', 'name');
+      this.projectProfileTransmissionGridMap = new DataMap(this.projectProfileTransmissionGrid, 'id', 'name');
     })
 
   }
@@ -263,16 +263,6 @@ export class ProjectProfileComponent implements OnInit, OnDestroy {
       this.formControls.projClassSeq.updateValueAndValidity();
       return;
     }
-
-    // const wijmoInvalid = this.projectProfileComponentData.sourceCollection.some((item: any) => {
-    //   return item.gl === '' || /^[a-zA-Z]+$/.test(item.glNo) || item.sl === '' || /^[a-zA-Z]+$/.test(item.sl) || item.faisRefNo === '';
-    // });
-    //   if (wijmoInvalid) {
-    //     this._snackBar.open('Please fill in or delete the rows in the table.', 'Close', {
-    //       duration: 5000,
-    //     });
-    //     return;
-    //   }
 
       const collectionView = this.projectProfileGrid.collectionView;
       const allItems = collectionView.sourceCollection as any[];
