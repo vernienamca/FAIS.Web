@@ -33,8 +33,8 @@ export interface IProjectProfileComponent {
     pjcId: number;
     projectComponent: number;
     details: number;
-    projectStage: number;
-    transmissionGrid: number;
+    projectStageSeq: number;
+    transmissionGridSeq: number;
     startDate: number;
     targetDate: number;
     completionDate: number;

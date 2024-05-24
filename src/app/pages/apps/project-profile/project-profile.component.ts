@@ -238,8 +238,8 @@ export class ProjectProfileComponent implements OnInit, OnDestroy {
       this.projectProfileClassification = data.filter(type => type.code =='PC');
       this.projectProfileStage = data.filter(type => type.code === 'PS');
       this.projectProfileTransmissionGrid = data.filter(type => type.code === 'PTG');
-      this.projectProfileStageMap = new DataMap(this.products, 'id', 'name');
-      this.projectProfileTransmissionGridMap = new DataMap(this.products, 'id', 'name');
+      this.projectProfileStageMap = new DataMap(this.projectProfileStage, 'id', 'name');
+      this.projectProfileTransmissionGridMap = new DataMap(this.projectProfileTransmissionGrid, 'id', 'name');
     })
 
 
@@ -284,8 +284,8 @@ export class ProjectProfileComponent implements OnInit, OnDestroy {
           pjcId: this.id || 0,
           projectComponent: item.projectComponent,
           details: item.details,
-          projectStage: item.projectStage,
-          transmissionGrid: item.transmissionGrid,
+          projectStageSeq: item.projectStage,
+          transmissionGridSeq: item.transmissionGrid,
           startDate: item.startDate,
           targetDate: item.targetDate,
           completionDate: item.completionDate,

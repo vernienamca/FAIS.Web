@@ -104,14 +104,14 @@
           <mat-divider style="margin: 10px 0;"></mat-divider>
           <div class="wijmotable">
             <wj-flex-grid class="main-grid px-4 py-4" #projectProfileGrid [itemsSource]="projectProfileComponentData" [selectionMode]="'Row'" [allowResizing]="false" style="width: 100%; border:none ; padding-right: 2%;" >
-              <wj-flex-grid-column binding="pjcId" header="PJC ID" width="30*" ></wj-flex-grid-column>
-              <wj-flex-grid-column binding="projectComponent" header="Project Component" width="30*" ></wj-flex-grid-column>
+              <!-- <wj-flex-grid-column binding="pjcId" header="PJC ID" width="30*" ></wj-flex-grid-column>
+              <wj-flex-grid-column binding="projectComponent" header="Project Component" width="30*" ></wj-flex-grid-column> -->
               <wj-flex-grid-column binding="details" header="Details" width="30*" ></wj-flex-grid-column>
-              <wj-flex-grid-column binding="projectStage" header="Project Stage" [dataMap]="projectProfileStageMap" [editor]="projectStageCombo" width="30*" ></wj-flex-grid-column>
-              <wj-flex-grid-column binding="transmissionGrid" header="Transmission Grid" [dataMap]="projectProfileTransmissionGridMap" [editor]="projectProfileTransmissionGridCombo" width="30*" ></wj-flex-grid-column>
-              <wj-flex-grid-column binding="startDate" header="Start Date" format="d" [editor]="startDateInput" width="30*" width="30*" ></wj-flex-grid-column>
-              <wj-flex-grid-column binding="targetDate" header="Target Date" format="d" [editor]="targetDateInput" width="30*" ></wj-flex-grid-column>
-              <wj-flex-grid-column binding="completionDate" header="Completion Date" format="d" [editor]="completionDateInput" width="30*" width="30*" ></wj-flex-grid-column>
+              <wj-flex-grid-column binding="projectStageSeq" header="Project Stage" [dataMap]="projectProfileStageMap" [dataMapEditor]="'DropDownList'" [editor]="projectStageCombo" width="30*" ></wj-flex-grid-column>
+              <wj-flex-grid-column binding="transmissionGridSeq" header="Transmission Grid" [dataMap]="projectProfileTransmissionGridMap" [dataMapEditor]="'DropDownList'" [editor]="projectProfileTransmissionGridCombo" width="30*" ></wj-flex-grid-column>
+              <wj-flex-grid-column binding="startDate" header="Start Date" format="d" data-type="Date" width="*" format="MMM/dd/yyyy" [editor]="startDateInput" width="30*" width="30*" inputFormat="MM/dd/yyyy"></wj-flex-grid-column>
+              <wj-flex-grid-column binding="targetDate" header="Target Date" format="d" [editor]="targetDateInput" width="30*"  inputFormat="MM/dd/yyyy"></wj-flex-grid-column>
+              <wj-flex-grid-column binding="completionDate" header="Completion Date" format="d" [editor]="completionDateInput" width="30*" width="30*" inputFormat="MM/dd/yyyy"></wj-flex-grid-column>
               <wj-flex-grid-column binding="action" header="Action"  width="10*" >
                 <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-cell="cell">
                   <button mat-button (click)="onDeleteRow(cell.item)">
@@ -121,9 +121,9 @@
               </wj-flex-grid-column>
             </wj-flex-grid>
           </div>
-        <wj-input-date #startDateInput></wj-input-date>
-        <wj-input-date #targetDateInput></wj-input-date>
-        <wj-input-date #completionDateInput></wj-input-date>
+        <wj-input-date #startDateInput inputFormat="MM/dd/yyyy"></wj-input-date>
+        <wj-input-date #targetDateInput inputFormat="MM/dd/yyyy"></wj-input-date>
+        <wj-input-date #completionDateInput inputFormat="MM/dd/yyyy"></wj-input-date>
         <wj-combo-box #projectStageCombo [displayMemberPath]="'name'" [selectedValuePath]="'id'" [itemsSource]="projectProfileStage"></wj-combo-box>
         <wj-combo-box #projectProfileTransmissionGridCombo [displayMemberPath]="'name'" [selectedValuePath]="'id'" [itemsSource]="projectProfileTransmissionGrid"></wj-combo-box>
         </div>
