@@ -10,6 +10,10 @@ import { FlexGrid } from '@grapecity/wijmo.grid';
 import { PortalService } from 'src/app/core/services/portal.service';
 import * as wjcCore from '@grapecity/wijmo';
 import { IPlantInformationCostCenter } from 'src/app/core/models/plant-information';
+import { WjInputModule } from '@grapecity/wijmo.angular2.input';
+import { WjGridModule } from '@grapecity/wijmo.angular2.grid';
+import { InputDate, InputTime, ComboBox, AutoComplete, InputNumber, InputColor } from '@grapecity/wijmo.input';
+import { DataMap }from '@grapecity/wijmo.grid';
 
 @Component({
   selector: 'vex-plant-information',
@@ -17,7 +21,7 @@ import { IPlantInformationCostCenter } from 'src/app/core/models/plant-informati
   styleUrls: ['./plant-information.component.scss']
 })
 export class PlantInformationComponent implements OnInit, OnDestroy {
-  @ViewChild('costCenterGrid') costCenterGrid: FlexGrid;
+  @ViewChild('plantInformationCostCenterGrid') plantInformationCostCenterGrid: FlexGrid;
   pageMode: PageMode;
   form: FormGroup; 
   layoutCtrl = new UntypedFormControl('fullwidth');
@@ -29,9 +33,11 @@ export class PlantInformationComponent implements OnInit, OnDestroy {
   types: ILibraryTypes[];
   libraryTypes = [];
   plantCode: string;
-  plantInformationCostCenterData = this.getPlantInformationCostCenterData(5);
+  plantInformationCostCenterData = this.getPlantInformationCostCenterData(0);
   hasAccess = false;
-  
+
+  costCenterType: any [] = [];
+  costCenterTypeMap;
  installationType: any [] = [];
  districtOffice: any [] = [];
  plantInfoClassification: any [] = [];
@@ -41,6 +47,8 @@ export class PlantInformationComponent implements OnInit, OnDestroy {
  provinces: any[] = [];
  municipalities: any[] =[];
  barangays: any[] =[];
+ costCenterTypes = [{}];//getProducts()
+ costCenterTypesMap = new DataMap(this.costCenterTypes, 'id', 'name');
 
   addNewRow(): void {
     const newItem = {
@@ -49,14 +57,14 @@ export class PlantInformationComponent implements OnInit, OnDestroy {
       costCenterTypeLto: '',
       action: '',
     };
-    this.costCenterGrid.collectionView.sourceCollection.unshift(newItem);
-    this.costCenterGrid.collectionView.refresh();
+    this.plantInformationCostCenterGrid.collectionView.sourceCollection.unshift(newItem);
+    this.plantInformationCostCenterGrid.collectionView.refresh();
   }
 
   onDeleteRow(item: any): void {
-      const index = this.costCenterGrid.collectionView.items.indexOf(item);
-        this.costCenterGrid.collectionView.sourceCollection.splice(index, 1);
-        this.costCenterGrid.collectionView.refresh();
+      const index = this.plantInformationCostCenterGrid.collectionView.items.indexOf(item);
+        this.plantInformationCostCenterGrid.collectionView.sourceCollection.splice(index, 1);
+        this.plantInformationCostCenterGrid.collectionView.refresh();
   }  
   
   
@@ -164,6 +172,7 @@ export class PlantInformationComponent implements OnInit, OnDestroy {
           status: data.status || '',
           statusDate: data.statusDate || ''
         });
+        this.plantInformationCostCenterData = new wjcCore.CollectionView(data.plantInformationCostCenter, { pageSize: 5 });
         this.statusLabel = data.isActive === 'Y' ? 'Active' : 'Inactive'; 
         this.createdBy = data.createdByName;
         this.createdAt = data.createdAt;
@@ -189,6 +198,8 @@ export class PlantInformationComponent implements OnInit, OnDestroy {
       this.transmissionGrid = data.filter(type => type.code === 'TRG');
       this.districtOffice = data.filter(type => type.code === 'DTO');
       this.facilityLocation = data.filter(type => type.code == 'FL');
+      this.costCenterType = data.filter(type => type.code === 'CCT');
+      this.costCenterTypeMap = new DataMap(this.costCenterTypes, 'id', 'name');
     })
 
     this._portalService.getRegions()
@@ -261,7 +272,7 @@ export class PlantInformationComponent implements OnInit, OnDestroy {
         return;
       }
 
-      const collectionView = this.costCenterGrid.collectionView;
+      const collectionView = this.plantInformationCostCenterGrid.collectionView;
       const allItems = collectionView.sourceCollection as any[];
 
       const plantInformationCostCenterDTOArray: IPlantInformationCostCenter[] = allItems.map((item: any) => {

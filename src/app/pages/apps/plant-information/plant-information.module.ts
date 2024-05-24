@@ -30,6 +30,7 @@ import {WjGridModule} from '@grapecity/wijmo.angular2.grid';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatTimepickerModule } from 'mat-timepicker';
 import { MatNativeDateModule } from '@angular/material/core';
+import { WjInputModule } from '@grapecity/wijmo.angular2.input';
 
 @NgModule({
   declarations: [PlantInformationListComponent, PlantInformationComponent],
@@ -63,7 +64,8 @@ import { MatNativeDateModule } from '@angular/material/core';
     MatDatepickerModule,
     MatNativeDateModule,
     MatTimepickerModule,
-    WjGridModule
+    WjGridModule,
+    WjInputModule, 
   ]
 })
 export class PlantInformationModule {
