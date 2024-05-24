@@ -46,6 +46,8 @@ export class ProjectProfileComponent implements OnInit, OnDestroy {
   projectProfileClassification: any [] = [];
   projectProfileStage: any [] = [];
   projectProfileTransmissionGrid: any [] = [];
+  projectProfileStageMap;
+  projectProfileTransmissionGridMap;
   hasAccess = false;
 
 
@@ -235,6 +237,8 @@ export class ProjectProfileComponent implements OnInit, OnDestroy {
       this.projectProfileClassification = data.filter(type => type.code =='PC');
       this.projectProfileStage = data.filter(type => type.code === 'PS');
       this.projectProfileTransmissionGrid = data.filter(type => type.code === 'PTG');
+      this.projectProfileStageMap = new DataMap(this.products, 'id', 'name');
+      this.projectProfileTransmissionGridMap = new DataMap(this.products, 'id', 'name');
     })
 
   }
