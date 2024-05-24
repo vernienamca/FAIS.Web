@@ -8,7 +8,7 @@
   <div class="flex flex-col sm:flex-row gap-4">
     <div class="card flex-auto">
       <div class="px-6 py-4 border-b flex items-center gap-2">
-        <button [ngClass]="form.touched && form.invalid ? '!bg-gray':'!bg-green'" class="!text-contrast-white" mat-raised-button type="button" (click)="save()" [disabled]="form.touched && form.invalid">
+        <button [ngClass]="form.touched && form.invalid ? '!bg-gray':'!bg-green'" class="!text-contrast-white" mat-raised-button type="button" (click)="save()" [disabled]="form.invalid && form.invalid">
           <mat-icon class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" #savebutton svgIcon="mat:archive"></mat-icon> Save
         </button>
         <button color="primary" mat-raised-button type="button" [routerLink]="['/apps/project-profile']">
@@ -54,8 +54,8 @@
 
         <mat-form-field appearance="fill" class="flex-auto">
           <mat-label>TPSR Month</mat-label>
-          <input matInput [matDatepicker]="tpsrMonth" inputFormat="MM/dd/yyyy" autocomplete="off" [min]="yesterday"
-            id="tpsrMonth" formControlName="tpsrMonth" type="text" required>
+          <input matInput [matDatepicker]="tpsrMonth" inputFormat="MM/dd/yyyy" autocomplete="off"
+            id="tpsrMonth" formControlName="tpsrMonth" type="text">
           <mat-datepicker-toggle matSuffix [for]="tpsrMonth"></mat-datepicker-toggle>
           <mat-datepicker #tpsrMonth></mat-datepicker>
         </mat-form-field>
@@ -124,8 +124,8 @@
         <wj-input-date #startDateInput></wj-input-date>
         <wj-input-date #targetDateInput></wj-input-date>
         <wj-input-date #completionDateInput></wj-input-date>
-        <wj-combo-box #projectStageCombo [itemsSource]="projectProfileStage"></wj-combo-box>
-        <wj-combo-box #projectProfileTransmissionGridCombo [itemsSource]="projectProfileTransmissionGrid"></wj-combo-box>
+        <wj-combo-box #projectStageCombo [displayMemberPath]="'name'" [selectedValuePath]="'id'" [itemsSource]="projectProfileStage"></wj-combo-box>
+        <wj-combo-box #projectProfileTransmissionGridCombo [displayMemberPath]="'name'" [selectedValuePath]="'id'" [itemsSource]="projectProfileTransmissionGrid"></wj-combo-box>
         </div>
             <div class="flex flex-col sm:flex-row sm:gap-4">
               <mat-slide-toggle color="accent" labelPosition="before" formControlName="isActive" (change)="onToggleStatus($event)">

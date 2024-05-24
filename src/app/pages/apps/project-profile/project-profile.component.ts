@@ -45,6 +45,7 @@ export class ProjectProfileComponent implements OnInit, OnDestroy {
   projectProfileComponentData = this.getProjectProfileComponentData(0);
   projectProfileClassification: any [] = [];
   projectProfileStage: any [] = [];
+  projectProfileStageForWijmo: any [] = [];
   projectProfileTransmissionGrid: any [] = [];
   projectProfileStageMap;
   projectProfileTransmissionGridMap;
@@ -197,7 +198,7 @@ export class ProjectProfileComponent implements OnInit, OnDestroy {
           projectName: data.projectName || '',
           projClassSeq: data.projClassSeq || '',
           projStageSeq: data.projStageSeq || '',
-          tpsrMonth: data.tpsrMonth || '',
+          tpsrMonth: data.tpsrMonth || new Date(),
           noOfComponentsCompleted: data.noOfComponentsCompleted || '',
           noOfComponentsUnderConstruction: data.noOfComponentsUnderConstruction || '',
           latestInspectionDate: data.latestInspectionDate || '',
@@ -240,6 +241,7 @@ export class ProjectProfileComponent implements OnInit, OnDestroy {
       this.projectProfileStageMap = new DataMap(this.projectProfileStage, 'id', 'name');
       this.projectProfileTransmissionGridMap = new DataMap(this.projectProfileTransmissionGrid, 'id', 'name');
     })
+
 
   }
 
