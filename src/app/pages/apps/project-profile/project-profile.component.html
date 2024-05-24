@@ -105,13 +105,13 @@
           <div class="wijmotable">
             <wj-flex-grid class="main-grid px-4 py-4" #projectProfileGrid [itemsSource]="projectProfileComponentData" [selectionMode]="'Row'" [allowResizing]="false" style="width: 100%; border:none ; padding-right: 2%;" >
               <wj-flex-grid-column binding="pjcId" header="PJC ID" width="30*" ></wj-flex-grid-column>
-              <wj-flex-grid-column binding="projectComponent" header="Project Component" width="30*" ></wj-flex-grid-column>
+              <wj-flex-grid-column binding="projectComponent" header="Project Component" [dataMap]="projectProfileComponentData" [editor]="projectProfileComponentCombo" width="30*" ></wj-flex-grid-column>
               <wj-flex-grid-column binding="details" header="Details" width="30*" ></wj-flex-grid-column>
-              <wj-flex-grid-column binding="projectStage" header="Project Stage" width="30*" ></wj-flex-grid-column>
+              <wj-flex-grid-column binding="projectStage" header="Project Stage" [dataMap]="projectProfileStage" [editor]="projectStageCombo" width="30*" ></wj-flex-grid-column>
               <wj-flex-grid-column binding="transmissionGrid" header="Transmission Grid" width="30*" ></wj-flex-grid-column>
-              <wj-flex-grid-column binding="startDate" header="Start Date" width="30*" ></wj-flex-grid-column>
-              <wj-flex-grid-column binding="targetDate" header="Target Date" width="30*" ></wj-flex-grid-column>
-              <wj-flex-grid-column binding="completionDate" header="Completion Date" width="30*" ></wj-flex-grid-column>
+              <wj-flex-grid-column binding="startDate" header="Start Date" format="d" [editor]="startDateInput" width="30*" width="30*" ></wj-flex-grid-column>
+              <wj-flex-grid-column binding="targetDate" header="Target Date" format="d" [editor]="targetDateInput" width="30*" ></wj-flex-grid-column>
+              <wj-flex-grid-column binding="completionDate" header="Completion Date" format="d" [editor]="completionDateInput" width="30*" width="30*" ></wj-flex-grid-column>
               <wj-flex-grid-column binding="action" header="Action"  width="10*" >
                 <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-cell="cell">
                   <button mat-button (click)="onDeleteRow(cell.item)">
@@ -121,9 +121,11 @@
               </wj-flex-grid-column>
             </wj-flex-grid>
           </div>
-          <div class="flex flex-row" fxLayoutAlign="end" [style.margin-top.px]="10" [style.margin-right.px]="40">
-            <div id="thePager"></div>
-          </div>
+        <wj-input-date #startDateInput></wj-input-date>
+        <wj-input-date #targetDateInput></wj-input-date>
+        <wj-input-date #completionDateInput></wj-input-date>
+        <wj-combo-box #projectStageCombo [itemsSource]="projectProfileStage"></wj-combo-box>
+        <wj-combo-box #projectProfileComponentCombo [itemsSource]="projectProfileComponentData"></wj-combo-box>
         </div>
             <div class="flex flex-col sm:flex-row sm:gap-4">
               <mat-slide-toggle color="accent" labelPosition="before" formControlName="isActive" (change)="onToggleStatus($event)">

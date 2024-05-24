@@ -26,9 +26,10 @@ import { SecondaryToolbarModule } from 'src/@vex/components/secondary-toolbar/se
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatInputModule } from '@angular/material/input';
-import {WjGridModule} from '@grapecity/wijmo.angular2.grid';
+import { WjGridModule } from '@grapecity/wijmo.angular2.grid';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
+import { WjInputModule } from '@grapecity/wijmo.angular2.input';
 
 @NgModule({
   declarations: [ProjectProfileListComponent, ProjectProfileComponent],
@@ -61,7 +62,9 @@ import { MatNativeDateModule } from '@angular/material/core';
     MatSnackBarModule,
     WjGridModule,
     MatDatepickerModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    WjGridModule,
+    WjInputModule, 
   ]
 })
 export class ProjectProfileModule {
