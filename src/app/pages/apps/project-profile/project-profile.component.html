@@ -1,4 +1,4 @@
-<vex-secondary-toolbar current="{{pageMode === 1 ? 'Edit Project Profile':'Add Project Profile'}}">
+<vex-secondary-toolbar current="{{pageMode === 2 ? 'Edit Project Profile':'Add Project Profile'}}">
   <vex-breadcrumbs [crumbs]="['System Management', 'Project Profile', 'Edit Project Profile']" class="flex-auto"></vex-breadcrumbs>
   <button class="ml-2" color="primary" mat-icon-button type="button">
     <mat-icon svgIcon="mat:more_vert"></mat-icon>
@@ -9,7 +9,7 @@
     <div class="card flex-auto">
       <div class="px-6 py-4 border-b flex items-center gap-2">
         <button [ngClass]="form.touched && form.invalid ? '!bg-gray':'!bg-green'" class="!text-contrast-white" mat-raised-button type="button" (click)="save()" [disabled]="form.touched && form.invalid">
-          <mat-icon class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" svgIcon="mat:archive"></mat-icon> Save
+          <mat-icon class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" #savebutton svgIcon="mat:archive"></mat-icon> Save
         </button>
         <button color="primary" mat-raised-button type="button" [routerLink]="['/apps/project-profile']">
           <mat-icon class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" svgIcon="mat:close"></mat-icon> Close
@@ -41,18 +41,26 @@
       <div class="flex flex-col flex-auto sm:flex-row sm:gap-4" [style.marginTop.px]="20">
         <mat-form-field appearance="fill">
           <mat-label>Project Stage</mat-label>
-          <mat-select formControlName="projectStageSeq" >
+          <mat-select formControlName="projStageSeq" >
             <mat-option *ngFor="let class of projectProfileStage" [value]="class.id">
               {{ class.description}}
             </mat-option>
           </mat-select>
         </mat-form-field>
-        <mat-form-field appearance="fill" class="flex-auto">
+        <!-- <mat-form-field appearance="fill" class="flex-auto">
             <mat-label>TPSR Month</mat-label>
             <input matInput formControlName="tpsrMonth">
+        </mat-form-field> -->
+
+        <mat-form-field appearance="fill" class="flex-auto">
+          <mat-label>TPSR Month</mat-label>
+          <input matInput [matDatepicker]="tpsrMonth" inputFormat="MM/dd/yyyy" autocomplete="off" [min]="yesterday"
+            id="tpsrMonth" formControlName="tpsrMonth" type="text" required>
+          <mat-datepicker-toggle matSuffix [for]="tpsrMonth"></mat-datepicker-toggle>
+          <mat-datepicker #tpsrMonth></mat-datepicker>
         </mat-form-field>
     </div>
-    <div class="flex flex-col flex-auto sm:flex-row sm:gap-4" [style.marginTop.px]="20">
+    <!-- <div class="flex flex-col flex-auto sm:flex-row sm:gap-4" [style.marginTop.px]="20">
       <mat-form-field appearance="fill" class="flex-auto">
           <mat-label>No. of Components Completed</mat-label>
           <input matInput formControlName="noOfComponentsCompleted">
@@ -61,9 +69,9 @@
           <mat-label>No. of Components Under Construction</mat-label>
           <input matInput formControlName="noOfComponentsUnderConstruction">
       </mat-form-field>
-  </div>
+  </div> -->
   <div class="flex flex-col flex-auto sm:flex-row sm:gap-4" [style.marginTop.px]="20">
-    <mat-form-field appearance="fill">
+    <mat-form-field appearance="fill" class="flex-auto">
       <mat-label>Remarks</mat-label>
       <textarea matInput formControlName="remarks" style="resize: none;"></textarea>
     </mat-form-field>
@@ -88,7 +96,7 @@
         <div class="table-container" [style.margin-top.px]="50" >
           <div class="flex flex-row" fxLayoutAlign="end" [style.margin-bottom.px]="10" [style.margin-right.px]="30">
             <h2 class="m-0 title flex-auto">Project Component</h2>
-            <button class="rounded-full !bg-green !text-white" mat-raised-button type="button" (click)="addNewRow()">
+            <button #addbutton class="rounded-full !bg-green !text-white" mat-raised-button type="button" (click)="addNewRow()">
               <mat-icon svgIcon="mat:add"></mat-icon>
               <span>Add</span>
             </button>
@@ -99,23 +107,25 @@
               <wj-flex-grid-column binding="pjcId" header="PJC ID" width="30*" ></wj-flex-grid-column>
               <wj-flex-grid-column binding="projectComponent" header="Project Component" width="30*" ></wj-flex-grid-column>
               <wj-flex-grid-column binding="details" header="Details" width="30*" ></wj-flex-grid-column>
-              <wj-flex-grid-column binding="projectStage" header="Project Stage" width="30*" ></wj-flex-grid-column>
-              <wj-flex-grid-column binding="transmissionGrid" header="Transmission Grid" width="30*" ></wj-flex-grid-column>
-              <wj-flex-grid-column binding="startDate" header="Start Date" width="30*" ></wj-flex-grid-column>
-              <wj-flex-grid-column binding="targetDate" header="Target Date" width="30*" ></wj-flex-grid-column>
-              <wj-flex-grid-column binding="completionDate" header="Completion Date" width="30*" ></wj-flex-grid-column>
+              <wj-flex-grid-column binding="projectStage" header="Project Stage" [dataMap]="projectProfileStageMap" [editor]="projectStageCombo" width="30*" ></wj-flex-grid-column>
+              <wj-flex-grid-column binding="transmissionGrid" header="Transmission Grid" [dataMap]="projectProfileTransmissionGridMap" [editor]="projectProfileTransmissionGridCombo" width="30*" ></wj-flex-grid-column>
+              <wj-flex-grid-column binding="startDate" header="Start Date" format="d" [editor]="startDateInput" width="30*" width="30*" ></wj-flex-grid-column>
+              <wj-flex-grid-column binding="targetDate" header="Target Date" format="d" [editor]="targetDateInput" width="30*" ></wj-flex-grid-column>
+              <wj-flex-grid-column binding="completionDate" header="Completion Date" format="d" [editor]="completionDateInput" width="30*" width="30*" ></wj-flex-grid-column>
               <wj-flex-grid-column binding="action" header="Action"  width="10*" >
                 <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-cell="cell">
                   <button mat-button (click)="onDeleteRow(cell.item)">
-                    <mat-icon>close</mat-icon>
+                    <mat-icon>delete</mat-icon>
                   </button>
                 </ng-template>
               </wj-flex-grid-column>
             </wj-flex-grid>
           </div>
-          <div class="flex flex-row" fxLayoutAlign="end" [style.margin-top.px]="10" [style.margin-right.px]="40">
-            <div id="thePager"></div>
-          </div>
+        <wj-input-date #startDateInput></wj-input-date>
+        <wj-input-date #targetDateInput></wj-input-date>
+        <wj-input-date #completionDateInput></wj-input-date>
+        <wj-combo-box #projectStageCombo [itemsSource]="projectProfileStage"></wj-combo-box>
+        <wj-combo-box #projectProfileTransmissionGridCombo [itemsSource]="projectProfileTransmissionGrid"></wj-combo-box>
         </div>
             <div class="flex flex-col sm:flex-row sm:gap-4">
               <mat-slide-toggle color="accent" labelPosition="before" formControlName="isActive" (change)="onToggleStatus($event)">

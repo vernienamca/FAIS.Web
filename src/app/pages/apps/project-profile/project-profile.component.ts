@@ -6,10 +6,20 @@ import { Subject, takeUntil } from 'rxjs';
 import { PageMode } from 'src/app/core/enums/page-mode.enum';
 import { ILibraryTypes } from 'src/app/core/models/library-types';
 import { CollectionViewNavigator } from '@grapecity/wijmo.input';
+import { SecurityService } from 'src/app/core/services/security.service';
 import { FlexGrid } from '@grapecity/wijmo.grid';
 import { PortalService } from 'src/app/core/services/portal.service';
 import * as wjcCore from '@grapecity/wijmo';
 import { IProjectProfile, IProjectProfileComponent } from 'src/app/core/models/project-profile';
+import { ModuleEnum } from 'src/app/core/enums/module-enum';
+import { MatButton } from '@angular/material/button';
+
+
+import { WjInputModule } from '@grapecity/wijmo.angular2.input';
+import { WjGridModule } from '@grapecity/wijmo.angular2.grid';
+import { InputDate, InputTime, ComboBox, AutoComplete, InputNumber, InputColor } from '@grapecity/wijmo.input';
+import { DataMap }from '@grapecity/wijmo.grid';
+// import { getData, getCountries, getProducts } from './data';
 
 @Component({
   selector: 'vex-project-profile',
@@ -18,6 +28,9 @@ import { IProjectProfile, IProjectProfileComponent } from 'src/app/core/models/p
 })
 export class ProjectProfileComponent implements OnInit, OnDestroy {
   @ViewChild('projectProfileGrid') projectProfileGrid: FlexGrid;
+  @ViewChild('addbutton') addbutton: MatButton;
+  @ViewChild('savebutton') savebutton: MatButton;
+  yesterday = new Date();
   pageMode: PageMode;
   form: FormGroup; 
   layoutCtrl = new UntypedFormControl('fullwidth');
@@ -32,6 +45,16 @@ export class ProjectProfileComponent implements OnInit, OnDestroy {
   projectProfileComponentData = this.getProjectProfileComponentData(0);
   projectProfileClassification: any [] = [];
   projectProfileStage: any [] = [];
+  projectProfileTransmissionGrid: any [] = [];
+  projectProfileStageMap;
+  projectProfileTransmissionGridMap;
+  hasAccess = false;
+
+
+ data = [{}];//getData()
+ countries = [{}];//getCountries()
+ products = [{}];//getProducts()
+ productMap = new DataMap(this.products, 'id', 'name');
 
   addNewRow(): void {
     const newItem = {
@@ -79,7 +102,7 @@ export class ProjectProfileComponent implements OnInit, OnDestroy {
     return {
       projectName: this.form.get('projectName'),
       projClassSeq: this.form.get('projClassSeq'),
-      projectStageSeq: this.form.get('projectStageSeq'),
+      projStageSeq: this.form.get('projStageSeq'),
       tpsrMonth: this.form.get('tpsrMonth'),
       noOfComponentsCompleted: this.form.get('noOfComponentsCompleted'),
       noOfComponentsUnderConstruction: this.form.get('noOfComponentsUnderConstruction'),
@@ -92,7 +115,7 @@ export class ProjectProfileComponent implements OnInit, OnDestroy {
       udf2: this.form.get('udf2'),
       udf3: this.form.get('udf3'),
       isActive: this.form.get('isActive'),
-      statusDate: this.form.get('statusDate'),
+      statusDate: this.form.get('statusDate')
     };
   }
 
@@ -103,12 +126,13 @@ export class ProjectProfileComponent implements OnInit, OnDestroy {
     private _route: ActivatedRoute,
     private _portalService: PortalService,
     private _snackBar: MatSnackBar,
-    private _router: Router
+    private _router: Router,
+    private _securityService: SecurityService,
   ) {
     this.form = this._fb.group({
       projectName: ['', [Validators.required]],
       projClassSeq: ['', [Validators.required]],
-      projectStageSeq: [''],
+      projStageSeq: [''],
       tpsrMonth: [''],
       noOfComponentsCompleted: [''],
       noOfComponentsUnderConstruction: [''],
@@ -125,6 +149,39 @@ export class ProjectProfileComponent implements OnInit, OnDestroy {
       statusDate: ['']
     });
 
+    this._securityService.getPermissions(parseInt(localStorage.getItem('user_id')))
+    .pipe(takeUntil(this._onDestroy$))
+    .subscribe(data => {
+      const permission = data.filter(a => a.moduleId === ModuleEnum.AddorEditProjectProfile);
+      if (!permission || permission.some(s => s.isRead) === false) {
+        this._router.navigate([`pages/error-401`]);
+      }
+      if(permission.some(s => s.isUpdate) === false) {
+        this.form.controls['projectName'].disable();
+        this.form.controls['projClassSeq'].disable();
+        this.form.controls['projStageSeq'].disable();
+        this.form.controls['tpsrMonth'].disable();
+        this.form.controls['noOfComponentsCompleted'].disable();
+        this.form.controls['noOfComponentsUnderConstruction'].disable();
+        this.form.controls['latestInspectionDate'].disable();
+        this.form.controls['totalAMRCost'].disable();
+        this.form.controls['recordedAMR'].disable();
+        this.form.controls['unrecordedAMR'].disable();
+        this.form.controls['remarks'].disable();
+        this.form.controls['udf1'].disable();
+        this.form.controls['udf2'].disable();
+        this.form.controls['udf3'].disable();
+        this.form.controls['isActive'].disable();
+        this.form.controls['statusDate'].disable();
+        //this.form.controls['addbutton'].disable();
+        this.addbutton.disabled = true;
+        this.savebutton.disabled = true;
+        this.projectProfileGrid.isDisabled = true;
+      }
+      this.hasAccess = permission.some(s => s.isUpdate);
+    });
+  
+
     const id = parseInt(this._route.snapshot.paramMap.get('id'));
     this.pageMode = this._route.snapshot.data.pageMode;
 
@@ -135,11 +192,11 @@ export class ProjectProfileComponent implements OnInit, OnDestroy {
         if (!data) {
           return;
         }
-
+        this.projectProfileComponentData = new wjcCore.CollectionView(data.projectProfileComponents, { pageSize: 5 });
         this.form.patchValue({
           projectName: data.projectName || '',
           projClassSeq: data.projClassSeq || '',
-          projectStageSeq: data.projectStageSeq || '',
+          projStageSeq: data.projStageSeq || '',
           tpsrMonth: data.tpsrMonth || '',
           noOfComponentsCompleted: data.noOfComponentsCompleted || '',
           noOfComponentsUnderConstruction: data.noOfComponentsUnderConstruction || '',
@@ -167,7 +224,10 @@ export class ProjectProfileComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.id = parseInt(this._route.snapshot.paramMap.get('id'));
+
+    if(!isNaN(this.id))
     this.projectProfileComponentData = this.getProjectProfileComponentData(this.id);
+
     this._portalService.getLibraryTypes()
     .pipe(takeUntil(this._onDestroy$))
     .subscribe(data => {
@@ -176,7 +236,11 @@ export class ProjectProfileComponent implements OnInit, OnDestroy {
       }
       this.projectProfileClassification = data.filter(type => type.code =='PC');
       this.projectProfileStage = data.filter(type => type.code === 'PS');
+      this.projectProfileTransmissionGrid = data.filter(type => type.code === 'PTG');
+      this.projectProfileStageMap = new DataMap(this.products, 'id', 'name');
+      this.projectProfileTransmissionGridMap = new DataMap(this.products, 'id', 'name');
     })
+
   }
 
   ngOnDestroy(): void {
@@ -227,7 +291,8 @@ export class ProjectProfileComponent implements OnInit, OnDestroy {
           createdBy: parseInt(localStorage.getItem('user_id')),
           createdAt: this.createdAt = new Date(),
           updatedBy: parseInt(localStorage.getItem('user_id')),
-          updatedAt: null
+          updatedAt: null,
+          projectProfileId: this.id || 0
         };
       });
     
@@ -235,7 +300,7 @@ export class ProjectProfileComponent implements OnInit, OnDestroy {
         id: this.id || 0,
         projectName: this.formControls.projectName.value,
         projClassSeq: this.formControls.projClassSeq.value,
-        projectStageSeq: this.formControls.projectStageSeq.value,
+        projStageSeq: this.formControls.projStageSeq.value,
         tpsrMonth: this.formControls.tpsrMonth.value,
         noOfComponentsCompleted: this.formControls.noOfComponentsCompleted.value,
         noOfComponentsUnderConstruction: this.formControls.noOfComponentsUnderConstruction.value,
@@ -253,12 +318,12 @@ export class ProjectProfileComponent implements OnInit, OnDestroy {
         createdAt: this.createdAt = new Date(),
         updatedBy: (localStorage.getItem('user_id')),
         updatedAt: this.updatedAt,
-        projectProfileComponentDTO: projectProfileComponentDTOArray,
+        projectProfileComponentsDTO: projectProfileComponentDTOArray,
         status: '',
         createdByName: '',
         updatedByName: '',
         projectProfileComponentModel: [],
-        projectProfileComponent: []
+        projectProfileComponents: []
       };
 
 
@@ -266,12 +331,11 @@ export class ProjectProfileComponent implements OnInit, OnDestroy {
     projectProfileDTO.id = parseInt(this._route.snapshot.paramMap.get('id'));
     projectProfileDTO.isActive = data.isActive ? 'Y' : 'N'; 
     projectProfileDTO.statusDate = new Date();
-    projectProfileDTO.tpsrMonth = new Date();
 
     if (this.pageMode === 1) {
       projectProfileDTO.id = 0;
       projectProfileDTO.createdBy = localStorage.getItem('user_id');
-      projectProfileDTO.projectProfileComponentDTO = projectProfileComponentDTOArray;
+      projectProfileDTO.projectProfileComponentsDTO = projectProfileComponentDTOArray;
 
       this._portalService.createProjectProfile(projectProfileDTO)
       .pipe(takeUntil(this._onDestroy$))
@@ -286,7 +350,6 @@ export class ProjectProfileComponent implements OnInit, OnDestroy {
       });
     }
     else if (this.pageMode === 2) {
-      projectProfileDTO.projectStageSeq = "0";
 
       projectProfileDTO.updatedBy = localStorage.getItem('user_id');
 

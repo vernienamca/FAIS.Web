@@ -12,6 +12,9 @@ import { CollectionViewNavigator } from '@grapecity/wijmo.input';
 import { FlexGrid } from '@grapecity/wijmo.grid';
 import { ILibraryTypeOption } from 'src/app/core/models/library-type-option';
 import { Router } from '@angular/router';
+import { SecurityService } from 'src/app/core/services/security.service';
+import { ModuleEnum } from 'src/app/core/enums/module-enum';
+import { MatButton } from '@angular/material/button';
 
 @Component({
   selector: 'vex-pro-forma-entry',
@@ -21,6 +24,7 @@ import { Router } from '@angular/router';
 
 export class ProFormaEntryComponent implements OnInit, OnDestroy {
   @ViewChild('proformaGrid') proformaGrid: FlexGrid;
+  @ViewChild('addbutton') addbutton: MatButton;
   form: FormGroup;
   layoutCtrl = new FormBuilder().control('fullwidth');
   statusLabel = 'Active';
@@ -37,6 +41,7 @@ export class ProFormaEntryComponent implements OnInit, OnDestroy {
   selectedItems: any[] = [];
   proformaData = this.getProFormaData(5);
   statusDate: Date = new Date();
+  hasAccess = false;
 
   addNewRow(): void {
     const newItem = {
@@ -131,12 +136,31 @@ export class ProFormaEntryComponent implements OnInit, OnDestroy {
     private _route: ActivatedRoute,
     private _portalService: PortalService,
     private _snackBar: MatSnackBar,
-    private _router: Router
+    private _router: Router,
+    private _securityService: SecurityService,
   ) {
     this.form = this._fb.group({
       tranTypeSeq: ['', [Validators.required, Validators.pattern(/^[0-9]+$/)]],
       description: ['', [Validators.required]],
       isActive: [true, []],
+    });
+
+    
+    this._securityService.getPermissions(parseInt(localStorage.getItem('user_id')))
+    .pipe(takeUntil(this._onDestroy$))
+    .subscribe(data => {
+      const permission = data.filter(a => a.moduleId === ModuleEnum.AddorEditProformaEntries);
+      if (!permission || permission.some(s => s.isRead) === false) {
+        this._router.navigate([`pages/error-401`]);
+      }
+      if(permission.some(s => s.isUpdate) === false) {
+        this.form.controls['tranTypeSeq'].disable();
+        this.form.controls['description'].disable();
+        this.form.controls['isActive'].disable();
+        this.addbutton.disabled = true;
+        this.proformaGrid.isDisabled = true;
+      }
+      this.hasAccess = permission.some(s => s.isUpdate);
     });
   }
 
