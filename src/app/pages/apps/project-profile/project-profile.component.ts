@@ -45,7 +45,8 @@ export class ProjectProfileComponent implements OnInit, OnDestroy {
   projectProfileComponentData = this.getProjectProfileComponentData(0);
   projectProfileClassification: any [] = [];
   projectProfileStage: any [] = [];
- hasAccess = false;
+  projectProfileTransmissionGrid: any [] = [];
+  hasAccess = false;
 
 
  data = [{}];//getData()
@@ -233,6 +234,7 @@ export class ProjectProfileComponent implements OnInit, OnDestroy {
       }
       this.projectProfileClassification = data.filter(type => type.code =='PC');
       this.projectProfileStage = data.filter(type => type.code === 'PS');
+      this.projectProfileTransmissionGrid = data.filter(type => type.code === 'PTG');
     })
 
   }
