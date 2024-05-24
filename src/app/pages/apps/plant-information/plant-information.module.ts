@@ -65,7 +65,7 @@ import { WjInputModule } from '@grapecity/wijmo.angular2.input';
     MatNativeDateModule,
     MatTimepickerModule,
     WjGridModule,
-    WjInputModule, 
+    WjInputModule
   ]
 })
 export class PlantInformationModule {
