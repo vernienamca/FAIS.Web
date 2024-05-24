@@ -172,6 +172,15 @@ export class PlantInformationComponent implements OnInit, OnDestroy {
             });
         }
     }
+    
+    getPlantInformationCostCenterDataCount(): number {
+      if(!this.plantInformationCostCenterGrid) {
+        return 0;
+      }
+      const collectionView = this.plantInformationCostCenterGrid.collectionView;
+      const allItems = collectionView.sourceCollection as any[];
+      return allItems.length;
+    }
     ngOnInit(): void {
         this._portalService.getLibraryTypes()
         .pipe(takeUntil(this._onDestroy$))
