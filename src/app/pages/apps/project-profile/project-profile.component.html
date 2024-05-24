@@ -95,7 +95,7 @@
 <hr class="w-full my-8">
         <div class="table-container" [style.margin-top.px]="50" >
           <div class="flex flex-row" fxLayoutAlign="end" [style.margin-bottom.px]="10" [style.margin-right.px]="30">
-            <h2 class="m-0 title flex-auto">Project Component</h2>
+            <h2 class="m-0 title flex-auto">Project Component ({{getProjectProfileComponentDataCount()}})</h2>
             <button #addbutton class="rounded-full !bg-green !text-white" mat-raised-button type="button" (click)="addNewRow()">
               <mat-icon svgIcon="mat:add"></mat-icon>
               <span>Add</span>

@@ -52,10 +52,7 @@ export class ProjectProfileComponent implements OnInit, OnDestroy {
   hasAccess = false;
 
 
- data = [{}];//getData()
- countries = [{}];//getCountries()
- products = [{}];//getProducts()
- productMap = new DataMap(this.products, 'id', 'name');
+ data = [{}];
 
   addNewRow(): void {
     const newItem = {
@@ -248,8 +245,15 @@ export class ProjectProfileComponent implements OnInit, OnDestroy {
       this.projectProfileStageMap = new DataMap(this.projectProfileStage, 'id', 'name');
       this.projectProfileTransmissionGridMap = new DataMap(this.projectProfileTransmissionGrid, 'id', 'name');
     })
+  }
 
-
+  getProjectProfileComponentDataCount(): number {
+    if(!this.projectProfileGrid) {
+      return 0;
+    }
+    const collectionView = this.projectProfileGrid.collectionView;
+    const allItems = collectionView.sourceCollection as any[];
+    return allItems.length;
   }
 
   ngOnDestroy(): void {
