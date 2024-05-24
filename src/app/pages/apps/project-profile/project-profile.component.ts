@@ -193,6 +193,13 @@ export class ProjectProfileComponent implements OnInit, OnDestroy {
         if (!data) {
           return;
         }
+
+        data.projectProfileComponents.forEach((function(component) {
+          component.startDate =  new Date(component.startDate).toLocaleDateString();
+          component.targetDate =  new Date(component.targetDate).toLocaleDateString();
+          component.completionDate =  new Date(component.completionDate).toLocaleDateString();
+        }));
+
         this.projectProfileComponentData = new wjcCore.CollectionView(data.projectProfileComponents, { pageSize: 5 });
         this.form.patchValue({
           projectName: data.projectName || '',
@@ -274,8 +281,8 @@ export class ProjectProfileComponent implements OnInit, OnDestroy {
           pjcId: this.id || 0,
           projectComponent: item.projectComponent,
           details: item.details,
-          projectStageSeq: item.projectStage,
-          transmissionGridSeq: item.transmissionGrid,
+          projectStageSeq: item.projectStageSeq,
+          transmissionGridSeq: item.transmissionGridSeq,
           startDate: item.startDate,
           targetDate: item.targetDate,
           completionDate: item.completionDate,

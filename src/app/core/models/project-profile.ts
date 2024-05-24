@@ -35,9 +35,9 @@ export interface IProjectProfileComponent {
     details: number;
     projectStageSeq: number;
     transmissionGridSeq: number;
-    startDate: number;
-    targetDate: number;
-    completionDate: number;
+    startDate: string;
+    targetDate: string;
+    completionDate: string;
     dateRemoved: Date;
     createdBy: number;
     createdAt: Date;
