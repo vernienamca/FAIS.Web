@@ -2,19 +2,19 @@ export interface IPlantInformation {
     id:number;
     plantCode: string;
     substationName: string;
-    classId: string;
     substationNameOld: string;
+    classId: string;
     transGrid: string;
     districtId: string;
-    mtd: string;
-    commisioningDate: string;
-    googleMapCoordinates: string;
-    udf1: string;
-    udf2: string;
-    udf3: string;
+    mtdId: string;
+    gmapCoord: string;
+    commissionDate: string;
+    udF1: string;
+    udF2: string;
+    udF3: string;
     regionId: string;
-    munId: string;
     provId: string;
+    munId: string;
     brgyId: string;
     status: string;
     statusDate?: Date
@@ -32,14 +32,14 @@ export interface IPlantInformation {
 
 export interface IPlantInformationCostCenter {
     plantCode: string;
-    costCenterType: string;
-    costCenterNo: string;
     costCenter: string;
-    dateRemoved: Date;
+    costCenterTypeLto: string;
+    // costCenterNo: string;
+    // dateRemoved: Date;
     createdBy: number;
     createdAt: Date;
-    updatedBy: number;
-    updatedAt: Date;
+    // updatedBy: number;
+    // updatedAt: Date;
   }
   
 

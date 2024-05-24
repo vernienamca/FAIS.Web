@@ -77,7 +77,7 @@
       <div class="flex flex-col flex-auto sm:flex-row sm:gap-4" [style.marginTop.px]="20">
         <mat-form-field appearance="fill" class="flex-auto">
             <mat-label>MTD</mat-label>
-            <input matInput formControlName="mtd">
+            <input matInput formControlName="mtdId">
         </mat-form-field>
         <mat-form-field appearance="fill" class="w-full">
           <mat-label>Commisioning Date</mat-label>
@@ -86,8 +86,8 @@
             [matDatepicker]="commisioningDatePicker"
             inputFormat="MM/dd/yyyy"
             autocomplete="off"
-            id="commisioningDate"
-            formControlName="commisioningDate"
+            id="commissionDate"
+            formControlName="commissionDate"
             type="text"
             required
           />
@@ -98,11 +98,11 @@
           <mat-datepicker #commisioningDatePicker></mat-datepicker>
           <mat-error
             *ngIf="
-              formControls.commisioningDate.touched &&
-              formControls.commisioningDate.invalid
+              formControls.commissionDate.touched &&
+              formControls.commissionDate.invalid
             "
           >
-            <span *ngIf="formControls.commisioningDate.getError('required')">
+            <span *ngIf="formControls.commissionDate.getError('required')">
               Commisioning date is required
             </span>
           </mat-error>
@@ -112,23 +112,23 @@
     <div class="flex flex-col flex-auto sm:flex-row sm:gap-4" [style.marginTop.px]="20">
       <mat-form-field appearance="fill" class="flex-auto">
           <mat-label>Google Map Coordinates</mat-label>
-          <input matInput formControlName="googleMapCoordinates">
+          <input matInput formControlName="gmapCoord">
       </mat-form-field>
   </div>
   <div class="flex flex-col flex-auto sm:flex-row sm:gap-4" [style.marginTop.px]="20">
     <mat-form-field appearance="fill" class="flex-auto">
         <mat-label>UDF 1</mat-label>
-        <input matInput formControlName="udf1">
+        <input matInput formControlName="udF1">
     </mat-form-field>
     <mat-form-field appearance="fill" class="flex-auto">
         <mat-label>UDF 2</mat-label>
-        <input matInput formControlName="udf2">
+        <input matInput formControlName="udF2">
     </mat-form-field>
 </div>
 <div class="flex flex-col flex-auto sm:flex-row sm:gap-4" [style.marginTop.px]="20">
   <mat-form-field appearance="fill" class="flex-auto">
       <mat-label>UDF 3</mat-label>
-      <input matInput formControlName="udf3">
+      <input matInput formControlName="udF3">
   </mat-form-field>
 </div>
 <hr class="w-full">

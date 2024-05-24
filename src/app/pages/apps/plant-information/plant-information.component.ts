@@ -44,8 +44,9 @@ export class PlantInformationComponent implements OnInit, OnDestroy {
 
   addNewRow(): void {
     const newItem = {
-      costCenterType: '',
-      costCenterNo: '',
+      plantCode: '',
+      costCenter: '',
+      costCenterTypeLto: '',
       action: '',
     };
     this.costCenterGrid.collectionView.sourceCollection.unshift(newItem);
@@ -67,7 +68,8 @@ export class PlantInformationComponent implements OnInit, OnDestroy {
     for (let i = 0; i < count; i++) {
       data.push({
         plantCode: '',
-        substationName: '',
+        costCenter: '',
+        costCenterTypeLto: '',
         action: '',
       });
     }
@@ -80,19 +82,19 @@ export class PlantInformationComponent implements OnInit, OnDestroy {
     return {
       plantCode: this.form.get('plantCode'),
       substationName: this.form.get('substationName'),
-      classId: this.form.get('classId'),
       substationNameOld: this.form.get('substationNameOld'),
+      classId: this.form.get('classId'),
       transGrid: this.form.get('transGrid'),
       districtId: this.form.get('districtId'),
-      mtd: this.form.get('mtd'),
-      commisioningDate: this.form.get('commisioningDate'),
-      googleMapCoordinates: this.form.get('googleMapCoordinates'),
-      udf1: this.form.get('udf1'),
-      udf2: this.form.get('udf2'),
-      udf3: this.form.get('udf3'),
+      mtdId: this.form.get('mtdId'),
+      gmapCoord: this.form.get('gmapCoord'),
+      commissionDate: this.form.get('commissionDate'),
+      udF1: this.form.get('udF1'),
+      udF2: this.form.get('udF2'),
+      udF3: this.form.get('udF3'),
       regionId: this.form.get('regionId'),
-      munId: this.form.get('munId'),
       provId: this.form.get('provId'),
+      munId: this.form.get('munId'),
       brgyId: this.form.get('brgyId'),
       isActive: this.form.get('isActive'),
       statusDate: this.form.get('statusDate'),
@@ -115,12 +117,12 @@ export class PlantInformationComponent implements OnInit, OnDestroy {
       substationNameOld: [''],
       transGrid: [''],
       districtId: [''],
-      mtd: [''],
-      commisioningDate: [''],
-      googleMapCoordinates: [''],
-      udf1: [''],
-      udf2: [''],
-      udf3: [''],
+      mtdId: [''],
+      commissionDate: [''],
+      gmapCoord: [''],
+      udF1: [''],
+      udF2: [''],
+      udF3: [''],
       regionId: [''],
       munId: [''],
       provId: [''],
@@ -148,12 +150,12 @@ export class PlantInformationComponent implements OnInit, OnDestroy {
           substationNameOld: data.substationNameOld || '',
           transGrid: data.transGrid || '',
           districtId: data.districtId || '',
-          mtd: data.mtd || '',
-          commisioningDate: data.commisioningDate || '',
-          googleMapCoordinates: data.googleMapCoordinates || '',
-          udf1: data.udf1 || '',
-          udf2: data.udf2 || '',
-          udf3: data.udf3 || '',
+          mtdId: data.mtdId || '',
+          commissionDate: data.commissionDate || '',
+          gmapCoord: data.gmapCoord || '',
+          udF1: data.udF1 || '',
+          udF2: data.udF2 || '',
+          udF3: data.udF3 || '',
           regionId: data.regionId || '',
           munId: data.munId || '',
           provId: data.provId || '',
@@ -265,14 +267,10 @@ export class PlantInformationComponent implements OnInit, OnDestroy {
       const plantInformationCostCenterDTOArray: IPlantInformationCostCenter[] = allItems.map((item: any) => {
         return {
           plantCode: this.plantCode || '',
-          costCenterType: item.costCenterType,
-          costCenterNo: item.costCenterNo,
           costCenter: item.costCenter,
-          dateRemoved: null,
+          costCenterTypeLto: item.costCenterTypeLto,
           createdBy: parseInt(localStorage.getItem('user_id')),
-          createdAt: this.createdAt = new Date(),
-          updatedBy: parseInt(localStorage.getItem('user_id')),
-          updatedAt: null
+          createdAt: this.createdAt = new Date()
         };
       });
     

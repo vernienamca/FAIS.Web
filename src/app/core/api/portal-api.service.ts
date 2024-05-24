@@ -246,7 +246,7 @@ export class PortalApi extends BaseApi {
     }
 
     getPlantInformations(): Observable<IPlantInformation[]> {
-        return this.get<IPlantInformation>(`${this._apiUrl}/plantinformation`);
+        return this.get<IPlantInformation>(`${this._apiUrl}/plantinformation/get`);
     }
 
     getPlantInformation(plantCode: string): Observable<IPlantInformation> {
