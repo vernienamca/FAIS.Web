@@ -150,31 +150,31 @@ export class ProjectProfileComponent implements OnInit, OnDestroy {
     .pipe(takeUntil(this._onDestroy$))
     .subscribe(data => {
       const permission = data.filter(a => a.moduleId === ModuleEnum.AddorEditProjectProfile);
-      // if (!permission || permission.some(s => s.isRead) === false) {
-      //   this._router.navigate([`pages/error-401`]);
-      // }
-      // if(permission.some(s => s.isUpdate) === false) {
-      //   this.form.controls['projectName'].disable();
-      //   this.form.controls['projClassSeq'].disable();
-      //   this.form.controls['projStageSeq'].disable();
-      //   this.form.controls['tpsrMonth'].disable();
-      //   this.form.controls['noOfComponentsCompleted'].disable();
-      //   this.form.controls['noOfComponentsUnderConstruction'].disable();
-      //   this.form.controls['latestInspectionDate'].disable();
-      //   this.form.controls['totalAMRCost'].disable();
-      //   this.form.controls['recordedAMR'].disable();
-      //   this.form.controls['unrecordedAMR'].disable();
-      //   this.form.controls['remarks'].disable();
-      //   this.form.controls['udf1'].disable();
-      //   this.form.controls['udf2'].disable();
-      //   this.form.controls['udf3'].disable();
-      //   this.form.controls['isActive'].disable();
-      //   this.form.controls['statusDate'].disable();
-      //   //this.form.controls['addbutton'].disable();
-      //   this.addbutton.disabled = true;
-      //   this.savebutton.disabled = true;
-      //   this.projectProfileGrid.isDisabled = true;
-      // }
+      if (!permission || permission.some(s => s.isRead) === false) {
+        this._router.navigate([`pages/error-401`]);
+      }
+      if(permission.some(s => s.isUpdate) === false) {
+        this.form.controls['projectName'].disable();
+        this.form.controls['projClassSeq'].disable();
+        this.form.controls['projStageSeq'].disable();
+        this.form.controls['tpsrMonth'].disable();
+        this.form.controls['noOfComponentsCompleted'].disable();
+        this.form.controls['noOfComponentsUnderConstruction'].disable();
+        this.form.controls['latestInspectionDate'].disable();
+        this.form.controls['totalAMRCost'].disable();
+        this.form.controls['recordedAMR'].disable();
+        this.form.controls['unrecordedAMR'].disable();
+        this.form.controls['remarks'].disable();
+        this.form.controls['udf1'].disable();
+        this.form.controls['udf2'].disable();
+        this.form.controls['udf3'].disable();
+        this.form.controls['isActive'].disable();
+        this.form.controls['statusDate'].disable();
+        //this.form.controls['addbutton'].disable();
+        this.addbutton.disabled = true;
+        this.savebutton.disabled = true;
+        this.projectProfileGrid.isDisabled = true;
+      }
       this.hasAccess = permission.some(s => s.isUpdate);
     });
   
