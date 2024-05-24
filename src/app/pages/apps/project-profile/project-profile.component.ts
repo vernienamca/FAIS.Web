@@ -45,16 +45,14 @@ export class ProjectProfileComponent implements OnInit, OnDestroy {
   projectProfileComponentData = this.getProjectProfileComponentData(0);
   projectProfileClassification: any [] = [];
   projectProfileStage: any [] = [];
+  projectProfileStageForWijmo: any [] = [];
   projectProfileTransmissionGrid: any [] = [];
   projectProfileStageMap;
   projectProfileTransmissionGridMap;
   hasAccess = false;
 
 
- data = [{}];//getData()
- countries = [{}];//getCountries()
- products = [{}];//getProducts()
- productMap = new DataMap(this.products, 'id', 'name');
+ data = [{}];
 
   addNewRow(): void {
     const newItem = {
@@ -192,12 +190,19 @@ export class ProjectProfileComponent implements OnInit, OnDestroy {
         if (!data) {
           return;
         }
+
+        data.projectProfileComponents.forEach((function(component) {
+          component.startDate =  new Date(component.startDate).toLocaleDateString();
+          component.targetDate =  new Date(component.targetDate).toLocaleDateString();
+          component.completionDate =  new Date(component.completionDate).toLocaleDateString();
+        }));
+
         this.projectProfileComponentData = new wjcCore.CollectionView(data.projectProfileComponents, { pageSize: 5 });
         this.form.patchValue({
           projectName: data.projectName || '',
           projClassSeq: data.projClassSeq || '',
           projStageSeq: data.projStageSeq || '',
-          tpsrMonth: data.tpsrMonth || '',
+          tpsrMonth: data.tpsrMonth || new Date(),
           noOfComponentsCompleted: data.noOfComponentsCompleted || '',
           noOfComponentsUnderConstruction: data.noOfComponentsUnderConstruction || '',
           latestInspectionDate: data.latestInspectionDate || '',
@@ -237,10 +242,18 @@ export class ProjectProfileComponent implements OnInit, OnDestroy {
       this.projectProfileClassification = data.filter(type => type.code =='PC');
       this.projectProfileStage = data.filter(type => type.code === 'PS');
       this.projectProfileTransmissionGrid = data.filter(type => type.code === 'PTG');
-      this.projectProfileStageMap = new DataMap(this.products, 'id', 'name');
-      this.projectProfileTransmissionGridMap = new DataMap(this.products, 'id', 'name');
+      this.projectProfileStageMap = new DataMap(this.projectProfileStage, 'id', 'name');
+      this.projectProfileTransmissionGridMap = new DataMap(this.projectProfileTransmissionGrid, 'id', 'name');
     })
+  }
 
+  getProjectProfileComponentDataCount(): number {
+    if(!this.projectProfileGrid) {
+      return 0;
+    }
+    const collectionView = this.projectProfileGrid.collectionView;
+    const allItems = collectionView.sourceCollection as any[];
+    return allItems.length;
   }
 
   ngOnDestroy(): void {
@@ -264,16 +277,6 @@ export class ProjectProfileComponent implements OnInit, OnDestroy {
       return;
     }
 
-    // const wijmoInvalid = this.projectProfileComponentData.sourceCollection.some((item: any) => {
-    //   return item.gl === '' || /^[a-zA-Z]+$/.test(item.glNo) || item.sl === '' || /^[a-zA-Z]+$/.test(item.sl) || item.faisRefNo === '';
-    // });
-    //   if (wijmoInvalid) {
-    //     this._snackBar.open('Please fill in or delete the rows in the table.', 'Close', {
-    //       duration: 5000,
-    //     });
-    //     return;
-    //   }
-
       const collectionView = this.projectProfileGrid.collectionView;
       const allItems = collectionView.sourceCollection as any[];
       const projectProfileComponentDTOArray: IProjectProfileComponent[] = allItems.map((item: any) => {
@@ -282,8 +285,8 @@ export class ProjectProfileComponent implements OnInit, OnDestroy {
           pjcId: this.id || 0,
           projectComponent: item.projectComponent,
           details: item.details,
-          projectStage: item.projectStage,
-          transmissionGrid: item.transmissionGrid,
+          projectStageSeq: item.projectStageSeq,
+          transmissionGridSeq: item.transmissionGridSeq,
           startDate: item.startDate,
           targetDate: item.targetDate,
           completionDate: item.completionDate,
