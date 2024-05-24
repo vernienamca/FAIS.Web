@@ -99,7 +99,8 @@
                                 <input matInput formControlName="substationNameOld" />
                             </mat-form-field>
                         </div>
-                        <div class="flex flex-col sm:flex-row sm:gap-4">
+                        <div class="flex flex-col flex-auto sm:flex-row sm:gap-4"
+                        [style.marginTop.px]="20">
                             <mat-form-field appearance="fill">
                                 <mat-label>Transmission Grid</mat-label>
                                 <mat-select formControlName="transGrid">
