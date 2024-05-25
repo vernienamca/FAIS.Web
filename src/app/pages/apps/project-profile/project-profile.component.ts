@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, Validators, FormBuilder, UntypedFormControl  } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, takeUntil,Observable ,tap} from 'rxjs';
 import { PageMode } from 'src/app/core/enums/page-mode.enum';
 import { ILibraryTypes } from 'src/app/core/models/library-types';
 import { CollectionViewNavigator } from '@grapecity/wijmo.input';
@@ -13,7 +13,7 @@ import * as wjcCore from '@grapecity/wijmo';
 import { IProjectProfile, IProjectProfileComponent } from 'src/app/core/models/project-profile';
 import { ModuleEnum } from 'src/app/core/enums/module-enum';
 import { MatButton } from '@angular/material/button';
-
+import {IRole} from 'src/app/core/models/role'
 
 import { WjInputModule } from '@grapecity/wijmo.angular2.input';
 import { WjGridModule } from '@grapecity/wijmo.angular2.grid';
@@ -50,7 +50,10 @@ export class ProjectProfileComponent implements OnInit, OnDestroy {
   projectProfileStageMap;
   projectProfileTransmissionGridMap;
   hasAccess = false;
-
+  userId: number;
+  roles: IRole[] = [];
+  roleIds: number[] = [];
+  isAdmin: boolean = false;
 
  data = [{}];//getData()
  countries = [{}];//getCountries()
@@ -231,10 +234,44 @@ export class ProjectProfileComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.userId = parseInt(localStorage.getItem('user_id'));
     this.id = parseInt(this._route.snapshot.paramMap.get('id'));
 
     if(!isNaN(this.id))
     this.projectProfileComponentData = this.getProjectProfileComponentData(this.id);
+
+    this._portalService.getUserRoles(this.userId)
+    .pipe(takeUntil(this._onDestroy$))
+    .subscribe(data => {
+      if(!data){
+        return;
+      }
+      const roleAuthorized = this._getRoleAuthorization(data)
+
+      if (roleAuthorized.name === 'ARMD Librarian') {
+        const armdLibrarianRole = data.find(role => role.name === 'ARMD Librarian');
+        if (armdLibrarianRole) {
+          this.roleIds.push(armdLibrarianRole.id); 
+          //this._disableFormFields(roleAuthorized);
+        }
+      }
+      else if (roleAuthorized.name === 'PAD Librarian') {
+        const padLibrarianRole = data.find(role => role.name === 'PAD Librarian');
+        if (padLibrarianRole) {
+          this.roleIds.push(padLibrarianRole.id);
+          //this._disableFormFields(roleAuthorized);
+        }
+      }
+
+      else if (roleAuthorized.name === 'Administrator') {
+       this.isAdmin = true;
+       const administratorRole = data.find(role => role.name === 'Administrator');
+       this.roleIds.push(administratorRole.id)
+      }
+      else {
+        //this._disableFormFields(roleAuthorized);
+      }
+    });
 
     this._portalService.getLibraryTypes()
     .pipe(takeUntil(this._onDestroy$))
@@ -250,6 +287,17 @@ export class ProjectProfileComponent implements OnInit, OnDestroy {
     })
 
 
+  }
+
+  private _getRoleAuthorization(roles: any[]): any {
+    const relevantRoles = roles.filter(role => roles.some(r => r.name === role.name && role.isActive === true));
+    if (relevantRoles.length > 0) {
+      const firstRole = relevantRoles.reduce((minRole, currentRole) => minRole.userRoleId < currentRole.userRoleId ? minRole : currentRole);
+      return firstRole;
+    }
+    else { 
+      this._router.navigate(['/pages/error-401']); 
+    }
   }
 
   ngOnDestroy(): void {
@@ -342,6 +390,23 @@ export class ProjectProfileComponent implements OnInit, OnDestroy {
         if (!data) {
           return;
         }
+
+        this.id = data.id;
+        const notifData = {
+        roleIds: this.roleIds, 
+        id: this.id,
+        assetName: data.projectName,
+        editMode: false,
+        ModuleId: ModuleEnum.ProjectProfile
+      };
+      this._securityService.postNotifRole(notifData)
+        .pipe(takeUntil(this._onDestroy$))
+        .subscribe(data => {
+          if(!data){
+            return;
+          }
+        })
+
         let snackBarRef = this._snackBar.open('Project profile has been successfully added.', 'Close');
         snackBarRef.afterDismissed().subscribe(() => {
           this._router.navigateByUrl('apps/project-profile');
@@ -358,6 +423,22 @@ export class ProjectProfileComponent implements OnInit, OnDestroy {
         if (!data) {
           return;
         }
+        this.id = data.id;
+        const notifData = {
+        roleIds: this.roleIds, 
+        id: this.id,
+        assetName: data.projectName,
+        editMode: true,
+        ModuleId: ModuleEnum.ProjectProfile
+      };
+      this._securityService.postNotifRole(notifData)
+        .pipe(takeUntil(this._onDestroy$))
+        .subscribe(data => {
+          if(!data){
+            return;
+          }
+        })
+
         let snackBarRef = this._snackBar.open('Project profile has been successfully updated.', 'Close');
         snackBarRef.afterDismissed().subscribe(() => {
           window.location.reload();
@@ -371,5 +452,17 @@ export class ProjectProfileComponent implements OnInit, OnDestroy {
       return;
     }
     this.types = this.types.filter(t => t.name === event.value);
+  }
+
+  private _getRoles(): Observable<IRole[]> {
+    return this._portalService.getRoles().pipe(
+      tap(roles => {
+        if (!roles) {
+          throw new Error('No roles found');
+        }
+        this.roles = roles;
+      }),
+      takeUntil(this._onDestroy$)
+    );
   }
 }
