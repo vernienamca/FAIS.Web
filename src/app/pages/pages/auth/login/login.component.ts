@@ -63,11 +63,8 @@ export class LoginComponent implements OnInit {
         }
         localStorage.setItem('user_id', data.userId);
         localStorage.setItem('access_token', data.accessToken);
-
-        if (data.isForcePasswordChange === 'Y')
-          this._router.navigate(['/apps/my-profile/change-password']);
-        else
-          this._router.navigate(['/apps/help-center/getting-started']);
+        
+        this._router.navigate(['/apps/help-center/getting-started']);
       });
   }
 
