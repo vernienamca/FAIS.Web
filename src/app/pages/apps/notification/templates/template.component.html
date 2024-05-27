@@ -256,7 +256,7 @@
                   </mat-select>
                   <mat-error
                     *ngIf="
-                      formControls.roles.touched && formControls.roles.invalid
+                    formControls.target.value == 1 && formControls.roles.touched && formControls.roles.invalid
                     "
                   >
                     <span *ngIf="formControls.roles.getError('required')">
@@ -276,7 +276,7 @@
                   </mat-select>
                   <mat-error
                     *ngIf="
-                      formControls.users.touched && formControls.users.invalid
+                    formControls.target.value == 2 && formControls.users.touched && formControls.users.invalid
                     "
                   >
                     <span *ngIf="formControls.users.getError('required')">
