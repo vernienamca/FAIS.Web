@@ -98,6 +98,27 @@ export class ProjectProfileComponent implements OnInit, OnDestroy {
     return collectionView;
   }
 
+  noOfComponentsCompleted(): string {    
+    if(this.projectProfileGrid == undefined) {
+        return "0";
+    }
+    const collectionView = this.projectProfileGrid.collectionView;
+    const allItems = collectionView.sourceCollection as any[];
+    return allItems.filter(function(component){
+      return component.completionDate != '' && component.completionDate != undefined;
+    }).length.toString();
+  }
+  noOfComponentsUnderConstruction(): string {
+    
+    if(this.projectProfileGrid == undefined) {
+        return "0";
+    }
+    const collectionView = this.projectProfileGrid.collectionView;
+    const allItems = collectionView.sourceCollection as any[];
+    return allItems.filter(function(component){
+      return component.completionDate == '' || component.completionDate == undefined;
+    }).length.toString();
+  }
 
   get formControls() {
     return {
@@ -105,8 +126,8 @@ export class ProjectProfileComponent implements OnInit, OnDestroy {
       projClassSeq: this.form.get('projClassSeq'),
       projStageSeq: this.form.get('projStageSeq'),
       tpsrMonth: this.form.get('tpsrMonth'),
-      noOfComponentsCompleted: this.form.get('noOfComponentsCompleted'),
-      noOfComponentsUnderConstruction: this.form.get('noOfComponentsUnderConstruction'),
+      noOfComponentsCompleted: this.noOfComponentsCompleted(),
+      noOfComponentsUnderConstruction: this.noOfComponentsUnderConstruction(),
       latestInspectionDate: this.form.get('latestInspectionDate'),
       totalAMRCost: this.form.get('totalAMRCost'),
       recordedAMR: this.form.get('recordedAMR'),
@@ -135,8 +156,8 @@ export class ProjectProfileComponent implements OnInit, OnDestroy {
       projClassSeq: ['', [Validators.required]],
       projStageSeq: [''],
       tpsrMonth: [''],
-      noOfComponentsCompleted: [''],
-      noOfComponentsUnderConstruction: [''],
+      noOfComponentsCompleted: this.noOfComponentsCompleted(),
+      noOfComponentsUnderConstruction: this.noOfComponentsUnderConstruction(),
       latestInspectionDate: [''],
       totalAMRCost: [''],
       recordedAMR: [''],
@@ -154,31 +175,31 @@ export class ProjectProfileComponent implements OnInit, OnDestroy {
     .pipe(takeUntil(this._onDestroy$))
     .subscribe(data => {
       const permission = data.filter(a => a.moduleId === ModuleEnum.AddorEditProjectProfile);
-      if (!permission || permission.some(s => s.isRead) === false) {
-        this._router.navigate([`pages/error-401`]);
-      }
-      if(permission.some(s => s.isUpdate) === false) {
-        this.form.controls['projectName'].disable();
-        this.form.controls['projClassSeq'].disable();
-        this.form.controls['projStageSeq'].disable();
-        this.form.controls['tpsrMonth'].disable();
-        this.form.controls['noOfComponentsCompleted'].disable();
-        this.form.controls['noOfComponentsUnderConstruction'].disable();
-        this.form.controls['latestInspectionDate'].disable();
-        this.form.controls['totalAMRCost'].disable();
-        this.form.controls['recordedAMR'].disable();
-        this.form.controls['unrecordedAMR'].disable();
-        this.form.controls['remarks'].disable();
-        this.form.controls['udf1'].disable();
-        this.form.controls['udf2'].disable();
-        this.form.controls['udf3'].disable();
-        this.form.controls['isActive'].disable();
-        this.form.controls['statusDate'].disable();
-        //this.form.controls['addbutton'].disable();
-        this.addbutton.disabled = true;
-        this.savebutton.disabled = true;
-        this.projectProfileGrid.isDisabled = true;
-      }
+      // if (!permission || permission.some(s => s.isRead) === false) {
+      //   this._router.navigate([`pages/error-401`]);
+      // }
+      // if(permission.some(s => s.isUpdate) === false) {
+      //   this.form.controls['projectName'].disable();
+      //   this.form.controls['projClassSeq'].disable();
+      //   this.form.controls['projStageSeq'].disable();
+      //   this.form.controls['tpsrMonth'].disable();
+      //   this.form.controls['noOfComponentsCompleted'].disable();
+      //   this.form.controls['noOfComponentsUnderConstruction'].disable();
+      //   this.form.controls['latestInspectionDate'].disable();
+      //   this.form.controls['totalAMRCost'].disable();
+      //   this.form.controls['recordedAMR'].disable();
+      //   this.form.controls['unrecordedAMR'].disable();
+      //   this.form.controls['remarks'].disable();
+      //   this.form.controls['udf1'].disable();
+      //   this.form.controls['udf2'].disable();
+      //   this.form.controls['udf3'].disable();
+      //   this.form.controls['isActive'].disable();
+      //   this.form.controls['statusDate'].disable();
+      //   //this.form.controls['addbutton'].disable();
+      //   this.addbutton.disabled = true;
+      //   this.savebutton.disabled = true;
+      //   this.projectProfileGrid.isDisabled = true;
+      // }
       this.hasAccess = permission.some(s => s.isUpdate);
     });
   
@@ -206,8 +227,8 @@ export class ProjectProfileComponent implements OnInit, OnDestroy {
           projClassSeq: data.projClassSeq || '',
           projStageSeq: data.projStageSeq || '',
           tpsrMonth: data.tpsrMonth || new Date(),
-          noOfComponentsCompleted: data.noOfComponentsCompleted || '',
-          noOfComponentsUnderConstruction: data.noOfComponentsUnderConstruction || '',
+          noOfComponentsCompleted: this.noOfComponentsCompleted(),
+          noOfComponentsUnderConstruction: this.noOfComponentsUnderConstruction(),
           latestInspectionDate: data.latestInspectionDate || '',
           totalAMRCost: data.totalAMRCost || '',
           recordedAMR: data.recordedAMR || '',
@@ -353,8 +374,8 @@ export class ProjectProfileComponent implements OnInit, OnDestroy {
         projClassSeq: this.formControls.projClassSeq.value,
         projStageSeq: this.formControls.projStageSeq.value,
         tpsrMonth: this.formControls.tpsrMonth.value,
-        noOfComponentsCompleted: this.formControls.noOfComponentsCompleted.value,
-        noOfComponentsUnderConstruction: this.formControls.noOfComponentsUnderConstruction.value,
+        noOfComponentsCompleted: this.noOfComponentsCompleted(),
+        noOfComponentsUnderConstruction: this.noOfComponentsUnderConstruction(),
         latestInspectionDate: this.formControls.latestInspectionDate.value,
         totalAMRCost: this.formControls.totalAMRCost.value,
         recordedAMR: this.formControls.recordedAMR.value,
