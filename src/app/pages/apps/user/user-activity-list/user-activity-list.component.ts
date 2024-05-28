@@ -92,6 +92,9 @@ export class UserActivityListComponent implements OnInit, OnDestroy, AfterViewIn
   }
 
   ngAfterViewInit(): void {
+    if (!this.paginator) {
+      return;
+    }
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }
