@@ -133,7 +133,11 @@ const routes: VexRoutes = [
           {
             path: 'transmission-profile',
             loadChildren: () => import('./pages/apps/transmission-line/transmission-line.module').then(m => m.TransmissionProfileModule)
-          }
+          },
+          {
+            path: 'asset-movement-report',
+            loadChildren: () => import('./pages/apps/amr-form-100/amr-form-100.module').then(m => m.AssetMovementReportModule)
+          },
 
         ]
       },
