@@ -102,6 +102,22 @@ export class ProjectProfileListComponent implements OnInit, OnDestroy, AfterView
       if (!data) {
         return;
       }
+
+      data.forEach((projectProfile) => {
+
+        var components = projectProfile.projectProfileComponents;
+
+        if(components.length != 0)
+          {
+            projectProfile.latestInspectionDate = new Date(Math.max.apply(null, components.map(function(e) {
+              return new Date(e.completionDate);
+            }))).toDateString();
+          }
+     
+        projectProfile.noOfComponentsCompleted = components.filter(c => c.completionDate != null).length.toString();
+        projectProfile.noOfComponentsUnderConstruction = components.filter(c => c.completionDate == null).length.toString();
+      });
+
       this.subject$.next(data);
     });
 
