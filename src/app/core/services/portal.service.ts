@@ -15,6 +15,7 @@ import { IChart } from '../models/chart';
 import { ILibraryTypes } from '../models/library-types';
 import { IAssetProfile } from '../models/asset-profile';
 import { IPermission } from '../models/permission';
+import { IPlantInformation } from '../models/plant-information';
 import { ITemplate } from '../models/template';
 import { IMeteringProfile } from '../models/metering-profile';
 import { IProjectProfile } from '../models/project-profile';
@@ -296,37 +297,72 @@ deleteProFormaEntry(id: number): Observable<any> {
     return this._portalApi.getAssetProfile(id);
 }
 
-getProjectProfiles(): Observable<IProjectProfile[]> {
-  return this._portalApi.getProjectProfiles();
-}
-
-getProjectProfile(id: number): Observable<IProjectProfile> {
-  return this._portalApi.getProjectProfile(id);
-}
-
-updateProjectProfile(data: any): Observable<any> {
-  return this._portalApi.updateProjectProfile(data);
-}
-
-exportProjectProfiles(): void {
-  this._portalApi.exportProjectProfiles().subscribe(response => {
-    const contentDisposition = response.headers.get('Content-Disposition');
-    const filename = contentDisposition 
-      ? contentDisposition.split(';')[1].trim().split('=')[1] 
-      : 'Library_Type_Options_' + this._datePipe.transform(new Date(), 'medium') + '.xlsx';
-
-      const blob = new Blob([response.body], { type: 'application/actet-stream' });
-
-      const link = document.createElement('a');
-      link.href = window.URL.createObjectURL(blob);
-      link.download = filename;
-      link.click();
-    });
+  getPlantInformations(): Observable<IPlantInformation[]> {
+    return this._portalApi.getPlantInformations();
   }
 
-createProjectProfile(data: any): Observable<any> {
-  return this._portalApi.createProjectProfile(data);
-}
+  getPlantInformation(plantCode: string): Observable<IPlantInformation> {
+    return this._portalApi.getPlantInformation(plantCode);
+  }
+
+  createPlantInformation(data: any): Observable<any> {
+    return this._portalApi.createPlantInformation(data);
+  }
+
+  updatePlantInformation(plantCode: string, data: any): Observable<any> {
+    return this._portalApi.updatePlantInformation(plantCode, data);
+  }
+
+  exportPlantInformations(): void {
+    this._portalApi.exportPlantInformations().subscribe(response => {
+      const contentDisposition = response.headers.get('Content-Disposition');
+      const filename = contentDisposition 
+        ? contentDisposition.split(';')[1].trim().split('=')[1] 
+        : 'Library_Type_Options_' + this._datePipe.transform(new Date(), 'medium') + '.xlsx';
+
+        const blob = new Blob([response.body], { type: 'application/actet-stream' });
+  
+        const link = document.createElement('a');
+        link.href = window.URL.createObjectURL(blob);
+        link.download = filename;
+        link.click();
+      });
+    }
+
+  getProjectProfiles(): Observable<IProjectProfile[]> {
+    return this._portalApi.getProjectProfiles();
+  }
+  
+  getProjectProfile(id: number): Observable<IProjectProfile> {
+    return this._portalApi.getProjectProfile(id);
+  }
+  
+  createProjectProfile(data: any): Observable<any> {
+    return this._portalApi.createProjectProfile(data);
+  }
+  
+  updateProjectProfile(data: any): Observable<any> {
+    return this._portalApi.updateProjectProfile(data);
+  }
+  
+  exportProjectProfiles(): void {
+    this._portalApi.exportProjectProfiles().subscribe(response => {
+      const contentDisposition = response.headers.get('Content-Disposition');
+      const filename = contentDisposition 
+        ? contentDisposition.split(';')[1].trim().split('=')[1] 
+        : 'Library_Type_Options_' + this._datePipe.transform(new Date(), 'medium') + '.xlsx';
+  
+        const blob = new Blob([response.body], { type: 'application/actet-stream' });
+  
+        const link = document.createElement('a');
+        link.href = window.URL.createObjectURL(blob);
+        link.download = filename;
+        link.click();
+      });
+    }
+  
+
+
 
 getMeteringProfiles(): Observable<IMeteringProfile[]> {
   return this._portalApi.getMeteringProfiles();
@@ -366,6 +402,7 @@ getMunicipalities(): Observable<any[]> {
 
     sDate = d.getUTCFullYear() + "-" + (d.getUTCMonth() + 1) + "-" + (d.getUTCDate() + 1) + "T00:08:00.000Z";
     return sDate;
+
   }
 
 getTransmissionProfiles(): Observable<any[]> {

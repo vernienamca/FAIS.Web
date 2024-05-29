@@ -16,6 +16,7 @@ import { IChart } from "../models/chart";
 import { ILibraryTypes } from "../models/library-types";
 import { IAssetProfile } from "../models/asset-profile";
 import { IProjectProfile } from "../models/project-profile";
+import { IPlantInformation } from "../models/plant-information";
 import { IPermission } from "../models/permission";
 import { IMeteringProfile } from "../models/metering-profile";
 import { ITransmissionProfile } from "../models/transmission-profile";
@@ -243,6 +244,31 @@ export class PortalApi extends BaseApi {
     getAssetProfiles(): Observable<IAssetProfile[]> {
         return this.get<IAssetProfile[]>(`${this._apiUrl}/assetprofile/get`);
     }
+
+    getPlantInformations(): Observable<IPlantInformation[]> {
+        return this.get<IPlantInformation>(`${this._apiUrl}/plantinformation/get`);
+    }
+
+    getPlantInformation(plantCode: string): Observable<IPlantInformation> {
+        return this.get<IPlantInformation>(`${this._apiUrl}/plantinformation/getbycode/${plantCode}`);
+    }
+
+    createPlantInformation(data: any): Observable<any> {
+        return this.post<any>(`${this._apiUrl}/plant-information/plant-information`, data);
+    }
+
+    updatePlantInformation(plantCode: string, data: any): Observable<any> {
+        return this.put<any>(`${this._apiUrl}/plantinformation/${plantCode}`, data);
+    }
+
+    exportPlantInformations(): Observable<HttpResponse<Blob>>  {
+        return this.get(`${this._apiUrl}/plantinformation/export`,   
+        {
+            observe: 'response',
+            responseType: 'blob' as 'json'
+        });
+    }
+
     getProjectProfiles(): Observable<IProjectProfile[]> {
         return this.get<IProjectProfile>(`${this._apiUrl}/projectprofile/get`);
     }
