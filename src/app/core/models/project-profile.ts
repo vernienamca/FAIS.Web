@@ -2,8 +2,8 @@ export interface IProjectProfile {
     id:number;
     projectName: string;
     projClassSeq: string;
-    projectStageSeq: string;
-    tpsrMonth: string;
+    projStageSeq: string;
+    tpsrMonth: Date;
     noOfComponentsCompleted: string;
     noOfComponentsUnderConstruction: string;
     latestInspectionDate: string;
@@ -11,21 +11,21 @@ export interface IProjectProfile {
     recordedAMR: string;
     unrecordedAMR: string;
     remarks: string;
-    udf1: string;
-    udf2: string;
-    udf3: string;
+    udF1: string;
+    udF2: string;
+    udF3: string;
     status: string;
     statusDate?: Date
     isActive: string;
-    createdBy: number;
+    createdBy: string;
     createdByName: string;
     createdAt: Date;
-    updatedBy?: number;
+    updatedBy?: string;
     updatedByName: string;
     updatedAt?: Date;
-    projectProfileComponentDTO: IProjectProfileComponent[];
+    projectProfileComponentsDTO: IProjectProfileComponent[];
     projectProfileComponentModel: IProjectProfileComponent[];
-    projectProfileComponent: IProjectProfileComponent[];
+    projectProfileComponents: IProjectProfileComponent[];
 }
 
 export interface IProjectProfileComponent {
@@ -33,16 +33,17 @@ export interface IProjectProfileComponent {
     pjcId: number;
     projectComponent: number;
     details: number;
-    projectStage: number;
-    transmissionGrid: number;
-    startDate: number;
-    targetDate: number;
-    completionDate: number;
+    projectStageSeq: number;
+    transmissionGridSeq: number;
+    startDate: string;
+    targetDate: string;
+    completionDate: string;
     dateRemoved: Date;
     createdBy: number;
     createdAt: Date;
     updatedBy: number;
     updatedAt: Date;
+    projectProfileId: number;
   }
   
 

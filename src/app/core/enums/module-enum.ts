@@ -21,7 +21,16 @@ export enum ModuleEnum {
     AddOrEditRole = 20,
     AddOrEditUser = 21,
     AddOrEditStringInterpolation = 22,
-    AddorEditMeteringProfile = 23,
-    AddorEditTransmissionProfile = 24,
-    AddorEditChartOfAccounts = 25
+    ChangePassword = 23,
+    ResetPassword = 24,
+    AddorRemoveModule = 25,
+    AddorRemoveRole = 26,
+    AddorRemoveUser = 27,
+    AddorRemoveStringInterpolation = 28,
+    AddorEditMeteringProfile = 29,
+    AddorEditTransmissionProfile = 30,
+    AddorEditChartOfAccounts = 31,
+    AddorEditProjectProfile = 32,
+    AddorEditProformaEntries = 33,
+    ProjectProfile = 34
 }

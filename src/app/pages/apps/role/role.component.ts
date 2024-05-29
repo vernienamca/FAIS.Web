@@ -164,13 +164,13 @@ export class RoleComponent implements OnInit {
 
   save(): void {   
     const data = Object.assign({}, this.form.value);
-    this.form.value.isActive = this.isActive ? 'Y' : 'N'; 
     if (this.roleId) {
       data.updatedBy = parseInt(localStorage.getItem('user_id'));
       this._updateRole(data);
       return;
     }
-    this.form.value.createdBy = this.userId;
+    data.isActive = this.isActive ? 'Y' : 'N'; 
+    data.createdBy = this.userId;
     this._addRole(data);
   }
 

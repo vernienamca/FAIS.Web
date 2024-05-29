@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, UntypedFormControl, Validators } from '@angular
 import { FormControl } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subject, finalize, takeUntil } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { fadeInUp400ms } from 'src/@vex/animations/fade-in-up.animation';
 import { stagger60ms } from 'src/@vex/animations/stagger.animation';
 import { IUser, IUserRole } from 'src/app/core/models/user';
@@ -77,7 +77,7 @@ export class UserComponent implements OnInit, OnDestroy {
       position: ['', [Validators.required]],
       firstName: ['', [Validators.required]],
       lastName: ['', [Validators.required]],
-      emailAddress: ['', [Validators.required]],
+      emailAddress: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)]],
       mobileNumber: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
       taFG: ['', []],
       oupFG: ['', []],
@@ -210,10 +210,16 @@ export class UserComponent implements OnInit, OnDestroy {
         if (!data) {
           return;
         }
+        if (data.errorDescription) {
+        let snackBarRef = this._snackBar.open(data.errorDescription, 'Close');
+        snackBarRef.afterDismissed().subscribe(() =>this.isSaving = false);
+      }
+      else {
         let snackBarRef = this._snackBar.open('User has been successfully saved.', 'Close');
         snackBarRef.afterDismissed().subscribe(() => {
           this._router.navigate([`apps/users/edit/${data.id}`]);
-        });
+        }); 
+        }
       });
   }
 
@@ -224,10 +230,15 @@ export class UserComponent implements OnInit, OnDestroy {
         if (!data) {
           return;
         }
-        let snackBarRef = this._snackBar.open('User has been successfully updated.', 'Close');
-        snackBarRef.afterDismissed().subscribe(() => {
-          window.location.reload();
-        });
+        if (data.errorDescription) {
+          let snackBarRef = this._snackBar.open(data.errorDescription, 'Close');
+          snackBarRef.afterDismissed().subscribe(() => this.isSaving = false);
+        } else {
+          let snackBarRef = this._snackBar.open('User has been successfully updated.', 'Close');
+          snackBarRef.afterDismissed().subscribe(() => {
+            window.location.reload();
+          });
+        }
       });
   }
 
