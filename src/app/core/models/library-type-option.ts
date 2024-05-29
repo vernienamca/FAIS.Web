@@ -17,4 +17,12 @@ export interface ILibraryTypeOption {
     updatedBy?: number;
     updatedByName: string;
     updatedAt?: Date;
+    parentValue: string;
+    parentId: number;
+    childValues: ChildValueModel[];
+}
+
+export interface ChildValueModel {
+    id: number;
+    description: string;
 }
