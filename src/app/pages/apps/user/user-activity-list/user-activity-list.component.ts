@@ -63,6 +63,10 @@ export class UserActivityListComponent implements OnInit, OnDestroy, AfterViewIn
   constructor(private _portalService: PortalService) { }
 
   ngOnInit(): void {
+    if (!this.userId) {
+      this.isListLoading = false;
+      return;
+    }
     this._portalService.getUserActivities(this.userId)
       .pipe(takeUntil(this._onDestroy$))
       .subscribe(data => {
@@ -88,6 +92,9 @@ export class UserActivityListComponent implements OnInit, OnDestroy, AfterViewIn
   }
 
   ngAfterViewInit(): void {
+    if (!this.paginator) {
+      return;
+    }
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }
