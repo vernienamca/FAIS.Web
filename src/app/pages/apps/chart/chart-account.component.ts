@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit,ViewChild } from '@angular/core';
-import { FormGroup, Validators, FormBuilder } from '@angular/forms';
+import { FormGroup, Validators, FormBuilder, FormControl } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
@@ -41,6 +41,10 @@ export class ChartAccountComponent implements OnInit, OnDestroy {
   initialFormValues: any;
   chartData: IChart | null = null;
   hasAccess = false;
+  parentValue: ILibraryTypeOption[] = [];
+  childValue: any [] = [];
+  subAccountControl = new FormControl();
+  selectedParent: ILibraryTypeOption | null = null;
 
   addNewRow(): void {
     const newItem = {
@@ -125,19 +129,23 @@ export class ChartAccountComponent implements OnInit, OnDestroy {
       });
     }
 
-
   ngOnInit(): void {
     this.salesData = this.getSalesData(0);
     this.id = parseInt(this._route.snapshot.paramMap.get('id'));
-    this._portalService.getLibraryTypes()
+    this._portalService.getDropdownValues('ACG')
     .pipe(takeUntil(this._onDestroy$))
-    .subscribe(data => {
+    .subscribe((data: ILibraryTypeOption[]) => {
       if (!data) {
         return;
       }
-      const libraryTypes: ILibraryTypes[] = data;
-      this.filteredLibraryTypes = libraryTypes.filter(type => type.code === 'ACG');
+      this.parentValue = data;
     });
+
+      this.form.get('accountgroup')?.valueChanges.subscribe((parentId) => {
+      this.selectedParent = this.parentValue.find(parent => parent.parentId === parentId);
+    });
+  
+  
 
     if (this.id) {
       this.isEditMode = true;
@@ -200,19 +208,6 @@ export class ChartAccountComponent implements OnInit, OnDestroy {
 
   onToggleStatus($event: any): void {
     this.statusLabel = !$event.checked ? 'Inactive' : 'Active';
-  }
-  
-  onLibraryTypeSelected(event: MatSelectChange): void {
-    this.selectedLibraryTypeId = event.value;
-    this._portalService.getLibraryTypeOptions()
-      .pipe(takeUntil(this._onDestroy$))
-      .subscribe(libraryData => {
-        if (!libraryData) {
-          return;
-        }
-        const libraryOptions = libraryData;
-        this.filteredLibraryOptions = libraryOptions.filter(type => parseInt(type.libraryTypeId) === this.selectedLibraryTypeId);
-      });
   }
   
   save(): void {

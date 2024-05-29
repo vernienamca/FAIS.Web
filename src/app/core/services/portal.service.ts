@@ -383,4 +383,8 @@ createTransmissionProfile(transmissionProfile: any): Observable<any> {
 updateTransmissionProfile(id: number, data: any): Observable<any> {
   return this._portalApi.updateTransmissionProfile(id, data);
 }
+
+getDropdownValues(code: string): Observable<ILibraryTypeOption[]> {
+  return this._portalApi.getDropdownValues(code);
+}
 }

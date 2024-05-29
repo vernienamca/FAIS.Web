@@ -326,4 +326,8 @@ export class PortalApi extends BaseApi {
     updateTransmissionProfile(id: number, data:any): Observable<ITransmissionProfile> {
         return this.put<any>(`${this._apiUrl}/transmissionlineprofile/${id}`,data);
     }
+
+    getDropdownValues(code: string): Observable<ILibraryTypeOption[]> {
+        return this.get<ILibraryTypeOption[]>(`${this._apiUrl}/librarytypeoption/${code}`);
+      }
 }
