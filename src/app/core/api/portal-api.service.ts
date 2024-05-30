@@ -254,7 +254,7 @@ export class PortalApi extends BaseApi {
     }
 
     createPlantInformation(data: any): Observable<any> {
-        return this.post<any>(`${this._apiUrl}/plant-information/plant-information`, data);
+        return this.post<any>(`${this._apiUrl}/plantinformation`, data);
     }
 
     updatePlantInformation(plantCode: string, data: any): Observable<any> {

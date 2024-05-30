@@ -127,11 +127,21 @@
                         </div>
                         <div
                             class="flex flex-col flex-auto sm:flex-row sm:gap-4"
-                            [style.marginTop.px]="20"
-                        >
-                            <mat-form-field appearance="fill" class="flex-auto">
+                            [style.marginTop.px]="20">
+                            <!-- <mat-form-field appearance="fill" class="flex-auto">
                                 <mat-label>MTD</mat-label>
                                 <input matInput formControlName="mtdId" />
+                            </mat-form-field> -->
+                            <mat-form-field appearance="fill">
+                                <mat-label>MTD</mat-label>
+                                <mat-select formControlName="mtdId">
+                                    <mat-option
+                                        *ngFor="let mtd of mtdList"
+                                        [value]="mtd.id"
+                                    >
+                                        {{ mtd.description}}
+                                    </mat-option>
+                                </mat-select>
                             </mat-form-field>
                             <mat-form-field appearance="fill" class="w-full">
                                 <mat-label>Commisioning Date</mat-label>

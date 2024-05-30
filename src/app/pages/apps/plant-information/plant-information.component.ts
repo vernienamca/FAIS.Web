@@ -5,14 +5,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { PageMode } from 'src/app/core/enums/page-mode.enum';
 import { ILibraryTypes } from 'src/app/core/models/library-types';
-import { CollectionViewNavigator } from '@grapecity/wijmo.input';
 import { FlexGrid } from '@grapecity/wijmo.grid';
 import { PortalService } from 'src/app/core/services/portal.service';
 import * as wjcCore from '@grapecity/wijmo';
 import { IPlantInformationCostCenter } from 'src/app/core/models/plant-information';
-import { WjInputModule } from '@grapecity/wijmo.angular2.input';
-import { WjGridModule } from '@grapecity/wijmo.angular2.grid';
-import { InputDate, InputTime, ComboBox, AutoComplete, InputNumber, InputColor } from '@grapecity/wijmo.input';
 import { DataMap }from '@grapecity/wijmo.grid';
 
 @Component({
@@ -36,12 +32,10 @@ export class PlantInformationComponent implements OnInit, OnDestroy {
     plantInformationCostCenterData = this.getPlantInformationCostCenterData(0);
     hasAccess = false;
     costCenterType: any [] = [];
-    costCenterTypeMap;
-    installationType: any [] = [];
     districtOffice: any [] = [];
+    mtdList: any [] = [];
     plantInfoClassification: any [] = [];
     transmissionGrid: any[] = [];
-    facilityLocation: any[] = [];
     regions: any[] = [];
     provinces: any[] = [];
     municipalities: any[] =[];
@@ -181,56 +175,55 @@ export class PlantInformationComponent implements OnInit, OnDestroy {
       const allItems = collectionView.sourceCollection as any[];
       return allItems.length;
     }
+
     ngOnInit(): void {
         this._portalService.getLibraryTypes()
-        .pipe(takeUntil(this._onDestroy$))
-        .subscribe(data => {
-            if(!data) {
-                return;
-            }
-            this.installationType = data.filter(type => type.code =='INT');
-            this.plantInfoClassification = data.filter(type => type.code =='MC');
-            this.transmissionGrid = data.filter(type => type.code === 'TRG');
-            this.districtOffice = data.filter(type => type.code === 'DTO');
-            this.facilityLocation = data.filter(type => type.code == 'FL');
-            this.costCenterType = data.filter(type => type.code === 'CCT');
-            this.costCenterTypeMap = new DataMap(this.costCenterTypes, 'id', 'name');
+            .pipe(takeUntil(this._onDestroy$))
+            .subscribe(data => {
+                if(!data) {
+                    return;
+                }
+                this.plantInfoClassification = data.filter(type => type.code =='PIC');
+                this.transmissionGrid = data.filter(type => type.code === 'PIC');
+                this.districtOffice = data.filter(type => type.code === 'PIC');
+                this.mtdList = data.filter(type => type.code === 'PIC');
+                this.costCenterType = data.filter(type => type.code === 'PIC');
         });
 
         this._portalService.getRegions()
-        .pipe(takeUntil(this._onDestroy$))
-        .subscribe(data => {
-            if(!data){
-                return;
-            }
-            this.regions = data;
+            .pipe(takeUntil(this._onDestroy$))
+            .subscribe(data => {
+                if(!data){
+                    return;
+                }
+                this.regions = data;
         });
 
         this._portalService.getProvinces()
-        .pipe(takeUntil(this._onDestroy$))
-        .subscribe(data => {
-            if(!data){
-                return;
-            }
-            this.provinces = data;
+            .pipe(takeUntil(this._onDestroy$))
+            .subscribe(data => {
+                if(!data){
+                    return;
+                }
+                this.provinces = data;
         });
 
         this._portalService.getMunicipalities()
-        .pipe(takeUntil(this._onDestroy$))
-        .subscribe(data => {
-            if(!data){
-                return;
-            }
-            this.municipalities = data;
+            .pipe(takeUntil(this._onDestroy$))
+            .subscribe(data => {
+                if(!data){
+                    return;
+                }
+                this.municipalities = data;
         });
 
         this._portalService.getBarangays()
-        .pipe(takeUntil(this._onDestroy$))
-        .subscribe(data => {
-            if(!data){
-                return;
-            }
-            this.barangays = data;
+            .pipe(takeUntil(this._onDestroy$))
+            .subscribe(data => {
+                if(!data){
+                    return;
+                }
+                this.barangays = data;
         });
     }
 
@@ -281,6 +274,7 @@ export class PlantInformationComponent implements OnInit, OnDestroy {
         data.isActive = data.isActive ? 'Y' : 'N'; 
         if (this.pageMode === 1) {
             data.createdBy = parseInt(localStorage.getItem('user_id'));
+            data.statusDate = new Date();
             data.plantInformationCostCenterDTO = plantInformationCostCenterDTOArray;
 
             this._portalService.createPlantInformation(data)

@@ -6,7 +6,7 @@ export interface IPlantInformation {
     classId: string;
     transGrid: string;
     districtId: string;
-    mtdId: string;
+    mtdId: number;
     gmapCoord: string;
     commissionDate: string;
     udF1: string;
