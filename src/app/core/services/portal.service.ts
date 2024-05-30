@@ -9,7 +9,7 @@ import { IStringInterpolation } from '../models/string-interpolation';
 import { DatePipe } from '@angular/common';
 import { ISettings } from '../models/settings';
 import { ICostCenter } from '../models/cost-center';
-import { ILibraryTypeOption } from '../models/library-type-option';
+import { DropdownValueModel, ILibraryTypeOption } from '../models/library-type-option';
 import { IProFormaEntry } from '../models/pro-forma-entry';
 import { IChart } from '../models/chart';
 import { ILibraryTypes } from '../models/library-types';
@@ -419,5 +419,9 @@ createTransmissionProfile(transmissionProfile: any): Observable<any> {
 
 updateTransmissionProfile(id: number, data: any): Observable<any> {
   return this._portalApi.updateTransmissionProfile(id, data);
+}
+
+getDropdownValues(code: string[]): Observable<DropdownValueModel[]> {
+  return this._portalApi.getDropdownValues(code);
 }
 }

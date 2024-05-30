@@ -10,7 +10,7 @@ import { ITemplate } from "../models/template";
 import { HttpResponse } from '@angular/common/http';
 import { ISettings } from "../models/settings";
 import { ICostCenter } from "../models/cost-center";
-import { ILibraryTypeOption } from "../models/library-type-option";
+import { DropdownValueModel, ILibraryTypeOption } from "../models/library-type-option";
 import { IProFormaEntry } from "../models/pro-forma-entry";
 import { IChart } from "../models/chart";
 import { ILibraryTypes } from "../models/library-types";
@@ -352,4 +352,8 @@ export class PortalApi extends BaseApi {
     updateTransmissionProfile(id: number, data:any): Observable<ITransmissionProfile> {
         return this.put<any>(`${this._apiUrl}/transmissionlineprofile/${id}`,data);
     }
+
+    getDropdownValues(code: string[]): Observable<DropdownValueModel[]> {
+        return this.get<DropdownValueModel[]>(`${this._apiUrl}/LibraryTypeOption/dropdown-values?codes=${code.join('&codes=')}`);
+      }
 }
