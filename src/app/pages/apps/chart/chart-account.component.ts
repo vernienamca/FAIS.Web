@@ -10,7 +10,7 @@ import { MatSelectChange } from '@angular/material/select';
 import * as wjcCore from '@grapecity/wijmo';
 import { CollectionViewNavigator } from '@grapecity/wijmo.input';
 import { FlexGrid } from '@grapecity/wijmo.grid';
-import { ILibraryTypeOption } from 'src/app/core/models/library-type-option';
+import { DropdownValueModel, ILibraryTypeOption } from 'src/app/core/models/library-type-option';
 import { SecurityService } from 'src/app/core/services/security.service';
 import { ModuleEnum } from 'src/app/core/enums/module-enum';
 
@@ -41,10 +41,10 @@ export class ChartAccountComponent implements OnInit, OnDestroy {
   initialFormValues: any;
   chartData: IChart | null = null;
   hasAccess = false;
-  parentValue: ILibraryTypeOption[] = [];
+  parentValue: DropdownValueModel[] = [];
   childValue: any [] = [];
   subAccountControl = new FormControl();
-  selectedParent: ILibraryTypeOption | null = null;
+  selectedParent: DropdownValueModel | null = null;
 
   addNewRow(): void {
     const newItem = {
@@ -132,9 +132,9 @@ export class ChartAccountComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.salesData = this.getSalesData(0);
     this.id = parseInt(this._route.snapshot.paramMap.get('id'));
-    this._portalService.getDropdownValues('ACG')
+    this._portalService.getDropdownValues(['ACG'])
     .pipe(takeUntil(this._onDestroy$))
-    .subscribe((data: ILibraryTypeOption[]) => {
+    .subscribe((data: DropdownValueModel[]) => {
       if (!data) {
         return;
       }

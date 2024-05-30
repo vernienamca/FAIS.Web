@@ -17,8 +17,16 @@ export interface ILibraryTypeOption {
     updatedBy?: number;
     updatedByName: string;
     updatedAt?: Date;
-    parentValue: string;
+}
+
+export interface DropdownValueModel {
+    libraryTypeId: number;
     parentId: number;
+    libraryTypeName: string;
+    dropdownCode: string;
+    dependentCode: string;
+    parentValue: string;
+    description: string;
     childValues: ChildValueModel[];
 }
 
