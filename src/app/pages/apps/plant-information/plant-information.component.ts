@@ -10,6 +10,8 @@ import { PortalService } from 'src/app/core/services/portal.service';
 import * as wjcCore from '@grapecity/wijmo';
 import { IPlantInformationCostCenter } from 'src/app/core/models/plant-information';
 import { DataMap }from '@grapecity/wijmo.grid';
+import { DropdownValueModel} from 'src/app/core/models/library-type-option';
+import { faL } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'vex-plant-information',
@@ -42,38 +44,8 @@ export class PlantInformationComponent implements OnInit, OnDestroy {
     barangays: any[] =[];
     costCenterTypes = [{}];
     costCenterTypesMap = new DataMap(this.costCenterTypes, 'id', 'name');
+    addMode: boolean = true;
 
-    addNewRow(): void {
-        const newItem = {
-            plantCode: '',
-            costCenter: '',
-            costCenterTypeLto: '',
-            action: '',
-        };
-        this.plantInformationCostCenterGrid.collectionView.sourceCollection.unshift(newItem);
-        this.plantInformationCostCenterGrid.collectionView.refresh();
-    }
-    onDeleteRow(item: any): void {
-            const index = this.plantInformationCostCenterGrid.collectionView.items.indexOf(item);
-                this.plantInformationCostCenterGrid.collectionView.sourceCollection.splice(index, 1);
-                this.plantInformationCostCenterGrid.collectionView.refresh();
-    }    
-    getPlantInformationCostCenterData(count: number) {
-        const maxRowsToShow = 5;
-        const pageSize = Math.min(count, maxRowsToShow);
-
-        const data = [];
-        for (let i = 0; i < count; i++) {
-            data.push({
-                plantCode: '',
-                costCenter: '',
-                costCenterTypeLto: '',
-                action: '',
-            });
-        }
-        const collectionView = new wjcCore.CollectionView(data, { pageSize });
-        return collectionView;
-    }
     get formControls() {
         return {
             plantCode: this.form.get('plantCode'),
@@ -130,12 +102,14 @@ export class PlantInformationComponent implements OnInit, OnDestroy {
         const plantCode = this._route.snapshot.paramMap.get('plantcode');
         this.pageMode = this._route.snapshot.data.pageMode;
         if (this.pageMode === 2) {
+            this.addMode = false;
             this._portalService.getPlantInformation(plantCode)
             .pipe(takeUntil(this._onDestroy$))
             .subscribe(data => {
                 if (!data) {
                     return;
                 }
+                console.log("editmode: ", data);
                 this.form.patchValue({
                     plantCode: data.plantCode || '',
                     substationName: data.substationName || '',
@@ -166,30 +140,41 @@ export class PlantInformationComponent implements OnInit, OnDestroy {
             });
         }
     }
-    
-    getPlantInformationCostCenterDataCount(): number {
-      if(!this.plantInformationCostCenterGrid) {
-        return 0;
-      }
-      const collectionView = this.plantInformationCostCenterGrid.collectionView;
-      const allItems = collectionView.sourceCollection as any[];
-      return allItems.length;
-    }
 
     ngOnInit(): void {
-        this._portalService.getLibraryTypes()
-            .pipe(takeUntil(this._onDestroy$))
-            .subscribe(data => {
-                if(!data) {
-                    return;
-                }
-                this.plantInfoClassification = data.filter(type => type.code =='PIC');
-                this.transmissionGrid = data.filter(type => type.code === 'PIC');
-                this.districtOffice = data.filter(type => type.code === 'PIC');
-                this.mtdList = data.filter(type => type.code === 'PIC');
-                this.costCenterType = data.filter(type => type.code === 'PIC');
+        const codes = ['PIC', 'CCT', 'AST', 'AC'];
+        this._portalService.getDropdownValues(codes)
+        .pipe(takeUntil(this._onDestroy$))
+        .subscribe((data: DropdownValueModel[]) => {
+          if (!data) {
+            return;   
+          }
+console.log(data);
+          this.plantInfoClassification = data.filter(type => type.dropdownCode =='PIC');
+          this.transmissionGrid = data.filter(type => type.dropdownCode === 'PIC');
+          this.districtOffice = data.filter(type => type.dropdownCode === 'PIC');
+          this.mtdList = data.filter(type => type.dropdownCode === 'PIC');
+          this.costCenterType = data.filter(type => type.dropdownCode === 'PIC');
+
         });
 
+        this.getRegions();
+        this.getProvinces();
+        this.getMunicipalities();
+        this.getBarangays();
+
+    }
+
+    ngOnDestroy(): void {
+        this._onDestroy$.next();
+        this._onDestroy$.complete();
+    }
+
+    onToggleStatus($event: any): void {
+        this.statusLabel = !$event.checked ? 'Inactive' : 'Active'; 
+    }
+
+    getRegions(): void {
         this._portalService.getRegions()
             .pipe(takeUntil(this._onDestroy$))
             .subscribe(data => {
@@ -198,7 +183,9 @@ export class PlantInformationComponent implements OnInit, OnDestroy {
                 }
                 this.regions = data;
         });
+    }
 
+    getProvinces(): void {
         this._portalService.getProvinces()
             .pipe(takeUntil(this._onDestroy$))
             .subscribe(data => {
@@ -207,7 +194,9 @@ export class PlantInformationComponent implements OnInit, OnDestroy {
                 }
                 this.provinces = data;
         });
+    }
 
+    getMunicipalities(): void {
         this._portalService.getMunicipalities()
             .pipe(takeUntil(this._onDestroy$))
             .subscribe(data => {
@@ -216,7 +205,9 @@ export class PlantInformationComponent implements OnInit, OnDestroy {
                 }
                 this.municipalities = data;
         });
+    }
 
+    getBarangays(): void {
         this._portalService.getBarangays()
             .pipe(takeUntil(this._onDestroy$))
             .subscribe(data => {
@@ -227,13 +218,47 @@ export class PlantInformationComponent implements OnInit, OnDestroy {
         });
     }
 
-    ngOnDestroy(): void {
-        this._onDestroy$.next();
-        this._onDestroy$.complete();
+    getPlantInformationCostCenterDataCount(): number {
+        if(!this.plantInformationCostCenterGrid) {
+          return 0;
+        }
+        const collectionView = this.plantInformationCostCenterGrid.collectionView;
+        const allItems = collectionView.sourceCollection as any[];
+        return allItems.length;
+    }
+    
+    addNewRow(): void {
+        const newItem = {
+            plantCode: '',
+            costCenter: '',
+            costCenterTypeLto: '',
+            action: '',
+        };
+        this.plantInformationCostCenterGrid.collectionView.sourceCollection.unshift(newItem);
+        this.plantInformationCostCenterGrid.collectionView.refresh();
     }
 
-    onToggleStatus($event: any): void {
-        this.statusLabel = !$event.checked ? 'Inactive' : 'Active'; 
+    onDeleteRow(item: any): void {
+            const index = this.plantInformationCostCenterGrid.collectionView.items.indexOf(item);
+                this.plantInformationCostCenterGrid.collectionView.sourceCollection.splice(index, 1);
+                this.plantInformationCostCenterGrid.collectionView.refresh();
+    } 
+
+    getPlantInformationCostCenterData(count: number) {
+        const maxRowsToShow = 5;
+        const pageSize = Math.min(count, maxRowsToShow);
+
+        const data = [];
+        for (let i = 0; i < count; i++) {
+            data.push({
+                plantCode: '',
+                costCenter: '',
+                costCenterTypeLto: '',
+                action: '',
+            });
+        }
+        const collectionView = new wjcCore.CollectionView(data, { pageSize });
+        return collectionView;
     }
 
     save(): void {

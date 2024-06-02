@@ -46,10 +46,10 @@ export class PlantInformationListComponent implements OnInit, OnDestroy, AfterVi
         { label: 'Plant Code', property: 'plantCode', type: 'text', visible: true },
         { label: 'Substation Name', property: 'substationName', type: 'text', visible: true },
         { label: 'Substation Name Old', property: 'substationNameOld', type: 'text', visible: true },
-        { label: 'Transmission Grid', property: 'transmissionGrid', type: 'text', visible: true },
-        { label: 'District Office', property: 'districtOffice', type: 'text', visible: true },
-        { label: 'Google Map Coordinates', property: 'googleMapCoordinates', type: 'text', visible: true },
-        { label: 'Commisioning Date', property: 'commisioningDate', type: 'text', visible: true },
+        { label: 'Transmission Grid', property: 'transGridDescription', type: 'text', visible: true },
+        { label: 'District Office', property: 'districtName', type: 'text', visible: true },
+        { label: 'Google Map Coordinates', property: 'gmapCoord', type: 'text', visible: true },
+        { label: 'Commisioning Date', property: 'commissionDate', type: 'text', visible: true },
         { label: 'Status', property: 'isActive', type: 'badge', visible: true },
         { label: 'Actions', property: 'actions', type: 'button', visible: true }
     ];
@@ -92,6 +92,7 @@ export class PlantInformationListComponent implements OnInit, OnDestroy, AfterVi
             if (!data) {
                 return;
             }
+            console.log(data);
             this.subject$.next(data);
         });
 
@@ -169,9 +170,6 @@ export class PlantInformationListComponent implements OnInit, OnDestroy, AfterVi
     onLabelChange(change: MatSelectChange, row: IPlantInformation): void {
         const index = this.librarytypeoptions.findIndex(c => c === row);
         this.subject$.next(this.librarytypeoptions);
-    }
-    exportPlantInformations(): void {
-        this._portalService.exportPlantInformations();
     }
 
     add(): void {
