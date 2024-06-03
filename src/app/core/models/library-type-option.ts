@@ -6,7 +6,7 @@ export interface ILibraryTypeOption {
     code: string;
     description: string;
     isActive: string;
-    remark: string;
+    remarks: string;
     ranking: string;
     udF1: string;
     udF2: string;

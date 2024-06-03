@@ -244,14 +244,14 @@ export class UserComponent implements OnInit, OnDestroy {
 
   private _getUserRoles(userId: number): void {
     this._portalService.getUserRoles(userId)
-    .pipe(takeUntil(this._onDestroy$))
-    .subscribe(data => {
-      if (!data) {
-        return;
-      }
-      this.userRoles = data;
-      this.userRoleTabLabel = `User Roles (${data?.length})`;
-      this._securityService.userRoles$.next(data);
-    });
+      .pipe(takeUntil(this._onDestroy$))
+      .subscribe(data => {
+        if (!data) {
+          return;
+        }
+        this.userRoles = data;
+        this.userRoleTabLabel = `User Roles (${data?.length})`;
+        this._securityService.userRoles$.next(data);
+      });
   }
 }

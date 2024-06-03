@@ -43,7 +43,7 @@ export class LibraryTypeOptionListComponent implements OnInit, OnDestroy, AfterV
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @Input()
   columns: TableColumn<ILibraryTypeOption>[] = [
-    { label: 'No.', property: 'no', type: 'text', visible: true },
+    { label: 'No.', property: 'id', type: 'text', visible: true },
     { label: 'Library Type', property: 'libraryTypeName', type: 'text', visible: true },
     { label: 'Option Code', property: 'code', type: 'text', visible: true },
     { label: 'Option Description', property: 'description', type: 'text', visible: true },
