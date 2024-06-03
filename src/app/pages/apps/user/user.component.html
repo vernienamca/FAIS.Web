@@ -37,7 +37,17 @@
                     <div class="flex flex-col sm:flex-row sm:gap-4">
                       <mat-form-field appearance="fill" class="flex-auto">
                         <mat-label>Employee Number</mat-label>
-                        <input matInput formControlName="employeeNumber" maxlength="7">
+                        <mat-select formControlName="employeeNumber" matTooltip="Select employees here..." (selectionChange)="selectEmployee($event)">
+                          <mat-option>
+                            <ngx-mat-select-search [formControl]="employeeFilterCtrl" placeholderLabel="Search..."
+                              noEntriesFoundLabel="No records found">
+                            </ngx-mat-select-search>
+                          </mat-option>
+                          <mat-option [value]="null"></mat-option>
+                          <mat-option *ngFor="let employee of (filteredEmployees$ | async)" [value]="employee">
+                            {{employee.employeeNumber}}
+                          </mat-option>
+                        </mat-select>
                       </mat-form-field>
                     </div>
                     <div class="flex flex-col sm:flex-row sm:gap-4">

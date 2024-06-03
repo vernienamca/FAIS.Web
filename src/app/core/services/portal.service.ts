@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, of } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { PortalApi } from '../api/portal-api.service';
 import { IModule } from '../models/module';
 import { IRole } from '../models/role';
@@ -7,7 +7,6 @@ import { IUser, IUserRole } from '../models/user';
 import { IAuditLogs } from '../models/audit-logs';
 import { IStringInterpolation } from '../models/string-interpolation';
 import { DatePipe } from '@angular/common';
-import { ISettings } from '../models/settings';
 import { ICostCenter } from '../models/cost-center';
 import { DropdownValueModel, ILibraryTypeOption } from '../models/library-type-option';
 import { IProFormaEntry } from '../models/pro-forma-entry';
@@ -20,6 +19,7 @@ import { ITemplate } from '../models/template';
 import { IMeteringProfile } from '../models/metering-profile';
 import { IProjectProfile } from '../models/project-profile';
 import { ITransmissionProfile } from '../models/transmission-profile';
+import { IEmployee } from '../models/employee';
 
 @Injectable({
   providedIn: 'root'
@@ -240,16 +240,19 @@ export class PortalService {
   getProFormaEntry(id: number): Observable<IProFormaEntry> {
     return this._portalApi.getProFormaEntry(id);
   }
+
   addProFormaEntry(proFormaEntry: any): Observable<any> {
     return this._portalApi.addProFormaEntry(proFormaEntry);
   }
+
   updateProFormaEntry(id: number, data: any): Observable<any> {
     return this._portalApi.updateProFormaEntry(id,data);
-}
+  }
 
-deleteProFormaEntry(id: number): Observable<any> {
-  return this._portalApi.deleteProFormaEntry(id);
-}
+  deleteProFormaEntry(id: number): Observable<any> {
+    return this._portalApi.deleteProFormaEntry(id);
+  }
+
   exportProFormaEntries(): void {
     this._portalApi.exportProFormaEntries().subscribe(response => {
       const contentDisposition = response.headers.get('Content-Disposition');
@@ -280,22 +283,23 @@ deleteProFormaEntry(id: number): Observable<any> {
   
   updateChartOfAccounts(id: number, data: any): Observable<any> {
     return this._portalApi.updateChartOfAccounts(id,data);
-}
+  }
+
   getAssetProfiles(): Observable<IAssetProfile[]> {
     return this._portalApi.getAssetProfiles();
   }
 
   createAssetProfile(assetProfile: any): Observable<any> {
     return this._portalApi.createAssetProfile(assetProfile);
-}
+  }
 
   updateAssetProfile(id: number , data:any): Observable<any> {
     return this._portalApi.updateAssetProfile(id,data);
-}
+  }
 
   getAssetProfile(id: number): Observable<IAssetProfile> {
     return this._portalApi.getAssetProfile(id);
-}
+  }
 
   getPlantInformations(): Observable<IPlantInformation[]> {
     return this._portalApi.getPlantInformations();
@@ -361,39 +365,37 @@ deleteProFormaEntry(id: number): Observable<any> {
       });
     }
   
+  getMeteringProfiles(): Observable<IMeteringProfile[]> {
+    return this._portalApi.getMeteringProfiles();
+  }
 
+  getMeteringProfile(id: number): Observable<IMeteringProfile> {
+    return this._portalApi.getMeteringProfile(id);
+  }
 
+  createMeteringProfile(data: any): Observable<any> {
+    return this._portalApi.createMeteringProfile(data);
+  }
 
-getMeteringProfiles(): Observable<IMeteringProfile[]> {
-  return this._portalApi.getMeteringProfiles();
-}
-getMeteringProfile(id: number): Observable<IMeteringProfile> {
-  return this._portalApi.getMeteringProfile(id);
-}
+  updateMeteringProfile(data: any): Observable<any> {
+    return this._portalApi.updateMeteringProfile(data);
+  }
 
-createMeteringProfile(data: any): Observable<any> {
-  return this._portalApi.createMeteringProfile(data);
-}
+  getRegions(): Observable<any[]> {
+    return this._portalApi.getRegions();
+  }
 
-updateMeteringProfile(data: any): Observable<any> {
-  return this._portalApi.updateMeteringProfile(data);
-}
+  getProvinces(): Observable<any[]> {
+    return this._portalApi.getProvinces();
+  }
 
-getRegions(): Observable<any[]> {
-  return this._portalApi.getRegions();
-}
+  getBarangays(): Observable<any[]> {
+    return this._portalApi.getBarangays();
+  }
 
-getProvinces(): Observable<any[]> {
-  return this._portalApi.getProvinces();
-}
-
-getBarangays(): Observable<any[]> {
-  return this._portalApi.getBarangays();
-}
-
-getMunicipalities(): Observable<any[]> {
-  return this._portalApi.getMunicipalities();
-}
+  getMunicipalities(): Observable<any[]> {
+    return this._portalApi.getMunicipalities();
+  }
 
   getStringDate(d: Date | string): string {
     if (typeof d == "string") return d; 
@@ -402,26 +404,29 @@ getMunicipalities(): Observable<any[]> {
 
     sDate = d.getUTCFullYear() + "-" + (d.getUTCMonth() + 1) + "-" + (d.getUTCDate() + 1) + "T00:08:00.000Z";
     return sDate;
-
   }
 
-getTransmissionProfiles(): Observable<any[]> {
- return this._portalApi.getTransmissionProfiles();
-}
+  getTransmissionProfiles(): Observable<any[]> {
+  return this._portalApi.getTransmissionProfiles();
+  }
 
-getTransmissionProfile(id: number): Observable<ITransmissionProfile>{
-  return this._portalApi.getTransmissionProfile(id);
-}
+  getTransmissionProfile(id: number): Observable<ITransmissionProfile>{
+    return this._portalApi.getTransmissionProfile(id);
+  }
 
-createTransmissionProfile(transmissionProfile: any): Observable<any> {
-  return this._portalApi.createTransmissionProfile(transmissionProfile);
-}
+  createTransmissionProfile(transmissionProfile: any): Observable<any> {
+    return this._portalApi.createTransmissionProfile(transmissionProfile);
+  }
 
-updateTransmissionProfile(id: number, data: any): Observable<any> {
-  return this._portalApi.updateTransmissionProfile(id, data);
-}
+  updateTransmissionProfile(id: number, data: any): Observable<any> {
+    return this._portalApi.updateTransmissionProfile(id, data);
+  }
 
-getDropdownValues(code: string[]): Observable<DropdownValueModel[]> {
-  return this._portalApi.getDropdownValues(code);
-}
+  getDropdownValues(code: string[]): Observable<DropdownValueModel[]> {
+    return this._portalApi.getDropdownValues(code);
+  }
+
+  getEmployees(): Observable<IEmployee[]> {
+    return this._portalApi.getEmployees();
+  }
 }

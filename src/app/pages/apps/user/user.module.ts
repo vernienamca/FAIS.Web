@@ -32,6 +32,7 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { ResetPasswordDialogComponent } from './reset-password-dialog/reset-password-dialog.component';
 import { MyProfileComponent } from './my-profile/my-profile.component';
 import { UserActivityListComponent } from './user-activity-list/user-activity-list.component';
+import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 
 @NgModule({
   declarations: [
@@ -70,7 +71,8 @@ import { UserActivityListComponent } from './user-activity-list/user-activity-li
     MatDialogModule,
     MatDividerModule,
     MatDatepickerModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    NgxMatSelectSearchModule
   ]
 })
 export class UserModule {

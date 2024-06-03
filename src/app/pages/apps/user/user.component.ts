@@ -4,12 +4,14 @@ import { FormBuilder, FormGroup, UntypedFormControl, Validators } from '@angular
 import { FormControl } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subject, takeUntil } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, of, startWith, takeUntil } from 'rxjs';
 import { fadeInUp400ms } from 'src/@vex/animations/fade-in-up.animation';
 import { stagger60ms } from 'src/@vex/animations/stagger.animation';
+import { IEmployee } from 'src/app/core/models/employee';
 import { IUser, IUserRole } from 'src/app/core/models/user';
 import { PortalService } from 'src/app/core/services/portal.service';
 import { SecurityService } from 'src/app/core/services/security.service';
+import { CommonFunctions } from 'src/app/shared/functions/common-functions';
 @Component({
   selector: 'app-user',
   templateUrl: './user.component.html',
@@ -27,8 +29,12 @@ export class UserComponent implements OnInit, OnDestroy {
   layoutCtrl = new UntypedFormControl('fullwidth');
   dataSource = [];
   searchCtrl: FormControl = new FormControl();
+  employeeFilterCtrl: FormControl = new FormControl();
+  employeeFilter$: Observable<string> = new Observable<string>();
+  filteredEmployees$: Observable<IEmployee[]> = new Observable<IEmployee[]>();
   userRoleTabLabel: string = 'User Roles (0)';
   userRoles: IUserRole[] = [];
+  employees$ = new BehaviorSubject<IEmployee[]>([]);
   pageLabel: string = 'Edit User';
   userId: number;
   photo: string;
@@ -38,6 +44,7 @@ export class UserComponent implements OnInit, OnDestroy {
   updatedAt: Date;
   isSaving: boolean;
   hasAccess = false;
+  hasSelectedEmployee: boolean = false;
   
   get formControls() {
     return {
@@ -57,6 +64,7 @@ export class UserComponent implements OnInit, OnDestroy {
     };
   }
 
+  private _employeeList$: BehaviorSubject<IEmployee[]> = new BehaviorSubject([]);
   private _onDestroy$ = new Subject<void>();
 
   constructor(
@@ -90,6 +98,15 @@ export class UserComponent implements OnInit, OnDestroy {
     this._securityService.userRoles$.subscribe(item => {
       this.userRoles = item;
     });
+
+    this._portalService.getEmployees()
+      .pipe(takeUntil(this._onDestroy$))
+      .subscribe(data => {
+        if (!data) {
+          return;
+        }
+        this.employees$.next(data);
+      });
 
     this._securityService.getPermissions(parseInt(localStorage.getItem('user_id')))
       .pipe(takeUntil(this._onDestroy$))
@@ -133,6 +150,17 @@ export class UserComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.employeeFilter$ = this.employeeFilterCtrl.valueChanges.pipe(
+      startWith(''),
+      takeUntil(this._onDestroy$)
+    );
+    this.filteredEmployees$ = CommonFunctions.applyDataFiltering(
+      this.employees$,
+      this.employeeFilter$,
+      (searchString) => (object) => object.employeeNumber.toLowerCase().indexOf(searchString.toLowerCase()) > -1 
+        || object.firstName.toLowerCase().indexOf(searchString.toLowerCase()) > -1 
+        || object.lastName.toLowerCase().indexOf(searchString.toLowerCase()) > -1
+    );
   }
 
   ngOnDestroy(): void {
@@ -172,6 +200,20 @@ export class UserComponent implements OnInit, OnDestroy {
       this.photo = e.target.result;
     };
     reader.readAsDataURL(file);
+  }
+
+  selectEmployee(event: any): void {
+    if (!event?.value) {
+      return;
+    }
+    this.form.patchValue({
+      position: event?.value.position,
+      username: event?.value.emailAddress.split('@')[0],
+      firstName: event?.value.firstName,
+      lastName: event?.value.lastName,
+      emailAddress: event?.value.emailAddress,
+      mobileNumber: event?.value.mobileNumber
+    });
   }
 
   private _initializeData(data: any): void {

@@ -17,9 +17,9 @@ import { ILibraryTypes } from "../models/library-types";
 import { IAssetProfile } from "../models/asset-profile";
 import { IProjectProfile } from "../models/project-profile";
 import { IPlantInformation } from "../models/plant-information";
-import { IPermission } from "../models/permission";
 import { IMeteringProfile } from "../models/metering-profile";
 import { ITransmissionProfile } from "../models/transmission-profile";
+import { IEmployee } from "../models/employee";
 
 export class PortalApi extends BaseApi {
     private _apiUrl = `${environment.apiGatewayBaseUrl}`;
@@ -355,5 +355,9 @@ export class PortalApi extends BaseApi {
 
     getDropdownValues(code: string[]): Observable<DropdownValueModel[]> {
         return this.get<DropdownValueModel[]>(`${this._apiUrl}/LibraryTypeOption/dropdown-values?codes=${code.join('&codes=')}`);
-      }
+    }
+
+    getEmployees(): Observable<IEmployee[]> {
+        return this.get<IEmployee[]>(`${this._apiUrl}/user/employees`);
+    }
 }
