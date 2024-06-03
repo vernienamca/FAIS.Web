@@ -29,7 +29,7 @@ export enum ModuleEnum {
     AddorRemoveStringInterpolation = 28,
     AddorEditMeteringProfile = 29,
     AddorEditTransmissionProfile = 30,
-    AddorEditChartOfAccounts = 25,
+    AddorEditChartOfAccounts = 31,
     AddorEditProjectProfile = 32,
     AddorEditProformaEntries = 33,
     ProjectProfile = 34
