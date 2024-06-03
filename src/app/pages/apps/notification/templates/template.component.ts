@@ -206,18 +206,17 @@ export class TemplateComponent implements OnInit, OnDestroy {
     if (!this.formControls.target.value) {
       this.formControls.target.markAsTouched();
       this.formControls.target.updateValueAndValidity();
-      isValid = false;
+      if (this.formControls.target.value == 2) {
+        this.formControls.users.markAsTouched();
+        this.formControls.users.updateValueAndValidity();
+        isValid = false;
+      } else {
+        this.formControls.roles.markAsTouched();
+        this.formControls.roles.updateValueAndValidity();
+        isValid = false;
+      }
     }
-    // if (!this.formControls.roles.value) {
-    //   this.formControls.roles.markAsTouched();
-    //   this.formControls.roles.updateValueAndValidity();
-    //   isValid = false;
-    // }
-    // if (!this.formControls.users.value) {
-    //   this.formControls.users.markAsTouched();
-    //   this.formControls.users.updateValueAndValidity();
-    //   isValid = false;
-    // }
+
     if (!this.formControls.notificationType.value) {
       this.formControls.notificationType.markAsTouched();
       this.formControls.notificationType.updateValueAndValidity();

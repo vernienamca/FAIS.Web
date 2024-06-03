@@ -1,0 +1,239 @@
+<vex-secondary-toolbar current="{{pageMode === 1 ? 'Edit Plant Information':'Add Plant Information'}}">
+    <vex-breadcrumbs [crumbs]="['System Management', 'Plant Information', 'Edit Plant Information']" class="flex-auto"></vex-breadcrumbs>
+    <button class="ml-2" color="primary" mat-icon-button type="button">
+        <mat-icon svgIcon="mat:more_vert"></mat-icon>
+    </button>
+</vex-secondary-toolbar>
+<div class="p-gutter container" [class.container]="layoutCtrl.value === 'boxed'" [class.px-gutter]="layoutCtrl.value === 'fullwidth'">
+    <div class="flex flex-col sm:flex-row gap-4">
+        <div class="card flex-auto">
+            <div class="px-6 py-4 border-b flex items-center gap-2">
+                <button
+                    [ngClass]="form.touched && form.invalid ? '!bg-gray':'!bg-green'"
+                    class="!text-contrast-white"
+                    mat-raised-button
+                    type="button"
+                    (click)="save()"
+                    [disabled]="form.touched && form.invalid">
+                    <mat-icon
+                        class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2"
+                        svgIcon="mat:archive"></mat-icon>
+                    Save
+                </button>
+                <button
+                    color="primary"
+                    mat-raised-button
+                    type="button"
+                    [routerLink]="['/apps/plant-information']">
+                    <mat-icon
+                        class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2"
+                        svgIcon="mat:close"></mat-icon>
+                    Close
+                </button>
+            </div>
+            <div class="px-6 py-4 flex flex-col">
+                <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
+                    <form [formGroup]="form" class="flex flex-col flex-auto form-container">
+                        <div class="flex flex-col flex-auto sm:flex-row sm:gap-4" [style.marginTop.px]="20">
+                            <mat-form-field appearance="fill" class="flex-auto">
+                                <mat-label>Plant Code</mat-label>
+                                <input matInput formControlName="plantCode" required  [readonly]="!addMode"/>
+                                <mat-error *ngIf="formControls.plantCode.touched && formControls.plantCode.invalid">
+                                    <span *ngIf="formControls.plantCode.getError('required')">
+                                        Plant Code is required
+                                    </span>
+                                </mat-error>
+                            </mat-form-field>
+                            <mat-form-field appearance="fill" class="flex-auto">
+                                <mat-label>Substation Name</mat-label>
+                                <input matInput formControlName="substationName" required />
+                                <mat-error *ngIf="formControls.substationName.touched && formControls.substationName.invalid">
+                                    <span *ngIf="formControls.substationName.getError('required')">
+                                        Substation Name is required
+                                    </span>
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="flex flex-col flex-auto sm:flex-row sm:gap-4" [style.marginTop.px]="20">
+                            <mat-form-field appearance="fill">
+                                <mat-label>Class</mat-label>
+                                <mat-select formControlName="classId">
+                                    <mat-option *ngFor="let class of plantInfoClassification" [value]="class.parentId">
+                                        {{ class.description}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                            <mat-form-field appearance="fill" class="flex-auto">
+                                <mat-label>Substation Name Old</mat-label>
+                                <input matInput formControlName="substationNameOld" />
+                            </mat-form-field>
+                        </div>
+                        <div class="flex flex-col flex-auto sm:flex-row sm:gap-4" [style.marginTop.px]="20">
+                            <mat-form-field appearance="fill">
+                                <mat-label>Transmission Grid</mat-label>
+                                <mat-select formControlName="transGrid">
+                                    <mat-option *ngFor="let grid of transmissionGrid" [value]="grid.parentId">
+                                        {{ grid.description}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+
+                            <mat-form-field appearance="fill">
+                                <mat-label>District Office</mat-label>
+                                <mat-select formControlName="districtId">
+                                    <mat-option *ngFor="let district of districtOffice" [value]="district.parentId">
+                                        {{ district.description}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div class="flex flex-col flex-auto sm:flex-row sm:gap-4" [style.marginTop.px]="20">
+                            <mat-form-field appearance="fill">
+                                <mat-label>MTD</mat-label>
+                                <mat-select formControlName="mtdId">
+                                    <mat-option *ngFor="let mtd of mtdList" [value]="mtd.parentId">
+                                        {{ mtd.description}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                            <mat-form-field appearance="fill" class="w-full">
+                                <mat-label>Commisioning Date</mat-label>
+                                <input
+                                    matInput
+                                    [matDatepicker]="commisioningDatePicker"
+                                    inputFormat="MM/dd/yyyy"
+                                    autocomplete="off"
+                                    id="commissionDate"
+                                    formControlName="commissionDate"
+                                    type="text"
+                                    required/>
+                                <mat-datepicker-toggle matSuffix [for]="commisioningDatePicker"></mat-datepicker-toggle>
+                                <mat-datepicker #commisioningDatePicker></mat-datepicker>
+                                <mat-error *ngIf="formControls.commissionDate.touched && formControls.commissionDate.invalid">
+                                    <span *ngIf="formControls.commissionDate.getError('required')">
+                                        Commisioning date is required
+                                    </span>
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="flex flex-col flex-auto sm:flex-row sm:gap-4" [style.marginTop.px]="20">
+                            <mat-form-field appearance="fill" class="flex-auto">
+                                <mat-label>Google Map Coordinates</mat-label>
+                                <input matInput formControlName="gmapCoord" />
+                            </mat-form-field>
+                        </div>
+                        <div class="flex flex-col flex-auto sm:flex-row sm:gap-4" [style.marginTop.px]="20">
+                            <mat-form-field appearance="fill" class="flex-auto">
+                                <mat-label>UDF 1</mat-label>
+                                <input matInput formControlName="udF1" />
+                            </mat-form-field>
+                            <mat-form-field appearance="fill" class="flex-auto">
+                                <mat-label>UDF 2</mat-label>
+                                <input matInput formControlName="udF2" />
+                            </mat-form-field>
+                        </div>
+                        <div class="flex flex-col flex-auto sm:flex-row sm:gap-4" [style.marginTop.px]="20">
+                            <mat-form-field appearance="fill" class="flex-auto">
+                                <mat-label>UDF 3</mat-label>
+                                <input matInput formControlName="udF3" />
+                            </mat-form-field>
+                        </div>
+                        <hr class="w-full" />
+                        <h2 class="my-4 title flex-auto">Address</h2>
+                        <div class="flex flex-col sm:flex-row sm:gap-4">
+                            <mat-form-field appearance="fill">
+                                <mat-label>Region</mat-label>
+                                <mat-select formControlName="regionId">
+                                    <mat-option *ngFor="let region of regions" [value]="region.id">
+                                        {{ region.description}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                            <mat-form-field appearance="fill">
+                                <mat-label>Municipality/City</mat-label>
+                                <mat-select formControlName="munId">
+                                    <mat-option *ngFor="let city of municipalities" [value]="city.id">
+                                        {{ city.description}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div class="flex flex-col sm:flex-row sm:gap-4">
+                            <mat-form-field appearance="fill">
+                                <mat-label>Province</mat-label>
+                                <mat-select formControlName="provId">
+                                    <mat-option *ngFor="let province of provinces" [value]="province.id">
+                                        {{ province.description}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                            <mat-form-field appearance="fill">
+                                <mat-label>Barangay</mat-label>
+                                <mat-select formControlName="brgyId">
+                                    <mat-option *ngFor="let barangay of barangays" [value]="barangay.id">
+                                        {{ barangay.description}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <hr class="w-full my-8" />
+                        <div class="table-container" [style.margin-top.px]="50">
+                            <div class="flex flex-row" fxLayoutAlign="end" [style.margin-bottom.px]="10" [style.margin-right.px]="30">
+                                <h2 class="m-0 title flex-auto">Cost Center ({{getPlantInformationCostCenterDataCount()}})</h2>
+                                <button class="rounded-full !bg-green !text-white" mat-raised-button type="button" (click)="addNewRow()">
+                                    <mat-icon svgIcon="mat:add"></mat-icon>
+                                    <span>Add</span>
+                                </button>
+                            </div>
+                            <mat-divider style="margin: 10px 0"></mat-divider>
+
+                            <!-- WIJMO TABLE -->
+                            <div class="wijmotable">
+                                <wj-flex-grid class="main-grid px-4 py-4" #plantInformationCostCenterGrid [itemsSource]="plantInformationCostCenterData" [selectionMode]="'Row'" [allowResizing]="false" style="width: 100%; border: none; padding-right: 2%">
+                                    <wj-flex-grid-column binding="costCenterType" header="Cost Center Type" width="30*"></wj-flex-grid-column>
+                                    <wj-flex-grid-column binding="costCenterNo" header="Cost Center No." width="30*"></wj-flex-grid-column>
+                                    
+                                    <!-- wordWrap="true" -->
+                                    <wj-flex-grid-column binding="action" header="Action" width="10*">
+                                        <ng-template
+                                            wjFlexGridCellTemplate
+                                            [cellType]="'Cell'"
+                                            let-cell="cell">
+                                            <button mat-button (click)="onDeleteRow(cell.item)">
+                                                <mat-icon>close</mat-icon>
+                                            </button>
+                                        </ng-template>
+                                    </wj-flex-grid-column>
+
+                                </wj-flex-grid>
+                            </div>
+                            <div class="flex flex-row" fxLayoutAlign="end" [style.margin-top.px]="10" [style.margin-right.px]="40">
+                                <div id="thePager"></div>
+                            </div>
+                        </div>
+                        <div class="flex flex-col sm:flex-row sm:gap-4">
+                            <mat-slide-toggle color="accent" labelPosition="before" formControlName="isActive" (change)="onToggleStatus($event)">
+                                {{ statusLabel }}
+                            </mat-slide-toggle>
+                        </div>
+                        <blockquote *ngIf="pageMode === 2" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px" [style.marginTop.px]="30">
+                            <span fxFlex> <strong>Created By</strong>: {{ createdBy }} </span>
+                            <span fxFlex>
+                                <strong>Date Created</strong>: {{ createdAt | date: 'MM/dd/yyyy
+                                hh:mm a' }}
+                            </span>
+                            <span fxFlex>
+                                <strong>Modified By</strong>: {{ updatedBy }}
+                            </span>
+                            <span fxFlex>
+                                <strong>Date Modified</strong>: {{ updatedAt ? (updatedAt |
+                                date: 'MM/dd/yyyy hh:mm a') : 'N/A' }}
+                            </span>
+                        </blockquote>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

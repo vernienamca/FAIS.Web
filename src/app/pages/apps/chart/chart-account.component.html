@@ -26,9 +26,9 @@
           <div class="flex flex-col sm:flex-row sm:gap-4">
             <mat-form-field appearance="fill" class=" flex-auto">
               <mat-label>Account Group</mat-label>
-              <mat-select formControlName="accountgroup" (selectionChange)="onLibraryTypeSelected($event)">
-                <mat-option *ngFor="let libraryType of filteredLibraryTypes" [value]="libraryType.id">
-                  {{ libraryType.name }}
+              <mat-select formControlName="accountgroup">
+                <mat-option *ngFor="let option of parentValue" [value]="option.parentId">
+                  {{ option.parentValue }}
                 </mat-option>
               </mat-select>
             </mat-form-field>
@@ -40,14 +40,15 @@
           </div>
    
           <div class="flex flex-col sm:flex-row sm:gap-4">
-            <mat-form-field appearance="fill" class=" flex-auto">
+            <mat-form-field appearance="fill" class="flex-auto">
               <mat-label>Sub-Account Group</mat-label>
-              <mat-select formControlName="subaccount" >
-                <mat-option *ngFor="let libraryTypeOptions of (isEditMode?  filteredOptions : filteredLibraryOptions)" [value]="libraryTypeOptions.id">
-                  {{ libraryTypeOptions.description }}
+              <mat-select formControlName="subaccount">
+                <mat-option *ngFor="let child of selectedParent?.childValues" [value]="child.id">
+                  {{ child.description }}
                 </mat-option>
               </mat-select>
             </mat-form-field>
+            
         
             <mat-form-field appearance="fill">
               <mat-label>RCA GL</mat-label>
