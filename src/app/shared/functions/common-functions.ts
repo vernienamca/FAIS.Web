@@ -78,7 +78,7 @@ export class CommonFunctions {
 
     return throwError(() => 'Something bad happened; please try again later.');
   };
-
+  
   public static applyDataFiltering = (
     sourceItems: Observable<any[]>,
     filterString: Observable<string>,

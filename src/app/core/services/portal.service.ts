@@ -422,8 +422,8 @@ export class PortalService {
     return this._portalApi.updateTransmissionProfile(id, data);
   }
 
-  getDropdownValues(code: string[]): Observable<DropdownValueModel[]> {
-    return this._portalApi.getDropdownValues(code);
+  getDropdownValues(codes: string[]): Observable<DropdownValueModel[]> {
+    return this._portalApi.getDropdownValues(codes);
   }
 
   getEmployees(): Observable<IEmployee[]> {
