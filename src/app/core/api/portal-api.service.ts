@@ -354,7 +354,7 @@ export class PortalApi extends BaseApi {
     }
 
     getDropdownValues(code: string[]): Observable<DropdownValueModel[]> {
-        return this.get<DropdownValueModel[]>(`${this._apiUrl}/LibraryTypeOption/dropdown-values?codes=${code.join('&codes=')}`);
+        return this.get<DropdownValueModel[]>(`${this._apiUrl}/LibraryTypeOption/lookups?codes=${code.join('&codes=')}`);
     }
 
     getEmployees(): Observable<IEmployee[]> {

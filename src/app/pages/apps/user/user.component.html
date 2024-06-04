@@ -63,8 +63,16 @@
                       <mat-form-field appearance="fill" class="flex-auto">
                         <mat-label>Position</mat-label>
                         <mat-select formControlName="position" required>
-                          <mat-option value="1">PAD Analyst</mat-option>
-                          <mat-option value="2">Administrator</mat-option>
+                          <ng-container *ngIf="hasSelectedEmployee; else noEmployeeSelected">
+                            <mat-option *ngFor="let employee of employees$ | async" [value]="employee.employeeNumber">
+                              {{ employee.position }}
+                            </mat-option>
+                          </ng-container>
+                          <ng-template #noEmployeeSelected>
+                            <mat-option *ngFor="let option of positionValues" [value]="option.parentId">
+                              {{ option.parentValue }}
+                            </mat-option>
+                          </ng-template>
                         </mat-select>
                         <mat-error *ngIf="formControls.position.touched && formControls.position.invalid">
                           <span *ngIf="formControls.position.getError('required')">
@@ -120,9 +128,9 @@
                       <mat-form-field appearance="fill" class="flex-auto">
                         <mat-label>TA-FG</mat-label>
                         <mat-select formControlName="taFG" multiple>
-                          <mat-option value="T1">T1</mat-option>
-                          <mat-option value="T2">T2</mat-option>
-                          <mat-option value="T4">T4</mat-option>
+                          <mat-option *ngFor = "let tafg of tafgValues" [value]= "tafg.parentValue" >
+                            {{tafg.parentValue}}
+                          </mat-option>
                         </mat-select>
                       </mat-form-field>
                       <mat-form-field appearance="fill" class="flex-auto">
@@ -136,7 +144,9 @@
                       <mat-form-field appearance="fill" class="flex-auto">
                         <mat-label>Division</mat-label>
                         <mat-select formControlName="division">
-                          <mat-option value="3">PAD</mat-option>
+                          <mat-option *ngFor = "let division of divisionValues" [value]="division.parentId" >
+                            {{division.parentValue}}
+                          </mat-option>
                         </mat-select>
                       </mat-form-field>
                     </div>

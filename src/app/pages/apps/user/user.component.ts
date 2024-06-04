@@ -8,6 +8,7 @@ import { BehaviorSubject, Observable, Subject, of, startWith, takeUntil } from '
 import { fadeInUp400ms } from 'src/@vex/animations/fade-in-up.animation';
 import { stagger60ms } from 'src/@vex/animations/stagger.animation';
 import { IEmployee } from 'src/app/core/models/employee';
+import { DropdownValueModel } from 'src/app/core/models/library-type-option';
 import { IUser, IUserRole } from 'src/app/core/models/user';
 import { PortalService } from 'src/app/core/services/portal.service';
 import { SecurityService } from 'src/app/core/services/security.service';
@@ -45,7 +46,10 @@ export class UserComponent implements OnInit, OnDestroy {
   isSaving: boolean;
   hasAccess = false;
   hasSelectedEmployee: boolean = false;
-  
+  positionValues: DropdownValueModel[] = [];
+  divisionValues: DropdownValueModel[] = [];
+  tafgValues: DropdownValueModel[] = [];
+
   get formControls() {
     return {
       employeeNumber: this.form.get('employeeNumber'),
@@ -64,7 +68,7 @@ export class UserComponent implements OnInit, OnDestroy {
     };
   }
 
-  private _employeeList$: BehaviorSubject<IEmployee[]> = new BehaviorSubject([]);
+  // private _employeeList$: BehaviorSubject<IEmployee[]> = new BehaviorSubject([]);
   private _onDestroy$ = new Subject<void>();
 
   constructor(
@@ -86,7 +90,7 @@ export class UserComponent implements OnInit, OnDestroy {
       firstName: ['', [Validators.required]],
       lastName: ['', [Validators.required]],
       emailAddress: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)]],
-      mobileNumber: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
+      mobileNumber: ['', [Validators.required, Validators.pattern("^[0-9()-]*$")]],
       taFG: ['', []],
       oupFG: ['', []],
       division: ['', []],
@@ -106,6 +110,17 @@ export class UserComponent implements OnInit, OnDestroy {
           return;
         }
         this.employees$.next(data);
+      });
+      
+      this._portalService.getDropdownValues(['POS','DIV','TAFG'])
+      .pipe(takeUntil(this._onDestroy$))
+      .subscribe((data: DropdownValueModel[]) => {
+        if (!data) {
+          return;
+        }
+        this.positionValues = data.filter(item => item.dropdownCode === 'POS')
+        this.divisionValues = data.filter(item => item.dropdownCode === 'DIV')
+        this.tafgValues = data.filter(item => item.dropdownCode === 'TAFG')
       });
 
     this._securityService.getPermissions(parseInt(localStorage.getItem('user_id')))
@@ -138,6 +153,7 @@ export class UserComponent implements OnInit, OnDestroy {
             return;
           }
           this._initializeData(data);
+          console.log('userdata', data)
           this._getUserRoles(this.userId);
           this._disableFormControls();
         });
@@ -174,7 +190,11 @@ export class UserComponent implements OnInit, OnDestroy {
     if (!this.photo.includes('assets/img/')) {
       data.photo = this.photo.split(',')[1];
     }
-    data.employeeNumber = this.formControls.employeeNumber.value;
+    data.employeeNumber = this.formControls.employeeNumber.value.employeeNumber;
+    console.log('dataemployeenumber', data.employeeNumber)
+
+    data.position = this.formControls.position.value.replace(/-/g, '');
+    console.log('position', data.position)
 
     if (this.userId) {
       data.userRoles = this.userRoles;
@@ -205,9 +225,11 @@ export class UserComponent implements OnInit, OnDestroy {
   selectEmployee(event: any): void {
     if (!event?.value) {
       return;
+
     }
+    this.hasSelectedEmployee = true;
     this.form.patchValue({
-      position: event?.value.position,
+      position: event?.value.employeeNumber,
       username: event?.value.emailAddress.split('@')[0],
       firstName: event?.value.firstName,
       lastName: event?.value.lastName,
