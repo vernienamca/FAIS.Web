@@ -3,7 +3,7 @@ export interface IEmployee {
     firstName: string;
     middleName: string;
     lastName: string;
-    Position: string;
+    position: string;
     jg: string;
     chargingMC: string;
     emailAddress: string;

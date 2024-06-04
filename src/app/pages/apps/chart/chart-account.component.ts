@@ -133,20 +133,17 @@ export class ChartAccountComponent implements OnInit, OnDestroy {
     this.salesData = this.getSalesData(0);
     this.id = parseInt(this._route.snapshot.paramMap.get('id'));
     this._portalService.getDropdownValues(['ACG'])
-    .pipe(takeUntil(this._onDestroy$))
-    .subscribe((data: DropdownValueModel[]) => {
-      if (!data) {
-        return;
-      }
-      this.parentValue = data;
-    });
-
+      .pipe(takeUntil(this._onDestroy$))
+      .subscribe((data: DropdownValueModel[]) => {
+        if (!data) {
+          return;
+        }
+        this.parentValue = data;
+      });
       this.form.get('accountgroup')?.valueChanges.subscribe((parentId) => {
       this.selectedParent = this.parentValue.find(parent => parent.parentId === parentId);
     });
   
-  
-
     if (this.id) {
       this.isEditMode = true;
       this.form.get('accountgroup')?.disable();
