@@ -46,13 +46,14 @@ export class UserComponent implements OnInit, OnDestroy {
   isSaving: boolean;
   hasAccess = false;
   hasSelectedEmployee: boolean = false;
-  positionValues: DropdownValueModel[] = [];
-  divisionValues: DropdownValueModel[] = [];
-  tafgValues: DropdownValueModel[] = [];
+  positions: DropdownValueModel[] = [];
+  divisions: DropdownValueModel[] = [];
+  tafgs: DropdownValueModel[] = [];
 
   get formControls() {
     return {
       employeeNumber: this.form.get('employeeNumber'),
+      tempEmployeeNumber: this.form.get('tempEmployeeNumber'),
       username: this.form.get('username'),
       position: this.form.get('position'),
       firstName: this.form.get('firstName'),
@@ -68,7 +69,6 @@ export class UserComponent implements OnInit, OnDestroy {
     };
   }
 
-  // private _employeeList$: BehaviorSubject<IEmployee[]> = new BehaviorSubject([]);
   private _onDestroy$ = new Subject<void>();
 
   constructor(
@@ -81,10 +81,10 @@ export class UserComponent implements OnInit, OnDestroy {
     private _datePipe: DatePipe
   ) {
     this.yesterday.setDate(this.yesterday.getDate() - 0);
-
     this.userId = parseInt(this._route.snapshot.paramMap.get('id'));
     this.form = this._fb.group({
       employeeNumber: ['', []],
+      tempEmployeeNumber: ['', []],
       username: ['', [Validators.required]],
       position: ['', [Validators.required]],
       firstName: ['', [Validators.required]],
@@ -94,10 +94,12 @@ export class UserComponent implements OnInit, OnDestroy {
       taFG: ['', []],
       oupFG: ['', []],
       division: ['', []],
-      accountStatus: ['', [Validators.required]],
+      accountStatus: ['1', [Validators.required]],
       statusDate: ['', []],
       accountExpiration: ['', []]
     });
+
+    this._getLookupValues();
 
     this._securityService.userRoles$.subscribe(item => {
       this.userRoles = item;
@@ -112,17 +114,6 @@ export class UserComponent implements OnInit, OnDestroy {
         this.employees$.next(data);
       });
       
-      this._portalService.getDropdownValues(['POS','DIV','TAFG'])
-      .pipe(takeUntil(this._onDestroy$))
-      .subscribe((data: DropdownValueModel[]) => {
-        if (!data) {
-          return;
-        }
-        this.positionValues = data.filter(item => item.dropdownCode === 'POS')
-        this.divisionValues = data.filter(item => item.dropdownCode === 'DIV')
-        this.tafgValues = data.filter(item => item.dropdownCode === 'TAFG')
-      });
-
     this._securityService.getPermissions(parseInt(localStorage.getItem('user_id')))
       .pipe(takeUntil(this._onDestroy$))
       .subscribe(data => {
@@ -190,19 +181,18 @@ export class UserComponent implements OnInit, OnDestroy {
     if (!this.photo.includes('assets/img/')) {
       data.photo = this.photo.split(',')[1];
     }
-    data.employeeNumber = this.formControls.employeeNumber.value.employeeNumber;
-    console.log('dataemployeenumber', data.employeeNumber)
-
-    data.position = this.formControls.position.value.replace(/-/g, '');
-    console.log('position', data.position)
+    
+    data.employeeNumber = this.formControls.employeeNumber.value;
 
     if (this.userId) {
+      data.tempEmployeeNumber = this.formControls.employeeNumber.value;
       data.userRoles = this.userRoles;
       data.updatedBy = parseInt(localStorage.getItem('user_id'));
+
+      console.log(data);
       this._updateUser(data);
       return;
     }
-
     data.createdBy = parseInt(localStorage.getItem('user_id'));
     this._createUser(data);
   }
@@ -225,22 +215,22 @@ export class UserComponent implements OnInit, OnDestroy {
   selectEmployee(event: any): void {
     if (!event?.value) {
       return;
-
     }
-    this.hasSelectedEmployee = true;
+    const position = this.positions.find(t => t.parentValue === event?.value.position);
     this.form.patchValue({
-      position: event?.value.employeeNumber,
+      position: position ? position.parentId : null,
       username: event?.value.emailAddress.split('@')[0],
       firstName: event?.value.firstName,
       lastName: event?.value.lastName,
       emailAddress: event?.value.emailAddress,
-      mobileNumber: event?.value.mobileNumber
+      mobileNumber: event?.value.mobileNumber,
     });
   }
 
   private _initializeData(data: any): void {
     this.form.setValue({
       employeeNumber: data.employeeNumber,
+      tempEmployeeNumber: data.employeeNumber,
       username: data.userName,
       position: data.position,
       firstName: data.firstName,
@@ -316,6 +306,20 @@ export class UserComponent implements OnInit, OnDestroy {
         this.userRoles = data;
         this.userRoleTabLabel = `User Roles (${data?.length})`;
         this._securityService.userRoles$.next(data);
+      });
+  }
+
+  private _getLookupValues(): void {
+    const libraryTypeCodes: string[] = ['POS','DIV','TAFG'];
+    this._portalService.getDropdownValues(libraryTypeCodes)
+      .pipe(takeUntil(this._onDestroy$))
+      .subscribe(data => {
+        if (!data) {
+          return;
+        }
+        this.positions = data.filter(t => t.dropdownCode === 'POS');
+        this.divisions = data.filter(t => t.dropdownCode === 'DIV');
+        this.tafgs = data.filter(t => t.dropdownCode === 'TAFG');
       });
   }
 }
