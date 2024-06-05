@@ -193,7 +193,8 @@
                                 <wj-flex-grid class="main-grid px-4 py-4" #plantInformationCostCenterGrid [itemsSource]="plantInformationCostCenterData" [selectionMode]="'Row'" [allowResizing]="false" style="width: 100%; border: none; padding-right: 2%">
                                     <wj-flex-grid-column binding="costCenterType" header="Cost Center Type" width="30*"></wj-flex-grid-column>
                                     <wj-flex-grid-column binding="costCenterNo" header="Cost Center No." width="30*"></wj-flex-grid-column>
-                                    
+                                    <!-- <wj-flex-grid-column binding="projectStageSeq" header="Project Stage" [dataMap]="projectProfileStageMap" [dataMapEditor]="'DropDownList'" [editor]="plantInfCombo" width="30*" ></wj-flex-grid-column> -->
+
                                     <!-- wordWrap="true" -->
                                     <wj-flex-grid-column binding="action" header="Action" width="10*">
                                         <ng-template

@@ -4,6 +4,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { PageMode } from 'src/app/core/enums/page-mode.enum';
+import { LibraryTypeCodes } from 'src/app/core/enums/library-types.enum';
 import { ILibraryTypes } from 'src/app/core/models/library-types';
 import { FlexGrid } from '@grapecity/wijmo.grid';
 import { PortalService } from 'src/app/core/services/portal.service';
@@ -21,6 +22,7 @@ import { faL } from '@fortawesome/free-solid-svg-icons';
 export class PlantInformationComponent implements OnInit, OnDestroy {
     @ViewChild('plantInformationCostCenterGrid') plantInformationCostCenterGrid: FlexGrid;
     pageMode: PageMode;
+    libraryTypeCodes: LibraryTypeCodes;
     form: FormGroup; 
     layoutCtrl = new UntypedFormControl('fullwidth');
     statusLabel: string = 'Active';
@@ -109,28 +111,8 @@ export class PlantInformationComponent implements OnInit, OnDestroy {
                 if (!data) {
                     return;
                 }
-                console.log("editmode: ", data);
-                this.form.patchValue({
-                    plantCode: data.plantCode || '',
-                    substationName: data.substationName || '',
-                    classId: data.classId || '',
-                    substationNameOld: data.substationNameOld || '',
-                    transGrid: data.transGrid || '',
-                    districtId: data.districtId || '',
-                    mtdId: data.mtdId || '',
-                    commissionDate: data.commissionDate || '',
-                    gmapCoord: data.gmapCoord || '',
-                    udF1: data.udF1 || '',
-                    udF2: data.udF2 || '',
-                    udF3: data.udF3 || '',
-                    regionId: data.regionId || '',
-                    munId: data.munId || '',
-                    provId: data.provId || '',
-                    brgyId: data.brgyId || '',
-                    isActive: data.isActive || 'Y',
-                    status: data.status || '',
-                    statusDate: data.statusDate || ''
-                });
+                this._patchValues(data);
+                
                 this.plantInformationCostCenterData = new wjcCore.CollectionView(data.plantInformationCostCenter, { pageSize: 5 });
                 this.statusLabel = data.isActive === 'Y' ? 'Active' : 'Inactive'; 
                 this.createdBy = data.createdByName;
@@ -142,26 +124,31 @@ export class PlantInformationComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        const codes = ['PIC', 'CCT', 'AST', 'AC'];
+        const codes = 
+            [ LibraryTypeCodes.PlantInformationClass
+            , LibraryTypeCodes.TransmissionGrid
+            , LibraryTypeCodes.DistrictOffice
+            , LibraryTypeCodes.MTD
+            , LibraryTypeCodes.CostCenterType];
+
         this._portalService.getDropdownValues(codes)
         .pipe(takeUntil(this._onDestroy$))
         .subscribe((data: DropdownValueModel[]) => {
           if (!data) {
             return;   
           }
-console.log(data);
-          this.plantInfoClassification = data.filter(type => type.dropdownCode =='PIC');
-          this.transmissionGrid = data.filter(type => type.dropdownCode === 'PIC');
-          this.districtOffice = data.filter(type => type.dropdownCode === 'PIC');
-          this.mtdList = data.filter(type => type.dropdownCode === 'PIC');
-          this.costCenterType = data.filter(type => type.dropdownCode === 'PIC');
+          this.plantInfoClassification = data.filter(type => type.dropdownCode == LibraryTypeCodes.PlantInformationClass);
+          this.transmissionGrid = data.filter(type => type.dropdownCode === LibraryTypeCodes.TransmissionGrid);
+          this.districtOffice = data.filter(type => type.dropdownCode === LibraryTypeCodes.DistrictOffice);
+          this.mtdList = data.filter(type => type.dropdownCode === LibraryTypeCodes.MTD);
+          this.costCenterType = data.filter(type => type.dropdownCode === LibraryTypeCodes.CostCenterType);
 
         });
 
-        this.getRegions();
-        this.getProvinces();
-        this.getMunicipalities();
-        this.getBarangays();
+        this._getRegions();
+        this._getProvinces();
+        this._getMunicipalities();
+        this._getBarangays();
 
     }
 
@@ -172,50 +159,6 @@ console.log(data);
 
     onToggleStatus($event: any): void {
         this.statusLabel = !$event.checked ? 'Inactive' : 'Active'; 
-    }
-
-    getRegions(): void {
-        this._portalService.getRegions()
-            .pipe(takeUntil(this._onDestroy$))
-            .subscribe(data => {
-                if(!data){
-                    return;
-                }
-                this.regions = data;
-        });
-    }
-
-    getProvinces(): void {
-        this._portalService.getProvinces()
-            .pipe(takeUntil(this._onDestroy$))
-            .subscribe(data => {
-                if(!data){
-                    return;
-                }
-                this.provinces = data;
-        });
-    }
-
-    getMunicipalities(): void {
-        this._portalService.getMunicipalities()
-            .pipe(takeUntil(this._onDestroy$))
-            .subscribe(data => {
-                if(!data){
-                    return;
-                }
-                this.municipalities = data;
-        });
-    }
-
-    getBarangays(): void {
-        this._portalService.getBarangays()
-            .pipe(takeUntil(this._onDestroy$))
-            .subscribe(data => {
-                if(!data){
-                    return;
-                }
-                this.barangays = data;
-        });
     }
 
     getPlantInformationCostCenterDataCount(): number {
@@ -302,22 +245,54 @@ console.log(data);
             data.statusDate = new Date();
             data.plantInformationCostCenterDTO = plantInformationCostCenterDTOArray;
 
-            this._portalService.createPlantInformation(data)
-            .pipe(takeUntil(this._onDestroy$))
-            .subscribe(data => {
-                if (!data) {
-                    return;
-                }
-                let snackBarRef = this._snackBar.open('Plant Infomration has been successfully added.', 'Close');
-                snackBarRef.afterDismissed().subscribe(() => {
-                    this._router.navigateByUrl('apps/plant-information');
-                });
-            });
+            this._createPlantInformation(data);
         }
         else if (this.pageMode === 2) {
             data.updatedBy = parseInt(localStorage.getItem('user_id'));
+            this._updatePlantInformation(data);
+        }
+    }
 
-            this._portalService.updatePlantInformation(data.plantCode, data)
+    private _patchValues(data): void {
+        this.form.patchValue({
+            plantCode: data.plantCode || '',
+            substationName: data.substationName || '',
+            classId: data.classId || '',
+            substationNameOld: data.substationNameOld || '',
+            transGrid: data.transGrid || '',
+            districtId: data.districtId || '',
+            mtdId: data.mtdId || '',
+            commissionDate: data.commissionDate || '',
+            gmapCoord: data.gmapCoord || '',
+            udF1: data.udF1 || '',
+            udF2: data.udF2 || '',
+            udF3: data.udF3 || '',
+            regionId: data.regionId || '',
+            munId: data.munId || '',
+            provId: data.provId || '',
+            brgyId: data.brgyId || '',
+            isActive: data.isActive || 'Y',
+            status: data.status || '',
+            statusDate: data.statusDate || ''
+        });
+    }
+
+    private _createPlantInformation(data: any) : void {
+        this._portalService.createPlantInformation(data)
+        .pipe(takeUntil(this._onDestroy$))
+        .subscribe(data => {
+            if (!data) {
+                return;
+            }
+            let snackBarRef = this._snackBar.open('Plant Infomration has been successfully added.', 'Close');
+            snackBarRef.afterDismissed().subscribe(() => {
+                this._router.navigateByUrl('apps/plant-information');
+            });
+        });
+    }
+
+    private _updatePlantInformation(data) {
+        this._portalService.updatePlantInformation(data.plantCode, data)
             .pipe(takeUntil(this._onDestroy$))
             .subscribe(data => {
                 if (!data) {
@@ -328,6 +303,49 @@ console.log(data);
                     window.location.reload();
                 });
             });
-        }
+    }
+
+    private _getRegions(): void {
+        this._portalService.getRegions()
+            .pipe(takeUntil(this._onDestroy$))
+            .subscribe(data => {
+                if(!data){
+                    return;
+                }
+                this.regions = data;
+        });
+    }
+
+    private _getProvinces(): void {
+        this._portalService.getProvinces()
+            .pipe(takeUntil(this._onDestroy$))
+            .subscribe(data => {
+                if(!data){
+                    return;
+                }
+                this.provinces = data;
+        });
+    }
+
+    private _getMunicipalities(): void {
+        this._portalService.getMunicipalities()
+            .pipe(takeUntil(this._onDestroy$))
+            .subscribe(data => {
+                if(!data){
+                    return;
+                }
+                this.municipalities = data;
+        });
+    }
+
+    private _getBarangays(): void {
+        this._portalService.getBarangays()
+            .pipe(takeUntil(this._onDestroy$))
+            .subscribe(data => {
+                if(!data){
+                    return;
+                }
+                this.barangays = data;
+        });
     }
 }
