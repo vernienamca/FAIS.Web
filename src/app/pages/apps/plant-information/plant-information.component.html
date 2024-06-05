@@ -59,7 +59,7 @@
                                 <mat-label>Class</mat-label>
                                 <mat-select formControlName="classId">
                                     <mat-option *ngFor="let class of plantInfoClassification" [value]="class.parentId">
-                                        {{ class.description}}
+                                        {{ class.parentValue}}
                                     </mat-option>
                                 </mat-select>
                             </mat-form-field>
@@ -73,7 +73,7 @@
                                 <mat-label>Transmission Grid</mat-label>
                                 <mat-select formControlName="transGrid">
                                     <mat-option *ngFor="let grid of transmissionGrid" [value]="grid.parentId">
-                                        {{ grid.description}}
+                                        {{ grid.parentValue}}
                                     </mat-option>
                                 </mat-select>
                             </mat-form-field>
@@ -82,7 +82,7 @@
                                 <mat-label>District Office</mat-label>
                                 <mat-select formControlName="districtId">
                                     <mat-option *ngFor="let district of districtOffice" [value]="district.parentId">
-                                        {{ district.description}}
+                                        {{ district.parentValue}}
                                     </mat-option>
                                 </mat-select>
                             </mat-form-field>
@@ -92,11 +92,11 @@
                                 <mat-label>MTD</mat-label>
                                 <mat-select formControlName="mtdId">
                                     <mat-option *ngFor="let mtd of mtdList" [value]="mtd.parentId">
-                                        {{ mtd.description}}
+                                        {{ mtd.parentValue}}
                                     </mat-option>
                                 </mat-select>
                             </mat-form-field>
-                            <mat-form-field appearance="fill" class="w-full">
+                            <mat-form-field appearance="fill" >
                                 <mat-label>Commisioning Date</mat-label>
                                 <input
                                     matInput
@@ -191,7 +191,7 @@
                             <!-- WIJMO TABLE -->
                             <div class="wijmotable">
                                 <wj-flex-grid class="main-grid px-4 py-4" #plantInformationCostCenterGrid [itemsSource]="plantInformationCostCenterData" [selectionMode]="'Row'" [allowResizing]="false" style="width: 100%; border: none; padding-right: 2%">
-                                    <wj-flex-grid-column binding="costCenterType" header="Cost Center Type" width="30*"></wj-flex-grid-column>
+                                    <wj-flex-grid-column binding="costCenterType" header="Cost Center Type"  [dataMap]="costCenterTypesMap"  width="30*"></wj-flex-grid-column>
                                     <wj-flex-grid-column binding="costCenterNo" header="Cost Center No." width="30*"></wj-flex-grid-column>
                                     <!-- <wj-flex-grid-column binding="projectStageSeq" header="Project Stage" [dataMap]="projectProfileStageMap" [dataMapEditor]="'DropDownList'" [editor]="plantInfCombo" width="30*" ></wj-flex-grid-column> -->
 

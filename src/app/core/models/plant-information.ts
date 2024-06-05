@@ -1,5 +1,4 @@
 export interface IPlantInformation {
-    id: number;
     plantCode: string;
     substationName: string;
     substationNameOld: string;
@@ -25,13 +24,12 @@ export interface IPlantInformation {
     updatedBy?: number;
     updatedByName: string;
     updatedAt?: Date;
-    plantInformationCostCenterDTO: IPlantInformationCostCenter[];
-    plantInformationCostCenterModel: IPlantInformationCostCenter[];
-    plantInformationCostCenter: IPlantInformationCostCenter[];
+    plantInformationDetailDTO: IPlantInformationCostCenter[];
+    plantInformationDetail: IPlantInformationCostCenter[];
 }
 
 export interface IPlantInformationCostCenter {
-    plantCode: string;
+    id: number;
     costCenter: string;
     costCenterTypeLto: string;
     createdBy: number;
