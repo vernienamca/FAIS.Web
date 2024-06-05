@@ -14,6 +14,7 @@ import { IProjectProfile, IProjectProfileComponent } from 'src/app/core/models/p
 import { ModuleEnum } from 'src/app/core/enums/module-enum';
 import { MatButton } from '@angular/material/button';
 import {IRole} from 'src/app/core/models/role'
+import { LibraryTypeCodes } from 'src/app/core/enums/library-types.enum';
 
 import { WjInputModule } from '@grapecity/wijmo.angular2.input';
 import { WjGridModule } from '@grapecity/wijmo.angular2.grid';
@@ -296,15 +297,20 @@ export class ProjectProfileComponent implements OnInit, OnDestroy {
       }
     });
 
-    this._portalService.getLibraryTypes()
+    const codes = 
+      [ LibraryTypeCodes.ProjectProfileClassification
+      , LibraryTypeCodes.ProjectProfileStage
+      , LibraryTypeCodes.ProjectProfileTransmissionGrid];
+
+    this._portalService.getDropdownValues(codes)
     .pipe(takeUntil(this._onDestroy$))
     .subscribe(data => {
       if(!data) {
         return;
       }
-      this.projectProfileClassification = data.filter(type => type.code =='PC');
-      this.projectProfileStage = data.filter(type => type.code === 'PS');
-      this.projectProfileTransmissionGrid = data.filter(type => type.code === 'PTG');
+      this.projectProfileClassification = data.filter(type => type.dropdownCode == LibraryTypeCodes.ProjectProfileClassification);
+      this.projectProfileStage = data.filter(type => type.dropdownCode === LibraryTypeCodes.ProjectProfileStage);
+      this.projectProfileTransmissionGrid = data.filter(type => type.dropdownCode === LibraryTypeCodes.ProjectProfileTransmissionGrid);
       this.projectProfileStageMap = new DataMap(this.projectProfileStage, 'id', 'name');
       this.projectProfileTransmissionGridMap = new DataMap(this.projectProfileTransmissionGrid, 'id', 'name');
     })

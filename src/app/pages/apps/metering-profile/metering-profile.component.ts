@@ -11,6 +11,7 @@ import {IRole} from 'src/app/core/models/role'
 import { MatDialog } from '@angular/material/dialog';
 import { MeteringConfirmationDialogComponent } from './metering-confirmation-dialog/metering-confirmation-dialog.component';
 import { ModuleEnum } from 'src/app/core/enums/module-enum';
+import { LibraryTypeCodes } from 'src/app/core/enums/library-types.enum';
 
 @Component({
   selector: 'vex-module',
@@ -141,17 +142,24 @@ export class MeteringProfileComponent implements OnInit, OnDestroy {
     this.chartofAccounts = chartAccounts;
   })
 
-    this._portalService.getLibraryTypes()
+  const codes = 
+    [ LibraryTypeCodes.InstallationType
+    , LibraryTypeCodes.MeteringClassification
+    , LibraryTypeCodes.MeteringTransmissionGrid
+    , LibraryTypeCodes.FacilityLocation
+    , LibraryTypeCodes.DistrictOffice];
+
+    this._portalService.getDropdownValues(codes)
     .pipe(takeUntil(this._onDestroy$))
     .subscribe(data => {
       if(!data) {
         return;
       }
-      this.installationType = data.filter(type => type.code =='INT');
-      this.meteringClassification = data.filter(type => type.code =='MC');
-      this.transmissionGrid = data.filter(type => type.code === 'TRG');
-      this.districtOffice = data.filter(type => type.code === 'DTO');
-      this.facilityLocation = data.filter(type => type.code == 'FL');
+      this.installationType = data.filter(type => type.dropdownCode == LibraryTypeCodes.InstallationType);
+      this.meteringClassification = data.filter(type => type.dropdownCode == LibraryTypeCodes.MeteringClassification);
+      this.transmissionGrid = data.filter(type => type.dropdownCode == LibraryTypeCodes.MeteringTransmissionGrid);
+      this.districtOffice = data.filter(type => type.dropdownCode == LibraryTypeCodes.DistrictOffice);
+      this.facilityLocation = data.filter(type => type.dropdownCode == LibraryTypeCodes.FacilityLocation);
     })
 
     this._portalService.getRegions()

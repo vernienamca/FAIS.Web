@@ -33,7 +33,6 @@ export class ProFormaEntryComponent implements OnInit, OnDestroy {
   updatedBy: string;
   updatedAt: Date;
   isEditMode: boolean = false;
-  filteredLibraryTypes: ILibraryTypes[] = [];
   filteredLibraryOptions: ILibraryTypeOption[] =[];
   filteredOptions: ILibraryTypeOption[] =[];
   id: number;
@@ -167,15 +166,6 @@ export class ProFormaEntryComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.proformaData = this.getProFormaData(0);
     this.id = parseInt(this._route.snapshot.paramMap.get('id'));
-    this._portalService.getLibraryTypes()
-    .pipe(takeUntil(this._onDestroy$))
-    .subscribe(data => {
-      if (!data) {
-        return;
-      }
-      const libraryTypes: ILibraryTypes[] = data;
-      this.filteredLibraryTypes = libraryTypes.filter(type => type.code === 'ACG');
-    });
 
     if (this.id) {
       this.isEditMode = true;
