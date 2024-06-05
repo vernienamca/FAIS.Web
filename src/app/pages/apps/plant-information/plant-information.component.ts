@@ -1,8 +1,8 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, Validators, FormBuilder, UntypedFormControl    } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subject, takeUntil } from 'rxjs';
+import { Observable, Subject, switchMap, takeUntil, tap } from 'rxjs';
 import { PageMode } from 'src/app/core/enums/page-mode.enum';
 import { LibraryTypeCodes } from 'src/app/core/enums/library-types.enum';
 import { ILibraryTypes } from 'src/app/core/models/library-types';
@@ -11,8 +11,9 @@ import { PortalService } from 'src/app/core/services/portal.service';
 import * as wjcCore from '@grapecity/wijmo';
 import { IPlantInformationCostCenter } from 'src/app/core/models/plant-information';
 import { DataMap }from '@grapecity/wijmo.grid';
-import { DropdownValueModel} from 'src/app/core/models/library-type-option';
-import { faL } from '@fortawesome/free-solid-svg-icons';
+import { SecurityService } from 'src/app/core/services/security.service';
+import { ModuleEnum } from 'src/app/core/enums/module-enum';
+import { IRole } from 'src/app/core/models/role';
 
 @Component({
     selector: 'vex-plant-information',
@@ -45,9 +46,14 @@ export class PlantInformationComponent implements OnInit, OnDestroy {
     municipalities: any[] =[];
     barangays: any[] =[];
     costCenterTypes = [{}];
-    costCenterTypesMap = new DataMap(this.costCenterTypes, 'id', 'name');
+    costCenterTypesMap = new DataMap(this.costCenterTypes, 'libraryTypeId', 'parentValue');
     addMode: boolean = true;
-
+    isEditMode: boolean = false;
+    isAdmin: boolean = false;
+    roleIds: number[] = [];
+    userId: number;
+    roles: IRole[] = [];
+    
     get formControls() {
         return {
             plantCode: this.form.get('plantCode'),
@@ -78,16 +84,18 @@ export class PlantInformationComponent implements OnInit, OnDestroy {
         private _route: ActivatedRoute,
         private _portalService: PortalService,
         private _snackBar: MatSnackBar,
-        private _router: Router
+        private _router: Router,
+        private _cdr: ChangeDetectorRef,
+        private _securityService: SecurityService
     ) {
         this.form = this._fb.group({
             plantCode: ['', [Validators.required]],
             substationName: ['', [Validators.required]],
             classId: [''],
             substationNameOld: [''],
-            transGrid: [''],
-            districtId: [''],
-            mtdId: [''],
+            transGrid: ['', [Validators.required]],
+            districtId: ['', [Validators.required]],
+            mtdId: ['', [Validators.required]],
             commissionDate: [''],
             gmapCoord: [''],
             udF1: [''],
@@ -112,18 +120,26 @@ export class PlantInformationComponent implements OnInit, OnDestroy {
                     return;
                 }
                 this._patchValues(data);
-                
-                this.plantInformationCostCenterData = new wjcCore.CollectionView(data.plantInformationCostCenter, { pageSize: 5 });
+
                 this.statusLabel = data.isActive === 'Y' ? 'Active' : 'Inactive'; 
                 this.createdBy = data.createdByName;
                 this.createdAt = data.createdAt;
                 this.updatedBy = data.updatedByName || 'N/A';
                 this.updatedAt = data.updatedAt;
+                this.plantInformationCostCenterData = new wjcCore.CollectionView(
+                    data.plantInformationDetail.map(item => ({
+                      costCenterType: item.costCenterTypeLto, 
+                      costCenterNo: item.costCenter                      ,
+                    })),
+                    { pageSize: 5 }
+                  );
+                this._cdr.detectChanges();
             });
         }
     }
 
     ngOnInit(): void {
+        this.userId = parseInt(localStorage.getItem('user_id'));
         const codes = 
             [ LibraryTypeCodes.PlantInformationClass
             , LibraryTypeCodes.TransmissionGrid
@@ -131,9 +147,14 @@ export class PlantInformationComponent implements OnInit, OnDestroy {
             , LibraryTypeCodes.MTD
             , LibraryTypeCodes.CostCenterType];
 
+            this._getRoles().pipe(
+                tap(() => this._checkFormFields()),  
+                takeUntil(this._onDestroy$)
+            ).subscribe();
+
         this._portalService.getDropdownValues(codes)
         .pipe(takeUntil(this._onDestroy$))
-        .subscribe((data: DropdownValueModel[]) => {
+        .subscribe((data) => {
           if (!data) {
             return;   
           }
@@ -141,15 +162,18 @@ export class PlantInformationComponent implements OnInit, OnDestroy {
           this.transmissionGrid = data.filter(type => type.dropdownCode === LibraryTypeCodes.TransmissionGrid);
           this.districtOffice = data.filter(type => type.dropdownCode === LibraryTypeCodes.DistrictOffice);
           this.mtdList = data.filter(type => type.dropdownCode === LibraryTypeCodes.MTD);
-          this.costCenterType = data.filter(type => type.dropdownCode === LibraryTypeCodes.CostCenterType);
 
+          this.costCenterTypes = data.filter(type => type.dropdownCode === LibraryTypeCodes.CostCenterType).map(type => ({
+            id: type.libraryTypeId,
+            name: type.parentValue
+          }));
+          this.costCenterTypesMap = new DataMap(this.costCenterTypes, 'id', 'name');
         });
 
         this._getRegions();
         this._getProvinces();
         this._getMunicipalities();
         this._getBarangays();
-
     }
 
     ngOnDestroy(): void {
@@ -217,7 +241,7 @@ export class PlantInformationComponent implements OnInit, OnDestroy {
         }
 
         const wijmoInvalid = this.plantInformationCostCenterData.sourceCollection.some((item: any) => {
-            return item.gl === '' || /^[a-zA-Z]+$/.test(item.glNo) || item.sl === '' || /^[a-zA-Z]+$/.test(item.sl) || item.faisRefNo === '';
+            return item.costCenterType === '' || /^[a-zA-Z]+$/.test(item.costCenterType) || item.costCenterNo === '' || /^[a-zA-Z]+$/.test(item.costCenterNo) || item.faisRefNo === '';
         });
         if (wijmoInvalid) {
             this._snackBar.open('Please fill in or delete the rows in the table.', 'Close', {
@@ -228,11 +252,11 @@ export class PlantInformationComponent implements OnInit, OnDestroy {
         const collectionView = this.plantInformationCostCenterGrid.collectionView;
         const allItems = collectionView.sourceCollection as any[];
 
-        const plantInformationCostCenterDTOArray: IPlantInformationCostCenter[] = allItems.map((item: any) => {
+        const plantInformationDetailDTO: IPlantInformationCostCenter[] = allItems.map((item: any) => {
             return {
-                plantCode: this.plantCode || '',
-                costCenter: item.costCenter,
-                costCenterTypeLto: item.costCenterTypeLto,
+                id: item.id,
+                costCenter: item.costCenterNo,
+                costCenterTypeLto: item.costCenterType,
                 createdBy: parseInt(localStorage.getItem('user_id')),
                 createdAt: this.createdAt = new Date()
             };
@@ -243,12 +267,12 @@ export class PlantInformationComponent implements OnInit, OnDestroy {
         if (this.pageMode === 1) {
             data.createdBy = parseInt(localStorage.getItem('user_id'));
             data.statusDate = new Date();
-            data.plantInformationCostCenterDTO = plantInformationCostCenterDTOArray;
-
+            data.plantInformationDetailDTO = plantInformationDetailDTO;
             this._createPlantInformation(data);
         }
         else if (this.pageMode === 2) {
             data.updatedBy = parseInt(localStorage.getItem('user_id'));
+            data.plantInformationDetailDTO = plantInformationDetailDTO;
             this._updatePlantInformation(data);
         }
     }
@@ -275,6 +299,7 @@ export class PlantInformationComponent implements OnInit, OnDestroy {
             status: data.status || '',
             statusDate: data.statusDate || ''
         });
+ 
     }
 
     private _createPlantInformation(data: any) : void {
@@ -284,7 +309,24 @@ export class PlantInformationComponent implements OnInit, OnDestroy {
             if (!data) {
                 return;
             }
-            let snackBarRef = this._snackBar.open('Plant Infomration has been successfully added.', 'Close');
+    
+            const notifData = {
+                roleIds: this.roleIds, 
+                id: data.plantCode,
+                assetName: data.substationName,
+                editMode: this.isEditMode,
+                isAdmin: this.isAdmin,
+                ModuleId: ModuleEnum.PlantInformation
+              };
+              this._securityService.postNotifRole(notifData)
+              .pipe(takeUntil(this._onDestroy$))
+              .subscribe(data => {
+                if(!data){
+                  return;
+                }
+              })
+
+            let snackBarRef = this._snackBar.open('Plant Information has been successfully added.', 'Close');
             snackBarRef.afterDismissed().subscribe(() => {
                 this._router.navigateByUrl('apps/plant-information');
             });
@@ -298,10 +340,27 @@ export class PlantInformationComponent implements OnInit, OnDestroy {
                 if (!data) {
                     return;
                 }
-                let snackBarRef = this._snackBar.open('Plant information has been successfully updated.', 'Close');
-                snackBarRef.afterDismissed().subscribe(() => {
-                    window.location.reload();
-                });
+
+                const notifData = {
+                    roleIds: this.roleIds, 
+                    id: data.plantCode,
+                    assetName: data.substationName,
+                    editMode: this.isEditMode,
+                    isAdmin: this.isAdmin,
+                    ModuleId: ModuleEnum.PlantInformation
+                  };
+                  this._securityService.postNotifRole(notifData)
+                  .pipe(takeUntil(this._onDestroy$))
+                  .subscribe(data => {
+                    if(!data){
+                      return;
+                    }
+                  })
+
+                // let snackBarRef = this._snackBar.open('Plant information has been successfully updated.', 'Close');
+                // snackBarRef.afterDismissed().subscribe(() => {
+                //     window.location.reload();
+                // });
             });
     }
 
@@ -348,4 +407,45 @@ export class PlantInformationComponent implements OnInit, OnDestroy {
                 this.barangays = data;
         });
     }
+
+    private _checkFormFields(): void {
+        this._portalService.getUserRoles(this.userId)
+        .pipe(takeUntil(this._onDestroy$))
+        .subscribe(data => {
+          if(!data){
+            return;
+          }
+          const roleAuthorized = this._getRoleAuthorization(data)
+          if (roleAuthorized.name === 'Administrator') {
+           this.isAdmin = true;
+           const administratorRole = this.roles.find(role => role.name === 'Administrator');
+           this.roleIds.push(administratorRole.id)
+          }
+    
+          if (roleAuthorized.name === 'PAD Librarian') {
+            const meteringLibrarianRole = this.roles.find(role => role.name === 'PAD Librarian');
+            this.roleIds.push(meteringLibrarianRole.id)
+          }
+        });
+
+    }
+    private _getRoleAuthorization(roles: any[]): any {
+        const relevantRoles = roles.filter(role => this.roles.some(r => r.name === role.name && role.isActive === true));
+        if (relevantRoles.length > 0) {
+          const firstRole = relevantRoles.reduce((minRole, currentRole) => minRole.userRoleId < currentRole.userRoleId ? minRole : currentRole);
+          return firstRole;
+        }
+      }
+      
+      private _getRoles(): Observable<IRole[]> {
+        return this._portalService.getRoles().pipe(
+          tap(roles => {
+            if (!roles) {
+              throw new Error('No roles found');
+            }
+            this.roles = roles;
+          }),
+          takeUntil(this._onDestroy$)
+        );
+      }
 }
