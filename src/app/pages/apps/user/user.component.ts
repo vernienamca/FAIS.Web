@@ -49,6 +49,8 @@ export class UserComponent implements OnInit, OnDestroy {
   positions: DropdownValueModel[] = [];
   divisions: DropdownValueModel[] = [];
   tafgs: DropdownValueModel[] = [];
+  oupfgs: DropdownValueModel[] = [];
+
 
   get formControls() {
     return {
@@ -144,7 +146,6 @@ export class UserComponent implements OnInit, OnDestroy {
             return;
           }
           this._initializeData(data);
-          console.log('userdata', data)
           this._getUserRoles(this.userId);
           this._disableFormControls();
         });
@@ -182,17 +183,16 @@ export class UserComponent implements OnInit, OnDestroy {
       data.photo = this.photo.split(',')[1];
     }
     
-    data.employeeNumber = this.formControls.employeeNumber.value;
 
     if (this.userId) {
-      data.tempEmployeeNumber = this.formControls.employeeNumber.value;
+      data.employeeNumber = this.formControls.tempEmployeeNumber.value;
       data.userRoles = this.userRoles;
       data.updatedBy = parseInt(localStorage.getItem('user_id'));
-
-      console.log(data);
       this._updateUser(data);
       return;
     }
+
+    data.employeeNumber = this.formControls.employeeNumber.value.employeeNumber;
     data.createdBy = parseInt(localStorage.getItem('user_id'));
     this._createUser(data);
   }
@@ -238,7 +238,7 @@ export class UserComponent implements OnInit, OnDestroy {
       emailAddress: data.emailAddress,
       mobileNumber: data.mobileNumber,
       taFG: data.tafGs || [],
-      oupFG: data.oufg || '',
+      oupFG: parseInt(data.oufg) ,
       division: data.division || '',
       accountStatus: data.status.toString(),
       statusDate: `${this._datePipe.transform(data.statusDate, 'longDate')}` || '',
@@ -310,7 +310,7 @@ export class UserComponent implements OnInit, OnDestroy {
   }
 
   private _getLookupValues(): void {
-    const libraryTypeCodes: string[] = ['POS','DIV','TAFG'];
+    const libraryTypeCodes: string[] = ['POS','DIV','TAFG', 'OFG'];
     this._portalService.getDropdownValues(libraryTypeCodes)
       .pipe(takeUntil(this._onDestroy$))
       .subscribe(data => {
@@ -320,6 +320,7 @@ export class UserComponent implements OnInit, OnDestroy {
         this.positions = data.filter(t => t.dropdownCode === 'POS');
         this.divisions = data.filter(t => t.dropdownCode === 'DIV');
         this.tafgs = data.filter(t => t.dropdownCode === 'TAFG');
+        this.oupfgs = data.filter(t => t.dropdownCode === 'OFG' )
       });
   }
 }

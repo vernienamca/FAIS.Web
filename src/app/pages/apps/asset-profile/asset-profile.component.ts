@@ -103,17 +103,6 @@ export class AssetProfileComponent implements OnInit, OnDestroy {
     this.chartofAccounts = chartAccounts;
   })
 
-    // this._portalService.getLibraryTypes()
-    // .pipe(takeUntil(this._onDestroy$))
-    // .subscribe(data => {
-    //   if(!data) {
-    //     return;
-    //   }
-    //   this.costCenterType = data.filter(type => type.code =='CCT');
-    //   this.assetType = data.filter(type => type.code =='AT');
-    //   this.filteredlibraryTypes = data.filter(type => type.code === 'AST');
-    //   this.assetClass = data.filter(type => type.code === 'AC' );
-    // })
     const codes = ['AT', 'CCT', 'AST', 'AC'];
     this._portalService.getDropdownValues(codes)
     .pipe(takeUntil(this._onDestroy$))
