@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit} from '@angular/core';
 import { FormGroup, Validators, FormBuilder, UntypedFormControl } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute,Router } from '@angular/router';
-import { Subject, takeUntil, tap , Observable, switchMap,combineLatest } from 'rxjs';
+import { Subject, takeUntil, tap , Observable, switchMap,combineLatest, startWith } from 'rxjs';
 import { PortalService } from 'src/app/core/services/portal.service';
 import { SecurityService } from 'src/app/core/services/security.service';
 import {IRole} from 'src/app/core/models/role'
@@ -35,10 +35,11 @@ export class TransmissionProfileComponent implements OnInit, OnDestroy {
  isSaving: boolean;
  isAdmin: boolean;
  hasAccess = false;
- totalStructures: number = 0;
- st: number = 0;
- sp: number = 0;
- wp: number = 0;
+ st$ = new Subject<number>();
+ sp$  = new Subject<number>();
+ cp$ = new Subject<number>();
+ wp$ = new Subject<number>();
+ slwt$  = new Subject<number>();
 
  get formControls() {
   return {
@@ -131,11 +132,11 @@ export class TransmissionProfileComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     combineLatest([
-      this.form.get('st').valueChanges,
-      this.form.get('sp').valueChanges,
-      this.form.get('cp').valueChanges,
-      this.form.get('wp').valueChanges,
-      this.form.get('slwt').valueChanges
+      this.form.get('st').valueChanges.pipe(startWith(null)),
+      this.form.get('sp').valueChanges.pipe(startWith(null)),
+      this.form.get('cp').valueChanges.pipe(startWith(null)),
+      this.form.get('wp').valueChanges.pipe(startWith(null)),
+      this.form.get('slwt').valueChanges.pipe(startWith(null))
     ])
     .pipe(takeUntil(this._onDestroy$))
     .subscribe(() => this.OnStructureChange());
@@ -348,8 +349,5 @@ export class TransmissionProfileComponent implements OnInit, OnDestroy {
 
     const total = st + sp + cp + wp + slwt;
     this.form.get('totalstructures').setValue(total);
-}
-calculateTotal(): number {
-  return this.st + this.sp + this.wp;
 }
 }
