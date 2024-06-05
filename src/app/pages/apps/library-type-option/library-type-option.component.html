@@ -35,21 +35,16 @@
             <div class="flex flex-col sm:flex-row sm:gap-4">
               <mat-form-field appearance="fill" class="flex-auto" [ngClass]="{'option-code': pageMode === 2}">
                 <mat-label>Option Code</mat-label>
-                <input matInput formControlName="code" required [readonly]="pageMode === 2">
-                <mat-error *ngIf="formControls.code.touched && formControls.code.invalid">
-                  <span *ngIf="formControls.code.getError('required')">
-                    Option code is required
-                  </span>
-                </mat-error>
+                <input matInput formControlName="code">
               </mat-form-field>
             </div>
             <div class="flex flex-col sm:flex-row sm:gap-4">
               <mat-form-field appearance="fill" class="flex-auto">
-                <mat-label>Option Description</mat-label>
+                <mat-label>Library Type Option</mat-label>
                 <input matInput formControlName="description" required>
                 <mat-error *ngIf="formControls.description.touched && formControls.description.invalid">
                   <span *ngIf="formControls.description.getError('required')">
-                    Option description is required
+                    Library Type Option is required
                   </span>
                 </mat-error>
               </mat-form-field>
@@ -90,11 +85,11 @@
 
             <div class="flex flex-col sm:flex-row sm:gap-4">
               <mat-form-field appearance="fill" class="flex-auto">
-                <mat-label>Remarks</mat-label>
-                <input matInput formControlName="remark" required>
-                <mat-error *ngIf="formControls.remark.touched && formControls.remark.invalid">
-                  <span *ngIf="formControls.remark.getError('required')">
-                    Remarks is required
+                <mat-label>Option Description</mat-label>
+                <input matInput formControlName="remarks" required>
+                <mat-error *ngIf="formControls.remarks.touched && formControls.remarks.invalid">
+                  <span *ngIf="formControls.remarks.getError('required')">
+                    Option Description is required
                   </span>
                 </mat-error>
               </mat-form-field>

@@ -13,6 +13,7 @@ import { RoleNames } from 'src/app/core/enums/role.enums';
 import { MatDialog } from '@angular/material/dialog';
 import { AssetConfirmationDialogComponent } from './asset-confirmation-dialog/asset-confirmation-dialog.component';
 import { ModuleEnum } from 'src/app/core/enums/module-enum';
+import { DropdownValueModel} from 'src/app/core/models/library-type-option';
 
 @Component({
   selector: 'vex-module',
@@ -29,10 +30,10 @@ export class AssetProfileComponent implements OnInit, OnDestroy {
  statusDate: Date | null = null;
  statusLabel = 'Active';
  chartofAccounts: IChart[] = [];
- costCenterType: any [] = [];
- assetClass: any [] = [];
- assetType: any [] = [];
- filteredlibraryTypes: ILibraryTypes[] = [];
+ costCenterType: DropdownValueModel [] = [];
+ assetClass: DropdownValueModel [] = [];
+ assetType: DropdownValueModel [] = [];
+ assetCategory: DropdownValueModel[] = [];
  createdBy: string;
  createdAt: Date;
  updatedBy: string;
@@ -102,17 +103,18 @@ export class AssetProfileComponent implements OnInit, OnDestroy {
     this.chartofAccounts = chartAccounts;
   })
 
-    this._portalService.getLibraryTypes()
+    const codes = ['AT', 'CCT', 'AST', 'AC'];
+    this._portalService.getDropdownValues(codes)
     .pipe(takeUntil(this._onDestroy$))
-    .subscribe(data => {
-      if(!data) {
-        return;
+    .subscribe((data: DropdownValueModel[]) => {
+      if (!data) {
+        return;   
       }
-      this.costCenterType = data.filter(type => type.code =='CCT');
-      this.assetType = data.filter(type => type.code =='AT');
-      this.filteredlibraryTypes = data.filter(type => type.code === 'AST');
-      this.assetClass = data.filter(type => type.code === 'AC' );
-    })
+      this.costCenterType = data.filter(item => item.dropdownCode === 'CCT');
+      this.assetType = data.filter(item => item.dropdownCode === 'AT');
+      this.assetCategory = data.filter(item => item.dropdownCode === 'AST');
+      this.assetClass = data.filter (item => item.dropdownCode === 'AC');
+    });
 
     if(this.id){
       this.isEditMode = true;

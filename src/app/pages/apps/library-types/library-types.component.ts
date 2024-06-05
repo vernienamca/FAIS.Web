@@ -76,7 +76,6 @@ export class LibraryTypesComponent implements OnInit, OnDestroy{
         if (!data) {
           return;
         }
-
         this.form.patchValue({
           code: data.code || '',
           description: data.description || '',
@@ -88,7 +87,6 @@ export class LibraryTypesComponent implements OnInit, OnDestroy{
         this.createdAt = data.createdAt;
         this.updatedBy = data.updatedBy || 'N/A';
         this.updatedAt = data.updatedAt;
-
       });
     }
   }

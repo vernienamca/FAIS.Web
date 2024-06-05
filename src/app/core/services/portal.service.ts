@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, of } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { PortalApi } from '../api/portal-api.service';
 import { IModule } from '../models/module';
 import { IRole } from '../models/role';
@@ -7,18 +7,19 @@ import { IUser, IUserRole } from '../models/user';
 import { IAuditLogs } from '../models/audit-logs';
 import { IStringInterpolation } from '../models/string-interpolation';
 import { DatePipe } from '@angular/common';
-import { ISettings } from '../models/settings';
 import { ICostCenter } from '../models/cost-center';
-import { ILibraryTypeOption } from '../models/library-type-option';
+import { DropdownValueModel, ILibraryTypeOption } from '../models/library-type-option';
 import { IProFormaEntry } from '../models/pro-forma-entry';
 import { IChart } from '../models/chart';
 import { ILibraryTypes } from '../models/library-types';
 import { IAssetProfile } from '../models/asset-profile';
 import { IPermission } from '../models/permission';
+import { IPlantInformation } from '../models/plant-information';
 import { ITemplate } from '../models/template';
 import { IMeteringProfile } from '../models/metering-profile';
 import { IProjectProfile } from '../models/project-profile';
 import { ITransmissionProfile } from '../models/transmission-profile';
+import { IEmployee } from '../models/employee';
 
 @Injectable({
   providedIn: 'root'
@@ -239,16 +240,19 @@ export class PortalService {
   getProFormaEntry(id: number): Observable<IProFormaEntry> {
     return this._portalApi.getProFormaEntry(id);
   }
+
   addProFormaEntry(proFormaEntry: any): Observable<any> {
     return this._portalApi.addProFormaEntry(proFormaEntry);
   }
+
   updateProFormaEntry(id: number, data: any): Observable<any> {
     return this._portalApi.updateProFormaEntry(id,data);
-}
+  }
 
-deleteProFormaEntry(id: number): Observable<any> {
-  return this._portalApi.deleteProFormaEntry(id);
-}
+  deleteProFormaEntry(id: number): Observable<any> {
+    return this._portalApi.deleteProFormaEntry(id);
+  }
+
   exportProFormaEntries(): void {
     this._portalApi.exportProFormaEntries().subscribe(response => {
       const contentDisposition = response.headers.get('Content-Disposition');
@@ -279,85 +283,119 @@ deleteProFormaEntry(id: number): Observable<any> {
   
   updateChartOfAccounts(id: number, data: any): Observable<any> {
     return this._portalApi.updateChartOfAccounts(id,data);
-}
+  }
+
   getAssetProfiles(): Observable<IAssetProfile[]> {
     return this._portalApi.getAssetProfiles();
   }
 
   createAssetProfile(assetProfile: any): Observable<any> {
     return this._portalApi.createAssetProfile(assetProfile);
-}
+  }
 
   updateAssetProfile(id: number , data:any): Observable<any> {
     return this._portalApi.updateAssetProfile(id,data);
-}
+  }
 
   getAssetProfile(id: number): Observable<IAssetProfile> {
     return this._portalApi.getAssetProfile(id);
-}
-
-getProjectProfiles(): Observable<IProjectProfile[]> {
-  return this._portalApi.getProjectProfiles();
-}
-
-getProjectProfile(id: number): Observable<IProjectProfile> {
-  return this._portalApi.getProjectProfile(id);
-}
-
-updateProjectProfile(data: any): Observable<any> {
-  return this._portalApi.updateProjectProfile(data);
-}
-
-exportProjectProfiles(): void {
-  this._portalApi.exportProjectProfiles().subscribe(response => {
-    const contentDisposition = response.headers.get('Content-Disposition');
-    const filename = contentDisposition 
-      ? contentDisposition.split(';')[1].trim().split('=')[1] 
-      : 'Library_Type_Options_' + this._datePipe.transform(new Date(), 'medium') + '.xlsx';
-
-      const blob = new Blob([response.body], { type: 'application/actet-stream' });
-
-      const link = document.createElement('a');
-      link.href = window.URL.createObjectURL(blob);
-      link.download = filename;
-      link.click();
-    });
   }
 
-createProjectProfile(data: any): Observable<any> {
-  return this._portalApi.createProjectProfile(data);
-}
+  getPlantInformations(): Observable<IPlantInformation[]> {
+    return this._portalApi.getPlantInformations();
+  }
 
-getMeteringProfiles(): Observable<IMeteringProfile[]> {
-  return this._portalApi.getMeteringProfiles();
-}
-getMeteringProfile(id: number): Observable<IMeteringProfile> {
-  return this._portalApi.getMeteringProfile(id);
-}
+  getPlantInformation(plantCode: string): Observable<IPlantInformation> {
+    return this._portalApi.getPlantInformation(plantCode);
+  }
 
-createMeteringProfile(data: any): Observable<any> {
-  return this._portalApi.createMeteringProfile(data);
-}
+  createPlantInformation(data: any): Observable<any> {
+    return this._portalApi.createPlantInformation(data);
+  }
 
-updateMeteringProfile(data: any): Observable<any> {
-  return this._portalApi.updateMeteringProfile(data);
-}
+  updatePlantInformation(plantCode: string, data: any): Observable<any> {
+    return this._portalApi.updatePlantInformation(plantCode, data);
+  }
 
-getRegions(): Observable<any[]> {
-  return this._portalApi.getRegions();
-}
+  exportPlantInformations(): void {
+    this._portalApi.exportPlantInformations().subscribe(response => {
+      const contentDisposition = response.headers.get('Content-Disposition');
+      const filename = contentDisposition 
+        ? contentDisposition.split(';')[1].trim().split('=')[1] 
+        : 'Library_Type_Options_' + this._datePipe.transform(new Date(), 'medium') + '.xlsx';
 
-getProvinces(): Observable<any[]> {
-  return this._portalApi.getProvinces();
-}
+        const blob = new Blob([response.body], { type: 'application/actet-stream' });
+  
+        const link = document.createElement('a');
+        link.href = window.URL.createObjectURL(blob);
+        link.download = filename;
+        link.click();
+      });
+    }
 
-getBarangays(): Observable<any[]> {
-  return this._portalApi.getBarangays();
-}
+  getProjectProfiles(): Observable<IProjectProfile[]> {
+    return this._portalApi.getProjectProfiles();
+  }
+  
+  getProjectProfile(id: number): Observable<IProjectProfile> {
+    return this._portalApi.getProjectProfile(id);
+  }
+  
+  createProjectProfile(data: any): Observable<any> {
+    return this._portalApi.createProjectProfile(data);
+  }
+  
+  updateProjectProfile(data: any): Observable<any> {
+    return this._portalApi.updateProjectProfile(data);
+  }
+  
+  exportProjectProfiles(): void {
+    this._portalApi.exportProjectProfiles().subscribe(response => {
+      const contentDisposition = response.headers.get('Content-Disposition');
+      const filename = contentDisposition 
+        ? contentDisposition.split(';')[1].trim().split('=')[1] 
+        : 'Library_Type_Options_' + this._datePipe.transform(new Date(), 'medium') + '.xlsx';
+  
+        const blob = new Blob([response.body], { type: 'application/actet-stream' });
+  
+        const link = document.createElement('a');
+        link.href = window.URL.createObjectURL(blob);
+        link.download = filename;
+        link.click();
+      });
+    }
+  
+  getMeteringProfiles(): Observable<IMeteringProfile[]> {
+    return this._portalApi.getMeteringProfiles();
+  }
 
-getMunicipalities(): Observable<any[]> {
-  return this._portalApi.getMunicipalities();
-}
+  getMeteringProfile(id: number): Observable<IMeteringProfile> {
+    return this._portalApi.getMeteringProfile(id);
+  }
+
+  createMeteringProfile(data: any): Observable<any> {
+    return this._portalApi.createMeteringProfile(data);
+  }
+
+  updateMeteringProfile(data: any): Observable<any> {
+    return this._portalApi.updateMeteringProfile(data);
+  }
+
+  getRegions(): Observable<any[]> {
+    return this._portalApi.getRegions();
+  }
+
+  getProvinces(): Observable<any[]> {
+    return this._portalApi.getProvinces();
+  }
+
+  getBarangays(): Observable<any[]> {
+    return this._portalApi.getBarangays();
+  }
+
+  getMunicipalities(): Observable<any[]> {
+    return this._portalApi.getMunicipalities();
+  }
 
   getStringDate(d: Date | string): string {
     if (typeof d == "string") return d; 
@@ -368,23 +406,27 @@ getMunicipalities(): Observable<any[]> {
     return sDate;
   }
 
-getTransmissionProfiles(): Observable<any[]> {
- return this._portalApi.getTransmissionProfiles();
-}
+  getTransmissionProfiles(): Observable<any[]> {
+  return this._portalApi.getTransmissionProfiles();
+  }
 
-getTransmissionProfile(id: number): Observable<ITransmissionProfile>{
-  return this._portalApi.getTransmissionProfile(id);
-}
+  getTransmissionProfile(id: number): Observable<ITransmissionProfile>{
+    return this._portalApi.getTransmissionProfile(id);
+  }
 
-createTransmissionProfile(transmissionProfile: any): Observable<any> {
-  return this._portalApi.createTransmissionProfile(transmissionProfile);
-}
+  createTransmissionProfile(transmissionProfile: any): Observable<any> {
+    return this._portalApi.createTransmissionProfile(transmissionProfile);
+  }
 
-updateTransmissionProfile(id: number, data: any): Observable<any> {
-  return this._portalApi.updateTransmissionProfile(id, data);
-}
+  updateTransmissionProfile(id: number, data: any): Observable<any> {
+    return this._portalApi.updateTransmissionProfile(id, data);
+  }
 
-getDropdownValues(code: string): Observable<ILibraryTypeOption[]> {
-  return this._portalApi.getDropdownValues(code);
-}
+  getDropdownValues(codes: string[]): Observable<DropdownValueModel[]> {
+    return this._portalApi.getDropdownValues(codes);
+  }
+
+  getEmployees(): Observable<IEmployee[]> {
+    return this._portalApi.getEmployees();
+  }
 }

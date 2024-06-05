@@ -35,10 +35,29 @@
                 <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
                   <form [formGroup]="form" class="flex flex-col flex-auto form-container p-6">
                     <div class="flex flex-col sm:flex-row sm:gap-4">
-                      <mat-form-field appearance="fill" class="flex-auto">
-                        <mat-label>Employee Number</mat-label>
-                        <input matInput formControlName="employeeNumber" maxlength="7">
-                      </mat-form-field>
+                        <ng-container *ngIf="!userId; else default">
+                          <mat-form-field appearance="fill" class="flex-auto">
+                            <mat-label>Employee Number</mat-label>
+                            <mat-select formControlName="employeeNumber" matTooltip="Select employees" (selectionChange)="selectEmployee($event)">
+                              <mat-option>
+                                <ngx-mat-select-search [formControl]="employeeFilterCtrl" placeholderLabel="Search..."
+                                  noEntriesFoundLabel="No records found">
+                                </ngx-mat-select-search>
+                              </mat-option>
+                              <mat-option [value]="null"></mat-option>
+                              <mat-option *ngFor="let employee of (filteredEmployees$ | async)" [value]="employee">
+                                {{ employee.employeeNumber }}
+                              </mat-option>
+                            </mat-select>
+                          </mat-form-field>
+                        </ng-container>
+                        <ng-template #default>
+                          <mat-form-field appearance="fill" class="flex-auto">
+                            <mat-label>Employee Number</mat-label>
+                            <input matInput formControlName="tempEmployeeNumber">
+                          </mat-form-field>
+                        </ng-template>
+                      
                     </div>
                     <div class="flex flex-col sm:flex-row sm:gap-4">
                       <mat-form-field appearance="fill" class="flex-auto">
@@ -52,9 +71,10 @@
                       </mat-form-field>
                       <mat-form-field appearance="fill" class="flex-auto">
                         <mat-label>Position</mat-label>
-                        <mat-select formControlName="position" required>
-                          <mat-option value="1">PAD Analyst</mat-option>
-                          <mat-option value="2">Administrator</mat-option>
+                        <mat-select formControlName="position" matTooltip="Select position" required>
+                          <mat-option *ngFor="let option of positions" [value]="option.parentId">
+                            {{ option.parentValue }}
+                          </mat-option>
                         </mat-select>
                         <mat-error *ngIf="formControls.position.touched && formControls.position.invalid">
                           <span *ngIf="formControls.position.getError('required')">
@@ -109,24 +129,28 @@
                     <div class="flex flex-col sm:flex-row sm:gap-4">
                       <mat-form-field appearance="fill" class="flex-auto">
                         <mat-label>TA-FG</mat-label>
-                        <mat-select formControlName="taFG" multiple>
-                          <mat-option value="T1">T1</mat-option>
-                          <mat-option value="T2">T2</mat-option>
-                          <mat-option value="T4">T4</mat-option>
+                        <mat-select formControlName="taFG" multiple matTooltip="Select TA-FG">
+                          <mat-option *ngFor="let tafg of tafgs" [value]="tafg.parentId">
+                            {{ tafg.parentValue }}
+                          </mat-option>
                         </mat-select>
                       </mat-form-field>
                       <mat-form-field appearance="fill" class="flex-auto">
                         <mat-label>OUP-FG</mat-label>
-                        <mat-select formControlName="oupFG">
-                          <mat-option value="7">HO</mat-option>
+                        <mat-select formControlName="oupFG" matTooltip="Select OUP-FG">
+                          <mat-option *ngFor="let oupfg of oupfgs" [value]="oupfg.parentId">
+                            {{ oupfg.parentValue }}
+                          </mat-option>
                         </mat-select>
                       </mat-form-field>
                     </div>
                     <div class="flex flex-col sm:flex-row sm:gap-4">
                       <mat-form-field appearance="fill" class="flex-auto">
                         <mat-label>Division</mat-label>
-                        <mat-select formControlName="division">
-                          <mat-option value="3">PAD</mat-option>
+                        <mat-select formControlName="division" matTooltip="Select division">
+                          <mat-option *ngFor="let division of divisions" [value]="division.parentId" >
+                            {{ division.parentValue }}
+                          </mat-option>
                         </mat-select>
                       </mat-form-field>
                     </div>

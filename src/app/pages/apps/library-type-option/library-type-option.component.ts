@@ -30,7 +30,7 @@ export class LibraryTypeOptionComponent implements OnInit, OnDestroy {
       code: this.form.get('code'),
       description: this.form.get('description'),
       status: this.form.get('isActive'),
-      remark: this.form.get('remark'),
+      remarks: this.form.get('remarks'),
       ranking: this.form.get('ranking'),
       udf1: this.form.get('udf1'),
       udf2: this.form.get('udf2'),
@@ -49,10 +49,10 @@ export class LibraryTypeOptionComponent implements OnInit, OnDestroy {
   ) {
     this.form = this._fb.group({
       libraryTypeId: ['', [Validators.required]],
-      code: ['', [Validators.required]],
+      code: [''],
       description: ['', [Validators.required]],
       isActive: [true],
-      remark: [''],
+      remarks: [''],
       ranking: ['', [Validators.required, Validators.pattern(/^[0-9]+$/)]],
       udf1: [''],
       udf2: [''],
@@ -63,41 +63,39 @@ export class LibraryTypeOptionComponent implements OnInit, OnDestroy {
     this.pageMode = this._route.snapshot.data.pageMode;
     
     this._portalService.getLibraryTypes()
-    .pipe(takeUntil(this._onDestroy$))
-    .subscribe(libraryTypes => {
-      if (!libraryTypes) {
-        return;
-      }
-      this.types = libraryTypes;
-      this.libraryTypes = libraryTypes.map(function(a) {return [a.id, a.name];}).filter((value, index, self) => self.indexOf(value) === index);
-    });
+      .pipe(takeUntil(this._onDestroy$))
+      .subscribe(libraryTypes => {
+        if (!libraryTypes) {
+          return;
+        }
+        this.types = libraryTypes;
+        this.libraryTypes = libraryTypes.map(function(a) {return [a.id, a.name];}).filter((value, index, self) => self.indexOf(value) === index);
+      });
 
     if (this.pageMode === 2) {
       this._portalService.getLibraryTypeOption(id)
-      .pipe(takeUntil(this._onDestroy$))
-      .subscribe(data => {
-        if (!data) {
-          return;
-        }
-
-        this.form.patchValue({
-          code: data.code || '',
-          description: data.description || '',
-          isActive: data.isActive === 'Y',
-          remark: data.remark,
-          ranking : data.ranking,
-          udf1 : data.udF1,
-          udf2 : data.udF2,
-          udf3 : data.udF3
+        .pipe(takeUntil(this._onDestroy$))
+        .subscribe(data => {
+          if (!data) {
+            return;
+          }
+          this.form.patchValue({
+            code: data.code || '',
+            description: data.description || '',
+            isActive: data.isActive === 'Y',
+            remarks: data.remarks,
+            ranking : data.ranking,
+            udf1 : data.udF1,
+            udf2 : data.udF2,
+            udf3 : data.udF3
+          });
+          this.form.get('libraryTypeId').setValue(data.libraryTypeId, data.libraryTypeName)
+          this.statusLabel = data.isActive === 'Y' ? 'Active' : 'Inactive'; 
+          this.createdBy = data.createdByName;
+          this.createdAt = data.createdAt;
+          this.updatedBy = data.updatedByName || 'N/A';
+          this.updatedAt = data.updatedAt;
         });
-        this.form.get('libraryTypeId').setValue(data.libraryTypeId, data.libraryTypeName)
-        this.statusLabel = data.isActive === 'Y' ? 'Active' : 'Inactive'; 
-        this.createdBy = data.createdByName;
-        this.createdAt = data.createdAt;
-        this.updatedBy = data.updatedByName || 'N/A';
-        this.updatedAt = data.updatedAt;
-
-      });
     }
   }
 
@@ -122,11 +120,6 @@ export class LibraryTypeOptionComponent implements OnInit, OnDestroy {
     if (!this.formControls.description.value) {
       this.formControls.description.markAsTouched();
       this.formControls.description.updateValueAndValidity();
-      return;
-    }
-    if (!this.formControls.code.value) {
-      this.formControls.code.markAsTouched();
-      this.formControls.code.updateValueAndValidity();
       return;
     }
     

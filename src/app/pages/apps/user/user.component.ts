@@ -4,12 +4,15 @@ import { FormBuilder, FormGroup, UntypedFormControl, Validators } from '@angular
 import { FormControl } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subject, takeUntil } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, of, startWith, takeUntil } from 'rxjs';
 import { fadeInUp400ms } from 'src/@vex/animations/fade-in-up.animation';
 import { stagger60ms } from 'src/@vex/animations/stagger.animation';
+import { IEmployee } from 'src/app/core/models/employee';
+import { DropdownValueModel } from 'src/app/core/models/library-type-option';
 import { IUser, IUserRole } from 'src/app/core/models/user';
 import { PortalService } from 'src/app/core/services/portal.service';
 import { SecurityService } from 'src/app/core/services/security.service';
+import { CommonFunctions } from 'src/app/shared/functions/common-functions';
 @Component({
   selector: 'app-user',
   templateUrl: './user.component.html',
@@ -27,8 +30,12 @@ export class UserComponent implements OnInit, OnDestroy {
   layoutCtrl = new UntypedFormControl('fullwidth');
   dataSource = [];
   searchCtrl: FormControl = new FormControl();
+  employeeFilterCtrl: FormControl = new FormControl();
+  employeeFilter$: Observable<string> = new Observable<string>();
+  filteredEmployees$: Observable<IEmployee[]> = new Observable<IEmployee[]>();
   userRoleTabLabel: string = 'User Roles (0)';
   userRoles: IUserRole[] = [];
+  employees$ = new BehaviorSubject<IEmployee[]>([]);
   pageLabel: string = 'Edit User';
   userId: number;
   photo: string;
@@ -38,10 +45,17 @@ export class UserComponent implements OnInit, OnDestroy {
   updatedAt: Date;
   isSaving: boolean;
   hasAccess = false;
-  
+  hasSelectedEmployee: boolean = false;
+  positions: DropdownValueModel[] = [];
+  divisions: DropdownValueModel[] = [];
+  tafgs: DropdownValueModel[] = [];
+  oupfgs: DropdownValueModel[] = [];
+
+
   get formControls() {
     return {
       employeeNumber: this.form.get('employeeNumber'),
+      tempEmployeeNumber: this.form.get('tempEmployeeNumber'),
       username: this.form.get('username'),
       position: this.form.get('position'),
       firstName: this.form.get('firstName'),
@@ -69,28 +83,39 @@ export class UserComponent implements OnInit, OnDestroy {
     private _datePipe: DatePipe
   ) {
     this.yesterday.setDate(this.yesterday.getDate() - 0);
-
     this.userId = parseInt(this._route.snapshot.paramMap.get('id'));
     this.form = this._fb.group({
       employeeNumber: ['', []],
+      tempEmployeeNumber: ['', []],
       username: ['', [Validators.required]],
       position: ['', [Validators.required]],
       firstName: ['', [Validators.required]],
       lastName: ['', [Validators.required]],
       emailAddress: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)]],
-      mobileNumber: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
+      mobileNumber: ['', [Validators.required, Validators.pattern("^[0-9()-]*$")]],
       taFG: ['', []],
       oupFG: ['', []],
       division: ['', []],
-      accountStatus: ['', [Validators.required]],
+      accountStatus: ['1', [Validators.required]],
       statusDate: ['', []],
       accountExpiration: ['', []]
     });
+
+    this._getLookupValues();
 
     this._securityService.userRoles$.subscribe(item => {
       this.userRoles = item;
     });
 
+    this._portalService.getEmployees()
+      .pipe(takeUntil(this._onDestroy$))
+      .subscribe(data => {
+        if (!data) {
+          return;
+        }
+        this.employees$.next(data);
+      });
+      
     this._securityService.getPermissions(parseInt(localStorage.getItem('user_id')))
       .pipe(takeUntil(this._onDestroy$))
       .subscribe(data => {
@@ -133,6 +158,17 @@ export class UserComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.employeeFilter$ = this.employeeFilterCtrl.valueChanges.pipe(
+      startWith(''),
+      takeUntil(this._onDestroy$)
+    );
+    this.filteredEmployees$ = CommonFunctions.applyDataFiltering(
+      this.employees$,
+      this.employeeFilter$,
+      (searchString) => (object) => object.employeeNumber.toLowerCase().indexOf(searchString.toLowerCase()) > -1 
+        || object.firstName.toLowerCase().indexOf(searchString.toLowerCase()) > -1 
+        || object.lastName.toLowerCase().indexOf(searchString.toLowerCase()) > -1
+    );
   }
 
   ngOnDestroy(): void {
@@ -146,15 +182,17 @@ export class UserComponent implements OnInit, OnDestroy {
     if (!this.photo.includes('assets/img/')) {
       data.photo = this.photo.split(',')[1];
     }
-    data.employeeNumber = this.formControls.employeeNumber.value;
+    
 
     if (this.userId) {
+      data.employeeNumber = this.formControls.tempEmployeeNumber.value;
       data.userRoles = this.userRoles;
       data.updatedBy = parseInt(localStorage.getItem('user_id'));
       this._updateUser(data);
       return;
     }
 
+    data.employeeNumber = this.formControls.employeeNumber.value.employeeNumber;
     data.createdBy = parseInt(localStorage.getItem('user_id'));
     this._createUser(data);
   }
@@ -174,9 +212,25 @@ export class UserComponent implements OnInit, OnDestroy {
     reader.readAsDataURL(file);
   }
 
+  selectEmployee(event: any): void {
+    if (!event?.value) {
+      return;
+    }
+    const position = this.positions.find(t => t.parentValue === event?.value.position);
+    this.form.patchValue({
+      position: position ? position.parentId : null,
+      username: event?.value.emailAddress.split('@')[0],
+      firstName: event?.value.firstName,
+      lastName: event?.value.lastName,
+      emailAddress: event?.value.emailAddress,
+      mobileNumber: event?.value.mobileNumber,
+    });
+  }
+
   private _initializeData(data: any): void {
     this.form.setValue({
       employeeNumber: data.employeeNumber,
+      tempEmployeeNumber: data.employeeNumber,
       username: data.userName,
       position: data.position,
       firstName: data.firstName,
@@ -184,7 +238,7 @@ export class UserComponent implements OnInit, OnDestroy {
       emailAddress: data.emailAddress,
       mobileNumber: data.mobileNumber,
       taFG: data.tafGs || [],
-      oupFG: data.oufg || '',
+      oupFG: parseInt(data.oufg) ,
       division: data.division || '',
       accountStatus: data.status.toString(),
       statusDate: `${this._datePipe.transform(data.statusDate, 'longDate')}` || '',
@@ -244,14 +298,29 @@ export class UserComponent implements OnInit, OnDestroy {
 
   private _getUserRoles(userId: number): void {
     this._portalService.getUserRoles(userId)
-    .pipe(takeUntil(this._onDestroy$))
-    .subscribe(data => {
-      if (!data) {
-        return;
-      }
-      this.userRoles = data;
-      this.userRoleTabLabel = `User Roles (${data?.length})`;
-      this._securityService.userRoles$.next(data);
-    });
+      .pipe(takeUntil(this._onDestroy$))
+      .subscribe(data => {
+        if (!data) {
+          return;
+        }
+        this.userRoles = data;
+        this.userRoleTabLabel = `User Roles (${data?.length})`;
+        this._securityService.userRoles$.next(data);
+      });
+  }
+
+  private _getLookupValues(): void {
+    const libraryTypeCodes: string[] = ['POS','DIV','TAFG', 'OFG'];
+    this._portalService.getDropdownValues(libraryTypeCodes)
+      .pipe(takeUntil(this._onDestroy$))
+      .subscribe(data => {
+        if (!data) {
+          return;
+        }
+        this.positions = data.filter(t => t.dropdownCode === 'POS');
+        this.divisions = data.filter(t => t.dropdownCode === 'DIV');
+        this.tafgs = data.filter(t => t.dropdownCode === 'TAFG');
+        this.oupfgs = data.filter(t => t.dropdownCode === 'OFG' )
+      });
   }
 }

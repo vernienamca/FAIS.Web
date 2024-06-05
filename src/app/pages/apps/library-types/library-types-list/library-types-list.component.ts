@@ -38,7 +38,7 @@ export class LibraryTypesListComponent implements OnInit, OnDestroy {
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @Input()
   columns: TableColumn<ILibraryTypes>[] = [
-    { label: 'No.', property: 'no', type: 'text', visible: true },
+    { label: 'No.', property: 'id', type: 'text', visible: true },
     { label: 'Library Type', property: 'name', type: 'text', visible: true },
     { label: 'Code', property: 'code', type: 'text', visible: true },
     { label: 'Description', property: 'description', type: 'text', visible: true },
@@ -69,15 +69,16 @@ export class LibraryTypesListComponent implements OnInit, OnDestroy {
   }
   ngOnInit(): void {
     this._portalService.getLibraryTypes()
-    .pipe(
-      takeUntil(this._onDestroy$),
-      finalize(() => this.isListLoading = false))
-    .subscribe(data => {
-      if (!data) {
-        return;
-      }
-      this.subject$.next(data);
-    });
+      .pipe(
+        takeUntil(this._onDestroy$),
+        finalize(() => this.isListLoading = false)
+      )
+      .subscribe(data => {
+        if (!data) {
+          return;
+        }
+        this.subject$.next(data);
+      });
 
     this.isListLoading = false
 

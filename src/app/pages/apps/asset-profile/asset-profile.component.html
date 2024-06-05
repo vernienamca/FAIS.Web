@@ -44,8 +44,8 @@
               <mat-form-field appearance="fill">
                 <mat-label>Asset Category</mat-label>
                 <mat-select formControlName="assetCategoryId">
-                  <mat-option *ngFor="let asset of filteredlibraryTypes" [value]="asset.id">
-                    {{asset.description}}
+                  <mat-option *ngFor="let asset of assetCategory" [value]="asset.parentId">
+                    {{asset.parentValue}}
                   </mat-option>
                 </mat-select>
               </mat-form-field>
@@ -64,8 +64,8 @@
               <mat-form-field appearance="fill">
                 <mat-label>Asset Type</mat-label>
                 <mat-select formControlName="assetType" >
-                  <mat-option *ngFor="let asset of assetType" [value]="asset.id">
-                    {{ asset.description}}
+                  <mat-option *ngFor="let asset of assetType" [value]="asset.parentId">
+                    {{ asset.parentValue}}
                   </mat-option>
                 </mat-select>
               </mat-form-field>
@@ -73,8 +73,8 @@
               <mat-form-field appearance="fill">
                 <mat-label>Cost Center Type</mat-label>
                 <mat-select formControlName="costcenter" >
-                  <mat-option *ngFor="let cost of costCenterType" [value]="cost.id">
-                    {{ cost.description}}
+                  <mat-option *ngFor="let cost of costCenterType" [value]="cost.parentId">
+                    {{ cost.parentValue}}
                   </mat-option>
                 </mat-select>
               </mat-form-field>
@@ -84,8 +84,8 @@
               <mat-form-field appearance="fill">
                 <mat-label>Asset Class</mat-label>
                 <mat-select formControlName="assetClassId">
-                  <mat-option *ngFor ="let class of assetClass" [value] = "class.id">
-                    {{ class.description}}
+                  <mat-option *ngFor ="let class of assetClass" [value] = "class.parentId">
+                    {{ class.parentValue}}
                   </mat-option>
                 </mat-select>
               </mat-form-field>

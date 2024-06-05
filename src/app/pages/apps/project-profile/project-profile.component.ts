@@ -218,8 +218,13 @@ export class ProjectProfileComponent implements OnInit, OnDestroy {
         data.projectProfileComponents.forEach((function(component) {
           component.startDate =  new Date(component.startDate).toLocaleDateString();
           component.targetDate =  new Date(component.targetDate).toLocaleDateString();
+
+          if(component.completionDate!= null)
           component.completionDate =  new Date(component.completionDate).toLocaleDateString();
         }));
+
+        var comletedComponent = data.projectProfileComponents.filter(c => c.completionDate != null).length;
+        var underConstructionComponent = data.projectProfileComponents.filter(c => c.completionDate == null).length;
 
         this.projectProfileComponentData = new wjcCore.CollectionView(data.projectProfileComponents, { pageSize: 5 });
         this.form.patchValue({
@@ -227,8 +232,8 @@ export class ProjectProfileComponent implements OnInit, OnDestroy {
           projClassSeq: data.projClassSeq || '',
           projStageSeq: data.projStageSeq || '',
           tpsrMonth: data.tpsrMonth || new Date(),
-          noOfComponentsCompleted: this.noOfComponentsCompleted(),
-          noOfComponentsUnderConstruction: this.noOfComponentsUnderConstruction(),
+          noOfComponentsCompleted: comletedComponent,
+          noOfComponentsUnderConstruction: underConstructionComponent,
           latestInspectionDate: data.latestInspectionDate || '',
           totalAMRCost: data.totalAMRCost || '',
           recordedAMR: data.recordedAMR || '',
@@ -367,6 +372,11 @@ export class ProjectProfileComponent implements OnInit, OnDestroy {
           projectProfileId: this.id || 0
         };
       });
+
+      
+      var comletedComponent = projectProfileComponentDTOArray.filter(c => c.completionDate != null).length.toString();
+      var underConstructionComponent = projectProfileComponentDTOArray.filter(c => c.completionDate == null).length.toString();
+
     
       const projectProfileDTO: IProjectProfile = {
         id: this.id || 0,

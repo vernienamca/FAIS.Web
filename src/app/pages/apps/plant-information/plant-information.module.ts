@@ -13,43 +13,32 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
-import { UserListComponent } from './user-list/user-list.component';
-import { UserRoutingModule } from './user-routing.module';
-import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { MatTabsModule } from '@angular/material/tabs';
-import { UserComponent } from './user.component';
-import { SecondaryToolbarModule } from 'src/@vex/components/secondary-toolbar/secondary-toolbar.module';
-import { FlexLayoutModule } from '@angular/flex-layout';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { MatInputModule } from '@angular/material/input';
-import { UserRoleListComponent } from './user-role-list/user-role-list.component';
+import { PlantInformationListComponent } from './plant-information-list/plant-information-list.component';
+import { PlantInformationRoutingModule } from './plant-information-routing.module';
+import { RelativeDateTimeModule } from 'src/@vex/pipes/relative-date-time/relative-date-time.module';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatDialogModule } from '@angular/material/dialog';
-import { AddRoleDialogComponent } from './add-role-dialog/add-role-dialog.component';
 import { MatDividerModule } from '@angular/material/divider';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { PlantInformationComponent } from './plant-information.component';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { SecondaryToolbarModule } from 'src/@vex/components/secondary-toolbar/secondary-toolbar.module';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatInputModule } from '@angular/material/input';
+import {WjGridModule} from '@grapecity/wijmo.angular2.grid';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatTimepickerModule } from 'mat-timepicker';
 import { MatNativeDateModule } from '@angular/material/core';
-import { ResetPasswordDialogComponent } from './reset-password-dialog/reset-password-dialog.component';
-import { MyProfileComponent } from './my-profile/my-profile.component';
-import { UserActivityListComponent } from './user-activity-list/user-activity-list.component';
-import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
+import { WjInputModule } from '@grapecity/wijmo.angular2.input';
 
 @NgModule({
-  declarations: [
-    UserListComponent, 
-    UserComponent, 
-    UserRoleListComponent, 
-    AddRoleDialogComponent, 
-    ResetPasswordDialogComponent,
-    MyProfileComponent,
-    UserActivityListComponent
-  ],
+  declarations: [PlantInformationListComponent, PlantInformationComponent],
   imports: [
     CommonModule,
-    UserRoutingModule,
+    PlantInformationRoutingModule,
     PageLayoutModule,
     BreadcrumbsModule,
-    MatInputModule,
     MatPaginatorModule,
     MatTableModule,
     MatSortModule,
@@ -62,18 +51,22 @@ import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
     ReactiveFormsModule,
     MatSelectModule,
     MatButtonToggleModule,
-    MatSlideToggleModule,
-    MatTabsModule,
-    SecondaryToolbarModule,
-    FlexLayoutModule,
-    MatSnackBarModule,
+    RelativeDateTimeModule,
     MatProgressBarModule,
     MatDialogModule,
     MatDividerModule,
+    FlexLayoutModule,
+    MatInputModule,
+    MatSlideToggleModule,
+    MatTabsModule,
+    SecondaryToolbarModule,
+    MatSnackBarModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    NgxMatSelectSearchModule
+    MatTimepickerModule,
+    WjGridModule,
+    WjInputModule
   ]
 })
-export class UserModule {
+export class PlantInformationModule {
 }

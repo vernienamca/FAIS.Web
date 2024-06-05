@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { throwError } from 'rxjs';
+import { Observable, combineLatest, map, throwError } from 'rxjs';
 import HttpStatusCode from 'src/app/core/enums/http-status-code.enum';
 
 export class CommonFunctions {
@@ -78,4 +78,23 @@ export class CommonFunctions {
 
     return throwError(() => 'Something bad happened; please try again later.');
   };
+  
+  public static applyDataFiltering = (
+    sourceItems: Observable<any[]>,
+    filterString: Observable<string>,
+    filterPredicate: (string) => (...obj) => boolean
+  ) => combineLatest([sourceItems, filterString])
+    .pipe(
+      map(([items, search]) => {
+        if (!items) {
+          return;
+        }
+
+        if (!search) {
+          return items;
+        }
+
+        return items.filter(filterPredicate(search));
+      })
+    );
 }
