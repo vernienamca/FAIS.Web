@@ -357,10 +357,10 @@ export class PlantInformationComponent implements OnInit, OnDestroy {
                     }
                   })
 
-                // let snackBarRef = this._snackBar.open('Plant information has been successfully updated.', 'Close');
-                // snackBarRef.afterDismissed().subscribe(() => {
-                //     window.location.reload();
-                // });
+                let snackBarRef = this._snackBar.open('Plant information has been successfully updated.', 'Close');
+                snackBarRef.afterDismissed().subscribe(() => {
+                    window.location.reload();
+                });
             });
     }
 
