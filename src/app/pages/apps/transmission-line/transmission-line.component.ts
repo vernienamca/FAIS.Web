@@ -10,6 +10,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ModuleEnum } from 'src/app/core/enums/module-enum';
 import { ITransmissionProfile } from 'src/app/core/models/transmission-profile';
 import { TransmissionConfirmationDialogComponent } from './transmission-profile-confirmation-dialog/transmission-confirmation-dialog.component';
+import { LibraryTypeCodes } from 'src/app/core/enums/library-types.enum';
 @Component({
   selector: 'vex-transmission',
   templateUrl: './transmission-line.component.html',
@@ -145,11 +146,11 @@ export class TransmissionProfileComponent implements OnInit, OnDestroy {
 
   this._getRoles().pipe(
     tap(() => this._checkFormFields()),  
-    switchMap(() => this._portalService.getLibraryTypes()),
+    switchMap(() => this._portalService.getDropdownValues([LibraryTypeCodes.VoltageLevel, LibraryTypeCodes.CircuitNumber])),
     takeUntil(this._onDestroy$)
   ).subscribe(data => {
-    this.voltageLevel = data.filter(type => type.code =='VL');
-    this.circuitNumber = data.filter(type => type.code =='CN');
+    this.voltageLevel = data.filter(type => type.dropdownCode == LibraryTypeCodes.VoltageLevel);
+    this.circuitNumber = data.filter(type => type.dropdownCode == LibraryTypeCodes.CircuitNumber );
   })
 
     if(this.id){
