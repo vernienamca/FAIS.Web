@@ -142,61 +142,11 @@ export class MeteringProfileComponent implements OnInit, OnDestroy {
     this.chartofAccounts = chartAccounts;
   })
 
-  const codes = 
-    [ LibraryTypeCodes.InstallationType
-    , LibraryTypeCodes.MeteringClassification
-    , LibraryTypeCodes.MeteringTransmissionGrid
-    , LibraryTypeCodes.FacilityLocation
-    , LibraryTypeCodes.DistrictOffice];
-
-    this._portalService.getDropdownValues(codes)
-    .pipe(takeUntil(this._onDestroy$))
-    .subscribe(data => {
-      if(!data) {
-        return;
-      }
-      this.installationType = data.filter(type => type.dropdownCode == LibraryTypeCodes.InstallationType);
-      this.meteringClassification = data.filter(type => type.dropdownCode == LibraryTypeCodes.MeteringClassification);
-      this.transmissionGrid = data.filter(type => type.dropdownCode == LibraryTypeCodes.MeteringTransmissionGrid);
-      this.districtOffice = data.filter(type => type.dropdownCode == LibraryTypeCodes.DistrictOffice);
-      this.facilityLocation = data.filter(type => type.dropdownCode == LibraryTypeCodes.FacilityLocation);
-    })
-
-    this._portalService.getRegions()
-    .pipe(takeUntil(this._onDestroy$))
-    .subscribe(data => {
-      if(!data){
-        return;
-      }
-      this.regions = data;
-    })
-
-    this._portalService.getProvinces()
-    .pipe(takeUntil(this._onDestroy$))
-    .subscribe(data => {
-      if(!data){
-        return;
-      }
-      this.provinces = data;
-    })
-
-    this._portalService.getMunicipalities()
-    .pipe(takeUntil(this._onDestroy$))
-    .subscribe(data => {
-      if(!data){
-        return;
-      }
-      this.municipalities = data;
-    })
-
-    this._portalService.getBarangays()
-    .pipe(takeUntil(this._onDestroy$))
-    .subscribe(data => {
-      if(!data){
-        return;
-      }
-      this.barangays = data;
-    })
+    this._getLookUps();
+    this._getRegions();
+    this._getProvinces();
+    this._getMunicipalities();
+    this._getBarangays();
 
     if(this.id){
       this.isEditMode = true;
@@ -374,6 +324,28 @@ export class MeteringProfileComponent implements OnInit, OnDestroy {
     }
   }
 
+  private _getLookUps(): void {
+    const codes = 
+    [ LibraryTypeCodes.InstallationType
+    , LibraryTypeCodes.MeteringClassification
+    , LibraryTypeCodes.MeteringTransmissionGrid
+    , LibraryTypeCodes.FacilityLocation
+    , LibraryTypeCodes.DistrictOffice];
+
+    this._portalService.getDropdownValues(codes)
+    .pipe(takeUntil(this._onDestroy$))
+    .subscribe(data => {
+      if(!data) {
+        return;
+      }
+      this.installationType = data.filter(type => type.dropdownCode == LibraryTypeCodes.InstallationType);
+      this.meteringClassification = data.filter(type => type.dropdownCode == LibraryTypeCodes.MeteringClassification);
+      this.transmissionGrid = data.filter(type => type.dropdownCode == LibraryTypeCodes.MeteringTransmissionGrid);
+      this.districtOffice = data.filter(type => type.dropdownCode == LibraryTypeCodes.DistrictOffice);
+      this.facilityLocation = data.filter(type => type.dropdownCode == LibraryTypeCodes.FacilityLocation);
+    })
+  }
+
   private _getRoles(): Observable<IRole[]> {
     return this._portalService.getRoles().pipe(
       tap(roles => {
@@ -385,4 +357,49 @@ export class MeteringProfileComponent implements OnInit, OnDestroy {
       takeUntil(this._onDestroy$)
     );
   }
+
+  private _getRegions(): void {
+    this._portalService.getRegions()
+        .pipe(takeUntil(this._onDestroy$))
+        .subscribe(data => {
+            if(!data){
+                return;
+            }
+            this.regions = data;
+    });
+  }
+
+  private _getProvinces(): void {
+      this._portalService.getProvinces()
+          .pipe(takeUntil(this._onDestroy$))
+          .subscribe(data => {
+              if(!data){
+                  return;
+              }
+              this.provinces = data;
+      });
+  }
+
+  private _getMunicipalities(): void {
+      this._portalService.getMunicipalities()
+          .pipe(takeUntil(this._onDestroy$))
+          .subscribe(data => {
+              if(!data){
+                  return;
+              }
+              this.municipalities = data;
+      });
+  }
+
+  private _getBarangays(): void {
+      this._portalService.getBarangays()
+          .pipe(takeUntil(this._onDestroy$))
+          .subscribe(data => {
+              if(!data){
+                  return;
+              }
+              this.barangays = data;
+      });
+  }
+  
 }

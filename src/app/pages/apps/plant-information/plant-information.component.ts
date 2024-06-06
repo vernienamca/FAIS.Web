@@ -140,36 +140,8 @@ export class PlantInformationComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.userId = parseInt(localStorage.getItem('user_id'));
-        const codes = 
-            [ LibraryTypeCodes.PlantInformationClass
-            , LibraryTypeCodes.TransmissionGrid
-            , LibraryTypeCodes.DistrictOffice
-            , LibraryTypeCodes.MTD
-            , LibraryTypeCodes.CostCenterType];
-
-            this._getRoles().pipe(
-                tap(() => this._checkFormFields()),  
-                takeUntil(this._onDestroy$)
-            ).subscribe();
-
-        this._portalService.getDropdownValues(codes)
-        .pipe(takeUntil(this._onDestroy$))
-        .subscribe((data) => {
-          if (!data) {
-            return;   
-          }
-          this.plantInfoClassification = data.filter(type => type.dropdownCode == LibraryTypeCodes.PlantInformationClass);
-          this.transmissionGrid = data.filter(type => type.dropdownCode === LibraryTypeCodes.TransmissionGrid);
-          this.districtOffice = data.filter(type => type.dropdownCode === LibraryTypeCodes.DistrictOffice);
-          this.mtdList = data.filter(type => type.dropdownCode === LibraryTypeCodes.MTD);
-
-          this.costCenterTypes = data.filter(type => type.dropdownCode === LibraryTypeCodes.CostCenterType).map(type => ({
-            id: type.libraryTypeId,
-            name: type.parentValue
-          }));
-          this.costCenterTypesMap = new DataMap(this.costCenterTypes, 'id', 'name');
-        });
-
+        
+        this._getLookUps();
         this._getRegions();
         this._getProvinces();
         this._getMunicipalities();
@@ -362,6 +334,38 @@ export class PlantInformationComponent implements OnInit, OnDestroy {
                     window.location.reload();
                 });
             });
+    }
+
+    private _getLookUps(): void {
+        const codes = 
+            [ LibraryTypeCodes.PlantInformationClass
+            , LibraryTypeCodes.TransmissionGrid
+            , LibraryTypeCodes.DistrictOffice
+            , LibraryTypeCodes.MTD
+            , LibraryTypeCodes.CostCenterType];
+
+            this._getRoles().pipe(
+                tap(() => this._checkFormFields()),  
+                takeUntil(this._onDestroy$)
+            ).subscribe();
+
+        this._portalService.getDropdownValues(codes)
+        .pipe(takeUntil(this._onDestroy$))
+        .subscribe((data) => {
+          if (!data) {
+            return;   
+          }
+          this.plantInfoClassification = data.filter(type => type.dropdownCode == LibraryTypeCodes.PlantInformationClass);
+          this.transmissionGrid = data.filter(type => type.dropdownCode === LibraryTypeCodes.TransmissionGrid);
+          this.districtOffice = data.filter(type => type.dropdownCode === LibraryTypeCodes.DistrictOffice);
+          this.mtdList = data.filter(type => type.dropdownCode === LibraryTypeCodes.MTD);
+
+          this.costCenterTypes = data.filter(type => type.dropdownCode === LibraryTypeCodes.CostCenterType).map(type => ({
+            id: type.libraryTypeId,
+            name: type.parentValue
+          }));
+          this.costCenterTypesMap = new DataMap(this.costCenterTypes, 'id', 'name');
+        });
     }
 
     private _getRegions(): void {
