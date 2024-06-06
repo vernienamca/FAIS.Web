@@ -32,8 +32,8 @@
               <mat-form-field appearance="fill" class=" flex-auto">
                 <mat-label>RCA GL</mat-label>
               <mat-select formControlName="rcaglId" multiple> 
-                <mat-option *ngFor="let chart of chartofAccounts" [value]="chart.parentId">
-                  {{ chart.parentValue }}
+                <mat-option *ngFor="let chart of chartofAccounts" [value]="chart.id">
+                  {{ chart.rcaGL }}
                 </mat-option>
               </mat-select>
            
@@ -53,8 +53,8 @@
               <mat-form-field appearance="fill">
                 <mat-label>Sl No</mat-label>
                 <mat-select formControlName="rcaSLId">
-                  <mat-option *ngFor="let chart of chartofAccounts" [value]="chart.parentId">
-                    {{chart.parentValue}}
+                  <mat-option *ngFor="let chart of chartofAccounts" [value]="chart.id">
+                    {{chart.rcaGL}}
                   </mat-option>
                 </mat-select>
               </mat-form-field>
