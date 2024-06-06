@@ -18,4 +18,8 @@ export enum LibraryTypeCodes {
     
     //GENERAL - INCLUDE TYPES USED IN MULTIPLE MODULE
     DistrictOffice = 'DO',
+
+    //TRANSMISSION LINE 
+    VoltageLevel = 'VL',
+    CircuitNumber = 'CN'
 }
