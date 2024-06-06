@@ -39,8 +39,8 @@
              <mat-form-field appearance="fill">
                 <mat-label>Installation Type</mat-label>
                 <mat-select formControlName="installationTypeSeq" >
-                  <mat-option *ngFor="let type of installationType" [value]="type.id">
-                    {{ type.description}}
+                  <mat-option *ngFor="let type of installationType" [value]="type.parentId">
+                    {{ type.parentValue}}
                   </mat-option>
                 </mat-select>
               </mat-form-field>
@@ -48,8 +48,8 @@
               <mat-form-field appearance="fill">
                 <mat-label>Metering Classification</mat-label>
                 <mat-select formControlName="meteringClass" >
-                  <mat-option *ngFor="let class of meteringClassification" [value]="class.id">
-                    {{ class.description}}
+                  <mat-option *ngFor="let class of meteringClassification" [value]="class.parentId">
+                    {{ class.parentValue}}
                   </mat-option>
                 </mat-select>
               </mat-form-field>
@@ -59,8 +59,8 @@
               <mat-form-field appearance="fill">
                 <mat-label>Transmission Grid</mat-label>
                 <mat-select formControlName="transGrid" >
-                  <mat-option *ngFor="let grid of transmissionGrid" [value]="grid.id">
-                    {{ grid.description}}
+                  <mat-option *ngFor="let grid of transmissionGrid" [value]="grid.parentId">
+                    {{ grid.parentValue}}
                   </mat-option>
                 </mat-select>
               </mat-form-field>
@@ -68,8 +68,8 @@
               <mat-form-field appearance="fill">
                 <mat-label>District Office</mat-label>
                 <mat-select formControlName="districtSeq" >
-                  <mat-option *ngFor="let district of districtOffice" [value]="district.id">
-                    {{ district.description}}
+                  <mat-option *ngFor="let district of districtOffice" [value]="district.parentId">
+                    {{ district.parentValue}}
                   </mat-option>
                 </mat-select>
               </mat-form-field>
@@ -79,8 +79,8 @@
               <mat-form-field appearance="fill">
                 <mat-label>Facility Location</mat-label>
                 <mat-select formControlName="facilityLocationSeq" >
-                  <mat-option *ngFor="let location of facilityLocation" [value]="location.id">
-                    {{ location.description}}
+                  <mat-option *ngFor="let location of facilityLocation" [value]="location.parentId">
+                    {{ location.parentValue}}
                   </mat-option>
                 </mat-select>
               </mat-form-field>

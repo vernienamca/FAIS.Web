@@ -32,8 +32,8 @@
               <mat-form-field appearance="fill">
                 <mat-label>VoltageLevel</mat-label>
                 <mat-select formControlName="voltageId">
-                  <mat-option *ngFor="let voltage of voltageLevel" [value]="voltage.id">
-                    {{voltage.description}}
+                  <mat-option *ngFor="let voltage of voltageLevel" [value]="voltage.parentId">
+                    {{voltage.parentValue}}
                   </mat-option>
                 </mat-select>
               </mat-form-field>
@@ -93,8 +93,8 @@
               <mat-form-field appearance="fill">
                 <mat-label>No. of Circuit</mat-label>
                 <mat-select formControlName="noCircuitId">
-                  <mat-option *ngFor="let circuit of circuitNumber" [value]="circuit.id">
-                    {{circuit.description}}
+                  <mat-option *ngFor="let circuit of circuitNumber" [value]="circuit.parentId">
+                    {{circuit.parentValue}}
                   </mat-option>
                 </mat-select>
               </mat-form-field>
