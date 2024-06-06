@@ -99,36 +99,8 @@ export class TransmissionProfileComponent implements OnInit, OnDestroy {
     udf3: [''] 
     });
   
-    this._securityService.getPermissions(parseInt(localStorage.getItem('user_id')))
-      .pipe(takeUntil(this._onDestroy$))
-      .subscribe(data => {
-        const permission = data.filter(a => a.moduleId === ModuleEnum.AddorEditTransmissionProfile);
-        if (!permission || permission.some(s => s.isRead) === false) {
-          this._router.navigate([`pages/error-401`]);
-        }
-        if(permission.some(s => s.isUpdate) === false) {
-          this.form.controls['lineStretch'].disable();
-          this.form.controls['voltageId'].disable();
-          this.form.controls['st'].disable();
-          this.form.controls['sp'].disable();
-          this.form.controls['cp'].disable();
-          this.form.controls['wp'].disable();
-          this.form.controls['slwt'].disable();
-          this.form.controls['totalstructures'].disable();
-          this.form.controls['installationdate'].disable();
-          this.form.controls['routelength'].disable();
-          this.form.controls['noCircuitId'].disable();
-          this.form.controls['circuitlength'].disable();
-          this.form.controls['conductorsize'].disable();
-          this.form.controls['noConductor'].disable();
-          this.form.controls['isActive'].disable();
-          this.form.controls['remarks'].disable();
-          this.form.controls['udf1'].disable();
-          this.form.controls['udf2'].disable();
-          this.form.controls['udf3'].disable();
-        }
-        this.hasAccess = permission.some(s => s.isUpdate);
-      });
+    this._getPermissions();
+    
     }
 
   ngOnInit(): void {
@@ -141,17 +113,18 @@ export class TransmissionProfileComponent implements OnInit, OnDestroy {
     ])
     .pipe(takeUntil(this._onDestroy$))
     .subscribe(() => this.OnStructureChange());
-  this.userId = parseInt(localStorage.getItem('user_id'));
-  this.id = parseInt(this._route.snapshot.paramMap.get('id'));
 
-  this._getRoles().pipe(
-    tap(() => this._checkFormFields()),  
-    switchMap(() => this._portalService.getDropdownValues([LibraryTypeCodes.VoltageLevel, LibraryTypeCodes.CircuitNumber])),
-    takeUntil(this._onDestroy$)
-  ).subscribe(data => {
-    this.voltageLevel = data.filter(type => type.dropdownCode == LibraryTypeCodes.VoltageLevel);
-    this.circuitNumber = data.filter(type => type.dropdownCode == LibraryTypeCodes.CircuitNumber );
-  })
+    this.userId = parseInt(localStorage.getItem('user_id'));
+    this.id = parseInt(this._route.snapshot.paramMap.get('id'));
+
+    this._getRoles().pipe(
+      tap(() => this._checkFormFields()),  
+      switchMap(() => this._portalService.getDropdownValues([LibraryTypeCodes.VoltageLevel, LibraryTypeCodes.CircuitNumber])),
+      takeUntil(this._onDestroy$)
+    ).subscribe(data => {
+      this.voltageLevel = data.filter(type => type.dropdownCode == LibraryTypeCodes.VoltageLevel);
+      this.circuitNumber = data.filter(type => type.dropdownCode == LibraryTypeCodes.CircuitNumber );
+    })
 
     if(this.id){
       this.isEditMode = true;
@@ -159,7 +132,7 @@ export class TransmissionProfileComponent implements OnInit, OnDestroy {
     }
     };
 
-   save(): void{
+   save(): void {
     this.isSaving = true;
     this._dialog.open(TransmissionConfirmationDialogComponent,{
     width: '500px',
@@ -194,6 +167,40 @@ export class TransmissionProfileComponent implements OnInit, OnDestroy {
     this._onDestroy$.complete();  
   }
 
+  private _getPermissions(): void {
+    this._securityService.getPermissions(parseInt(localStorage.getItem('user_id')))
+      .pipe(takeUntil(this._onDestroy$))
+      .subscribe(data => {
+        const permission = data.filter(a => a.moduleId === ModuleEnum.AddorEditTransmissionProfile);
+        if (!permission || permission.some(s => s.isRead) === false) {
+          this._router.navigate([`pages/error-401`]);
+        }
+        if(permission.some(s => s.isUpdate) === false) {
+          this.form.controls['lineStretch'].disable();
+          this.form.controls['voltageId'].disable();
+          this.form.controls['st'].disable();
+          this.form.controls['sp'].disable();
+          this.form.controls['cp'].disable();
+          this.form.controls['wp'].disable();
+          this.form.controls['slwt'].disable();
+          this.form.controls['totalstructures'].disable();
+          this.form.controls['installationdate'].disable();
+          this.form.controls['routelength'].disable();
+          this.form.controls['noCircuitId'].disable();
+          this.form.controls['circuitlength'].disable();
+          this.form.controls['conductorsize'].disable();
+          this.form.controls['noConductor'].disable();
+          this.form.controls['isActive'].disable();
+          this.form.controls['remarks'].disable();
+          this.form.controls['udf1'].disable();
+          this.form.controls['udf2'].disable();
+          this.form.controls['udf3'].disable();
+        }
+        this.hasAccess = permission.some(s => s.isUpdate);
+      });
+
+  }
+
   private _checkFormFields(): void {
     this._portalService.getUserRoles(this.userId)
     .pipe(takeUntil(this._onDestroy$))
@@ -213,7 +220,7 @@ export class TransmissionProfileComponent implements OnInit, OnDestroy {
         this.roleIds.push(armdAnalystRole.id)
       }
     });
-}
+  }
   
   private _createTransmissionProfile(data: ITransmissionProfile): void {
     data.statusDate = new Date();
@@ -245,7 +252,7 @@ export class TransmissionProfileComponent implements OnInit, OnDestroy {
         this._router.navigate([`apps/transmission-profile/edit/${data.id}`]); 
       }, 2000);
   });
-}
+  }
 
   private _updateTransmissionProfile(data: ITransmissionProfile): void{
     data.statusDate = new Date();
@@ -277,7 +284,7 @@ export class TransmissionProfileComponent implements OnInit, OnDestroy {
     })
   }
 
-   private _getTransmissionProfile(id: number): void{
+  private _getTransmissionProfile(id: number): void{
       this._portalService.getTransmissionProfile(id)
       .pipe(takeUntil(this._onDestroy$))
       .subscribe(data => {
@@ -340,7 +347,7 @@ export class TransmissionProfileComponent implements OnInit, OnDestroy {
     );
   }
 
-   OnStructureChange(): void 
+  OnStructureChange(): void 
   {
     const st = +this.form.get('st').value;
     const sp = +this.form.get('sp').value;
@@ -350,5 +357,5 @@ export class TransmissionProfileComponent implements OnInit, OnDestroy {
 
     const total = st + sp + cp + wp + slwt;
     this.form.get('totalstructures').setValue(total);
-}
+  }
 }
