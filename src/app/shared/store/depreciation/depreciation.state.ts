@@ -1,8 +1,8 @@
 import { Injectable } from "@angular/core";
-import { Action, Actions, Selector, State, StateContext, Store } from "@ngxs/store";
+import { Action, Actions, Selector, State, StateContext, Store, ofActionDispatched } from "@ngxs/store";
 import { PortalService } from "src/app/core/services/portal.service";
 import { GetFieldDictionaries, InitStates } from "./depreciation.action";
-import { finalize, tap } from "rxjs";
+import { finalize, takeUntil, tap } from "rxjs";
 import { IFieldDictionary } from "src/app/core/models/field-dictionary";
 
 export class DepreciationStateModel {
@@ -50,7 +50,8 @@ export class DepreciationState {
         tap(items => {
             ctx.patchState({ dictionaries: items });
         }),
-        finalize(() => ctx.patchState({ isLoading: false }))
+        finalize(() => ctx.patchState({ isLoading: false })),
+        takeUntil(this._actions.pipe(ofActionDispatched(GetFieldDictionaries)))
       );
     }
 }
