@@ -22,11 +22,15 @@ import { UserApi } from './core/api/user-api.service';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { MatTimepickerModule } from 'mat-timepicker';
-
+import { NgxsModule } from '@ngxs/store';
+import { DepreciationState } from './shared/store/depreciation/depreciation.state';
 
 @NgModule({
   declarations: [AppComponent, ForgotPasswordComponent],
   imports: [
+    NgxsModule.forRoot([
+      DepreciationState
+    ]),
     NgxDatatableModule,
     BrowserModule,
     AppRoutingModule,

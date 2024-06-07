@@ -20,6 +20,7 @@ import { IPlantInformation } from "../models/plant-information";
 import { IMeteringProfile } from "../models/metering-profile";
 import { ITransmissionProfile } from "../models/transmission-profile";
 import { IEmployee } from "../models/employee";
+import { IFieldDictionary } from "../models/field-dictionary";
 
 export class PortalApi extends BaseApi {
     private _apiUrl = `${environment.apiGatewayBaseUrl}`;
@@ -359,5 +360,9 @@ export class PortalApi extends BaseApi {
 
     getEmployees(): Observable<IEmployee[]> {
         return this.get<IEmployee[]>(`${this._apiUrl}/user/employees`);
+    }
+
+    getFieldDictionaries(): Observable<IFieldDictionary[]> {
+        return this.get<IFieldDictionary[]>(`${this._apiUrl}/depreciation/dictionaries`);
     }
 }

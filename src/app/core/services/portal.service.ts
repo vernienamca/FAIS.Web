@@ -20,6 +20,7 @@ import { IMeteringProfile } from '../models/metering-profile';
 import { IProjectProfile } from '../models/project-profile';
 import { ITransmissionProfile } from '../models/transmission-profile';
 import { IEmployee } from '../models/employee';
+import { IFieldDictionary } from '../models/field-dictionary';
 
 @Injectable({
   providedIn: 'root'
@@ -428,5 +429,9 @@ export class PortalService {
 
   getEmployees(): Observable<IEmployee[]> {
     return this._portalApi.getEmployees();
+  }
+
+  getFieldDictionaries(): Observable<IFieldDictionary[]> {
+    return this._portalApi.getFieldDictionaries();
   }
 }

@@ -40,6 +40,7 @@
     "@ngneat/until-destroy": "~9.2.3",
     "@ngx-loading-bar/core": "^6.0.2",
     "@ngx-loading-bar/router": "^6.0.2",
+    "@ngxs/store": "^3.8.2",
     "@swimlane/ngx-datatable": "^20.1.0",
     "angular-calendar": "~0.31.0",
     "angular-oauth2-oidc": "^15.0.1",
