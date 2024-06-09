@@ -26,6 +26,7 @@ import { SecondaryToolbarModule } from 'src/@vex/components/secondary-toolbar/se
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatInputModule } from '@angular/material/input';
+import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 
 @NgModule({
   declarations: [LibraryTypeOptionListComponent, LibraryTypeOptionComponent],
@@ -55,7 +56,8 @@ import { MatInputModule } from '@angular/material/input';
     MatSlideToggleModule,
     MatTabsModule,
     SecondaryToolbarModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    NgxMatSelectSearchModule
   ]
 })
 export class LibraryTypeOptionModule {

@@ -8,6 +8,8 @@ import { Subject, takeUntil } from 'rxjs';
 import { ILibraryTypes } from 'src/app/core/models/library-types';
 import { PortalService } from 'src/app/core/services/portal.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { ChangeDetectorRef } from '@angular/core';
+import { MatRadioChange } from '@angular/material/radio';
 
 @Component({
   selector: 'vex-library-types',
@@ -27,6 +29,9 @@ export class LibraryTypesComponent implements OnInit, OnDestroy{
   updatedAt: Date;
   types: ILibraryTypes[];
   libraryTypes = [];
+  isSaving: boolean;
+  typesOption: any [] = [];
+  selectedOption: string = '1';
   
   private _onDestroy$ = new Subject<void>();
 
@@ -35,7 +40,9 @@ export class LibraryTypesComponent implements OnInit, OnDestroy{
       name: this.form.get('name'),
       code: this.form.get('code'),
       description: this.form.get('description'),
-      status: this.form.get('isActive')
+      status: this.form.get('isActive'),
+      option: this.form.get('selectedOptionControl'),
+      // tempcode: this.form.get('tempcode')
     };
   }
 
@@ -45,13 +52,15 @@ export class LibraryTypesComponent implements OnInit, OnDestroy{
     private _route: ActivatedRoute,
     private _router: Router,
     private _portalService: PortalService,
-    private _snackBar: MatSnackBar
+    private _snackBar: MatSnackBar,
+    private _cdRef: ChangeDetectorRef
   ) {
     this.form = this._fb.group({
       name: ['', [Validators.required]],
       code: ['', [Validators.required]],
       description: ['', [Validators.required]],
-      isActive: [true]
+      isActive: [true],
+      selectedOptionControl: ['1']
     });
 
     const id = parseInt(this._route.snapshot.paramMap.get('id'));
@@ -59,6 +68,7 @@ export class LibraryTypesComponent implements OnInit, OnDestroy{
 
     this.pageLabel =  this.pageMode == 1 ? 'Add Library Type' : 'Edit Library Type';
 
+    this._getLookupValues();
     this._portalService.getLibraryTypes()
     .pipe(takeUntil(this._onDestroy$))
     .subscribe(libraryTypes => {
@@ -106,7 +116,12 @@ export class LibraryTypesComponent implements OnInit, OnDestroy{
     this.statusLabel = !$event.checked ? 'Inactive' : 'Active';
   }
 
+  onRadioChange(event: MatRadioChange): void {
+    this.selectedOption = event.value;
+  }
+  
   save(): void {
+    this.isSaving = true;
     if (!this.formControls.name.value) {
       this.formControls.name.markAsTouched();
       this.formControls.name.updateValueAndValidity();
@@ -136,12 +151,22 @@ export class LibraryTypesComponent implements OnInit, OnDestroy{
         if (!data) {
           return;
         }
-        let snackBarRef = this._snackBar.open('Library type has been successfully added.', 'Close');
-        snackBarRef.afterDismissed().subscribe(() => {
-          this._router.navigateByUrl('apps/library-types');
-        });
+        if (data.errorDescription) {
+          let snackBarRef = this._snackBar.open(data.errorDescription, 'Close');
+          snackBarRef.afterDismissed().subscribe(() => {
+            this.isSaving = false;
+            this._cdRef.detectChanges();
+          });
+        } else {
+          let snackBarRef = this._snackBar.open('Library type has been successfully added.', 'Close');
+          snackBarRef.afterDismissed().subscribe(() => {
+            this.isSaving = false;
+            this._router.navigateByUrl('apps/library-types');
+            this._cdRef.detectChanges();
+          });
+        }
       });
-    }
+    }    
     else if (this.pageMode === 2) {
       data.updatedBy = parseInt(localStorage.getItem('user_id'));
       
@@ -164,5 +189,17 @@ export class LibraryTypesComponent implements OnInit, OnDestroy{
       return;
     }
     this.types = this.types.filter(t => t.name === event.value);
+  }
+
+  private _getLookupValues(): void {
+    const libraryTypeCodes: string[] = ['ACG'];
+    this._portalService.getDropdownValues(libraryTypeCodes)
+    .pipe(takeUntil(this._onDestroy$))
+    .subscribe(data => {
+      if (!data) {
+        return;
+      }
+      this.typesOption = data.filter(t => t.dropdownCode === 'ACG');
+    });
   }
 }

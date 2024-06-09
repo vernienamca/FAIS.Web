@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, UntypedFormControl, Validators } from '@angular
 import { FormControl } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BehaviorSubject, Observable, Subject, of, startWith, takeUntil } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, startWith, takeUntil } from 'rxjs';
 import { fadeInUp400ms } from 'src/@vex/animations/fade-in-up.animation';
 import { stagger60ms } from 'src/@vex/animations/stagger.animation';
 import { IEmployee } from 'src/app/core/models/employee';

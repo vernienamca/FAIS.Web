@@ -4,6 +4,7 @@
     <mat-icon svgIcon="mat:more_vert"></mat-icon>
   </button>
 </vex-secondary-toolbar>
+<mat-progress-bar *ngIf="isSaving" mode="indeterminate" color="primary"></mat-progress-bar>
 <div class="p-gutter container" [class.container]="layoutCtrl.value === 'boxed'" [class.px-gutter]="layoutCtrl.value === 'fullwidth'">
   <div class="flex flex-col sm:flex-row gap-4">
     <div class="card flex-auto">
@@ -31,19 +32,44 @@
                     Library type is required
                   </span>
                 </mat-error>
+                <mat-hint align="start">
+                  Please select the type of library you wish to create. <br>
+                </mat-hint>
               </mat-form-field>
             </div>
+
+            <div *ngIf="pageMode === 1">
+              <mat-radio-group aria-label="Select an option" formControlName="selectedOptionControl" (change)="onRadioChange($event)" [style.marginTop.px]="20">
+                <mat-radio-button color="primary" value="1" matTooltip="The parent dropdown data.">Parent Type</mat-radio-button>
+                <mat-radio-button color="primary" value="2" matTooltip="The child dropdown data.">Dependent Type</mat-radio-button>
+              </mat-radio-group>
+            </div>
+             
             <div class="flex flex-col sm:flex-row sm:gap-4">
-              <mat-form-field appearance="fill" class="flex-auto" [ngClass]="{'code': pageMode === 2}">
-                <mat-label>Code</mat-label>
-                <input matInput formControlName="code" required [readonly]="pageMode === 2">
-                <mat-error *ngIf="formControls.code.touched && formControls.code.invalid">
-                  <span *ngIf="formControls.code.getError('required')">
-                    Code is required
-                  </span>
-                </mat-error>
-              </mat-form-field>
+              <ng-container *ngIf="selectedOption === '1'; else dependentTemplate">
+                <mat-form-field appearance="fill" class="flex-auto" [ngClass]="{'code': pageMode === 2}">
+                  <mat-label>Code</mat-label>
+                  <input matInput formControlName="code" oninput="this.value = this.value.toUpperCase()" required [readonly]="pageMode === 2">
+                  <mat-error *ngIf="formControls.code.touched && formControls.code.invalid">
+                    <span *ngIf="formControls.code.getError('required')">
+                      Code is required
+                    </span>
+                  </mat-error>
+                </mat-form-field>
+              </ng-container>
+              
+              <ng-template #dependentTemplate>
+                <mat-form-field appearance="fill" class="flex-auto" [ngClass]="{'code': pageMode === 2}">
+                  <mat-label>Code</mat-label>
+                  <mat-select formControlName="code">
+                    <mat-option *ngFor="let option of typesOption " [value]="option.dependentCode">
+                      {{ option.parentValue }} - {{ option.dependentCode }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </ng-template>
             </div>
+            
             <div class="flex flex-col sm:flex-row sm:gap-4">
               <mat-form-field appearance="fill" class="flex-auto">
                 <mat-label>Description</mat-label>
