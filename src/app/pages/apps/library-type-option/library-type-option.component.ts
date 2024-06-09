@@ -1,11 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormGroup, Validators, FormBuilder, UntypedFormControl  } from '@angular/forms';
+import { FormGroup, Validators, FormBuilder, UntypedFormControl, FormControl  } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subject, takeUntil } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, startWith, takeUntil } from 'rxjs';
 import { PageMode } from 'src/app/core/enums/page-mode.enum';
 import { ILibraryTypes } from 'src/app/core/models/library-types';
 import { PortalService } from 'src/app/core/services/portal.service';
+import { CommonFunctions } from 'src/app/shared/functions/common-functions';
 
 @Component({
   selector: 'vex-library-type-option',
@@ -22,6 +23,10 @@ export class LibraryTypeOptionComponent implements OnInit, OnDestroy {
   updatedBy: string;
   updatedAt: Date;
   types: ILibraryTypes[];
+  typesFilterCtrl: FormControl = new FormControl();
+  typesFilter$: Observable<string> = new Observable<string>();
+  filteredtypes$: Observable<ILibraryTypes[]> = new Observable<ILibraryTypes[]>();
+  types$ = new BehaviorSubject<ILibraryTypes[]>([]);
   libraryTypes = [];
 
   get formControls() {
@@ -68,7 +73,7 @@ export class LibraryTypeOptionComponent implements OnInit, OnDestroy {
         if (!libraryTypes) {
           return;
         }
-        this.types = libraryTypes;
+        this.types$.next(libraryTypes);
         this.libraryTypes = libraryTypes.map(function(a) {return [a.id, a.name];}).filter((value, index, self) => self.indexOf(value) === index);
       });
 
@@ -100,6 +105,16 @@ export class LibraryTypeOptionComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.typesFilter$ = this.typesFilterCtrl.valueChanges.pipe(
+      startWith(''),
+      takeUntil(this._onDestroy$)
+    );
+    this.filteredtypes$ = CommonFunctions.applyDataFiltering(
+      this.types$,
+      this.typesFilter$,
+      (searchString) => (libraryType) =>
+        libraryType.name.toLowerCase().indexOf(searchString.toLowerCase()) > -1
+    );
   }
 
   ngOnDestroy(): void {
@@ -157,12 +172,5 @@ export class LibraryTypeOptionComponent implements OnInit, OnDestroy {
         });
       });
     }
-  }
-
-  onFilterUser(event: any): void {        
-    if (!event.value) {
-      return;
-    }
-    this.types = this.types.filter(t => t.name === event.value);
   }
 }

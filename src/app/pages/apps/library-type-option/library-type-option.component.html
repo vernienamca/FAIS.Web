@@ -21,9 +21,15 @@
             <div class="flex flex-col sm:flex-row sm:gap-4">
               <mat-form-field appearance="fill" class="flex-auto">
                 <mat-label>Library Type</mat-label>
-                <mat-select placeholder="Select Library Type" formControlName="libraryTypeId" (selectionChange)="onFilterUser($event)"
-                  class="border-0 outline-none w-full bg-transparent flex-auto"> 
-                  <mat-option *ngFor="let libraryType of libraryTypes" [value]="libraryType[0]">{{libraryType[1]}}</mat-option>
+                <mat-select placeholder="Select Library Type" formControlName="libraryTypeId"
+                  class="border-0 outline-none w-full bg-transparent flex-auto">
+                  <ngx-mat-select-search [formControl]="typesFilterCtrl" placeholderLabel="Search..."
+                    noEntriesFoundLabel="No records found">
+                  </ngx-mat-select-search>
+                  <mat-option [value]="null"></mat-option>
+                  <mat-option *ngFor="let libraryType of (filteredtypes$ | async)" [value]="libraryType.id">
+                    {{libraryType.name}}
+                  </mat-option>
                 </mat-select>
                 <mat-error *ngIf="formControls.libraryTypeId.touched && formControls.libraryTypeId.invalid">
                   <span *ngIf="formControls.libraryTypeId.getError('required')">
@@ -31,13 +37,10 @@
                   </span>
                 </mat-error>
               </mat-form-field>
+              
+              
             </div>
-            <div class="flex flex-col sm:flex-row sm:gap-4">
-              <mat-form-field appearance="fill" class="flex-auto" [ngClass]="{'option-code': pageMode === 2}">
-                <mat-label>Option Code</mat-label>
-                <input matInput formControlName="code">
-              </mat-form-field>
-            </div>
+         
             <div class="flex flex-col sm:flex-row sm:gap-4">
               <mat-form-field appearance="fill" class="flex-auto">
                 <mat-label>Library Type Option</mat-label>
@@ -63,6 +66,17 @@
             </div>
 
             <div class="flex flex-col sm:flex-row sm:gap-4">
+              <mat-form-field appearance="fill" class="flex-auto" [ngClass]="{'option-code': pageMode === 2}">
+                <mat-label>Option Code</mat-label>
+                <input matInput formControlName="code">
+                <mat-hint align="start">
+                  Option codes are reference for dropdowns with dependent types. <br>
+                  Leave blank for dropdowns without dependent.
+                </mat-hint>
+              </mat-form-field>
+            </div>
+
+            <div class="flex flex-col sm:flex-row sm:gap-4" [style.marginTop.px]="20">
               <mat-form-field appearance="fill" class="flex-auto">
                 <mat-label>UDF1</mat-label>
                 <input matInput formControlName="udf1" >

@@ -14,6 +14,7 @@ import { MatSort } from '@angular/material/sort';
 import { PortalService } from 'src/app/core/services/portal.service';
 import { filter, finalize, takeUntil } from 'rxjs/operators';
 import { Observable, ReplaySubject, Subject } from 'rxjs';
+import { MatRadioModule } from '@angular/material/radio';
 
 @UntilDestroy()
 @Component({
@@ -98,6 +99,11 @@ export class LibraryTypesListComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this._onDestroy$.next();
     this._onDestroy$.complete();
+  }
+   
+  ngAfterViewInit(): void {
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
   }
 
   onFilterChange(value: string): void {
