@@ -42,7 +42,6 @@ export class LibraryTypesComponent implements OnInit, OnDestroy{
       description: this.form.get('description'),
       status: this.form.get('isActive'),
       option: this.form.get('selectedOptionControl'),
-      // tempcode: this.form.get('tempcode')
     };
   }
 

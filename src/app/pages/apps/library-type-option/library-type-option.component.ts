@@ -28,6 +28,7 @@ export class LibraryTypeOptionComponent implements OnInit, OnDestroy {
   filteredtypes$: Observable<ILibraryTypes[]> = new Observable<ILibraryTypes[]>();
   types$ = new BehaviorSubject<ILibraryTypes[]>([]);
   libraryTypes = [];
+  isSaving: boolean;
 
   get formControls() {
     return {
@@ -127,6 +128,7 @@ export class LibraryTypeOptionComponent implements OnInit, OnDestroy {
   }
 
   save(): void {
+    this.isSaving = true;
     if (!this.formControls.libraryTypeId.value) {
       this.formControls.libraryTypeId.markAsTouched();
       this.formControls.libraryTypeId.updateValueAndValidity();
@@ -153,6 +155,7 @@ export class LibraryTypeOptionComponent implements OnInit, OnDestroy {
         }
         let snackBarRef = this._snackBar.open('Library type option has been successfully added.', 'Close');
         snackBarRef.afterDismissed().subscribe(() => {
+          this.isSaving = false;
           this._router.navigateByUrl('apps/library-options');
         });
       });
