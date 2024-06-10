@@ -4,9 +4,9 @@ export interface IProFormaEntry {
     description: string;
     isActive: string;
     statusDate: Date;
-    createdBy: string;
+    createdBy: number;
     createdAt: Date;
-    updatedBy?: string;
+    updatedBy?: number;
     updatedAt?: Date;
     proFormaEntryDetailsDTO: IProFormaEntryDetails[];
     proFormaEntryDetailModel: IProFormaEntryDetails[];

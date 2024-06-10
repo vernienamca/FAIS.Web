@@ -24,12 +24,14 @@ import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { MatTimepickerModule } from 'mat-timepicker';
 import { NgxsModule } from '@ngxs/store';
 import { DepreciationState } from './shared/store/depreciation/depreciation.state';
+import { SystemManagementState } from './shared/store/system-management/system-management.state';
 
 @NgModule({
   declarations: [AppComponent, ForgotPasswordComponent],
   imports: [
     NgxsModule.forRoot([
-      DepreciationState
+      DepreciationState,
+      SystemManagementState
     ]),
     NgxDatatableModule,
     BrowserModule,

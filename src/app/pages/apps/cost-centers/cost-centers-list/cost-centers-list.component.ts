@@ -42,8 +42,8 @@ export class CostCentersListComponent implements OnInit, OnDestroy, AfterViewIni
   @Input()
   columns: TableColumn<ICostCenter>[] = [
     { label: 'FG Code', property: 'fgCode', type: 'text', visible: true },
-    { label: 'MC Number', property: 'mcNumber', type: 'text', visible: true },
-    { label: 'Long Name', property: 'longName', type: 'text', visible: true },
+    { label: 'Cost Center No.', property: 'mcNumber', type: 'text', visible: true },
+    { label: 'Cost Center Name', property: 'longName', type: 'text', visible: true },
     { label: 'Short Name', property: 'shortName', type: 'text', visible: true }
   ];
 
@@ -112,6 +112,7 @@ export class CostCentersListComponent implements OnInit, OnDestroy, AfterViewIni
     value = value.trim();
     value = value.toLowerCase();
     this.dataSource.filter = value;
+    this.totalCount = this.dataSource.filteredData.length;
   }
 
   toggleColumnVisibility(column, event): void {

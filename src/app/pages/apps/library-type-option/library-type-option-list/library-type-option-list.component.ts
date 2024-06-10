@@ -19,6 +19,7 @@ import { ILibraryTypeOption } from 'src/app/core/models/library-type-option';
 import { LibraryTypeOptionStatusEnum } from 'src/app/core/enums/library-type-option-status.enum';
 import { Router } from '@angular/router';
 import { ILibraryTypes } from 'src/app/core/models/library-types';
+import { CommonFunctions } from 'src/app/shared/functions/common-functions';
 
 @UntilDestroy()
 @Component({
@@ -87,36 +88,34 @@ export class LibraryTypeOptionListComponent implements OnInit, OnDestroy, AfterV
     .pipe(
       takeUntil(this._onDestroy$),
       finalize(() => this.isListLoading = false))
-    .subscribe(data => {
-      if (!data) {
-        return;
-      }
-      this.subject$.next(data);
-    });
+      .subscribe(data => {
+        if (!data) {
+          return;
+        }
+        this.subject$.next(data);
+      });
 
     this._portalService.getLibraryTypes()
-    .pipe(takeUntil(this._onDestroy$))
-    .subscribe(libraryTypes => {
-      if (!libraryTypes) {
-        return;
-      }
-      this.types = libraryTypes;
-      this.libraryTypes = libraryTypes.map(function(a) {return a.name;}).filter((value, index, self) => self.indexOf(value) === index);
-      this.libraryTypes.push("All");      
-      this.libraryTypes.sort((a, b) => {
-        return (a === "All") ? -1 : (b === "All") ? 1 : b.localeCompare(a);
+      .pipe(takeUntil(this._onDestroy$))
+      .subscribe(data => {
+        if (!data) {
+          return;
+        }
+        this.types = data;
+        this.libraryTypes.push("All");
+        this.libraryTypes = data.map(t => t.name.charAt(0).toUpperCase() + t.name.slice(1)).sort(CommonFunctions.sortPredicate(a => a, true));  
       });
-    });
 
     this.isListLoading = false
 
     this.dataSource = new MatTableDataSource();
     this.data$
       .pipe(filter<ILibraryTypeOption[]>(Boolean))
-      .subscribe(librarytypeoptions => {
-        this.totalCount = librarytypeoptions.length;
-        this.librarytypeoptions = librarytypeoptions;
-        this.dataSource.data = librarytypeoptions;
+      .subscribe(options => {
+        this.totalCount = options.length;
+        this.librarytypeoptions = options;
+        this.dataSource.data = options;
+        this.totalCount = this.dataSource.filteredData.length;
       });
 
     this.searchCtrl.valueChanges.pipe(

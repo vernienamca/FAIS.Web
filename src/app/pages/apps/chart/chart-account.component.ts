@@ -58,10 +58,11 @@ export class ChartAccountComponent implements OnInit, OnDestroy {
   }
   
   onDeleteRow(item: any): void {
-   
-      const index = this.salesGrid.collectionView.items.indexOf(item);
-        this.salesGrid.collectionView.sourceCollection.splice(index, 1);
-        this.salesGrid.collectionView.refresh();
+    console.log(item);
+    
+    const index = this.salesGrid.collectionView.items.indexOf(item);
+    this.salesGrid.collectionView.sourceCollection.splice(index, 1);
+    this.salesGrid.collectionView.refresh();
   }
 
   getSalesData(count: number) {
@@ -217,11 +218,9 @@ export class ChartAccountComponent implements OnInit, OnDestroy {
         });
         return;
       }
- 
       const collectionView = this.salesGrid.collectionView;  
       const allItems = collectionView.sourceCollection as any[];
-    
-       const chartOfAccountDetailsDTOArray: IChartDetails[] = allItems.map((item: any) => {
+      const chartOfAccountDetailsDTOArray: IChartDetails[] = allItems.map((item: any) => {
         return {
           id: item.id || 0, 
           chartOfAccountsId: this.id || 0,  
@@ -230,7 +229,7 @@ export class ChartAccountComponent implements OnInit, OnDestroy {
           ledgerTitle: item.ledgerTitle,
           dateRemoved: null,
           createdBy: parseInt(localStorage.getItem('user_id')),
-          createdAt: this.createdAt = new Date(),
+          createdAt: new Date(),
           updatedBy: parseInt(localStorage.getItem('user_id')),
           updatedAt: null
         };

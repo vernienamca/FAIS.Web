@@ -2,10 +2,9 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute } from '@angular/router';
-import { Subject, takeUntil } from 'rxjs';
+import { Observable, Subject, map, takeUntil } from 'rxjs';
 import { PortalService } from 'src/app/core/services/portal.service';
 import { IProFormaEntry, IProFormaEntryDetails } from 'src/app/core/models/pro-forma-entry';
-import { ILibraryTypes } from "../../../core/models/library-types";
 import { MatSelectChange } from '@angular/material/select';
 import * as wjcCore from '@grapecity/wijmo';
 import { CollectionViewNavigator } from '@grapecity/wijmo.input';
@@ -15,6 +14,7 @@ import { Router } from '@angular/router';
 import { SecurityService } from 'src/app/core/services/security.service';
 import { ModuleEnum } from 'src/app/core/enums/module-enum';
 import { MatButton } from '@angular/material/button';
+import { IUser } from 'src/app/core/models/user';
 
 @Component({
   selector: 'vex-pro-forma-entry',
@@ -139,28 +139,26 @@ export class ProFormaEntryComponent implements OnInit, OnDestroy {
     private _securityService: SecurityService,
   ) {
     this.form = this._fb.group({
-      tranTypeSeq: ['', [Validators.required, Validators.pattern(/^[0-9]+$/)]],
+      tranTypeSeq: ['', [Validators.required]],
       description: ['', [Validators.required]],
       isActive: [true, []],
     });
-
-    
     this._securityService.getPermissions(parseInt(localStorage.getItem('user_id')))
-    .pipe(takeUntil(this._onDestroy$))
-    .subscribe(data => {
-      const permission = data.filter(a => a.moduleId === ModuleEnum.AddorEditProformaEntries);
-      if (!permission || permission.some(s => s.isRead) === false) {
-        this._router.navigate([`pages/error-401`]);
-      }
-      if(permission.some(s => s.isUpdate) === false) {
-        this.form.controls['tranTypeSeq'].disable();
-        this.form.controls['description'].disable();
-        this.form.controls['isActive'].disable();
-        this.addbutton.disabled = true;
-        this.proformaGrid.isDisabled = true;
-      }
-      this.hasAccess = permission.some(s => s.isUpdate);
-    });
+      .pipe(takeUntil(this._onDestroy$))
+      .subscribe(data => {
+        const permission = data.filter(a => a.moduleId === ModuleEnum.AddorEditProformaEntries);
+        if (!permission || permission.some(s => s.isRead) === false) {
+          this._router.navigate([`pages/error-401`]);
+        }
+        if(permission.some(s => s.isUpdate) === false) {
+          this.form.controls['tranTypeSeq'].disable();
+          this.form.controls['description'].disable();
+          this.form.controls['isActive'].disable();
+          this.addbutton.disabled = true;
+          this.proformaGrid.isDisabled = true;
+        }
+        this.hasAccess = permission.some(s => s.isUpdate);
+      });
   }
 
   ngOnInit(): void {
@@ -173,14 +171,26 @@ export class ProFormaEntryComponent implements OnInit, OnDestroy {
       if (this.isEditMode) {
         this._portalService.getProFormaEntry(this.id)
           .pipe(takeUntil(this._onDestroy$))
-          .subscribe(
-            (data: IProFormaEntry) => {
+          .subscribe((data: IProFormaEntry) => {
               this.proformaData = new wjcCore.CollectionView(data.proformaEntryDetails, { pageSize: 5 });
               new CollectionViewNavigator('#thePager', {
                 byPage: true,
                 headerFormat: 'Page {currentPage:n0} of {pageCount:n0}',
                 cv: this.proformaData
               });
+
+            this._getUser(data.createdBy).subscribe(data => { 
+              if (!data) {
+                return;
+              }
+              this.createdBy = `${data.firstName} ${data.lastName}`;
+            });
+            this._getUser(data.updatedBy).subscribe(data => {
+              if (!data) {
+                return;
+              }
+              this.updatedBy = `${data.firstName} ${data.lastName}`;
+            });
 
             this.form.setValue({
               tranTypeSeq: data.tranTypeSeq,
@@ -233,11 +243,9 @@ export class ProFormaEntryComponent implements OnInit, OnDestroy {
         });
         return;
       }
-
       const collectionView = this.proformaGrid.collectionView;
       const allItems = collectionView.sourceCollection as any[];
-
-       const proFormaDetailsDTOArray: IProFormaEntryDetails[] = allItems.map((item: any) => {
+      const proFormaDetailsDTOArray: IProFormaEntryDetails[] = allItems.map((item: any) => {
         return {
           id: item.id || 0,
           proFormaDetailsId: this.id || 0,
@@ -281,9 +289,9 @@ export class ProFormaEntryComponent implements OnInit, OnDestroy {
         description: this.formControls.description.value,
         isActive: this.formControls.isActive.value ? 'Y' : 'N',
         statusDate: this.statusDate,
-        createdBy: (localStorage.getItem('user_id')),
+        createdBy: parseInt(localStorage.getItem('user_id')),
         createdAt: this.createdAt = new Date(),
-        updatedBy: (localStorage.getItem('user_id')),
+        updatedBy: parseInt(localStorage.getItem('user_id')),
         updatedAt: this.updatedAt,
         proFormaEntryDetailsDTO: proFormaDetailsDTOArray,
         proFormaEntryDetailModel: [],
@@ -297,37 +305,31 @@ export class ProFormaEntryComponent implements OnInit, OnDestroy {
             if (!data) {
               return;
             }
-            if (data.errorDescription) {
-              this._snackBar.open(data.errorDescription, 'Close', {
-                duration: 5000,
-              });
-            } else {
-              this._snackBar.open('Pro-Forma Entry updated successfully.', 'Close', {
-                duration: 5000,
-              });
-            }
+            let snackBarRef = this._snackBar.open('Pro-forma has been successfully updated.', 'Close');
+            snackBarRef.afterDismissed().subscribe(() => {
+              window.location.reload();
+            });
           });
         } else {
-
           this._portalService.addProFormaEntry(proFormaDetails)
-          .pipe(takeUntil(this._onDestroy$))
-          .subscribe(data => {
-            if (!data) {
-              return;
-            }
-            if (data.errorDescription) {
-              this._snackBar.open(data.errorDescription, 'Close', {
-                duration: 5000,
-              });
-            } else {
-              this._snackBar.open('Pro-Forma Entry added successfully.', 'Close', {
-                duration: 5000,
-              });
-              this.form.reset();
-              this.proformaData.sourceCollection = [];
-              this._router.navigate([`apps/pro-forma-entries/edit/${data.id}`]);
-            }
-          });
+            .pipe(takeUntil(this._onDestroy$))
+            .subscribe(data => {
+              if (!data) {
+                return;
+              }
+              let snackBarRef = this._snackBar.open('Pro-forma has been successfully saved.', 'Close');
+              snackBarRef.afterDismissed().subscribe(() => {
+                this._router.navigate([`apps/pro-forma-entries/edit/${data.id}`]);
+              }); 
+            });
         }
+  }
+
+  private _getUser(userId: number): Observable<IUser> {
+    return this._portalService.getUser(userId)
+      .pipe(
+        map((user) => user),
+        takeUntil(this._onDestroy$)
+      );
   }
 }

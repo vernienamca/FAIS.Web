@@ -1,20 +1,21 @@
 import { AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { Observable, of, ReplaySubject, Subject } from 'rxjs';
-import { filter, finalize, takeUntil } from 'rxjs/operators';
+import { BehaviorSubject, Observable, ReplaySubject, Subject } from 'rxjs';
+import { filter, finalize, map, takeUntil } from 'rxjs/operators';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { TableColumn } from '../../../../../@vex/interfaces/table-column.interface';
-import { SelectionModel } from '@angular/cdk/collections';
 import { fadeInUp400ms } from '../../../../../@vex/animations/fade-in-up.animation';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS, MatFormFieldDefaultOptions } from '@angular/material/form-field';
 import { stagger40ms } from '../../../../../@vex/animations/stagger.animation';
 import { UntypedFormControl } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { PortalService } from 'src/app/core/services/portal.service';
 import { IModule } from 'src/app/core/models/module';
 import { Router } from '@angular/router';
 import { SecurityService } from 'src/app/core/services/security.service';
+import { Store } from '@ngxs/store';
+import { SystemManagementState } from 'src/app/shared/store/system-management/system-management.state';
+import { GetModules } from 'src/app/shared/store/system-management/system-management.action';
 
 @UntilDestroy()
 @Component({
@@ -38,23 +39,19 @@ export class ModuleListComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @Input()
-  columns: TableColumn<IModule>[] = [
-    { label: 'Module Name', property: 'name', type: 'text', visible: true, cssClasses: ['font-medium'] },
-    { label: 'Modified By', property: 'updatedBy', type: 'text', visible: true },
-    { label: 'Date Modified', property: 'updatedAt', type: 'text', visible: true },
-    { label: 'Actions', property: 'actions', type: 'button', visible: true }
-  ];
+    columns: TableColumn<IModule>[] = [
+      { label: 'Module Name', property: 'name', type: 'text', visible: true, cssClasses: ['font-medium'] },
+      { label: 'Modified By', property: 'updatedBy', type: 'text', visible: true },
+      { label: 'Date Modified', property: 'updatedAt', type: 'text', visible: true },
+      { label: 'Action', property: 'actions', type: 'button', visible: true }
+    ];
   layoutCtrl = new UntypedFormControl('fullwidth');
   subject$: ReplaySubject<IModule[]> = new ReplaySubject<IModule[]>(1);
   data$: Observable<IModule[]> = this.subject$.asObservable();
-  customers: IModule[];
-  totalCount: number = 0;
-  pageSize = 10;
-  pageSizeOptions: number[] = [5, 10, 20, 50];
+  isLoading$ = new BehaviorSubject<boolean>(false);
+  totalCount$ = new BehaviorSubject<number>(0);
   dataSource: MatTableDataSource<IModule> | null;
-  selection = new SelectionModel<IModule>(true, []);
   searchCtrl = new UntypedFormControl();
-  isListLoading = true;
   hasUpdateAccess = false;
 
   get visibleColumns() {
@@ -64,10 +61,11 @@ export class ModuleListComponent implements OnInit, OnDestroy, AfterViewInit {
   private _onDestroy$ = new Subject<void>();
 
   constructor(
+    private _store: Store,
     private _router: Router,
-    private _portalService: PortalService,
     private _securityService: SecurityService
   ) {
+    this.dataSource = new MatTableDataSource();
     const userId = parseFloat(localStorage.getItem('user_id'));
     this._securityService.getPermissions(userId)
       .pipe(takeUntil(this._onDestroy$))
@@ -81,30 +79,31 @@ export class ModuleListComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnInit(): void {
-    this._portalService.getModules()
-      .pipe(
-        takeUntil(this._onDestroy$),
-        finalize(() => this.isListLoading = false)
-      )
-      .subscribe(data => {
-        if (!data) {
-          return;
-        }
-        this.subject$.next(data);
-      });
+    this._store.dispatch(new GetModules())
+    .pipe(
+      map(() => this._store.selectSnapshot(SystemManagementState.getModules)),
+      finalize(() =>  this.isLoading$.next(false)),
+      takeUntil(this._onDestroy$)
+    ).subscribe((modules: IModule[]) => {
+      if (!modules) {
+        return;
+      }
+      this.subject$.next(modules);
+      this.totalCount$.next(this.dataSource.filteredData.length);
+      this.isLoading$.next(false);
+    });
 
-    this.dataSource = new MatTableDataSource();
-    this.data$
-      .pipe(filter<IModule[]>(Boolean))
-      .subscribe(customers => {
-        this.totalCount = customers.length;
-        this.customers = customers;
-        this.dataSource.data = customers;
-      });
-
-    this.searchCtrl.valueChanges.pipe(
-      untilDestroyed(this)
-    ).subscribe(value => this._onFilterChange(value));
+    this.data$.pipe(
+      filter<IModule[]>(Boolean),
+      takeUntil(this._onDestroy$)
+    ).subscribe(data => {
+      if (!data) {
+        return;
+      }
+      this.dataSource.data = data;
+    });
+    this.searchCtrl.valueChanges.pipe(untilDestroyed(this))
+      .subscribe(value => this._onFilterChange(value));
   }
 
   ngOnDestroy(): void {
@@ -113,42 +112,37 @@ export class ModuleListComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
+    if (!this.dataSource) {
+      return;
+    }
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }
 
-  edit(module: any): void {
+  edit(module: IModule): void {
+    if (!module) {
+      return;
+    }
     this._router.navigate([`apps/modules/edit/${module.id}`]);
   }
 
-  toggleColumnVisibility(column, event): void {
+  toggleColumnVisibility(column: TableColumn<IModule>, event: MouseEvent): void {
     event.stopPropagation();
     event.stopImmediatePropagation();
     column.visible = !column.visible;
-  }
-
-  isAllSelected(): boolean {
-    const numSelected = this.selection.selected.length;
-    const numRows = this.dataSource.data.length;
-    return numSelected === numRows;
-  }
-
-  masterToggle(): void {
-    this.isAllSelected() ?
-      this.selection.clear() :
-      this.dataSource.data.forEach(row => this.selection.select(row));
   }
 
   trackByProperty<T>(index: number, column: TableColumn<T>): string {
     return column.property;
   }
 
-  private _onFilterChange(value: string) {
+  private _onFilterChange(value: string): void {
     if (!this.dataSource) {
       return;
     }
     value = value.trim();
     value = value.toLowerCase();
     this.dataSource.filter = value;
+    this.totalCount$.next(this.dataSource.filteredData.length);
   }
 }

@@ -113,6 +113,7 @@ export class LibraryTypesListComponent implements OnInit, OnDestroy {
     value = value.trim();
     value = value.toLowerCase();
     this.dataSource.filter = value;
+    this.totalCount = this.dataSource.filteredData.length;
   }
 
   masterToggle(): void {
@@ -144,5 +145,4 @@ export class LibraryTypesListComponent implements OnInit, OnDestroy {
     event.stopImmediatePropagation();
     column.visible = !column.visible;
   }
-
 }

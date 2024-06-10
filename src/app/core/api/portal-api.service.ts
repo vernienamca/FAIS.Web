@@ -30,7 +30,7 @@ export class PortalApi extends BaseApi {
     }
 
     getModules(): Observable<IModule[]> {
-        return this.get<IModule[]>(`${this._apiUrl}/module/get`);
+        return this.get<IModule[]>(`${this._apiUrl}/module`);
     }
 
     getModule(id: number): Observable<IModule> {

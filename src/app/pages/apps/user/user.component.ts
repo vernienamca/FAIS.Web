@@ -265,9 +265,9 @@ export class UserComponent implements OnInit, OnDestroy {
           return;
         }
         if (data.errorDescription) {
-        let snackBarRef = this._snackBar.open(data.errorDescription, 'Close');
-        snackBarRef.afterDismissed().subscribe(() =>this.isSaving = false);
-      }
+          let snackBarRef = this._snackBar.open(data.errorDescription, 'Close');
+          snackBarRef.afterDismissed().subscribe(() =>this.isSaving = false);
+        }
       else {
         let snackBarRef = this._snackBar.open('User has been successfully saved.', 'Close');
         snackBarRef.afterDismissed().subscribe(() => {

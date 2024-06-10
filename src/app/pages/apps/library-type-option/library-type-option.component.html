@@ -38,21 +38,6 @@
                   </span>
                 </mat-error>
               </mat-form-field>
-            </div>
-         
-            <div class="flex flex-col sm:flex-row sm:gap-4">
-              <mat-form-field appearance="fill" class="flex-auto">
-                <mat-label>Library Type Option</mat-label>
-                <input matInput formControlName="description" required>
-                <mat-error *ngIf="formControls.description.touched && formControls.description.invalid">
-                  <span *ngIf="formControls.description.getError('required')">
-                    Library Type Option is required
-                  </span>
-                </mat-error>
-              </mat-form-field>
-            </div>
-
-            <div class="flex flex-col sm:flex-row sm:gap-4">
               <mat-form-field appearance="fill" class="flex-auto">
                 <mat-label>Ranking</mat-label>
                 <input type="number" matInput formControlName="ranking" required>
@@ -63,39 +48,16 @@
                 </mat-error>
               </mat-form-field>
             </div>
-
             <div class="flex flex-col sm:flex-row sm:gap-4">
               <mat-form-field appearance="fill" class="flex-auto" [ngClass]="{'option-code': pageMode === 2}">
                 <mat-label>Option Code</mat-label>
-                <input matInput formControlName="code">
-                <mat-hint align="start">
-                  Option codes are reference for dropdowns with dependent types. <br>
-                  Leave blank for dropdowns without dependent.
-                </mat-hint>
+                <input matInput formControlName="code">              
               </mat-form-field>
-            </div>
-
-            <div class="flex flex-col sm:flex-row sm:gap-4" [style.marginTop.px]="20">
               <mat-form-field appearance="fill" class="flex-auto">
                 <mat-label>UDF1</mat-label>
                 <input matInput formControlName="udf1" >
               </mat-form-field>
             </div>
-
-            <div class="flex flex-col sm:flex-row sm:gap-4">
-              <mat-form-field appearance="fill" class="flex-auto">
-                <mat-label>UDF2</mat-label>
-                <input matInput formControlName="udf2" >
-              </mat-form-field>
-            </div>
-
-            <div class="flex flex-col sm:flex-row sm:gap-4">
-              <mat-form-field appearance="fill" class="flex-auto">
-                <mat-label>UDF3</mat-label>
-                <input matInput formControlName="udf3" >
-              </mat-form-field>
-            </div>
-
             <div class="flex flex-col sm:flex-row sm:gap-4">
               <mat-form-field appearance="fill" class="flex-auto">
                 <mat-label>Option Description</mat-label>
@@ -105,6 +67,25 @@
                     Option Description is required
                   </span>
                 </mat-error>
+              </mat-form-field>
+              <mat-form-field appearance="fill" class="flex-auto">
+                <mat-label>UDF2</mat-label>
+                <input matInput formControlName="udf2" >
+              </mat-form-field>
+            </div>
+            <div class="flex flex-col sm:flex-row sm:gap-4">
+              <mat-form-field appearance="fill" class="flex-auto">
+                <mat-label>Library Type Option</mat-label>
+                <input matInput formControlName="description" required>
+                <mat-error *ngIf="formControls.description.touched && formControls.description.invalid">
+                  <span *ngIf="formControls.description.getError('required')">
+                    Library Type Option is required
+                  </span>
+                </mat-error>
+              </mat-form-field>
+              <mat-form-field appearance="fill" class="flex-auto">
+                <mat-label>UDF3</mat-label>
+                <input matInput formControlName="udf3" >
               </mat-form-field>
             </div>
             <div class="flex flex-col sm:flex-row sm:gap-4">
