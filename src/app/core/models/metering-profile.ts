@@ -13,6 +13,7 @@ export interface IMeteringProfile {
     lineSegment: string;
     remarks: string;
     adReqionSeq: number;
+    adRegionSeqDescription: string;
     adProvSeq: number;
     adMunSeq: number;
     adBrgySeq: number;

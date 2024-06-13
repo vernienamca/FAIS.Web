@@ -48,7 +48,7 @@ export class MeteringProfileListComponent implements OnInit, OnDestroy, AfterVie
     { label: 'Type of Installation', property: 'installationTypeDescription', type: 'text', visible: true },
     { label: 'Metering Class', property: 'meteringClassDescription', type: 'text', visible: true },
     { label: 'Transmission Grid', property: 'transGridDescription', type: 'text', visible: true },
-    { label: 'District Office', property: 'adRegionSeq', type: 'text', visible: true },
+    { label: 'District Office', property: 'adRegionSeqDescription', type: 'text', visible: true },
     { label: 'Facility Location', property: 'facilityLocationDescription', type: 'text', visible: true },
     { label: 'Line Segment', property: 'lineSegment', type: 'text', visible: true },
     { label: 'Status', property: 'isActive', type: 'text', visible: true },
@@ -109,6 +109,7 @@ export class MeteringProfileListComponent implements OnInit, OnDestroy, AfterVie
         if (!data) {
           return;
         }
+        console.log(data);
         this.subject$.next(data);
       });
 

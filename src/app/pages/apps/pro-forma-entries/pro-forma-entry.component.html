@@ -1,6 +1,6 @@
-<vex-secondary-toolbar [current]="isEditMode ? 'Edit Pro-Forma Entries' : 'Add Pro-Forma Entries'">
+<vex-secondary-toolbar [current]="isEditMode ? 'Edit Pro-forma Entry' : 'Add Pro-forma Entry'">
   <vex-breadcrumbs
-    [crumbs]="['System Libraries', 'Pro-Forma Entries', isEditMode ? 'Edit Pro-Forma Entries' : 'Add Pro-Forma Entries']"
+    [crumbs]="['System Libraries', 'Pro-forma Entries', isEditMode ? 'Edit Pro-forma Entry' : 'Add Pro-forma Entry']"
     class="flex-auto"></vex-breadcrumbs>
   <button class="ml-2" color="primary" mat-icon-button type="button">
     <mat-icon svgIcon="mat:more_vert"></mat-icon>
@@ -36,6 +36,17 @@
           </form>
         </div>
       </div>
+      <div class="flex flex-col sm:flex-row sm:gap-4" [style.margin-left.px]="20">
+        <div [formGroup]="form">
+          <mat-slide-toggle labelPosition="before" formControlName="isActive"
+            (change)="onToggleStatus($event)">
+            {{ statusLabel }}
+          </mat-slide-toggle>
+          <span *ngIf="id" [style.margin-left.px]="20"> 
+            <strong>Status Date: </strong>{{ statusDate }}
+          </span>
+        </div>
+      </div>
       <div fxLayout="row" fxLayout="start center" fxLayoutGap="5px">
         <div class="table-container" [style.margin-top.px]="50" >
           <div class="flex flex-row" fxLayoutAlign="end" [style.margin-bottom.px]="10" [style.margin-right.px]="30">
@@ -47,31 +58,31 @@
           <mat-divider style="margin: 10px 0;"></mat-divider>
           <div class="wijmotable">
             <wj-flex-grid class="main-grid long-table px-4 py-4" #proformaGrid [itemsSource]="proformaData" [selectionMode]="'Row'" [allowResizing]="false" style="width: 100%; border:none ; padding-right: 2%;" >
-              <wj-flex-grid-column binding="faisRefNo" header="FAIS Ref No." width="30*" ></wj-flex-grid-column>
-              <wj-flex-grid-column binding="tranTypeSeq" header="Transaction Seq." width="30*" ></wj-flex-grid-column>
-              <wj-flex-grid-column binding="costCenter" header="Cost Center" width="30*" ></wj-flex-grid-column>
+              <wj-flex-grid-column binding="faisRefNo" header="FAIS Ref No." width="30*" [maxLength]="20"></wj-flex-grid-column>
+              <wj-flex-grid-column binding="tranTypeSeq" header="Transaction Seq." width="30*" [maxLength]="6"></wj-flex-grid-column>
+              <wj-flex-grid-column binding="costCenter" header="Cost Center" width="30*" [maxLength]="35"></wj-flex-grid-column>
               <wj-flex-grid-column binding="glNo" header="GL No." width="30*" ></wj-flex-grid-column>
               <wj-flex-grid-column binding="rcaGl" header="RCA GL" width="30*" ></wj-flex-grid-column>
-              <wj-flex-grid-column binding="prefix" header="Prefix" width="30*" ></wj-flex-grid-column>
+              <wj-flex-grid-column binding="prefix" header="Prefix" width="30*" [maxLength]="2"></wj-flex-grid-column>
               <wj-flex-grid-column binding="sl" header="SL" width="30*" ></wj-flex-grid-column>
-              <wj-flex-grid-column binding="otherCode" header="Others Code" width="30*" ></wj-flex-grid-column>
-              <wj-flex-grid-column binding="dce" header="DCE" width="30*" ></wj-flex-grid-column>
-              <wj-flex-grid-column binding="plantCode" header="Plant Code" width="30*" ></wj-flex-grid-column>
-              <wj-flex-grid-column binding="wo" header="WO" width="30*" ></wj-flex-grid-column>
-              <wj-flex-grid-column binding="refBillNo" header="Rev./Bill No." width="30*" ></wj-flex-grid-column>
-              <wj-flex-grid-column binding="source" header="Source" width="30*" ></wj-flex-grid-column>
-              <wj-flex-grid-column binding="nature" header="Nature" width="30*" ></wj-flex-grid-column>
-              <wj-flex-grid-column binding="aYyyy" header="A_YYYY" width="30*" ></wj-flex-grid-column>
-              <wj-flex-grid-column binding="fg" header="FG" width="30*" ></wj-flex-grid-column>
-              <wj-flex-grid-column binding="debit" header="Debit" width="30*" ></wj-flex-grid-column>
-              <wj-flex-grid-column binding="credit" header="Credit" width="30*" ></wj-flex-grid-column>
-              <wj-flex-grid-column binding="tranDate" header="Tran Date" width="30*" ></wj-flex-grid-column>
-              <wj-flex-grid-column binding="ymPosted" header="Year Month Posted" width="30*" ></wj-flex-grid-column>
-              <wj-flex-grid-column binding="datecreated" header="Date Created" width="30*" ></wj-flex-grid-column>
-              <wj-flex-grid-column binding="usercreated" header="User Created" width="30*" ></wj-flex-grid-column>
-              <wj-flex-grid-column binding="sort" header="Sort Order No." width="30*" ></wj-flex-grid-column>
-              <wj-flex-grid-column binding="udf1" header="UDF 1" width="30*" ></wj-flex-grid-column>
-              <wj-flex-grid-column binding="udf2" header="UDF 2" width="30*" ></wj-flex-grid-column>
+              <wj-flex-grid-column binding="otherCode" header="Others Code" width="30*" [maxLength]="5"></wj-flex-grid-column>
+              <wj-flex-grid-column binding="dce" header="DCE" width="30*" [maxLength]="10"></wj-flex-grid-column>
+              <wj-flex-grid-column binding="plantCode" header="Plant Code" width="30*" [maxLength]="50"></wj-flex-grid-column>
+              <wj-flex-grid-column binding="wo" header="WO" width="30*" [maxLength]="50"></wj-flex-grid-column>
+              <wj-flex-grid-column binding="refBillNo" header="Rev./Bill No." width="30*" [maxLength]="50"></wj-flex-grid-column>
+              <wj-flex-grid-column binding="source" header="Source" width="30*" [maxLength]="50"></wj-flex-grid-column>
+              <wj-flex-grid-column binding="nature" header="Nature" width="30*" [maxLength]="50"></wj-flex-grid-column>
+              <wj-flex-grid-column binding="aYyyy" header="A_YYYY" width="30*" [maxLength]="10"></wj-flex-grid-column>
+              <wj-flex-grid-column binding="fg" header="FG" width="30*" [maxLength]="25"></wj-flex-grid-column>
+              <wj-flex-grid-column binding="debit" header="Debit" width="30*" [maxLength]="5"></wj-flex-grid-column>
+              <wj-flex-grid-column binding="credit" header="Credit" width="30*" [maxLength]="5"></wj-flex-grid-column>
+              <wj-flex-grid-column binding="tranDate" header="Tran Date" width="30*" [maxLength]="25"></wj-flex-grid-column>
+              <wj-flex-grid-column binding="ymPosted" header="Year Month Posted" width="30*" [maxLength]="25"></wj-flex-grid-column>
+              <wj-flex-grid-column binding="datecreated" header="Date Created" width="30*"></wj-flex-grid-column>
+              <wj-flex-grid-column binding="usercreated" header="User Created" width="30*"></wj-flex-grid-column>
+              <wj-flex-grid-column binding="sort" header="Sort Order No." width="30*" [maxLength]="9"></wj-flex-grid-column>
+              <wj-flex-grid-column binding="udf1" header="UDF 1" width="30*" [maxLength]="50"></wj-flex-grid-column>
+              <wj-flex-grid-column binding="udf2" header="UDF 2" width="30*" [maxLength]="50"></wj-flex-grid-column>
               <wj-flex-grid-column binding="action" header="Action" width="30*" >
                 <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-cell="cell">
                   <button mat-button class="delete" (click)="onDeleteRow(cell.item)">
@@ -84,16 +95,6 @@
           <div class="flex flex-row" fxLayoutAlign="end" [style.margin-top.px]="10" [style.margin-right.px]="40">
             <div id="thePager"></div>
           </div>
-        </div>
-      </div>
-      <div class="flex flex-col sm:flex-row sm:gap-4" [style.margin-left.px]="20" [style.margin-top.px]="10"
-        [style.margin-bottom.px]="30">
-        <div [formGroup]="form">
-          <mat-slide-toggle  labelPosition="before" formControlName="isActive"
-            (change)="onToggleStatus($event)">
-            {{ statusLabel }}
-          </mat-slide-toggle>
-          <span [style.margin-left.px]="20"> <strong>Status Date: </strong>{{ statusDate | date: 'MM/dd/yyyy' }}</span>
         </div>
       </div>
       <blockquote fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px" [style.marginTop.px]="30"

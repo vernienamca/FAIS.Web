@@ -8,18 +8,18 @@ import { DialogInterface } from 'src/app/core/models/dialog';
   styleUrls: ['./dialog.component.scss']
 })
 export class DialogComponent {
-  constructor(@Inject(MAT_DIALOG_DATA) public data: DialogInterface,
-  private _dialogRef: MatDialogRef<DialogComponent>,
-  ) {}
+  isConfirmYes: boolean = false;
 
-  handleDialogSubmit() {    
-    setTimeout(() => {
-      this.data.callbackMethod();
-    }, 500);
-    this.closeDialog(this.data);
+  constructor(@Inject(MAT_DIALOG_DATA) public data: DialogInterface,
+    private _dialogRef: MatDialogRef<DialogComponent>
+  ) {
   }
 
-  closeDialog(data?: any) {
-    this._dialogRef.close(data);
+  handleConfirmYes(): void {    
+    this._dialogRef.close(true);
+  }
+
+  closeDialog(): void {
+    this._dialogRef.close(false);
   }
 }

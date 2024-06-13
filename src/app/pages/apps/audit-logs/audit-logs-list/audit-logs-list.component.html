@@ -54,6 +54,13 @@
                 {{ row[column.property] | date: 'MM/dd/yyyy hh:mm a' }}
               </td>
             </ng-container>
+            <ng-container *ngIf="column.property === 'oldValues' || column.property === 'newValues'; else text">
+              <td *matCellDef="let row" mat-cell>
+                {{ row[column.property] !== null ? row[column.property].substring(0, 60) : row[column.property] }}
+                <mat-icon *ngIf="row[column.property]?.length > 60" [matTooltip]="row[column.property]" class="icon-sm" 
+                  svgIcon="mat:more_horiz"></mat-icon> 
+              </td>
+            </ng-container>
             <ng-template #text>
               <td *matCellDef="let row" mat-cell>
                 {{ row[column.property] }}

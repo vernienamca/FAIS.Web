@@ -12,6 +12,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MeteringConfirmationDialogComponent } from './metering-confirmation-dialog/metering-confirmation-dialog.component';
 import { ModuleEnum } from 'src/app/core/enums/module-enum';
 import { LibraryTypeCodes } from 'src/app/core/enums/library-types.enum';
+import { DialogComponent } from '../dialog/dialog.component';
 
 @Component({
   selector: 'vex-module',
@@ -154,28 +155,30 @@ export class MeteringProfileComponent implements OnInit, OnDestroy {
     }
     };
 
-   save(): void{
-    this.isSaving = true;
-    this._dialog.open(MeteringConfirmationDialogComponent,{
-    width: '500px',
-    disableClose: true
-    })
-    .afterClosed().subscribe((result: boolean) => {
-      if (result)
-        if(this.isEditMode)
-          {
-           editdata.id = parseInt(this._route.snapshot.paramMap.get('id'));
-           editdata.createdBy = data.createdBy;
-           this._updateMetering(editdata)
-          }
-          else {
-            this._addMetering(data);
-          }
-          else {
-            this._snackBar.open('User Cancelled saving.', 'Close');
-            this.isSaving = false;  
-          }
-    })
+   save(): void {
+    const dialogRef = this._dialog.open(DialogComponent, {
+      data: {
+        cancelButtonLabel: "Cancel",
+        confirmButtonLabel: "Yes, Proceed",
+        dialogHeader: "Confirmation",
+        dialogContent: "Are you sure you want to proceed saving?",
+        moduleName: 'Metering Profile'
+      },
+      width: '450px'
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (!result) {
+        this.isSaving = false;  
+        return;
+      }
+      if (this.isEditMode) {
+        editdata.id = parseInt(this._route.snapshot.paramMap.get('id'));
+        editdata.createdBy = data.createdBy;
+        this._updateMetering(editdata)
+      } else {
+        this._addMetering(data);
+      }
+    });
     const data = Object.assign({},this.form.value)
     const editdata = Object.assign({}, this.form.getRawValue())
     data.createdBy = parseInt(localStorage.getItem('user_id'));
@@ -184,7 +187,7 @@ export class MeteringProfileComponent implements OnInit, OnDestroy {
     editdata.updatedBy = this.userId;
    }
 
-  ngOnDestroy(): void {``
+  ngOnDestroy(): void {
     this._onDestroy$.next();
     this._onDestroy$.complete();  
   }

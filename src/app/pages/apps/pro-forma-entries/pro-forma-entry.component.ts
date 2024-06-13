@@ -15,6 +15,7 @@ import { SecurityService } from 'src/app/core/services/security.service';
 import { ModuleEnum } from 'src/app/core/enums/module-enum';
 import { MatButton } from '@angular/material/button';
 import { IUser } from 'src/app/core/models/user';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'vex-pro-forma-entry',
@@ -39,8 +40,8 @@ export class ProFormaEntryComponent implements OnInit, OnDestroy {
   selectedLibraryTypeId: number;
   selectedItems: any[] = [];
   proformaData = this.getProFormaData(5);
-  statusDate: Date = new Date();
   hasAccess = false;
+  statusDate: string;
 
   addNewRow(): void {
     const newItem = {
@@ -76,9 +77,9 @@ export class ProFormaEntryComponent implements OnInit, OnDestroy {
   }
 
   onDeleteRow(item: any): void {
-      const index = this.proformaGrid.collectionView.items.indexOf(item);
-        this.proformaGrid.collectionView.sourceCollection.splice(index, 1);
-        this.proformaGrid.collectionView.refresh();
+    const index = this.proformaGrid.collectionView.items.indexOf(item); 
+    this.proformaGrid.collectionView.sourceCollection.splice(index, 1);
+    this.proformaGrid.collectionView.refresh();
   }
 
   getProFormaData(count: number) {
@@ -137,6 +138,7 @@ export class ProFormaEntryComponent implements OnInit, OnDestroy {
     private _snackBar: MatSnackBar,
     private _router: Router,
     private _securityService: SecurityService,
+    private _datePipe: DatePipe
   ) {
     this.form = this._fb.group({
       tranTypeSeq: ['', [Validators.required]],
@@ -185,6 +187,7 @@ export class ProFormaEntryComponent implements OnInit, OnDestroy {
               }
               this.createdBy = `${data.firstName} ${data.lastName}`;
             });
+
             this._getUser(data.updatedBy).subscribe(data => {
               if (!data) {
                 return;
@@ -199,6 +202,7 @@ export class ProFormaEntryComponent implements OnInit, OnDestroy {
             });
             this.updatedAt = data.updatedAt;
             this.createdAt = data.createdAt;
+            this.statusDate = `${this._datePipe.transform(data.statusDate, 'short')}` || '';
           });
       }
     }
@@ -277,7 +281,7 @@ export class ProFormaEntryComponent implements OnInit, OnDestroy {
           dateRemoved: null,
           createdBy: parseInt(localStorage.getItem('user_id')),
           createdAt: this.createdAt = new Date(),
-          updatedBy: parseInt(localStorage.getItem('user_id')),
+          updatedBy: this.id ? parseInt(localStorage.getItem('user_id')) : null,
           updatedAt: null,
           proformaEntryId: this.id || 0
         };
@@ -288,10 +292,10 @@ export class ProFormaEntryComponent implements OnInit, OnDestroy {
         tranTypeSeq: this.formControls.tranTypeSeq.value,
         description: this.formControls.description.value,
         isActive: this.formControls.isActive.value ? 'Y' : 'N',
-        statusDate: this.statusDate,
+        statusDate: new Date(),
         createdBy: parseInt(localStorage.getItem('user_id')),
         createdAt: this.createdAt = new Date(),
-        updatedBy: parseInt(localStorage.getItem('user_id')),
+        updatedBy: this.id ? parseInt(localStorage.getItem('user_id')) : null,
         updatedAt: this.updatedAt,
         proFormaEntryDetailsDTO: proFormaDetailsDTOArray,
         proFormaEntryDetailModel: [],
@@ -305,7 +309,7 @@ export class ProFormaEntryComponent implements OnInit, OnDestroy {
             if (!data) {
               return;
             }
-            let snackBarRef = this._snackBar.open('Pro-forma has been successfully updated.', 'Close');
+            let snackBarRef = this._snackBar.open('Pro-forma entry has been successfully updated.', 'Close');
             snackBarRef.afterDismissed().subscribe(() => {
               window.location.reload();
             });
@@ -317,7 +321,7 @@ export class ProFormaEntryComponent implements OnInit, OnDestroy {
               if (!data) {
                 return;
               }
-              let snackBarRef = this._snackBar.open('Pro-forma has been successfully saved.', 'Close');
+              let snackBarRef = this._snackBar.open('Pro-forma entry has been successfully saved.', 'Close');
               snackBarRef.afterDismissed().subscribe(() => {
                 this._router.navigate([`apps/pro-forma-entries/edit/${data.id}`]);
               }); 

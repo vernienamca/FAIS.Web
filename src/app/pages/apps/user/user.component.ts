@@ -216,7 +216,7 @@ export class UserComponent implements OnInit, OnDestroy {
     if (!event?.value) {
       return;
     }
-    const position = this.positions.find(t => t.parentValue === event?.value.position);
+    const position = this.positions.find(t => t.parentValue === event?.value.position.trimEnd());
     this.form.patchValue({
       position: position ? position.parentId : null,
       username: event?.value.emailAddress.split('@')[0],

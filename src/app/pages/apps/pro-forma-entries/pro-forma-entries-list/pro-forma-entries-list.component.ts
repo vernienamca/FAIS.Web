@@ -1,9 +1,8 @@
 import { AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { Observable, of, ReplaySubject, Subject } from 'rxjs';
+import { Observable, ReplaySubject, Subject } from 'rxjs';
 import { filter, finalize, takeUntil } from 'rxjs/operators';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { MatDialog } from '@angular/material/dialog';
 import { TableColumn } from '../../../../../@vex/interfaces/table-column.interface';
@@ -63,7 +62,6 @@ export class ProFormaEntriesListComponent implements OnInit, OnDestroy, AfterVie
   searchCtrl = new UntypedFormControl();
   labels = aioTableLabels;      
   isListLoading = true;  
-
   proFormaEntryStatusEnum = ProFormaEntryStatusEnum;
 
   public filteredUsers: ReplaySubject<string[]> = new ReplaySubject<string[]>(1);
@@ -76,12 +74,28 @@ export class ProFormaEntriesListComponent implements OnInit, OnDestroy, AfterVie
   constructor(
     private _dialog: MatDialog,
     private _portalService: PortalService,
-    private _router: Router,
-   private _snackBar: MatSnackBar
+    private _router: Router
   ) {
   }
 
   ngOnInit(): void {
+    this._loadProformaEntries();
+    this.searchCtrl.valueChanges.pipe(
+      untilDestroyed(this)
+    ).subscribe(value => this.onFilterChange(value));
+  }
+
+  ngOnDestroy(): void {
+    this._onDestroy$.next();
+    this._onDestroy$.complete();
+  }
+
+  ngAfterViewInit(): void {
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+  }
+
+  private _loadProformaEntries(): void {
     this._portalService.getProFormaEntries()
       .pipe(
         takeUntil(this._onDestroy$),
@@ -103,20 +117,6 @@ export class ProFormaEntriesListComponent implements OnInit, OnDestroy, AfterVie
         this.proformaentries = proformaentries;
         this.dataSource.data = proformaentries;
       });
-
-    this.searchCtrl.valueChanges.pipe(
-      untilDestroyed(this)
-    ).subscribe(value => this.onFilterChange(value));
-  }
-
-  ngOnDestroy(): void {
-    this._onDestroy$.next();
-    this._onDestroy$.complete();
-  }
-
-  ngAfterViewInit(): void {
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
   }
 
   onFilterChange(value: string): void {
@@ -134,18 +134,6 @@ export class ProFormaEntriesListComponent implements OnInit, OnDestroy, AfterVie
     column.visible = !column.visible;
   }
 
-  isAllSelected(): boolean {
-    const numSelected = this.selection.selected.length;
-    const numRows = this.dataSource.data.length;
-    return numSelected === numRows;
-  }
-
-  masterToggle(): void {
-    this.isAllSelected() ?
-      this.selection.clear() :
-      this.dataSource.data.forEach(row => this.selection.select(row));
-  }
-
   trackByProperty<T>(index: number, column: TableColumn<T>): string {
     return column.property;
   }
@@ -154,11 +142,12 @@ export class ProFormaEntriesListComponent implements OnInit, OnDestroy, AfterVie
     const index = this.proformaentries.findIndex(c => c === row);
     this.subject$.next(this.proformaentries);
   }
+  
   exportProFormaEntries(): void {
     this._portalService.exportProFormaEntries();
   }
 
-  add() {
+  add(): void {
     this._router.navigate(['apps/pro-forma-entries/add']);
   }
   
@@ -167,33 +156,23 @@ export class ProFormaEntriesListComponent implements OnInit, OnDestroy, AfterVie
   }
 
   delete(proFormaEntry: any): void {
-
-
     const dialogRef = this._dialog.open(DialogComponent, {
       data: {
         cancelButtonLabel: "Cancel",
-        confirmButtonLabel: "Continue delete pro-forma entry",
-        dialogHeader: "Delete pro-forma entry",
-        dialogContent: "Are you sure you would like to delete this pro-forma entry?",
-        callbackMethod: function() {
-         
-        }
+        confirmButtonLabel: "Yes, Proceed",
+        dialogHeader: "Confirmation",
+        dialogContent: "Are you sure you want to delete this pro-forma entry?",
+        moduleName: 'Pro-forma Entries'
       },
-      width: '700px'
+      width: '450px'
     });
-
-    
     dialogRef.afterClosed().subscribe(result => {
-      if(result != undefined) {
-        this._portalService.deleteProFormaEntry(proFormaEntry.id)
-        .pipe(takeUntil(this._onDestroy$))
-        .subscribe(libraryData => {
-          if (!libraryData) {
-            return;
-          }
-        
-        });
+      if (!result) {
+        return;
       }
+      this._portalService.deleteProFormaEntry(proFormaEntry.id)
+        .pipe(takeUntil(this._onDestroy$))
+        .subscribe(() => this._loadProformaEntries())
     });
   }
 }
