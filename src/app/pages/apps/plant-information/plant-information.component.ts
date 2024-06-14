@@ -14,6 +14,8 @@ import { DataMap }from '@grapecity/wijmo.grid';
 import { SecurityService } from 'src/app/core/services/security.service';
 import { ModuleEnum } from 'src/app/core/enums/module-enum';
 import { IRole } from 'src/app/core/models/role';
+import { DialogComponent } from '../dialog/dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
     selector: 'vex-plant-information',
@@ -53,6 +55,7 @@ export class PlantInformationComponent implements OnInit, OnDestroy {
     roleIds: number[] = [];
     userId: number;
     roles: IRole[] = [];
+    isSaving: boolean = false;
     
     get formControls() {
         return {
@@ -86,7 +89,8 @@ export class PlantInformationComponent implements OnInit, OnDestroy {
         private _snackBar: MatSnackBar,
         private _router: Router,
         private _cdr: ChangeDetectorRef,
-        private _securityService: SecurityService
+        private _securityService: SecurityService,
+        private _dialog: MatDialog
     ) {
         this.form = this._fb.group({
             plantCode: ['', [Validators.required]],
@@ -201,6 +205,7 @@ export class PlantInformationComponent implements OnInit, OnDestroy {
     }
 
     save(): void {
+        
         if (!this.formControls.plantCode.value) {
             this.formControls.plantCode.markAsTouched();
             this.formControls.plantCode.updateValueAndValidity();
@@ -211,6 +216,33 @@ export class PlantInformationComponent implements OnInit, OnDestroy {
             this.formControls.substationName.updateValueAndValidity();
             return;
         }
+
+        const dialogRef = this._dialog.open(DialogComponent, {
+            data: {
+              cancelButtonLabel: "Cancel",
+              confirmButtonLabel: "Yes, Proceed",
+              dialogHeader: "Confirmation",
+              dialogContent: "Are you sure you want to proceed saving?",
+              moduleName: 'Metering Profile'
+            },
+            width: '450px'
+          });
+          dialogRef.afterClosed().subscribe(result => {
+            if (!result) {
+              this.isSaving = false;  
+              return;
+            }
+            if (this.pageMode == 2) {
+                data.updatedBy = parseInt(localStorage.getItem('user_id'));
+                data.plantInformationDetailDTO = plantInformationDetailDTO;
+                this._updatePlantInformation(data);
+            } else {
+                data.createdBy = parseInt(localStorage.getItem('user_id'));
+                data.statusDate = new Date();
+                data.plantInformationDetailDTO = plantInformationDetailDTO;
+                this._createPlantInformation(data);
+            }
+          });
 
         const wijmoInvalid = this.plantInformationCostCenterData.sourceCollection.some((item: any) => {
             return item.costCenterType === '' || /^[a-zA-Z]+$/.test(item.costCenterType) || item.costCenterNo === '' || /^[a-zA-Z]+$/.test(item.costCenterNo) || item.faisRefNo === '';
@@ -236,17 +268,6 @@ export class PlantInformationComponent implements OnInit, OnDestroy {
         const data = Object.assign({}, this.form.value);
         data.id = parseInt(this._route.snapshot.paramMap.get('id'));
         data.isActive = data.isActive ? 'Y' : 'N'; 
-        if (this.pageMode === 1) {
-            data.createdBy = parseInt(localStorage.getItem('user_id'));
-            data.statusDate = new Date();
-            data.plantInformationDetailDTO = plantInformationDetailDTO;
-            this._createPlantInformation(data);
-        }
-        else if (this.pageMode === 2) {
-            data.updatedBy = parseInt(localStorage.getItem('user_id'));
-            data.plantInformationDetailDTO = plantInformationDetailDTO;
-            this._updatePlantInformation(data);
-        }
     }
 
     private _patchValues(data): void {
