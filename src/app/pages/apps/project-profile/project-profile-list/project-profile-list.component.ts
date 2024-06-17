@@ -4,7 +4,6 @@ import { filter, finalize, takeUntil } from 'rxjs/operators';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { MatDialog } from '@angular/material/dialog';
 import { TableColumn } from '../../../../../@vex/interfaces/table-column.interface';
 import { aioTableLabels } from '../../../../../static-data/aio-table-data';
 import { SelectionModel } from '@angular/cdk/collections';
@@ -38,6 +37,7 @@ import { ILibraryTypes } from 'src/app/core/models/library-types';
     }
   ]
 })
+
 export class ProjectProfileListComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -54,14 +54,10 @@ export class ProjectProfileListComponent implements OnInit, OnDestroy, AfterView
     { label: 'Total AMR Cost', property: 'totalAMRCost', type: 'text', visible: true },
     { label: 'Recorded AMR', property: 'recordedAMR', type: 'text', visible: true },
     { label: 'Unrecorded AMR', property: 'unrecordedAMR', type: 'text', visible: true },
-    { label: 'UDF 1', property: 'udf1', type: 'text', visible: true },
-    { label: 'UDF 2', property: 'udf2', type: 'text', visible: true },
-    { label: 'UDF 3', property: 'udf3', type: 'text', visible: true },
     { label: 'Remarks', property: 'remarks', type: 'text', visible: true },
     { label: 'Status', property: 'isActive', type: 'badge', visible: true },
     { label: 'Actions', property: 'actions', type: 'button', visible: true }
   ];
-
   layoutCtrl = new UntypedFormControl('fullwidth');
   subject$: ReplaySubject<IProjectProfile[]> = new ReplaySubject<IProjectProfile[]>(1);
   data$: Observable<IProjectProfile[]> = this.subject$.asObservable();
@@ -87,36 +83,20 @@ export class ProjectProfileListComponent implements OnInit, OnDestroy, AfterView
   }
 
   constructor(
-    private _dialog: MatDialog,
     private _portalService: PortalService,
     private _router: Router
-  ) {
-  }
+  ) {  }
 
   ngOnInit(): void {
     this._portalService.getProjectProfiles()
     .pipe(
       takeUntil(this._onDestroy$),
-      finalize(() => this.isListLoading = false))
+      finalize(() => this.isListLoading = false)
+    )
     .subscribe(data => {
       if (!data) {
         return;
       }
-
-      data.forEach((projectProfile) => {
-
-        var components = projectProfile.projectProfileComponents;
-
-        if(components.length != 0)
-          {
-            projectProfile.latestInspectionDate = new Date(Math.max.apply(null, components.map(function(e) {
-              return new Date(e.completionDate);
-            }))).toDateString();
-          }
-     
-        projectProfile.noOfComponentsCompleted = components.filter(c => c.completionDate != null).length.toString();
-        projectProfile.noOfComponentsUnderConstruction = components.filter(c => c.completionDate == null).length.toString();
-      });
 
       this.subject$.next(data);
     });

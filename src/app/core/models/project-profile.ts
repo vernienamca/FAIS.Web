@@ -4,8 +4,8 @@ export interface IProjectProfile {
     projClassSeq: string;
     projStageSeq: string;
     tpsrMonth: Date;
-    noOfComponentsCompleted: string;
-    noOfComponentsUnderConstruction: string;
+    noOfComponentsCompleted: number;
+    noOfComponentsUnderConstruction: number;
     latestInspectionDate: string;
     totalAMRCost: string;
     recordedAMR: string;
