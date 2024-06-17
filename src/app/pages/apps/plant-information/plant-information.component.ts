@@ -48,7 +48,7 @@ export class PlantInformationComponent implements OnInit, OnDestroy {
     municipalities: any[] =[];
     barangays: any[] =[];
     costCenterTypes = [{}];
-    costCenterTypesMap = new DataMap(this.costCenterTypes, 'libraryTypeId', 'parentValue');
+    costCenterTypesMap = new DataMap(this.costCenterTypes, 'parentId', 'parentValue');
     addMode: boolean = true;
     isEditMode: boolean = false;
     isAdmin: boolean = false;
@@ -111,7 +111,7 @@ export class PlantInformationComponent implements OnInit, OnDestroy {
             brgyId: [''],
             isActive: [true],
             status: [''],
-            statusDate: ['']
+            statusDate: [''],
         });
         const plantCode = this._route.snapshot.paramMap.get('plantcode');
         this.pageMode = this._route.snapshot.data.pageMode;
@@ -123,8 +123,8 @@ export class PlantInformationComponent implements OnInit, OnDestroy {
                 if (!data) {
                     return;
                 }
-                this._patchValues(data);
 
+                this._patchValues(data);
                 this.statusLabel = data.isActive === 'Y' ? 'Active' : 'Inactive'; 
                 this.createdBy = data.createdByName;
                 this.createdAt = data.createdAt;
@@ -132,6 +132,7 @@ export class PlantInformationComponent implements OnInit, OnDestroy {
                 this.updatedAt = data.updatedAt;
                 this.plantInformationCostCenterData = new wjcCore.CollectionView(
                     data.plantInformationDetail.map(item => ({
+                      id: item.id,
                       costCenterType: item.costCenterTypeLto, 
                       costCenterNo: item.costCenter                      ,
                     })),
@@ -232,7 +233,26 @@ export class PlantInformationComponent implements OnInit, OnDestroy {
               this.isSaving = false;  
               return;
             }
+
+            const collectionView = this.plantInformationCostCenterGrid.collectionView;
+            const allItems = collectionView.sourceCollection as any[];
+     
+            const plantInformationDetailDTO: IPlantInformationCostCenter[] = allItems.map((item: any) => {
+                return {
+                    id: item.id,
+                    costCenter: item.costCenterNo,
+                    costCenterTypeLto: item.costCenterType,
+                    createdBy: item.createdBy,
+                    createdAt: new Date()
+                };
+            });
+          
+            const data = Object.assign({}, this.form.value);
+            data.id = parseInt(this._route.snapshot.paramMap.get('id'));
+            data.isActive = data.isActive ? 'Y' : 'N'; 
+
             if (this.pageMode == 2) {
+                data.createdBy = parseInt(localStorage.getItem('user_id'));
                 data.updatedBy = parseInt(localStorage.getItem('user_id'));
                 data.plantInformationDetailDTO = plantInformationDetailDTO;
                 this._updatePlantInformation(data);
@@ -253,21 +273,6 @@ export class PlantInformationComponent implements OnInit, OnDestroy {
             });
             return;
         }
-        const collectionView = this.plantInformationCostCenterGrid.collectionView;
-        const allItems = collectionView.sourceCollection as any[];
-
-        const plantInformationDetailDTO: IPlantInformationCostCenter[] = allItems.map((item: any) => {
-            return {
-                id: item.id,
-                costCenter: item.costCenterNo,
-                costCenterTypeLto: item.costCenterType,
-                createdBy: parseInt(localStorage.getItem('user_id')),
-                createdAt: this.createdAt = new Date()
-            };
-        });
-        const data = Object.assign({}, this.form.value);
-        data.id = parseInt(this._route.snapshot.paramMap.get('id'));
-        data.isActive = data.isActive ? 'Y' : 'N'; 
     }
 
     private _patchValues(data): void {
