@@ -15,8 +15,6 @@ export interface IPlantInformation {
     provId: string;
     munId: string;
     brgyId: string;
-    status: string;
-    statusDate?: Date
     isActive: string;
     createdBy: number;
     createdByName: string;
@@ -24,18 +22,17 @@ export interface IPlantInformation {
     updatedBy?: number;
     updatedByName: string;
     updatedAt?: Date;
-    plantInformationDetailDTO: IPlantInformationCostCenter[];
-    plantInformationDetail: IPlantInformationCostCenter[];
+    plantInformationDetailDTO: IPlantInformationDetails[];
+    details: IPlantInformationDetails[];
 }
 
-export interface IPlantInformationCostCenter {
+export interface IPlantInformationDetails {
     id: number;
-    costCenter: string;
+    costCenterType: number;
+    costCenterNo: string;
     costCenterTypeLto: string;
     createdBy: number;
     createdAt: Date;
-  }
+}
   
-
-
         

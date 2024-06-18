@@ -306,8 +306,8 @@ export class PortalService {
     return this._portalApi.getPlantInformations();
   }
 
-  getPlantInformation(plantCode: string): Observable<IPlantInformation> {
-    return this._portalApi.getPlantInformation(plantCode);
+  getPlantInformation(id: string): Observable<IPlantInformation> {
+    return this._portalApi.getPlantInformation(id);
   }
 
   createPlantInformation(data: any): Observable<any> {

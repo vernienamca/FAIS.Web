@@ -8,7 +8,7 @@ import { IProFormaEntry, IProFormaEntryDetails } from 'src/app/core/models/pro-f
 import { MatSelectChange } from '@angular/material/select';
 import * as wjcCore from '@grapecity/wijmo';
 import { CollectionViewNavigator } from '@grapecity/wijmo.input';
-import { FlexGrid } from '@grapecity/wijmo.grid';
+import { AllowSorting, FlexGrid, HeadersVisibility, SelectionMode } from '@grapecity/wijmo.grid';
 import { ILibraryTypeOption } from 'src/app/core/models/library-type-option';
 import { Router } from '@angular/router';
 import { SecurityService } from 'src/app/core/services/security.service';
@@ -16,6 +16,7 @@ import { ModuleEnum } from 'src/app/core/enums/module-enum';
 import { MatButton } from '@angular/material/button';
 import { IUser } from 'src/app/core/models/user';
 import { DatePipe } from '@angular/common';
+import { WjFlexGrid } from '@grapecity/wijmo.angular2.grid';
 
 @Component({
   selector: 'vex-pro-forma-entry',
@@ -42,6 +43,13 @@ export class ProFormaEntryComponent implements OnInit, OnDestroy {
   proformaData = this.getProFormaData(5);
   hasAccess = false;
   statusDate: string;
+  columns: any[] = [
+    {
+      header: 'Date',
+      binding: 'date',
+      format: 'dd/MM/yyyy'
+    }
+  ];
 
   addNewRow(): void {
     const newItem = {
@@ -219,7 +227,7 @@ export class ProFormaEntryComponent implements OnInit, OnDestroy {
     this._onDestroy$.next();
     this._onDestroy$.complete();
   }
-
+  
   onToggleStatus($event: any): void {
     this.statusLabel = !$event.checked ? 'Inactive' : 'Active';
   }

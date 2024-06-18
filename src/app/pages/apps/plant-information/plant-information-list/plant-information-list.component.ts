@@ -87,12 +87,12 @@ export class PlantInformationListComponent implements OnInit, OnDestroy, AfterVi
         this._portalService.getPlantInformations()
         .pipe(
             takeUntil(this._onDestroy$),
-            finalize(() => this.isListLoading = false))
+            finalize(() => this.isListLoading = false)
+        )
         .subscribe(data => {
             if (!data) {
                 return;
             }
-            console.log(data);
             this.subject$.next(data);
         });
 
