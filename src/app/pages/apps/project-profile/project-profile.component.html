@@ -4,22 +4,24 @@
     <mat-icon svgIcon="mat:more_vert"></mat-icon>
   </button>
 </vex-secondary-toolbar>
+<mat-progress-bar *ngIf="isSaving" mode="indeterminate" color="primary"></mat-progress-bar>
+
 <div class="p-gutter container" [class.container]="layoutCtrl.value === 'boxed'" [class.px-gutter]="layoutCtrl.value === 'fullwidth'">
   <div class="flex flex-col sm:flex-row gap-4">
     <div class="card flex-auto">
       <div class="px-6 py-4 border-b flex items-center gap-2">
-        <button [ngClass]="form.touched && form.invalid ? '!bg-gray':'!bg-green'" class="!text-contrast-white" mat-raised-button type="button" (click)="save()" [disabled]="form.invalid && form.invalid">
+        <button [ngClass]="[form.invalid || isSaving ? '!bg-gray' : '!bg-green', '!text-contrast-white']" class="!text-contrast-white" mat-raised-button type="button" (click)="save()" [disabled]="form.invalid || isSaving">
           <mat-icon class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" #savebutton svgIcon="mat:archive"></mat-icon> Save
         </button>
         <button color="primary" mat-raised-button type="button" [routerLink]="['/apps/project-profile']">
           <mat-icon class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" svgIcon="mat:close"></mat-icon> Close
         </button>
       </div>
-      <div class="px-6 py-4 flex flex-col">
-        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px">
-          <form [formGroup]="form" class="flex flex-col flex-auto form-container">
-            <div class="flex flex-col flex-auto sm:flex-row sm:gap-4" [style.marginTop.px]="20">
-              <mat-form-field appearance="fill" class="flex-auto">
+
+      <div class="px-6 py-4 flex flex-col sm:flex-row gap-6">
+        <form [formGroup]="form" class="flex flex-col flex-auto form-container">
+          <div class="flex flex-col flex-auto sm:flex-row sm:gap-4">
+              <mat-form-field appearance="fill">
                 <mat-label>Project Name</mat-label>
                 <input matInput formControlName="projectName" required>
                 <mat-error *ngIf="formControls.projectName.touched && formControls.projectName.invalid">
@@ -28,126 +30,164 @@
                   </span>
                 </mat-error>
               </mat-form-field>
+              
               <mat-form-field appearance="fill">
                 <mat-label>Project Classification</mat-label>
                 <mat-select formControlName="projClassSeq" >
-                  <mat-option *ngFor="let class of projectProfileClassification" [value]="class.id">
-                    {{ class.description}}
+                  <mat-option *ngFor="let class of projectProfileClassification" [value]="class.parentId">
+                    {{ class.parentValue}}
                   </mat-option>
                 </mat-select>
               </mat-form-field>
           </div>
         
-      <div class="flex flex-col flex-auto sm:flex-row sm:gap-4" [style.marginTop.px]="20">
-        <mat-form-field appearance="fill">
-          <mat-label>Project Stage</mat-label>
-          <mat-select formControlName="projStageSeq" >
-            <mat-option *ngFor="let class of projectProfileStage" [value]="class.id">
-              {{ class.description}}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-        <!-- <mat-form-field appearance="fill" class="flex-auto">
-            <mat-label>TPSR Month</mat-label>
-            <input matInput formControlName="tpsrMonth">
-        </mat-form-field> -->
+          <div class="flex flex-col sm:flex-row sm:gap-4">
+            <mat-form-field appearance="fill">
+              <mat-label>Project Stage</mat-label>
+              <mat-select formControlName="projStageSeq" >
+                <mat-option *ngFor="let class of projectProfileStage" [value]="class.parentId">
+                  {{ class.parentValue}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
 
-        <mat-form-field appearance="fill" class="flex-auto">
-          <mat-label>TPSR Month</mat-label>
-          <input matInput [matDatepicker]="tpsrMonth" inputFormat="MM/dd/yyyy" autocomplete="off"
-            id="tpsrMonth" formControlName="tpsrMonth" type="text">
-          <mat-datepicker-toggle matSuffix [for]="tpsrMonth"></mat-datepicker-toggle>
-          <mat-datepicker #tpsrMonth></mat-datepicker>
-        </mat-form-field>
-    </div>
-    <div class="flex flex-col flex-auto sm:flex-row sm:gap-4" [style.marginTop.px]="20">
-      <mat-form-field appearance="fill" class="flex-auto" >
-          <mat-label>No. of Components Completed</mat-label>
-          <input matInput formControlName="noOfComponentsCompleted" readonly>
-      </mat-form-field>
-      <mat-form-field appearance="fill" class="flex-auto" >
-          <mat-label>No. of Components Under Construction</mat-label>
-          <input matInput formControlName="noOfComponentsUnderConstruction" readonly>
-      </mat-form-field>
-  </div>
-  <div class="flex flex-col flex-auto sm:flex-row sm:gap-4" [style.marginTop.px]="20">
-    <mat-form-field appearance="fill" class="flex-auto">
-      <mat-label>Remarks</mat-label>
-      <textarea matInput formControlName="remarks" style="resize: none;"></textarea>
-    </mat-form-field>
-  </div>
-<div class="flex flex-col flex-auto sm:flex-row sm:gap-4" [style.marginTop.px]="20">
-  <mat-form-field appearance="fill" class="flex-auto">
-      <mat-label>UDF 1</mat-label>
-      <input matInput formControlName="udf1">
-  </mat-form-field>
-  <mat-form-field appearance="fill" class="flex-auto">
-      <mat-label>UDF 2</mat-label>
-      <input matInput formControlName="udf2">
-  </mat-form-field>
-</div>
-<div class="flex flex-col sm:flex-row sm:gap-4">
-  <mat-form-field appearance="fill">
-    <mat-label>UDF3</mat-label>
-    <input matInput formControlName="udf3">
-  </mat-form-field>
-  </div>
-<hr class="w-full my-8">
-        <div class="table-container" [style.margin-top.px]="50" >
-          <div class="flex flex-row" fxLayoutAlign="end" [style.margin-bottom.px]="10" [style.margin-right.px]="30">
-            <h2 class="m-0 title flex-auto">Project Component ({{getProjectProfileComponentDataCount()}})</h2>
-            <button #addbutton class="rounded-full !bg-green !text-white" mat-raised-button type="button" (click)="addNewRow()">
-              <mat-icon svgIcon="mat:add"></mat-icon>
-              <span>Add</span>
-            </button>
+            <mat-form-field appearance="fill">
+              <mat-label>TPSR Month</mat-label>
+              <input matInput [matDatepicker]="tpsrMonth" inputFormat="MM/dd/yyyy" autocomplete="off"
+                id="tpsrMonth" formControlName="tpsrMonth" type="text" required>
+              <mat-datepicker-toggle matSuffix [for]="tpsrMonth"></mat-datepicker-toggle>
+              <mat-datepicker #tpsrMonth></mat-datepicker>
+              <mat-error *ngIf="formControls.tpsrMonth.touched && formControls.tpsrMonth.invalid">
+                <span *ngIf="formControls.tpsrMonth.getError('required')">
+                  TPSR Month is required
+                </span>
+              </mat-error>
+            </mat-form-field>
           </div>
-          <mat-divider style="margin: 10px 0;"></mat-divider>
-          <div class="wijmotable">
-            <wj-flex-grid class="main-grid px-4 py-4" #projectProfileGrid [itemsSource]="projectProfileComponentData" [selectionMode]="'Row'" [allowResizing]="false" style="width: 100%; border:none ; padding-right: 2%;" >
-              <!-- <wj-flex-grid-column binding="pjcId" header="PJC ID" width="30*" ></wj-flex-grid-column>
-              <wj-flex-grid-column binding="projectComponent" header="Project Component" width="30*" ></wj-flex-grid-column> -->
-              <wj-flex-grid-column binding="details" header="Details" width="30*" ></wj-flex-grid-column>
-              <wj-flex-grid-column binding="projectStageSeq" header="Project Stage" [dataMap]="projectProfileStageMap" [dataMapEditor]="'DropDownList'" [editor]="projectStageCombo" width="30*" ></wj-flex-grid-column>
-              <wj-flex-grid-column binding="transmissionGridSeq" header="Transmission Grid" [dataMap]="projectProfileTransmissionGridMap" [dataMapEditor]="'DropDownList'" [editor]="projectProfileTransmissionGridCombo" width="30*" ></wj-flex-grid-column>
-              <wj-flex-grid-column binding="startDate" header="Start Date" format="d" data-type="Date" width="*" format="MMM/dd/yyyy" [editor]="startDateInput" width="30*" width="30*" inputFormat="MM/dd/yyyy"></wj-flex-grid-column>
-              <wj-flex-grid-column binding="targetDate" header="Target Date" format="d" [editor]="targetDateInput" width="30*"  inputFormat="MM/dd/yyyy"></wj-flex-grid-column>
-              <wj-flex-grid-column binding="completionDate" header="Completion Date" format="d" [editor]="completionDateInput" width="30*" width="30*" inputFormat="MM/dd/yyyy"></wj-flex-grid-column>
-              <wj-flex-grid-column binding="action" header="Action"  width="10*" >
-                <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-cell="cell">
-                  <button mat-button (click)="onDeleteRow(cell.item)">
-                    <mat-icon>delete</mat-icon>
-                </button>
-                </ng-template>
-              </wj-flex-grid-column>
-            </wj-flex-grid>
+
+          <div class="flex flex-col flex-auto sm:flex-row sm:gap-4">
+            <mat-form-field appearance="fill">
+                <mat-label>No. of Components Completed</mat-label>
+                <input matInput formControlName="noOfComponentsCompleted" readonly>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill">
+                <mat-label>No. of Components Under Construction</mat-label>
+                <input matInput formControlName="noOfComponentsUnderConstruction" readonly>
+            </mat-form-field>
+          </div>       
+          
+          <div class="flex flex-col sm:flex-row sm:gap-4" *ngIf="pageMode === 2">
+            <mat-form-field appearance="fill">
+              <mat-label>Latest Inspection Date</mat-label>
+              <input matInput formControlName="latestInspectionDate" readonly>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill">
+              <mat-label>Total AMR Cost</mat-label>
+              <input matInput formControlName="totalAmrCost" readonly>
+            </mat-form-field>
           </div>
-        <wj-input-date #startDateInput inputFormat="MM/dd/yyyy"></wj-input-date>
-        <wj-input-date #targetDateInput inputFormat="MM/dd/yyyy"></wj-input-date>
-        <wj-input-date #completionDateInput inputFormat="MM/dd/yyyy"></wj-input-date>
-        <wj-combo-box #projectStageCombo [displayMemberPath]="'name'" [selectedValuePath]="'id'" [itemsSource]="projectProfileStage"></wj-combo-box>
-        <wj-combo-box #projectProfileTransmissionGridCombo [displayMemberPath]="'name'" [selectedValuePath]="'id'" [itemsSource]="projectProfileTransmissionGrid"></wj-combo-box>
-        </div>
-            <div class="flex flex-col sm:flex-row sm:gap-4">
-              <mat-slide-toggle color="accent" labelPosition="before" formControlName="isActive" (change)="onToggleStatus($event)">
-                {{ statusLabel }}
-              </mat-slide-toggle>
+
+          <div class="flex flex-col sm:flex-row sm:gap-4" *ngIf="pageMode === 2">
+            <mat-form-field appearance="fill">
+              <mat-label>Recorded AMR</mat-label>
+              <input matInput formControlName="recordedAMR" readonly>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill">
+              <mat-label>Unrecorded AMR</mat-label>
+              <input matInput formControlName="unrecordedAMR" readonly>
+            </mat-form-field>
+          </div>
+
+          <div class="flex flex-col flex-auto sm:flex-row sm:gap-4">
+            <mat-form-field appearance="fill">
+                <mat-label>UDF 1</mat-label>
+                <input matInput formControlName="udf1">
+            </mat-form-field>
+
+            <mat-form-field appearance="fill">
+                <mat-label>UDF 2</mat-label>
+                <input matInput formControlName="udf2">
+            </mat-form-field>
+          </div>
+
+          <div class="flex flex-col sm:flex-row sm:gap-4">
+            <mat-form-field appearance="fill">
+              <mat-label>UDF3</mat-label>
+              <input matInput formControlName="udf3">
+            </mat-form-field>
+          </div>
+
+          <div class="flex flex-col sm:flex-row sm:gap-4">
+            <mat-form-field appearance="fill">
+              <mat-label>Remarks</mat-label>
+              <textarea matInput formControlName="remarks"></textarea>
+            </mat-form-field>
+          </div>
+
+          <hr class="w-full my-8">
+          <div class="table-container" [style.margin-top.px]="50" >
+            <div class="flex flex-row" fxLayoutAlign="end" [style.margin-bottom.px]="10" [style.margin-right.px]="30">
+              <h2 class="m-0 title flex-auto">Project Component ({{getProjectProfileComponentDataCount()}})</h2>
+              <button #addbutton class="rounded-full !bg-green !text-white" mat-raised-button type="button" (click)="addNewRow()">
+                <mat-icon svgIcon="mat:add"></mat-icon>
+                <span>Add</span>
+              </button>
             </div>
-            <blockquote *ngIf="pageMode === 2" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px" [style.marginTop.px]="30">
-              <span fxFlex>
-                <strong>Created By</strong>: {{ createdBy }}
-              </span>
-              <span fxFlex>
-                <strong>Date Created</strong>: {{ createdAt | date: 'MM/dd/yyyy hh:mm a' }}
-              </span>
-              <span fxFlex>
-                <strong>Modified By</strong>: {{ updatedBy }}
-              </span>
-              <span fxFlex>
-                <strong>Date Modified</strong>: {{ updatedAt ? (updatedAt | date: 'MM/dd/yyyy hh:mm a') : 'N/A' }}
-              </span>
-            </blockquote>
-          </form>
-        </div>
+
+            <mat-divider style="margin: 10px 0;"></mat-divider>
+            <div class="wijmotable">
+              <wj-flex-grid class="main-grid px-4 py-4" #projectProfileGrid [itemsSource]="projectProfileComponentData" [selectionMode]="'Row'" [allowResizing]="false" style="width: 100%; border:none ; padding-right: 2%;" >
+                <!-- <wj-flex-grid-column binding="pjcId" header="PJC ID" width="30*" ></wj-flex-grid-column>
+                <wj-flex-grid-column binding="projectComponent" header="Project Component" width="30*" ></wj-flex-grid-column> -->
+                <wj-flex-grid-column binding="details" header="Details" width="30*" ></wj-flex-grid-column>
+                <wj-flex-grid-column binding="projectStageSeq" header="Project Stage" [dataMap]="projectProfileStageMap" [dataMapEditor]="'DropDownList'" [editor]="projectStageCombo" width="30*" ></wj-flex-grid-column>
+                <wj-flex-grid-column binding="transmissionGridSeq" header="Transmission Grid" [dataMap]="projectProfileTransmissionGridMap" [dataMapEditor]="'DropDownList'" [editor]="projectProfileTransmissionGridCombo" width="30*" ></wj-flex-grid-column>
+                <wj-flex-grid-column binding="startDate" header="Start Date" format="d" data-type="Date" width="*" format="MMM/dd/yyyy" [editor]="startDateInput" width="30*" width="30*" inputFormat="MM/dd/yyyy"></wj-flex-grid-column>
+                <wj-flex-grid-column binding="targetDate" header="Target Date" format="d" [editor]="targetDateInput" width="30*"  inputFormat="MM/dd/yyyy"></wj-flex-grid-column>
+                <wj-flex-grid-column binding="completionDate" header="Completion Date" format="d" [editor]="completionDateInput" width="30*" width="30*" inputFormat="MM/dd/yyyy"></wj-flex-grid-column>
+                <wj-flex-grid-column binding="action" header="Action"  width="10*" >
+                  <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-cell="cell">
+                    <button mat-button (click)="onDeleteRow(cell.item)">
+                      <mat-icon>delete</mat-icon>
+                  </button>
+                  </ng-template>
+                </wj-flex-grid-column>
+              </wj-flex-grid>
+            </div>
+            <wj-input-date #startDateInput inputFormat="MM/dd/yyyy"></wj-input-date>
+            <wj-input-date #targetDateInput inputFormat="MM/dd/yyyy"></wj-input-date>
+            <wj-input-date #completionDateInput inputFormat="MM/dd/yyyy"></wj-input-date>
+            <wj-combo-box #projectStageCombo [displayMemberPath]="'name'" [selectedValuePath]="'id'" [itemsSource]="projectProfileStage"></wj-combo-box>
+            <wj-combo-box #projectProfileTransmissionGridCombo [displayMemberPath]="'name'" [selectedValuePath]="'id'" [itemsSource]="projectProfileTransmissionGrid"></wj-combo-box>
+            
+          </div>
+
+          <div class="flex flex-col sm:flex-row sm:gap-4">
+            <mat-slide-toggle color="accent" labelPosition="before" formControlName="isActive" (change)="onToggleStatus($event)">
+              {{ statusLabel }}
+            </mat-slide-toggle>
+
+            <span *ngIf="pageMode === 2" [style.margin-left.px]="50"> <strong>Status Date: </strong>{{ statusDate | date: 'MM/dd/yyyy' }}</span>
+             
+          </div>
+          <blockquote *ngIf="pageMode === 2" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px" [style.marginTop.px]="30">
+            <span fxFlex>
+              <strong>Created By</strong>: {{ createdBy }}
+            </span>
+            <span fxFlex>
+              <strong>Date Created</strong>: {{ createdAt | date: 'MM/dd/yyyy hh:mm a' }}
+            </span>
+            <span fxFlex>
+              <strong>Modified By</strong>: {{ updatedBy }}
+            </span>
+            <span fxFlex>
+              <strong>Date Modified</strong>: {{ updatedAt ? (updatedAt | date: 'MM/dd/yyyy hh:mm a') : 'N/A' }}
+            </span>
+          </blockquote>
+        </form>
       </div>
     </div>
   </div>

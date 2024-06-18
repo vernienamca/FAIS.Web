@@ -5,7 +5,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subject, takeUntil,Observable ,tap} from 'rxjs';
 import { PageMode } from 'src/app/core/enums/page-mode.enum';
 import { ILibraryTypes } from 'src/app/core/models/library-types';
-import { CollectionViewNavigator } from '@grapecity/wijmo.input';
 import { SecurityService } from 'src/app/core/services/security.service';
 import { FlexGrid } from '@grapecity/wijmo.grid';
 import { PortalService } from 'src/app/core/services/portal.service';
@@ -15,12 +14,9 @@ import { ModuleEnum } from 'src/app/core/enums/module-enum';
 import { MatButton } from '@angular/material/button';
 import {IRole} from 'src/app/core/models/role'
 import { LibraryTypeCodes } from 'src/app/core/enums/library-types.enum';
-
-import { WjInputModule } from '@grapecity/wijmo.angular2.input';
-import { WjGridModule } from '@grapecity/wijmo.angular2.grid';
-import { InputDate, InputTime, ComboBox, AutoComplete, InputNumber, InputColor } from '@grapecity/wijmo.input';
 import { DataMap }from '@grapecity/wijmo.grid';
-// import { getData, getCountries, getProducts } from './data';
+import { MatDialog } from '@angular/material/dialog';
+import { DialogComponent } from '../dialog/dialog.component';
 
 @Component({
   selector: 'vex-project-profile',
@@ -35,6 +31,7 @@ export class ProjectProfileComponent implements OnInit, OnDestroy {
   pageMode: PageMode;
   form: FormGroup; 
   layoutCtrl = new UntypedFormControl('fullwidth');
+  statusDate: Date | null = null;
   statusLabel: string = 'Active';
   createdBy: string;
   createdAt: Date;
@@ -55,6 +52,7 @@ export class ProjectProfileComponent implements OnInit, OnDestroy {
   roles: IRole[] = [];
   roleIds: number[] = [];
   isAdmin: boolean = false;
+  isSaving: boolean;
 
  data = [{}];
 
@@ -99,27 +97,27 @@ export class ProjectProfileComponent implements OnInit, OnDestroy {
     return collectionView;
   }
 
-  noOfComponentsCompleted(): string {    
-    if(this.projectProfileGrid == undefined) {
-        return "0";
-    }
-    const collectionView = this.projectProfileGrid.collectionView;
-    const allItems = collectionView.sourceCollection as any[];
-    return allItems.filter(function(component){
-      return component.completionDate != '' && component.completionDate != undefined;
-    }).length.toString();
-  }
-  noOfComponentsUnderConstruction(): string {
+  // noOfComponentsCompleted(): string {    
+  //   if(this.projectProfileGrid == undefined) {
+  //       return "0";
+  //   }
+  //   const collectionView = this.projectProfileGrid.collectionView;
+  //   const allItems = collectionView.sourceCollection as any[];
+  //   return allItems.filter(function(component){
+  //     return component.completionDate != '' && component.completionDate != undefined;
+  //   }).length.toString();
+  // }
+  // noOfComponentsUnderConstruction(): string {
     
-    if(this.projectProfileGrid == undefined) {
-        return "0";
-    }
-    const collectionView = this.projectProfileGrid.collectionView;
-    const allItems = collectionView.sourceCollection as any[];
-    return allItems.filter(function(component){
-      return component.completionDate == '' || component.completionDate == undefined;
-    }).length.toString();
-  }
+  //   if(this.projectProfileGrid == undefined) {
+  //       return "0";
+  //   }
+  //   const collectionView = this.projectProfileGrid.collectionView;
+  //   const allItems = collectionView.sourceCollection as any[];
+  //   return allItems.filter(function(component){
+  //     return component.completionDate == '' || component.completionDate == undefined;
+  //   }).length.toString();
+  // }
 
   get formControls() {
     return {
@@ -127,8 +125,8 @@ export class ProjectProfileComponent implements OnInit, OnDestroy {
       projClassSeq: this.form.get('projClassSeq'),
       projStageSeq: this.form.get('projStageSeq'),
       tpsrMonth: this.form.get('tpsrMonth'),
-      noOfComponentsCompleted: this.noOfComponentsCompleted(),
-      noOfComponentsUnderConstruction: this.noOfComponentsUnderConstruction(),
+      noOfComponentsCompleted: this.form.get('noOfComponentsCompleted'),
+      noOfComponentsUnderConstruction: this.form.get('noOfComponentsUnderConstruction'),
       latestInspectionDate: this.form.get('latestInspectionDate'),
       totalAMRCost: this.form.get('totalAMRCost'),
       recordedAMR: this.form.get('recordedAMR'),
@@ -151,14 +149,15 @@ export class ProjectProfileComponent implements OnInit, OnDestroy {
     private _snackBar: MatSnackBar,
     private _router: Router,
     private _securityService: SecurityService,
+    private _dialog: MatDialog
   ) {
     this.form = this._fb.group({
       projectName: ['', [Validators.required]],
       projClassSeq: ['', [Validators.required]],
-      projStageSeq: [''],
-      tpsrMonth: [''],
-      noOfComponentsCompleted: this.noOfComponentsCompleted(),
-      noOfComponentsUnderConstruction: this.noOfComponentsUnderConstruction(),
+      projStageSeq: ['', [Validators.required]],
+      tpsrMonth: ['', [Validators.required]],
+      noOfComponentsCompleted: [''],
+      noOfComponentsUnderConstruction: [''],
       latestInspectionDate: [''],
       totalAMRCost: [''],
       recordedAMR: [''],
@@ -172,38 +171,7 @@ export class ProjectProfileComponent implements OnInit, OnDestroy {
       statusDate: ['']
     });
 
-    this._securityService.getPermissions(parseInt(localStorage.getItem('user_id')))
-    .pipe(takeUntil(this._onDestroy$))
-    .subscribe(data => {
-      const permission = data.filter(a => a.moduleId === ModuleEnum.AddorEditProjectProfile);
-      // if (!permission || permission.some(s => s.isRead) === false) {
-      //   this._router.navigate([`pages/error-401`]);
-      // }
-      // if(permission.some(s => s.isUpdate) === false) {
-      //   this.form.controls['projectName'].disable();
-      //   this.form.controls['projClassSeq'].disable();
-      //   this.form.controls['projStageSeq'].disable();
-      //   this.form.controls['tpsrMonth'].disable();
-      //   this.form.controls['noOfComponentsCompleted'].disable();
-      //   this.form.controls['noOfComponentsUnderConstruction'].disable();
-      //   this.form.controls['latestInspectionDate'].disable();
-      //   this.form.controls['totalAMRCost'].disable();
-      //   this.form.controls['recordedAMR'].disable();
-      //   this.form.controls['unrecordedAMR'].disable();
-      //   this.form.controls['remarks'].disable();
-      //   this.form.controls['udf1'].disable();
-      //   this.form.controls['udf2'].disable();
-      //   this.form.controls['udf3'].disable();
-      //   this.form.controls['isActive'].disable();
-      //   this.form.controls['statusDate'].disable();
-      //   //this.form.controls['addbutton'].disable();
-      //   this.addbutton.disabled = true;
-      //   this.savebutton.disabled = true;
-      //   this.projectProfileGrid.isDisabled = true;
-      // }
-      this.hasAccess = permission.some(s => s.isUpdate);
-    });
-  
+    this._getPermissions();
 
     const id = parseInt(this._route.snapshot.paramMap.get('id'));
     this.pageMode = this._route.snapshot.data.pageMode;
@@ -216,41 +184,16 @@ export class ProjectProfileComponent implements OnInit, OnDestroy {
           return;
         }
 
-        data.projectProfileComponents.forEach((function(component) {
-          component.startDate =  new Date(component.startDate).toLocaleDateString();
-          component.targetDate =  new Date(component.targetDate).toLocaleDateString();
-
-          if(component.completionDate!= null)
-          component.completionDate =  new Date(component.completionDate).toLocaleDateString();
-        }));
-
-        var comletedComponent = data.projectProfileComponents.filter(c => c.completionDate != null).length;
-        var underConstructionComponent = data.projectProfileComponents.filter(c => c.completionDate == null).length;
-
+        console.log(data);
+        
         this.projectProfileComponentData = new wjcCore.CollectionView(data.projectProfileComponents, { pageSize: 5 });
-        this.form.patchValue({
-          projectName: data.projectName || '',
-          projClassSeq: data.projClassSeq || '',
-          projStageSeq: data.projStageSeq || '',
-          tpsrMonth: data.tpsrMonth || new Date(),
-          noOfComponentsCompleted: comletedComponent,
-          noOfComponentsUnderConstruction: underConstructionComponent,
-          latestInspectionDate: data.latestInspectionDate || '',
-          totalAMRCost: data.totalAMRCost || '',
-          recordedAMR: data.recordedAMR || '',
-          unrecordedAMR: data.unrecordedAMR || '',
-          udf1: data.udF1 || '',
-          udf2: data.udF2 || '',
-          udf3: data.udF3 || '',
-          remarks: data.remarks || '',
-          isActive: data.isActive || 'Y',
-          status: data.status || '',
-          statusDate: data.statusDate = new Date()
-        });
+       
+        this._patchValues(data);
+        this.statusDate = data.statusDate
         this.statusLabel = data.isActive === 'Y' ? 'Active' : 'Inactive'; 
-        this.createdBy = data.createdBy.toString();
+        this.createdBy = data.createdByName.toString();
         this.createdAt = data.createdAt;
-        this.updatedBy = data.updatedBy.toString() || 'N/A';
+        this.updatedBy = data.updatedByName.toString() || 'N/A';
         this.updatedAt = data.updatedAt;
 
       });
@@ -296,24 +239,8 @@ export class ProjectProfileComponent implements OnInit, OnDestroy {
         //this._disableFormFields(roleAuthorized);
       }
     });
-
-    const codes = 
-      [ LibraryTypeCodes.ProjectProfileClassification
-      , LibraryTypeCodes.ProjectProfileStage
-      , LibraryTypeCodes.ProjectProfileTransmissionGrid];
-
-    this._portalService.getDropdownValues(codes)
-    .pipe(takeUntil(this._onDestroy$))
-    .subscribe(data => {
-      if(!data) {
-        return;
-      }
-      this.projectProfileClassification = data.filter(type => type.dropdownCode == LibraryTypeCodes.ProjectProfileClassification);
-      this.projectProfileStage = data.filter(type => type.dropdownCode === LibraryTypeCodes.ProjectProfileStage);
-      this.projectProfileTransmissionGrid = data.filter(type => type.dropdownCode === LibraryTypeCodes.ProjectProfileTransmissionGrid);
-      this.projectProfileStageMap = new DataMap(this.projectProfileStage, 'id', 'name');
-      this.projectProfileTransmissionGridMap = new DataMap(this.projectProfileTransmissionGrid, 'id', 'name');
-    })
+    this._getLookUps();
+    
   }
 
   getProjectProfileComponentDataCount(): number {
@@ -346,74 +273,58 @@ export class ProjectProfileComponent implements OnInit, OnDestroy {
   }
 
   save(): void {
-    if (!this.formControls.projectName.value) {
-      this.formControls.projectName.markAsTouched();
-      this.formControls.projectName.updateValueAndValidity();
-      return;
-    }
-    if (!this.formControls.projClassSeq.value) {
-      this.formControls.projClassSeq.markAsTouched();
-      this.formControls.projClassSeq.updateValueAndValidity();
-      return;
-    }
-
-      const collectionView = this.projectProfileGrid.collectionView;
-      const allItems = collectionView.sourceCollection as any[];
-      const projectProfileComponentDTOArray: IProjectProfileComponent[] = allItems.map((item: any) => {
-        return {
-          id: item.id || 0,
-          pjcId: this.id || 0,
-          projectComponent: item.projectComponent,
-          details: item.details,
-          projectStageSeq: item.projectStageSeq,
-          transmissionGridSeq: item.transmissionGridSeq,
-          startDate: item.startDate,
-          targetDate: item.targetDate,
-          completionDate: item.completionDate,
-          dateRemoved: null,
-          createdBy: parseInt(localStorage.getItem('user_id')),
-          createdAt: this.createdAt = new Date(),
-          updatedBy: parseInt(localStorage.getItem('user_id')),
-          updatedAt: null,
-          projectProfileId: this.id || 0
-        };
-      });
-
-      
-      var comletedComponent = projectProfileComponentDTOArray.filter(c => c.completionDate != null).length.toString();
-      var underConstructionComponent = projectProfileComponentDTOArray.filter(c => c.completionDate == null).length.toString();
-
-    
-      const projectProfileDTO: IProjectProfile = {
-        id: this.id || 0,
-        projectName: this.formControls.projectName.value,
-        projClassSeq: this.formControls.projClassSeq.value,
-        projStageSeq: this.formControls.projStageSeq.value,
-        tpsrMonth: this.formControls.tpsrMonth.value,
-        noOfComponentsCompleted: this.noOfComponentsCompleted(),
-        noOfComponentsUnderConstruction: this.noOfComponentsUnderConstruction(),
-        latestInspectionDate: this.formControls.latestInspectionDate.value,
-        totalAMRCost: this.formControls.totalAMRCost.value,
-        recordedAMR: this.formControls.recordedAMR.value,
-        unrecordedAMR: this.formControls.unrecordedAMR.value,
-        remarks: this.formControls.remarks.value,
-        udF1: this.formControls.udf1.value,
-        udF2: this.formControls.udf2.value,
-        udF3: this.formControls.udf3.value,
-        isActive: this.formControls.isActive.value ? 'Y' : 'N',
-        statusDate: this.formControls.statusDate.value,
-        createdBy: (localStorage.getItem('user_id')),
+    this.isSaving = true;
+    const collectionView = this.projectProfileGrid.collectionView;
+    const allItems = collectionView.sourceCollection as any[];
+    const projectProfileComponentDTOArray: IProjectProfileComponent[] = allItems.map((item: any) => {
+      return {
+        id: item.id || 0,
+        pjcId: this.id || 0,
+        projectComponent: item.projectComponent,
+        details: item.details,
+        projectStageSeq: item.projectStageSeq,
+        transmissionGridSeq: item.transmissionGridSeq,
+        startDate: item.startDate,
+        targetDate: item.targetDate,
+        completionDate: item.completionDate,
+        dateRemoved: null,
+        createdBy: parseInt(localStorage.getItem('user_id')),
         createdAt: this.createdAt = new Date(),
-        updatedBy: (localStorage.getItem('user_id')),
-        updatedAt: this.updatedAt,
-        projectProfileComponentsDTO: projectProfileComponentDTOArray,
-        status: '',
-        createdByName: '',
-        updatedByName: '',
-        projectProfileComponentModel: [],
-        projectProfileComponents: []
+        updatedBy: parseInt(localStorage.getItem('user_id')),
+        updatedAt: null,
+        projectProfileId: this.id || 0
       };
+    });
 
+    const projectProfileDTO: IProjectProfile = {
+      id: this.id || 0,
+      projectName: this.formControls.projectName.value,
+      projClassSeq: this.formControls.projClassSeq.value,
+      projStageSeq: this.formControls.projStageSeq.value,
+      tpsrMonth: this.formControls.tpsrMonth.value,
+      noOfComponentsCompleted: this.formControls.noOfComponentsCompleted.value,
+      noOfComponentsUnderConstruction: this.formControls.noOfComponentsUnderConstruction.value,
+      latestInspectionDate: this.formControls.latestInspectionDate.value,
+      totalAMRCost: this.formControls.totalAMRCost.value,
+      recordedAMR: this.formControls.recordedAMR.value,
+      unrecordedAMR: this.formControls.unrecordedAMR.value,
+      remarks: this.formControls.remarks.value,
+      udF1: this.formControls.udf1.value,
+      udF2: this.formControls.udf2.value,
+      udF3: this.formControls.udf3.value,
+      isActive: this.formControls.isActive.value ? 'Y' : 'N',
+      statusDate: this.formControls.statusDate.value,
+      createdBy: (localStorage.getItem('user_id')),
+      createdAt: this.createdAt = new Date(),
+      updatedBy: (localStorage.getItem('user_id')),
+      updatedAt: this.updatedAt,
+      projectProfileComponentsDTO: projectProfileComponentDTOArray,
+      status: '',
+      createdByName: '',
+      updatedByName: '',
+      projectProfileComponentModel: [],
+      projectProfileComponents: []
+    };
 
     const data = Object.assign({}, this.form.value);
     projectProfileDTO.id = parseInt(this._route.snapshot.paramMap.get('id'));
@@ -425,66 +336,27 @@ export class ProjectProfileComponent implements OnInit, OnDestroy {
       projectProfileDTO.createdBy = localStorage.getItem('user_id');
       projectProfileDTO.projectProfileComponentsDTO = projectProfileComponentDTOArray;
 
-      this._portalService.createProjectProfile(projectProfileDTO)
-      .pipe(takeUntil(this._onDestroy$))
-      .subscribe(data => {
-        if (!data) {
-          return;
-        }
-
-        this.id = data.id;
-        const notifData = {
-        roleIds: this.roleIds, 
-        id: this.id,
-        assetName: data.projectName,
-        editMode: false,
-        ModuleId: ModuleEnum.ProjectProfile
-      };
-      this._securityService.postNotifRole(notifData)
-        .pipe(takeUntil(this._onDestroy$))
-        .subscribe(data => {
-          if(!data){
-            return;
-          }
-        })
-
-        let snackBarRef = this._snackBar.open('Project profile has been successfully added.', 'Close');
-        snackBarRef.afterDismissed().subscribe(() => {
-          this._router.navigateByUrl('apps/project-profile');
-        });
+      const dialogRef = this._dialog.open(DialogComponent, {
+        data: {
+          cancelButtonLabel: "Cancel",
+          confirmButtonLabel: "Confrim",
+          dialogHeader: "Confirmation",
+          dialogContent: "Save Project Profile?",
+          moduleName: 'Project Profile',
+          callbackMethod: function() { }
+        },
+        width: '450px'
       });
+      dialogRef.afterClosed().subscribe(result => {
+        if(!result) { return; }
+        this._createProjectProfile(projectProfileDTO);
+      });
+
     }
     else if (this.pageMode === 2) {
 
       projectProfileDTO.updatedBy = localStorage.getItem('user_id');
-
-      this._portalService.updateProjectProfile(projectProfileDTO)
-      .pipe(takeUntil(this._onDestroy$))
-      .subscribe(data => {
-        if (!data) {
-          return;
-        }
-        this.id = data.id;
-        const notifData = {
-        roleIds: this.roleIds, 
-        id: this.id,
-        assetName: data.projectName,
-        editMode: true,
-        ModuleId: ModuleEnum.ProjectProfile
-      };
-      this._securityService.postNotifRole(notifData)
-        .pipe(takeUntil(this._onDestroy$))
-        .subscribe(data => {
-          if(!data){
-            return;
-          }
-        })
-
-        let snackBarRef = this._snackBar.open('Project profile has been successfully updated.', 'Close');
-        snackBarRef.afterDismissed().subscribe(() => {
-          window.location.reload();
-        });
-      });
+      this._updateProjectProfile(projectProfileDTO);
     }
   }
 
@@ -495,15 +367,117 @@ export class ProjectProfileComponent implements OnInit, OnDestroy {
     this.types = this.types.filter(t => t.name === event.value);
   }
 
-  private _getRoles(): Observable<IRole[]> {
-    return this._portalService.getRoles().pipe(
-      tap(roles => {
-        if (!roles) {
-          throw new Error('No roles found');
+  private _createProjectProfile(projectProfileDTO: IProjectProfile): void {
+    projectProfileDTO.statusDate = new Date();
+    this._portalService.createProjectProfile(projectProfileDTO)
+    .pipe(takeUntil(this._onDestroy$))
+    .subscribe(data => {
+      if (!data) {
+        return;
+      }
+
+      this.id = data.id;
+      const notifData = {
+      roleIds: this.roleIds, 
+      id: this.id,
+      assetName: data.projectName,
+      editMode: false,
+      ModuleId: ModuleEnum.ProjectProfile
+    };
+    this._securityService.postNotifRole(notifData)
+      .pipe(takeUntil(this._onDestroy$))
+      .subscribe(data => {
+        if(!data){
+          return;
         }
-        this.roles = roles;
-      }),
-      takeUntil(this._onDestroy$)
-    );
+      })
+
+      let snackBarRef = this._snackBar.open('Project profile has been successfully added.', 'Close');
+      this.isSaving = false;
+      snackBarRef.afterDismissed().subscribe(() => {
+        this._router.navigateByUrl('apps/project-profile');
+      });
+    });
+  }
+
+  private _updateProjectProfile(projectProfileDTO: IProjectProfile): void {
+    this._portalService.updateProjectProfile(projectProfileDTO)
+    .pipe(takeUntil(this._onDestroy$))
+    .subscribe(data => {
+      if (!data) {
+        return;
+      }
+      this.id = data.id;
+      const notifData = {
+      roleIds: this.roleIds, 
+      id: this.id,
+      assetName: data.projectName,
+      editMode: true,
+      ModuleId: ModuleEnum.ProjectProfile
+    };
+    this._securityService.postNotifRole(notifData)
+      .pipe(takeUntil(this._onDestroy$))
+      .subscribe(data => {
+        if(!data){
+          return;
+        }
+      })
+
+      let snackBarRef = this._snackBar.open('Project profile has been successfully updated.', 'Close');
+      snackBarRef.afterDismissed().subscribe(() => {
+        window.location.reload();
+      });
+    });
+  }
+  
+  private _getLookUps(): void {
+    const codes = 
+      [ LibraryTypeCodes.ProjectProfileClassification
+      , LibraryTypeCodes.ProjectProfileStage
+      , LibraryTypeCodes.ProjectProfileTransmissionGrid];
+
+    this._portalService.getDropdownValues(codes)
+    .pipe(takeUntil(this._onDestroy$))
+    .subscribe(data => {
+      if(!data) {
+        return;
+      }
+      this.projectProfileClassification = data.filter(type => type.dropdownCode == LibraryTypeCodes.ProjectProfileClassification);
+      this.projectProfileStage = data.filter(type => type.dropdownCode === LibraryTypeCodes.ProjectProfileStage);
+      this.projectProfileTransmissionGrid = data.filter(type => type.dropdownCode === LibraryTypeCodes.ProjectProfileTransmissionGrid);
+      this.projectProfileStageMap = new DataMap(this.projectProfileStage, 'parentIt', 'parentValue');
+      this.projectProfileTransmissionGridMap = new DataMap(this.projectProfileTransmissionGrid, 'parentIt', 'parentValue');
+    })
+  }
+
+  private _patchValues(data): void {
+    console.log('patch: ', data);
+    this.form.patchValue({
+      projectName: data.projectName || '',
+      projClassSeq: data.projClassSeq || '',
+      projStageSeq: data.projStageSeq || '',
+      tpsrMonth: data.tpsrMonth || new Date(),
+      noOfComponentsCompleted: data.noOfComponentsCompleted || '',
+      noOfComponentsUnderConstruction: data.noOfComponentsUnderConstruction || '',
+      latestInspectionDate: data.latestInspectionDate || '',
+      totalAMRCost: data.totalAmrCost,
+      recordedAMR: data.recordedAMR || '',
+      unrecordedAMR: data.unrecordedAMR || '',
+      udf1: data.udF1 || '',
+      udf2: data.udF2 || '',
+      udf3: data.udF3 || '',
+      remarks: data.remarks || '',
+      isActive: data.isActive === 'Y' ? true : false,
+      status: data.status || '',
+    });
+  }
+
+  private _getPermissions(): void {
+    this._securityService.getPermissions(parseInt(localStorage.getItem('user_id')))
+    .pipe(takeUntil(this._onDestroy$))
+    .subscribe(data => {
+      const permission = data.filter(a => a.moduleId === ModuleEnum.AddorEditProjectProfile);
+      this.hasAccess = permission.some(s => s.isUpdate);
+    });
   }
 }

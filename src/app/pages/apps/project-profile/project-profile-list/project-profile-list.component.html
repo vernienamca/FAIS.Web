@@ -65,7 +65,7 @@
             <ng-container *ngIf="column.property === 'no'">
               <td mat-cell *matCellDef="let row; let i = index"> {{ i + 1 }} </td>
             </ng-container>
-            <ng-container *ngIf="column.property === 'createdAt'; else text">
+            <ng-container *ngIf="column.property === 'tpsrMonth'; else text">
               <td *matCellDef="let row" [ngClass]="column.cssClasses" mat-cell>
                 {{ row[column.property] | date: 'MM/dd/yyyy hh:mm a' }}
               </td>
@@ -78,22 +78,18 @@
           </ng-container>
         </ng-container>
   
-        
         <ng-container matColumnDef="isActive">
           <th *matHeaderCellDef class="uppercase" mat-header-cell mat-sort-header>Status</th>
           <td *matCellDef="let row" mat-cell>
             <div class="flex items-center gap-1">
-              <div *ngIf="row['isActive'] == 'Y'" [ngClass]="['text-green', 'bg-green/10']" 
-                class="rounded px-2 py-1 font-medium text-xs flex-none">
-                ACTIVE
-              </div>
-              <div *ngIf="row['isActive'] == 'N'" [ngClass]="['text-amber', 'bg-amber/10']" 
-                class="rounded px-2 py-1 font-medium text-xs flex-none">
-                INACTIVE
+              <div [ngClass]="row.isActive == 'Y' ? ['text-green', 'bg-green/10'] : ['text-amber', 'bg-amber/10']" 
+                   class="rounded px-2 py-1 font-medium text-xs flex-none">
+                {{ row.isActive == 'Y' ? 'ACTIVE' : 'INACTIVE' }}
               </div>
             </div>
           </td>
         </ng-container>
+
         <ng-container matColumnDef="actions">
           <th *matHeaderCellDef mat-header-cell mat-sort-header>ACTIONS</th>
           <td *matCellDef="let row" class="w-10 text-secondary" mat-cell>
