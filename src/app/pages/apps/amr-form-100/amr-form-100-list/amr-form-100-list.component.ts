@@ -136,6 +136,7 @@ export class AssetMovementReportListComponent implements OnInit, OnDestroy, Afte
   edit(row: IAmr100): void {
     const amrDialog = this._dialog.open(AmrReportDialogComponent, {
       height: '60vh',
+      width: '50vh',
       disableClose: false,
       data: { id: row.id, isEditMode: true }
     });

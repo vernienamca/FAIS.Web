@@ -27,6 +27,8 @@ import { AssetMovementReportRoutingModule } from './amr-form-100-routing.module'
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { MatDividerModule } from '@angular/material/divider';
 import { AmrReportDialogComponent } from './amr-form-100-report-sequence/amr-report-dialog.component';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
 
 @NgModule({
   declarations: [AssetMovementReportListComponent, AmrReportDialogComponent],
@@ -57,7 +59,10 @@ import { AmrReportDialogComponent } from './amr-form-100-report-sequence/amr-rep
     MatInputModule,
     MatSlideToggleModule,
     NgxMatSelectSearchModule,
-    MatDividerModule
+    MatDividerModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    
   ]
 })
 export class AssetMovementReportModule {

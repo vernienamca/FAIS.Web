@@ -1,0 +1,110 @@
+<div class="flex items-center" mat-dialog-title>
+  <h2 class="title m-0 flex-auto">
+    {{ isEditMode ? "Add Report Sequence" : "Edit Report Sequence" }}
+  </h2>
+  <button class="text-secondary" mat-dialog-close mat-icon-button type="button">
+    <mat-icon svgIcon="mat:close"></mat-icon>
+  </button>
+</div>
+<mat-divider class="text-border"></mat-divider>
+<mat-dialog-content class="flex flex-col items-center">
+  <form [formGroup]="form" class="flex flex-col flex-auto form-container">
+
+    <div class="flex flex-col sm:flex-row sm:gap-4">
+      <mat-form-field appearance="fill">
+        <mat-label>Report Sequence</mat-label>
+        <input matInput formControlName="reportseq" />
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>AMR Year and Month</mat-label>
+        <input matInput formControlName="yearmonth" />
+      </mat-form-field>
+    </div>
+
+    <div class="flex flex-col sm:flex-row sm:gap-4">
+      <mat-form-field appearance="fill" class="flex-auto">
+        <mat-label>Received by TRANSCO</mat-label>
+        <ng-container *ngIf="isEditMode; else addModeTemplate">
+          <input matInput formControlName="receivedtransco" />
+        </ng-container>
+        <ng-template #addModeTemplate>
+          <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="8px">
+            <input matInput [matDatepicker]="picker" formControlName="receivedtransco" />
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </div>
+        </ng-template>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="flex-auto">
+        <mat-label>Received by ARMPMD</mat-label>
+        <ng-container *ngIf="isEditMode; else addModeTemplateARMPMD">
+          <input matInput formControlName="receivedarmpmd" />
+        </ng-container>
+        <ng-template #addModeTemplateARMPMD>
+          <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="8px">
+            <input matInput [matDatepicker]="pickerARMPMD" formControlName="receivedarmpmd" />
+            <mat-datepicker-toggle matSuffix [for]="pickerARMPMD"></mat-datepicker-toggle>
+            <mat-datepicker #pickerARMPMD></mat-datepicker>
+          </div>
+        </ng-template>
+      </mat-form-field>
+    </div>
+
+    <div class="flex flex-col sm:flex-row sm:gap-4">
+      <mat-form-field appearance="fill" class="flex-auto">
+        <mat-label>Sent for encoding</mat-label>
+        <ng-container *ngIf="isEditMode; else addModeTemplateEncoding">
+          <input matInput formControlName="encoding" />
+        </ng-container>
+        <ng-template #addModeTemplateEncoding>
+          <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="8px">
+            <input matInput [matDatepicker]="pickerEncoding" formControlName="encoding" />
+            <mat-datepicker-toggle matSuffix [for]="pickerEncoding"></mat-datepicker-toggle>
+            <mat-datepicker #pickerEncoding></mat-datepicker>
+          </div>
+        </ng-template>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Number of Binders</mat-label>
+        <input matInput formControlName="binders" type="number" />
+      </mat-form-field>
+    </div>
+
+    <div class="flex flex-col sm:flex-row sm:gap-4">
+      <mat-form-field appearance="fill">
+        <mat-label>UDF 1</mat-label>
+        <input matInput formControlName="udf1" />
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>UDF 2</mat-label>
+        <input matInput formControlName="udf2" />
+      </mat-form-field>
+    </div>
+
+    <div class="flex flex-col sm:flex-row sm:gap-4">
+      <mat-form-field appearance="fill" class="flex-auto">
+        <mat-label>UDF 3</mat-label>
+        <input matInput formControlName="udf3" />
+      </mat-form-field>
+    </div>
+  </form>
+</mat-dialog-content>
+
+<div fxLayout="column" fxLayoutAlign="end end">
+  <mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close type="button">Cancel</button>
+    <button
+      cdkFocusInitial
+      color="primary"
+      mat-button
+      [mat-dialog-close]="true"
+      type="button"
+    >
+      Confirm
+    </button>
+  </mat-dialog-actions>
+</div>

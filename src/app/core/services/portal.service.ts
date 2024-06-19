@@ -21,6 +21,7 @@ import { IProjectProfile } from '../models/project-profile';
 import { ITransmissionProfile } from '../models/transmission-profile';
 import { IEmployee } from '../models/employee';
 import { IFieldDictionary } from '../models/field-dictionary';
+import { IAmr100 } from '../models/amr-100';
 
 @Injectable({
   providedIn: 'root'
@@ -433,5 +434,13 @@ export class PortalService {
 
   getFieldDictionaries(): Observable<IFieldDictionary[]> {
     return this._portalApi.getFieldDictionaries();
+  }
+
+  getAssetMovementReports(): Observable<IAmr100[]> {
+    return this._portalApi.getAssetMovementReports();
+  }
+
+  getAssetMovementReport(id: number): Observable<IAmr100> {
+    return this._portalApi.getAssetMovementReport(id);
   }
 }

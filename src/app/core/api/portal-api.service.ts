@@ -21,6 +21,7 @@ import { IMeteringProfile } from "../models/metering-profile";
 import { ITransmissionProfile } from "../models/transmission-profile";
 import { IEmployee } from "../models/employee";
 import { IFieldDictionary } from "../models/field-dictionary";
+import { IAmr100 } from "../models/amr-100";
 
 export class PortalApi extends BaseApi {
     private _apiUrl = `${environment.apiGatewayBaseUrl}`;
@@ -364,5 +365,13 @@ export class PortalApi extends BaseApi {
 
     getFieldDictionaries(): Observable<IFieldDictionary[]> {
         return this.get<IFieldDictionary[]>(`${this._apiUrl}/depreciation/dictionaries`);
+    }
+
+    getAssetMovementReports(): Observable<IAmr100[]> {
+        return this.get<IAmr100[]>(`${this._apiUrl}/amr/get`);
+    }
+
+    getAssetMovementReport(id: number): Observable<IAmr100> {
+        return this.get<IAmr100>(`${this._apiUrl}/amr/getbyid?id=${id}`);
     }
 }
