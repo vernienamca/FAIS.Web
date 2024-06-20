@@ -302,7 +302,7 @@ export class PortalService {
   getAssetProfile(id: number): Observable<IAssetProfile> {
     return this._portalApi.getAssetProfile(id);
   }
-
+ 
   getPlantInformations(): Observable<IPlantInformation[]> {
     return this._portalApi.getPlantInformations();
   }
@@ -442,5 +442,13 @@ export class PortalService {
 
   getAssetMovementReport(id: number): Observable<IAmr100> {
     return this._portalApi.getAssetMovementReport(id);
+  }
+
+  createAssetMovementReport(data: any): Observable<any> {
+    return this._portalApi.createAssetMovementReport(data);
+  }
+
+  updateAssetMovementReport(id:number, data: any): Observable<any> {
+    return this._portalApi.updateAssetMovementReport(id, data);
   }
 }

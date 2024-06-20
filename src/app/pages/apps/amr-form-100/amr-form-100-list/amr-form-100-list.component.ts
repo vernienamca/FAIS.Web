@@ -64,6 +64,7 @@ export class AssetMovementReportListComponent implements OnInit, OnDestroy, Afte
   labels = aioTableLabels;
   isListLoading = false;
   isEditMode: boolean = false;
+  isViewMode: boolean = false;
 
   get visibleColumns() {
     return this.columns.filter(column => column.visible).map(column => column.property);
@@ -123,27 +124,47 @@ export class AssetMovementReportListComponent implements OnInit, OnDestroy, Afte
     this.dataSource.sort = this.sort;
   }
 
+  exportReportLogs(): void{
+
+  }
+
   createReport(): void {
     this._dialog.open(AmrReportDialogComponent, {
       height: '60vh',
       disableClose: false,
+      data: {isEditMode: false, isViewMode: false }
     }).afterClosed().subscribe(result => {
      
       this._router.navigate(['/apps/amr-100']); 
     });
   }
   
+  view(row: IAmr100): void {
+    const amrDialog = this._dialog.open(AmrReportDialogComponent, {
+      height: '60vh',
+      disableClose: false,
+      data: { id: row.id, isViewMode: true }
+    });
+    amrDialog.afterClosed().subscribe(result => {
+      if (result) {
+     
+      }
+      this._router.navigate(['/apps/amr-100']); 
+    });
+  
+    this._router.navigate([`/apps/amr-100/edit/${row.id}`]); 
+  }
+
   edit(row: IAmr100): void {
     const amrDialog = this._dialog.open(AmrReportDialogComponent, {
       height: '60vh',
-      width: '50vh',
       disableClose: false,
-      data: { id: row.id, isEditMode: true }
+      data: { id: row.id, isEditMode: true, isViewMode: false }
     });
   
     amrDialog.afterClosed().subscribe(result => {
       if (result) {
-      // if result is true maybe ganon call edit
+    
       }
       this._router.navigate(['/apps/amr-100']); 
     });
@@ -151,6 +172,9 @@ export class AssetMovementReportListComponent implements OnInit, OnDestroy, Afte
     this._router.navigate([`/apps/amr-100/edit/${row.id}`]); 
   }
   
+  encoding(row: IAmr100): void {
+
+  }
 
   exportChartLogs(): void {
     this._portalService.exportChartLogs();

@@ -22,6 +22,10 @@
             placeholder="Search amr here..." type="search">
         </div>
         <span class="flex-1"></span>
+        <button color="primary" mat-raised-button type="button" (click)="exportReportLogs()">
+          <mat-icon svgIcon="mat:download"></mat-icon>
+          <span>Export reports</span>
+        </button>
       <button [matMenuTriggerFor]="columnFilterMenu" class="ml-4 flex-none" mat-icon-button matTooltip="Filter Columns" type="button">
         <mat-icon svgIcon="mat:filter_list"></mat-icon>
       </button>
@@ -69,7 +73,7 @@
           <th *matHeaderCellDef mat-header-cell mat-sort-header>ACTION</th>
           <td *matCellDef="let row" class="w-10 text-secondary" mat-cell>
             <button (click)="$event.stopPropagation()"
-                    [matMenuTriggerData]="{ chart: row }"
+                    [matMenuTriggerData]="{ report: row }"
                     [matMenuTriggerFor]="actionsMenu"
                     mat-icon-button
                     type="button">
@@ -79,7 +83,7 @@
         </ng-container>
 
         <tr *matHeaderRowDef="visibleColumns" mat-header-row></tr>
-        <tr (click)="edit(row)" *matRowDef="let row; columns: visibleColumns;" @fadeInUp   
+        <tr (click)="view(row)" *matRowDef="let row; columns: visibleColumns;" @fadeInUp   
           class="hover:bg-hover trans-ease-out cursor-pointer" mat-row></tr>
       </table>
       <mat-paginator [pageSizeOptions]="pageSizeOptions" [pageSize]="pageSize" class="sticky left-0"></mat-paginator>
@@ -94,10 +98,14 @@
   </button>
 </mat-menu>
 <mat-menu #actionsMenu="matMenu" xPosition="before" yPosition="below">
-  <!-- <ng-template let-chart="chart" matMenuContent>
-    <button (click)="edit(chart)" mat-menu-item>
+  <ng-template let-report="report" matMenuContent>
+    <button (click)="edit(report)" mat-menu-item>
       <mat-icon svgIcon="mat:edit"></mat-icon>
       <span>Edit</span>
     </button>
-  </ng-template> -->
+    <button (click)="encoding(report)" mat-menu-item>
+      <mat-icon svgIcon="mat:send"></mat-icon>
+      <span>For Encoding</span>
+    </button>
+  </ng-template>
 </mat-menu>

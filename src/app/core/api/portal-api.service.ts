@@ -374,4 +374,12 @@ export class PortalApi extends BaseApi {
     getAssetMovementReport(id: number): Observable<IAmr100> {
         return this.get<IAmr100>(`${this._apiUrl}/amr/getbyid?id=${id}`);
     }
+
+    createAssetMovementReport(data: any): Observable<any> {
+        return this.post<any>(`${this._apiUrl}/amr/`, data);
+    }
+
+    updateAssetMovementReport(id:number, data: any): Observable<any> {
+        return this.put<any>(`${this._apiUrl}/amr/${id}`,data);
+    }
 }
