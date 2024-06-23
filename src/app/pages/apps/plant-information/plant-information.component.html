@@ -1,4 +1,4 @@
-<vex-secondary-toolbar current="{{pageMode === 1 ? 'Edit Plant Information':'Add Plant Information'}}">
+<vex-secondary-toolbar current="{{plantCode ? 'Edit Plant Information':'Add Plant Information'}}">
     <vex-breadcrumbs [crumbs]="['System Management', 'Plant Information', 'Edit Plant Information']" class="flex-auto"></vex-breadcrumbs>
     <button class="ml-2" color="primary" mat-icon-button type="button">
         <mat-icon svgIcon="mat:more_vert"></mat-icon>
@@ -20,14 +20,8 @@
                         svgIcon="mat:archive"></mat-icon>
                     Save
                 </button>
-                <button
-                    color="primary"
-                    mat-raised-button
-                    type="button"
-                    [routerLink]="['/apps/plant-information']">
-                    <mat-icon
-                        class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2"
-                        svgIcon="mat:close"></mat-icon>
+                <button color="primary" mat-raised-button type="button" [routerLink]="['/apps/plant-information']">
+                    <mat-icon class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" svgIcon="mat:close"></mat-icon>
                     Close
                 </button>
             </div>
@@ -213,7 +207,7 @@
                                 {{ statusLabel }}
                             </mat-slide-toggle>
                         </div>
-                        <blockquote *ngIf="pageMode === 2" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px" [style.marginTop.px]="30">
+                        <blockquote *ngIf="plantCode" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="5px" [style.marginTop.px]="30">
                             <span fxFlex> <strong>Created By</strong>: {{ createdBy }} </span>
                             <span fxFlex>
                                 <strong>Date Created</strong>: {{ createdAt | date: 'MM/dd/yyyy hh:mm a' }}

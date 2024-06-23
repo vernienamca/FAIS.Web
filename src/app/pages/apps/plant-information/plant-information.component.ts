@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@ang
 import { FormGroup, Validators, FormBuilder, UntypedFormControl    } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BehaviorSubject, Observable, Subject, switchMap, takeUntil, tap } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, of, switchMap, takeUntil, tap } from 'rxjs';
 import { PageMode } from 'src/app/core/enums/page-mode.enum';
 import { LibraryTypeCodes } from 'src/app/core/enums/library-types.enum';
 import { ILibraryTypes } from 'src/app/core/models/library-types';
@@ -42,9 +42,6 @@ export class PlantInformationComponent implements OnInit, OnDestroy {
     costCenterTypes: DropdownValueModel[] = [];
     plantDetailsToAdd: IPlantDetails[] = [];
     plantCode: string;
-
-
-    pageMode: PageMode;
     libraryTypeCodes: LibraryTypeCodes;
     form: FormGroup; 
     
@@ -90,8 +87,7 @@ export class PlantInformationComponent implements OnInit, OnDestroy {
         provId: this.form.get('provId'),
         munId: this.form.get('munId'),
         brgyId: this.form.get('brgyId'),
-        isActive: this.form.get('isActive'),
-        //statusDate: this.form.get('statusDate')
+        isActive: this.form.get('isActive')
       };
     }
 
@@ -145,13 +141,16 @@ export class PlantInformationComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.userId = parseInt(localStorage.getItem('user_id'));
-        
-        this._getLookUps();
-        this._getRegions();
-        this._getProvinces();
-        this._getMunicipalities();
-        this._getBarangays();
+      this.userId = parseInt(localStorage.getItem('user_id'));  
+      this._getRoles().pipe(
+        tap(() => this._checkFormFields()),  
+        takeUntil(this._onDestroy$)
+      ).subscribe();
+      this._getLookUps();
+      this._getRegions();
+      this._getProvinces();
+      this._getMunicipalities();
+      this._getBarangays();
     }
 
     ngOnDestroy(): void {
@@ -200,7 +199,6 @@ export class PlantInformationComponent implements OnInit, OnDestroy {
         costCenterNo: null,
         isRemoved: false
       };
-      this.plantDetailsToAdd.push(newItem);
       let cv = this.grid.collectionView;
       cv.sourceCollection.push(newItem);
       cv.refresh();
@@ -223,20 +221,26 @@ export class PlantInformationComponent implements OnInit, OnDestroy {
         this.formControls.substationName.updateValueAndValidity();
         return;
       }
-
       const data = Object.assign({}, this.form.value);
       this.plantDetailsToAdd.map(t => t.plantCode = data.plantCode);
       data.isActive = data.isActive ? 'Y' : 'N'; 
       data.details = this.plantDetailsToAdd;
 
+      const notifData = {
+        roleIds: this.roleIds, 
+        id: data.plantCode,
+        assetName: data.substationName,
+        editMode: this.isEditMode,
+        isAdmin: this.isAdmin,
+        ModuleId: ModuleEnum.PlantInformation
+      };
       if (this.plantCode) {
         data.updatedBy = parseInt(localStorage.getItem('user_id'));
-        this._updatePlantInfo(data);
+        this._updatePlantInfo(data, notifData);
         return;
       }
-
       data.createdBy = parseInt(localStorage.getItem('user_id'));
-      this._createPlantInformation(data);
+      this._createPlantInformation(data, notifData);
     }
 
     private _initializeData(data: IPlantInformation): void {
@@ -259,7 +263,6 @@ export class PlantInformationComponent implements OnInit, OnDestroy {
         brgyId: data.brgyId || '',
         isActive: data.isActive || 'Y'
       });
-
       data.details.forEach(item => {
         const newItem: IPlantDetails = {
           id: item.id,
@@ -275,98 +278,74 @@ export class PlantInformationComponent implements OnInit, OnDestroy {
       this.totalCostCenter$.next(data.details?.length);
     }
 
-    private _createPlantInformation(data: any) : void {
-        const dialogRef = this._dialog.open(DialogComponent, {
-            data: {
-              cancelButtonLabel: "Cancel",
-              confirmButtonLabel: "Yes, Proceed",
-              dialogHeader: "Confirmation",
-              dialogContent: "Are you sure you want to proceed saving?",
-              moduleName: 'Metering Profile'
-            },
-            width: '450px'
-          });
-          dialogRef.afterClosed().subscribe(result => {
-            if (!result) {
+    private _createPlantInformation(data: any, notifData: any) : void {
+      const dialogRef = this._dialog.open(DialogComponent, {
+        data: {
+          cancelButtonLabel: "Cancel",
+          confirmButtonLabel: "Yes, Proceed",
+          dialogHeader: "Confirmation",
+          dialogContent: "Are you sure you want to proceed saving?",
+          moduleName: 'Metering Profile'
+        },
+        width: '450px'
+      });
+      dialogRef.afterClosed().subscribe(result => {
+        if (!result) {
+          return;
+        }
+        this._portalService.createPlantInformation(data)
+          .pipe(
+            switchMap(() =>  {
+              this._securityService.postNotifRole(notifData)
+                .pipe(takeUntil(this._onDestroy$))
+                .subscribe();
+              return of([]);
+            }),
+            takeUntil(this._onDestroy$)
+          )
+          .subscribe(data => {
+            if (!data) {
               return;
             }
-            this._portalService.createPlantInformation(data)
-                .pipe(takeUntil(this._onDestroy$))
-                .subscribe(data => {
-                    if (!data) {
-                    return;
-                    }
-            
-                    const notifData = {
-                        roleIds: this.roleIds, 
-                        id: data.plantCode,
-                        assetName: data.substationName,
-                        editMode: this.isEditMode,
-                        isAdmin: this.isAdmin,
-                        ModuleId: ModuleEnum.PlantInformation
-                    };
-                    this._securityService.postNotifRole(notifData)
-                    .pipe(takeUntil(this._onDestroy$))
-                    .subscribe(data => {
-                        if (!data){
-                            return;
-                        }
-                    });
-
-                    let snackBarRef = this._snackBar.open('Plant information has been successfully added.', 'Close');
-                    snackBarRef.afterDismissed().subscribe(() => {
-                        this._router.navigateByUrl('apps/plant-information');
-                    });
-                });
+            let snackBarRef = this._snackBar.open('Plant information has been successfully added.', 'Close');
+            snackBarRef.afterDismissed().subscribe(() => {
+              this._router.navigateByUrl('apps/plant-information');
+            });
           });
-        
+      });
     }
 
-    private _updatePlantInfo(data) {
-        this._portalService.updatePlantInformation(data.plantCode, data)
-            .pipe(takeUntil(this._onDestroy$))
-            .subscribe(data => {
-                if (!data) {
-                    return;
-                }
-
-                const notifData = {
-                    roleIds: this.roleIds, 
-                    id: data.plantCode,
-                    assetName: data.substationName,
-                    editMode: this.isEditMode,
-                    isAdmin: this.isAdmin,
-                    ModuleId: ModuleEnum.PlantInformation
-                  };
-                  this._securityService.postNotifRole(notifData)
-                  .pipe(takeUntil(this._onDestroy$))
-                  .subscribe(data => {
-                    if(!data){
-                      return;
-                    }
-                  })
-
-                let snackBarRef = this._snackBar.open('Plant information has been successfully updated.', 'Close');
-                snackBarRef.afterDismissed().subscribe(() => {
-                    window.location.reload();
-                });
-            });
+    private _updatePlantInfo(data: any, notifData: any) {
+      this._portalService.updatePlantInformation(data.plantCode, data)
+        .pipe(
+          switchMap(() =>  {
+            this._securityService.postNotifRole(notifData)
+              .pipe(takeUntil(this._onDestroy$))
+              .subscribe();
+            return of([]);
+          }),
+          takeUntil(this._onDestroy$)
+        )
+        .subscribe(data => {
+          if (!data) {
+            return;
+          }
+          let snackBarRef = this._snackBar.open('Plant information has been successfully updated.', 'Close');
+          snackBarRef.afterDismissed().subscribe(() => {
+            window.location.reload();
+          });
+        });
     }
 
     private _getLookUps(): void {
-        const codes = 
-            [ LibraryTypeCodes.PlantInformationClass
-            , LibraryTypeCodes.TransmissionGrid
-            , LibraryTypeCodes.DistrictOffice
-            , LibraryTypeCodes.MTD
-            , LibraryTypeCodes.CostCenterType];
-
-            this._getRoles().pipe(
-                tap(() => this._checkFormFields()),  
-                takeUntil(this._onDestroy$)
-            ).subscribe();
-
-        this._portalService.getDropdownValues(codes)
+      const codes = [ 
+        LibraryTypeCodes.PlantInformationClass, 
+        LibraryTypeCodes.TransmissionGrid, 
+        LibraryTypeCodes.DistrictOffice, 
+        LibraryTypeCodes.MTD, 
+        LibraryTypeCodes.CostCenterType
+      ];
+      this._portalService.getDropdownValues(codes)
         .pipe(takeUntil(this._onDestroy$))
         .subscribe((data) => {
           if (!data) {
@@ -381,87 +360,86 @@ export class PlantInformationComponent implements OnInit, OnDestroy {
     }
 
     private _getRegions(): void {
-        this._portalService.getRegions()
-            .pipe(takeUntil(this._onDestroy$))
-            .subscribe(data => {
-                if(!data){
-                    return;
-                }
-                this.regions = data;
-        });
+      this._portalService.getRegions()
+        .pipe(takeUntil(this._onDestroy$))
+        .subscribe(data => {
+          if (!data){
+            return;
+          }
+          this.regions = data;
+      });
     }
 
     private _getProvinces(): void {
-        this._portalService.getProvinces()
-            .pipe(takeUntil(this._onDestroy$))
-            .subscribe(data => {
-                if(!data){
-                    return;
-                }
-                this.provinces = data;
-        });
+      this._portalService.getProvinces()
+        .pipe(takeUntil(this._onDestroy$))
+        .subscribe(data => {
+          if (!data){
+            return;
+          }
+          this.provinces = data;
+      });
     }
 
     private _getMunicipalities(): void {
-        this._portalService.getMunicipalities()
-            .pipe(takeUntil(this._onDestroy$))
-            .subscribe(data => {
-                if(!data){
-                    return;
-                }
-                this.municipalities = data;
-        });
+      this._portalService.getMunicipalities()
+        .pipe(takeUntil(this._onDestroy$))
+        .subscribe(data => {
+          if (!data){
+            return;
+          }
+          this.municipalities = data;
+      });
     }
 
     private _getBarangays(): void {
-        this._portalService.getBarangays()
-            .pipe(takeUntil(this._onDestroy$))
-            .subscribe(data => {
-                if(!data){
-                    return;
-                }
-                this.barangays = data;
-        });
+      this._portalService.getBarangays()
+        .pipe(takeUntil(this._onDestroy$))
+        .subscribe(data => {
+          if (!data){
+            return;
+          }
+          this.barangays = data;
+      });
     }
 
     private _checkFormFields(): void {
-        this._portalService.getUserRoles(this.userId)
-        .pipe(takeUntil(this._onDestroy$))
-        .subscribe(data => {
-          if(!data){
-            return;
-          }
-          const roleAuthorized = this._getRoleAuthorization(data)
-          if (roleAuthorized.name === 'Administrator') {
-           this.isAdmin = true;
-           const administratorRole = this.roles.find(role => role.name === 'Administrator');
-           this.roleIds.push(administratorRole.id)
-          }
-    
-          if (roleAuthorized.name === 'PAD Librarian') {
-            const meteringLibrarianRole = this.roles.find(role => role.name === 'PAD Librarian');
-            this.roleIds.push(meteringLibrarianRole.id)
-          }
-        });
-
-    }
-    private _getRoleAuthorization(roles: any[]): any {
-        const relevantRoles = roles.filter(role => this.roles.some(r => r.name === role.name && role.isActive === true));
-        if (relevantRoles.length > 0) {
-          const firstRole = relevantRoles.reduce((minRole, currentRole) => minRole.userRoleId < currentRole.userRoleId ? minRole : currentRole);
-          return firstRole;
+      this._portalService.getUserRoles(this.userId)
+      .pipe(takeUntil(this._onDestroy$))
+      .subscribe(data => {
+        if (!data){
+          return;
         }
+        const roleAuthorized = this._getRoleAuthorization(data)
+        if (roleAuthorized.name === 'Administrator') {
+          this.isAdmin = true;
+          const administratorRole = this.roles.find(role => role.name === 'Administrator');
+          this.roleIds.push(administratorRole.id)
+        }
+        if (roleAuthorized.name === 'PAD Librarian') {
+          const meteringLibrarianRole = this.roles.find(role => role.name === 'PAD Librarian');
+          this.roleIds.push(meteringLibrarianRole.id)
+        }
+      });
+    }
+
+    private _getRoleAuthorization(roles: any[]): any {
+      const relevantRoles = roles.filter(role => this.roles.some(r => r.name === role.name && role.isActive === true));
+      if (relevantRoles.length > 0) {
+        const firstRole = relevantRoles.reduce((minRole, currentRole) => minRole.userRoleId < currentRole.userRoleId ? minRole : currentRole);
+        return firstRole;
       }
+    }
       
-      private _getRoles(): Observable<IRole[]> {
-        return this._portalService.getRoles().pipe(
-          tap(roles => {
-            if (!roles) {
-              throw new Error('No roles found');
-            }
-            this.roles = roles;
-          }),
-          takeUntil(this._onDestroy$)
-        );
-      }
+    private _getRoles(): Observable<IRole[]> {
+      return this._portalService.getRoles().pipe(
+        tap(roles => {
+          if (!roles) {
+            throw new Error('No roles found');
+          }
+          this.roles = roles;
+        }),
+        takeUntil(this._onDestroy$)
+      );
+    }
 }
