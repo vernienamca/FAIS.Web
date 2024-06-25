@@ -8,7 +8,7 @@ export enum LibraryTypeCodes {
     //PROJECT PROFILE
     ProjectProfileClassification = 'PC',
     ProjectProfileStage = 'PS',
-    ProjectProfileTransmissionGrid = 'PTG',
+    ProjectProfileTransmissionGrid = 'TRG',
 
     //METERING PROFILE
     InstallationType = 'INT',
