@@ -130,8 +130,8 @@
           <hr class="w-full my-8">
           <div class="table-container" [style.margin-top.px]="50" >
             <div class="flex flex-row" fxLayoutAlign="end" [style.margin-bottom.px]="10" [style.margin-right.px]="30">
-              <h2 class="m-0 title flex-auto">Project Component ({{getProjectProfileComponentDataCount()}})</h2>
-              <button #addbutton class="rounded-full !bg-green !text-white" mat-raised-button type="button" (click)="addNewRow()">
+              <!-- <h2 class="m-0 title flex-auto">Project Component ({{getProjectProfileComponentDataCount()}})</h2> -->
+              <button #addbutton class="rounded-full !bg-green !text-white" mat-raised-button type="button" (click)="addComponent()">
                 <mat-icon svgIcon="mat:add"></mat-icon>
                 <span>Add</span>
               </button>
@@ -139,29 +139,106 @@
 
             <mat-divider style="margin: 10px 0;"></mat-divider>
             <div class="wijmotable">
-              <wj-flex-grid class="main-grid px-4 py-4" #projectProfileGrid [itemsSource]="projectProfileComponentData" [selectionMode]="'Row'" [allowResizing]="false" style="width: 100%; border:none ; padding-right: 2%;" >
-                <!-- <wj-flex-grid-column binding="pjcId" header="PJC ID" width="30*" ></wj-flex-grid-column>
-                <wj-flex-grid-column binding="projectComponent" header="Project Component" width="30*" ></wj-flex-grid-column> -->
-                <wj-flex-grid-column binding="details" header="Details" width="30*" ></wj-flex-grid-column>
-                <wj-flex-grid-column binding="projectStageSeq" header="Project Stage" [dataMap]="projectProfileStageMap" [dataMapEditor]="'DropDownList'" [editor]="projectStageCombo" width="30*" ></wj-flex-grid-column>
-                <wj-flex-grid-column binding="transmissionGridSeq" header="Transmission Grid" [dataMap]="projectProfileTransmissionGridMap" [dataMapEditor]="'DropDownList'" [editor]="projectProfileTransmissionGridCombo" width="30*" ></wj-flex-grid-column>
-                <wj-flex-grid-column binding="startDate" header="Start Date" format="d" data-type="Date" width="*" format="MMM/dd/yyyy" [editor]="startDateInput" width="30*" width="30*" inputFormat="MM/dd/yyyy"></wj-flex-grid-column>
+              <wj-flex-grid class="main-grid px-4 py-4" #grid [itemsSource]="projectProfileComponents$ | async"  (initialized)="initFlexGrid(grid)">
+                <!-- <wj-flex-grid-column binding="details" header="PJC ID" width="30*" ></wj-flex-grid-column> -->
+                
+              <wj-flex-grid-column binding="projectProfileSeq" header="PJC ID" width="40*">
+                  <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-cell="cell">
+                    <mat-form-field appearance="fill" class="flex flex-col sm:flex-row" [style.width.%]="198">
+                      <input #myText matInput [value]="cell.item.projectProfileSeq" readonly />
+                    </mat-form-field>
+                  </ng-template>
+              </wj-flex-grid-column>
+
+              <wj-flex-grid-column binding="componentName" header="PROJECT COMPONENT" width="40*">
+                <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-cell="cell">
+                  <mat-form-field appearance="fill" class="flex flex-col sm:flex-row" [style.width.%]="198">
+                    <input #myText matInput [value]="cell.item.componentName" (input)="nameInput(cell.item.tempKey, myText.value)" />
+                  </mat-form-field>
+                </ng-template>
+              </wj-flex-grid-column>
+              
+              <wj-flex-grid-column binding="details" header="DETAILS" width="40*">
+                  <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-cell="cell">
+                    <mat-form-field appearance="fill" class="flex flex-col sm:flex-row" [style.width.%]="198">
+                      <input #myText matInput [value]="cell.item.details" (input)="detailInput(cell.item.tempKey, myText.value)" />
+                    </mat-form-field>
+                  </ng-template>
+              </wj-flex-grid-column>
+
+              <wj-flex-grid-column binding="projectStageSeq" header="PROJECT STAGE" width="30*">
+                <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-cell="cell">
+                  <mat-form-field appearance="fill" class="flex flex-col sm:flex-row" [style.width.%]="198">
+                    <mat-select disableOptionCentering [(value)]="cell.item.projectStageSeq" placeholder="Select a project stage" 
+                      [compareWith]="fieldComparison" (selectionChange)="porjectStageChange(cell.item.tempKey, $event)" required>
+                      <mat-option #option *ngFor="let pps of projectProfileStage" [value]="pps">
+                        {{pps.parentValue}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </ng-template>
+              </wj-flex-grid-column>
+
+              <wj-flex-grid-column binding="transmissionGridSeq" header="TRANSMISSION GRID" width="30*">
+                <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-cell="cell">
+                  <mat-form-field appearance="fill" class="flex flex-col sm:flex-row" [style.width.%]="198">
+                    <mat-select disableOptionCentering [(value)]="cell.item.transmissionGridSeq" placeholder="Select a transmission grid" 
+                      [compareWith]="fieldComparison" (selectionChange)="transmissionGridChange(cell.item.tempKey, $event)" required>
+                      <mat-option #option *ngFor="let tg of transmissionGrid" [value]="tg">
+                        {{tg.parentValue}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </ng-template>
+              </wj-flex-grid-column>
+
+              <wj-flex-grid-column binding="startDate" header="START DATE" width="30*">
+                <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-cell="cell">
+                  <mat-form-field appearance="fill" class="flex flex-col sm:flex-row" [style.width.%]="198">
+                    <input matInput [matDatepicker]="startDate" inputFormat="MM/dd/yyyy" autocomplete="off"
+                      id="startDate" [value]="cell.item.startDate" type="text" (dateChange)="startDateChange(cell.item.tempKey, $event)" required>
+                    <mat-datepicker-toggle matSuffix [for]="startDate"></mat-datepicker-toggle>
+                    <mat-datepicker #startDate></mat-datepicker>
+                  </mat-form-field>
+                </ng-template>
+              </wj-flex-grid-column>
+              
+              <wj-flex-grid-column binding="targetDate" header="TARGET DATE" width="30*">
+                <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-cell="cell">
+                  <mat-form-field appearance="fill" class="flex flex-col sm:flex-row" [style.width.%]="198">
+                    <input matInput [matDatepicker]="targetDate" inputFormat="MM/dd/yyyy" autocomplete="off"
+                      id="targetDate" [value]="cell.item.targetDate" type="text" (dateChange)="targetDateChange(cell.item.tempKey, $event)" required>
+                    <mat-datepicker-toggle matSuffix [for]="targetDate"></mat-datepicker-toggle>
+                    <mat-datepicker #targetDate></mat-datepicker>
+                  </mat-form-field>
+                </ng-template>
+              </wj-flex-grid-column>
+
+              <wj-flex-grid-column binding="completionDate" header="COMPLETION DATE" width="30*">
+                <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-cell="cell">
+                  <mat-form-field appearance="fill" class="flex flex-col sm:flex-row" [style.width.%]="198">
+                    <input matInput [matDatepicker]="completionDate" inputFormat="MM/dd/yyyy" autocomplete="off"
+                      id="completionDate" [value]="cell.item.completionDate" type="text" (dateChange)="completionDateChange(cell.item.tempKey, $event)" required>
+                    <mat-datepicker-toggle matSuffix [for]="completionDate"></mat-datepicker-toggle>
+                    <mat-datepicker #completionDate></mat-datepicker>
+                  </mat-form-field>
+                </ng-template>
+                </wj-flex-grid-column>
+                <!-- <wj-flex-grid-column binding="transmissionGridSeq" header="Transmission Grid" [dataMap]="projectProfileTransmissionGridMap" [dataMapEditor]="'DropDownList'" [editor]="projectProfileTransmissionGridCombo" width="30*" ></wj-flex-grid-column> -->
+                <!-- <wj-flex-grid-column binding="startDate" header="Start Date" format="d" data-type="Date" width="*" format="MMM/dd/yyyy" [editor]="startDateInput" width="30*" width="30*" inputFormat="MM/dd/yyyy"></wj-flex-grid-column>
                 <wj-flex-grid-column binding="targetDate" header="Target Date" format="d" [editor]="targetDateInput" width="30*"  inputFormat="MM/dd/yyyy"></wj-flex-grid-column>
-                <wj-flex-grid-column binding="completionDate" header="Completion Date" format="d" [editor]="completionDateInput" width="30*" width="30*" inputFormat="MM/dd/yyyy"></wj-flex-grid-column>
+                <wj-flex-grid-column binding="completionDate" header="Completion Date" format="d" [editor]="completionDateInput" width="30*" width="30*" inputFormat="MM/dd/yyyy"></wj-flex-grid-column> -->
                 <wj-flex-grid-column binding="action" header="Action"  width="10*" >
                   <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-cell="cell">
-                    <button mat-button (click)="onDeleteRow(cell.item)">
+                    <button mat-button (click)="deleteComponent(cell.item)">
                       <mat-icon>delete</mat-icon>
                   </button>
                   </ng-template>
                 </wj-flex-grid-column>
               </wj-flex-grid>
             </div>
-            <wj-input-date #startDateInput inputFormat="MM/dd/yyyy"></wj-input-date>
-            <wj-input-date #targetDateInput inputFormat="MM/dd/yyyy"></wj-input-date>
-            <wj-input-date #completionDateInput inputFormat="MM/dd/yyyy"></wj-input-date>
-            <wj-combo-box #projectStageCombo [displayMemberPath]="'name'" [selectedValuePath]="'id'" [itemsSource]="projectProfileStage"></wj-combo-box>
-            <wj-combo-box #projectProfileTransmissionGridCombo [displayMemberPath]="'name'" [selectedValuePath]="'id'" [itemsSource]="projectProfileTransmissionGrid"></wj-combo-box>
+            <!-- <wj-combo-box #projectStageCombo [displayMemberPath]="'name'" [selectedValuePath]="'id'" [itemsSource]="projectProfileStage"></wj-combo-box> -->
+            <!-- <wj-combo-box #projectProfileTransmissionGridCombo [displayMemberPath]="'name'" [selectedValuePath]="'id'" [itemsSource]="projectProfileTransmissionGrid"></wj-combo-box> -->
             
           </div>
 

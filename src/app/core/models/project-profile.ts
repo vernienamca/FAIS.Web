@@ -7,7 +7,7 @@ export interface IProjectProfile {
     noOfComponentsCompleted: number;
     noOfComponentsUnderConstruction: number;
     latestInspectionDate: string;
-    totalAMRCost: string;
+    totalAmrCost: string;
     recordedAMR: string;
     unrecordedAMR: string;
     remarks: string;
@@ -23,28 +23,44 @@ export interface IProjectProfile {
     updatedBy?: string;
     updatedByName: string;
     updatedAt?: Date;
-    projectProfileComponentsDTO: IProjectProfileComponent[];
-    projectProfileComponentModel: IProjectProfileComponent[];
-    projectProfileComponents: IProjectProfileComponent[];
+    projectProfileComponentsDTO?: IProjectProfileComponents[];
+    // projectProfileComponentModel: IProjectProfileComponent[];
+    projectProfileComponents: IProjectProfileComponents[];
 }
 
-export interface IProjectProfileComponent {
+export interface IProjectProfileComponents {
     id: number;
-    pjcId: number;
-    projectComponent: number;
-    details: number;
+    tempKey: string;
+    projectProfileSeq: number;
+    componentName: string,
+    details: string,
     projectStageSeq: number;
     transmissionGridSeq: number;
-    startDate: string;
-    targetDate: string;
-    completionDate: string;
-    dateRemoved: Date;
-    createdBy: number;
-    createdAt: Date;
-    updatedBy: number;
-    updatedAt: Date;
-    projectProfileId: number;
+    startDate: Date;
+    targetDate: Date;
+    completionDate: Date;
+    inspectionDate: Date;
+    initialAMRMonth: Date;
+    isRemoved: boolean
   }
+
+// export interface IProjectProfileComponent {
+//     id: number;
+//     pjcId: number;
+//     projectComponent: number;
+//     details: number;
+//     projectStageSeq: number;
+//     transmissionGridSeq: number;
+//     startDate: string;
+//     targetDate: string;
+//     completionDate: string;
+//     dateRemoved: Date;
+//     createdBy: number;
+//     createdAt: Date;
+//     updatedBy: number;
+//     updatedAt: Date;
+//     projectProfileId: number;
+//   }
   
 
 
