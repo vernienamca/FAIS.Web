@@ -124,6 +124,7 @@ export class PlantInformationComponent implements OnInit, OnDestroy {
       });
 
       if (this.plantCode) {
+        this.formControls.plantCode.disable();
         this._portalService.getPlantInformation(this.plantCode)
           .pipe(takeUntil(this._onDestroy$))
           .subscribe(data => {
@@ -235,6 +236,7 @@ export class PlantInformationComponent implements OnInit, OnDestroy {
         ModuleId: ModuleEnum.PlantInformation
       };
       if (this.plantCode) {
+        data.plantCode = this.form.get('plantCode').value;
         data.updatedBy = parseInt(localStorage.getItem('user_id'));
         this._updatePlantInfo(data, notifData);
         return;
